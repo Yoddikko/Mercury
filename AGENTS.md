@@ -18,6 +18,7 @@ Read these files first:
 * if behavior changes, add or update tests at the right level
 * run relevant local verification before finishing when feasible
 * if tests are skipped or cannot run, explain why explicitly
+* if preparing or opening a PR, complete the PR body; if you cannot open the PR directly, provide a fully written body ready to paste
 
 ## Commit and Versioning Rules
 

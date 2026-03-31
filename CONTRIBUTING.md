@@ -109,10 +109,13 @@ PRs should explain:
 * why it changed
 * whether docs were updated
 * whether the change is version-relevant
+* what testing was added, updated, or intentionally skipped
 
 Use the repository PR template.
 
 If implementation-sensitive files change without any documentation update, the PR must explicitly mark `no doc update needed` and explain why.
+
+If AI prepares a PR but cannot create it directly, it should still provide a completed PR body ready to paste.
 
 ## Testing
 
@@ -189,5 +192,7 @@ AI contributors should not:
 * bump versions unless explicitly asked or a release workflow requires it
 
 AI should read `docs/guidelines/TESTING.md`, add or update tests when behavior changes, and run relevant verification commands before finishing whenever feasible.
+
+If AI prepares or opens a PR, it should complete the PR template instead of leaving the description empty.
 
 AI may prepare changes for commit, but committing and releasing should remain explicit actions.

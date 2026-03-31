@@ -17,6 +17,7 @@ Start with:
 * avoid unrelated redesign
 * add or update tests for behavior changes
 * run relevant local verification when feasible and explain any skipped testing
+* if preparing or opening a PR, complete the PR body; if you cannot open the PR directly, provide a fully written body ready to paste
 
 ## Commit and Release Rules
 

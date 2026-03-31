@@ -105,3 +105,13 @@ Claude should:
 * prefer unit tests for logic-heavy changes
 * ask for or provide a clear no-tests rationale when tests are intentionally skipped
 * run relevant verification when feasible and report any limitation
+
+---
+
+## PR Preparation Rule
+
+If Claude opens or prepares a PR:
+
+* complete the repository PR template
+* summarize docs and testing impact explicitly
+* provide a ready-to-paste PR body if direct PR creation is not available

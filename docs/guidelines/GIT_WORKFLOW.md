@@ -326,6 +326,10 @@ Relevant tests should also be added or updated when behavior changes.
 
 If tests are not updated, the PR should include an explicit rationale.
 
+If a PR is being prepared, the PR template should be completed.
+
+If the AI cannot open the PR directly, it should still provide a complete body ready to paste.
+
 ---
 
 ## AI Checklist Before Version Bump or Tag

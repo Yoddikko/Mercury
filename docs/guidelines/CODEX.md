@@ -124,3 +124,13 @@ Codex should:
 * prefer unit tests for logic and view-model behavior
 * run relevant local verification when feasible
 * explicitly explain skipped tests or unrun commands
+
+---
+
+## PR Preparation Rule
+
+If Codex opens or prepares a PR:
+
+* complete the repository PR template
+* summarize docs and testing impact explicitly
+* provide a ready-to-paste PR body if direct PR creation is not available
