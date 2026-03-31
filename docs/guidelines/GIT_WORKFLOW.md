@@ -322,6 +322,10 @@ Before creating a commit, an AI agent should verify:
 
 If implementation-sensitive files change without any docs update, the change should include an explicit rationale in the PR.
 
+Relevant tests should also be added or updated when behavior changes.
+
+If tests are not updated, the PR should include an explicit rationale.
+
 ---
 
 ## AI Checklist Before Version Bump or Tag

@@ -14,6 +14,7 @@ Claude should preserve project consistency while allowing controlled evolution.
 * prefer documented behavior
 * avoid unnecessary redesign
 * follow `/docs/guidelines/GIT_WORKFLOW.md`
+* follow `/docs/guidelines/TESTING.md`
 
 ---
 
@@ -93,3 +94,14 @@ Claude should not:
 * change versions unless explicitly asked or a release workflow requires it
 
 When asked to commit, Claude should follow `/docs/guidelines/GIT_WORKFLOW.md`.
+
+---
+
+## Testing Rule
+
+Claude should:
+
+* require tests for meaningful behavior changes
+* prefer unit tests for logic-heavy changes
+* ask for or provide a clear no-tests rationale when tests are intentionally skipped
+* run relevant verification when feasible and report any limitation

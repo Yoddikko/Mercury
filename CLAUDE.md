@@ -5,8 +5,9 @@ Start with:
 1. `docs/guidelines/GENERAL.md`
 2. `docs/guidelines/CLAUDE.md`
 3. `docs/guidelines/GIT_WORKFLOW.md`
-4. `docs/architecture/ARCHITECTURE.md`
-5. the relevant feature, AI, and product docs
+4. `docs/guidelines/TESTING.md`
+5. `docs/architecture/ARCHITECTURE.md`
+6. the relevant feature, AI, and product docs
 
 ## Repo Rules
 
@@ -14,6 +15,8 @@ Start with:
 * implementation may refine the docs only when the change is necessary, minimal, and documented
 * keep architecture and documentation aligned
 * avoid unrelated redesign
+* add or update tests for behavior changes
+* run relevant local verification when feasible and explain any skipped testing
 
 ## Commit and Release Rules
 
