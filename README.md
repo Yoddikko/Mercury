@@ -6,9 +6,9 @@ The project combines RSS ingestion, local-first article storage, AI enrichment, 
 
 ## Repository Status
 
-This repository is currently documentation-first.
+This repository is currently documentation-first, with an initial Xcode project scaffold under `Mercury/`.
 
-That means the main source of truth lives in the Markdown files under `docs/`.
+The main source of truth still lives in the Markdown files under `docs/`.
 
 Implementation work should follow the documented architecture and update the docs whenever behavior, models, prompts, or contracts change.
 
