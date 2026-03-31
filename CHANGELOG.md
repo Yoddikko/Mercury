@@ -14,6 +14,7 @@ The format is intentionally lightweight:
 
 * Git workflow and versioning guidelines
 * root agent instruction files for Codex-compatible agents and Claude
+* initial Xcode project scaffold for the Mercury iOS app
 
 ### Changed
 
