@@ -2,17 +2,58 @@
 
 set -euo pipefail
 
-PROJECT_PATH="${PROJECT_PATH:-Mercury/Mercury.xcodeproj}"
-SCHEME="${SCHEME:-Mercury}"
+destination_id="$(
+  xcrun simctl list devices available --json | python3 -c '
+import json
+import re
+import sys
 
-show_destinations="$(xcodebuild -project "${PROJECT_PATH}" -scheme "${SCHEME}" -showdestinations 2>/dev/null || true)"
+payload = json.load(sys.stdin)
+candidates = []
+preferred_names = [
+    "iPhone 16e",
+    "iPhone 16",
+    "iPhone 15",
+    "iPhone 15 Pro",
+    "iPhone 14",
+    "iPhone SE (3rd generation)",
+]
+name_rank = {name: index for index, name in enumerate(preferred_names)}
 
-destination_id="$(printf '%s\n' "${show_destinations}" | sed -n 's/.*platform:iOS Simulator[^}]*id:\([^,]*\),[^}]*name:iPhone[^}]*.*/\1/p' | head -n1)"
+for runtime, devices in payload.get("devices", {}).items():
+    match = re.search(r"iOS-(\d+)-(\d+)", runtime)
+    if not match:
+        continue
+
+    version = (int(match.group(1)), int(match.group(2)))
+
+    for device in devices:
+        name = device.get("name", "")
+        if not name.startswith("iPhone"):
+            continue
+
+        candidates.append(
+            (
+                device.get("state") == "Booted",
+                version,
+                -name_rank.get(name, len(preferred_names)),
+                name,
+                device.get("udid", ""),
+            )
+        )
+
+if not candidates:
+    sys.exit(1)
+
+candidates.sort(reverse=True)
+print(candidates[0][4])
+'
+)"
 
 if [[ -n "${destination_id}" ]]; then
   printf 'id=%s\n' "${destination_id}"
   exit 0
 fi
 
-echo "Unable to find an available iOS Simulator destination for ${SCHEME}."
+echo "Unable to find an available iPhone simulator."
 exit 1
