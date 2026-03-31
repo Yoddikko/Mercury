@@ -1,0 +1,167 @@
+# Contributing to Mercury
+
+This repository is documentation-first.
+
+That means contributors should treat the docs as the current source of truth and keep implementation and documentation aligned as the project evolves.
+
+## Read First
+
+Before making changes, read:
+
+1. `docs/guidelines/GENERAL.md`
+2. `docs/guidelines/GIT_WORKFLOW.md`
+3. `docs/architecture/ARCHITECTURE.md`
+4. the relevant files under `docs/features/`, `docs/ai/`, and `docs/product/`
+
+If you are using an AI agent, also read:
+
+* `AGENTS.md`
+* `CLAUDE.md`
+
+## Contribution Principles
+
+* keep changes small and reviewable
+* avoid unrelated edits
+* prefer consistency over novelty
+* do not silently diverge from documented behavior
+* if you change behavior or contracts, update the related docs
+
+## Workflow
+
+### 1. Start from `main`
+
+Create a short-lived branch from `main`.
+
+Suggested branch prefixes:
+
+* `feat/`
+* `fix/`
+* `docs/`
+* `refactor/`
+* `chore/`
+
+Examples:
+
+* `docs/contributing-guide`
+* `feat/article-clustering`
+* `fix/rss-normalization`
+
+### 2. Keep the Scope Tight
+
+One branch should address one concern.
+
+Good examples:
+
+* one feature and its related doc updates
+* one bug fix and its related tests
+* one documentation clarification
+
+Avoid mixing:
+
+* refactors plus features
+* formatting cleanup plus behavioral changes
+* unrelated fixes
+
+### 3. Update the Docs When Needed
+
+If your change affects any of the following, update the related docs in the same work session:
+
+* feature behavior
+* architecture responsibilities
+* AI provider contracts
+* prompt inputs or outputs
+* persisted models or required fields
+
+### 4. Commit with Conventional Commits
+
+Format:
+
+```text
+type(scope): short imperative summary
+```
+
+Examples:
+
+* `docs(guidelines): add release workflow`
+* `feat(feed): add article ranking stage`
+* `fix(rss): handle malformed dates`
+* `refactor(providers): extract response mapper`
+
+Recommended types:
+
+* `feat`
+* `fix`
+* `docs`
+* `refactor`
+* `test`
+* `chore`
+* `ci`
+
+Use a commit body when the change affects architecture, contracts, or release decisions.
+
+### 5. Open a Focused PR
+
+PRs should explain:
+
+* what changed
+* why it changed
+* whether docs were updated
+* whether the change is version-relevant
+
+Use the repository PR template.
+
+If implementation-sensitive files change without any documentation update, the PR must explicitly mark `no doc update needed` and explain why.
+
+## Versioning
+
+Mercury uses SemVer with a practical pre-1.0 policy.
+
+While the project is pre-1.0:
+
+* `PATCH` for bug fixes, internal cleanup, and docs clarifications that do not change the documented contract
+* `MINOR` for new features, behavior changes, new capabilities, model changes, or contract changes
+
+Examples:
+
+* `0.1.0 -> 0.1.1` for a fix
+* `0.1.1 -> 0.2.0` for a new feature or contract change
+
+Do not bump versions casually. Version changes should be intentional and tied to a release or milestone.
+
+See `docs/guidelines/GIT_WORKFLOW.md` for the canonical versioning rules.
+
+## Tags and Releases
+
+Use annotated tags on release-ready commits:
+
+```bash
+git tag -a v0.1.0 -m "Mercury v0.1.0"
+git push origin v0.1.0
+```
+
+Rules:
+
+* tag only release-ready states
+* keep `CHANGELOG.md` aligned before tagging
+* tag from the intended release commit on `main`
+
+## Pull Request Checklist
+
+Before opening or merging a PR, verify:
+
+* the change is focused
+* unrelated files are excluded
+* the docs are updated if needed
+* the commit messages are clear
+* the version impact is understood
+* `CHANGELOG.md` is updated if the change is part of a release
+
+## AI-Specific Rule
+
+AI contributors should not:
+
+* create commits unless explicitly asked
+* create tags unless explicitly asked
+* bump versions unless explicitly asked or a release workflow requires it
+
+AI may prepare changes for commit, but committing and releasing should remain explicit actions.

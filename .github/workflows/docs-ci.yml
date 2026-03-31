@@ -1,0 +1,65 @@
+name: Docs CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  docs-sync:
+    name: Docs sync
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check documentation sync
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: bash .github/scripts/check-doc-sync.sh
+
+  markdown:
+    name: Markdown lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Lint Markdown
+        uses: DavidAnson/markdownlint-cli2-action@v20
+        with:
+          globs: |
+            README.md
+            CHANGELOG.md
+            CONTRIBUTING.md
+            AGENTS.md
+            CLAUDE.md
+            .github/pull_request_template.md
+            docs/guidelines/**/*.md
+
+  repo-hygiene:
+    name: Repository hygiene
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Fail on Finder artifacts
+        run: |
+          if find . -name '.DS_Store' -print | grep -q .; then
+            echo "Remove .DS_Store files before merging."
+            find . -name '.DS_Store' -print
+            exit 1
+          fi

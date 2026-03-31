@@ -15,6 +15,7 @@ Codex may make small structural improvements when required by implementation, bu
 * follow `/docs/ai/*`
 * follow `/docs/product/*`
 * follow `/docs/guidelines/GENERAL.md`
+* follow `/docs/guidelines/GIT_WORKFLOW.md`
 
 ---
 
@@ -99,3 +100,15 @@ Code must be:
 * minimal
 * compilable
 * aligned with docs after changes
+
+---
+
+## Commit and Versioning Rule
+
+Codex should not:
+
+* create commits unless explicitly asked
+* create tags unless explicitly asked
+* change versions unless explicitly asked or a release workflow requires it
+
+When asked to commit, Codex should follow `/docs/guidelines/GIT_WORKFLOW.md`.
