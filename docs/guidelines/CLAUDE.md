@@ -13,6 +13,7 @@ Claude should preserve project consistency while allowing controlled evolution.
 * respect existing docs
 * prefer documented behavior
 * avoid unnecessary redesign
+* follow `/docs/guidelines/GIT_WORKFLOW.md`
 
 ---
 
@@ -80,3 +81,15 @@ When making changes, explain briefly:
 ## Safety Rule
 
 Do not invent major features or requirements without documenting them.
+
+---
+
+## Commit and Versioning Rule
+
+Claude should not:
+
+* create commits unless explicitly asked
+* create tags unless explicitly asked
+* change versions unless explicitly asked or a release workflow requires it
+
+When asked to commit, Claude should follow `/docs/guidelines/GIT_WORKFLOW.md`.

@@ -96,6 +96,14 @@ Implementation and documentation should remain aligned.
 
 ---
 
+## Git and Versioning
+
+Commits, tags, and version changes should follow `/docs/guidelines/GIT_WORKFLOW.md`.
+
+AI should not create commits, tags, or version bumps unless explicitly asked.
+
+---
+
 ## Error Handling
 
 * never fail silently

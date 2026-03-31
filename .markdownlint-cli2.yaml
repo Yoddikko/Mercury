@@ -1,0 +1,6 @@
+config:
+  MD013: false
+  MD022: false
+  MD024:
+    siblings_only: true
+  MD032: false
