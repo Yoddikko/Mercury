@@ -6,6 +6,17 @@ Mercury is an AI-powered news aggregation app for iOS.
 
 The project combines RSS ingestion, local-first article storage, AI enrichment, and personalized feed logic behind a documented architecture based on SwiftUI, MVVM, SwiftData, and provider abstraction.
 
+## License
+
+This project is licensed under the Mercury Source Available License (MSAL).
+
+The code is publicly available for viewing only.
+Unauthorized use, copying, modification, or distribution is strictly prohibited.
+
+See the LICENSE file for details.
+
+
+
 ## Repository Status
 
 This repository is currently documentation-first, with an initial Xcode project scaffold under `Mercury/`.
