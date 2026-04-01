@@ -24,3 +24,35 @@
 "developer.playground.stored_debug_records" = "Record debug salvati: %lld";
 "developer.playground.simulation.empty" = "Inserisci un prompt per eseguire una simulazione locale.";
 "developer.playground.simulation.prefix" = "Riassunto simulato";
+
+"developer.playground.section.rss_diagnostics" = "Diagnostica RSS";
+"developer.playground.rss.group" = "Gruppo";
+"developer.playground.rss.region" = "Regione";
+"developer.playground.rss.run" = "Esegui diagnostica RSS";
+"developer.playground.rss.running" = "Recupero e validazione feed in corso…";
+"developer.playground.rss.summary" = "Riepilogo RSS";
+"developer.playground.rss.missing_feeds" = "Senza feed URL / URL non valido";
+"developer.playground.rss.failed_feeds" = "Feed falliti";
+"developer.playground.rss.no_articles" = "Feed senza articoli";
+"developer.playground.rss.success_feeds" = "Feed riusciti";
+"developer.playground.rss.articles" = "Articoli normalizzati";
+"developer.playground.rss.selected_outlets" = "Outlets selezionati: %lld";
+"developer.playground.rss.outlets_checked" = "Outlets controllati: %lld";
+"developer.playground.rss.success_count" = "Feed riusciti: %lld";
+"developer.playground.rss.no_articles_count" = "Feed senza articoli: %lld";
+"developer.playground.rss.missing_count" = "Outlets senza feed URL: %lld";
+"developer.playground.rss.failed_count" = "Feed falliti: %lld";
+"developer.playground.rss.deduped_count" = "Articoli deduplicati: %lld";
+"developer.playground.rss.duration_ms" = "Durata ultima esecuzione: %lld ms";
+"developer.playground.rss.caption.success" = "%@ • %lld articoli • %lld ms";
+"developer.playground.rss.caption.default" = "%@ • %lld ms";
+
+"developer.rss.group.all" = "Tutti gli outlets";
+"developer.rss.group.main" = "Outlets principali";
+"developer.rss.group.region" = "Per regione";
+"developer.rss.status.success" = "Successo";
+"developer.rss.status.no_articles" = "Nessun articolo";
+"developer.rss.status.no_feed" = "Feed URL assente";
+"developer.rss.status.invalid_url" = "Feed URL non valido";
+"developer.rss.status.request_failed" = "Richiesta fallita";
+"developer.rss.status.parse_failed" = "Parsing fallito";

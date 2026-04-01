@@ -24,3 +24,35 @@
 "developer.playground.stored_debug_records" = "Stored debug records: %lld";
 "developer.playground.simulation.empty" = "Enter a prompt to run a local simulation.";
 "developer.playground.simulation.prefix" = "Simulated summary";
+
+"developer.playground.section.rss_diagnostics" = "RSS Diagnostics";
+"developer.playground.rss.group" = "Group";
+"developer.playground.rss.region" = "Region";
+"developer.playground.rss.run" = "Run RSS diagnostics";
+"developer.playground.rss.running" = "Fetching and validating feeds…";
+"developer.playground.rss.summary" = "RSS Summary";
+"developer.playground.rss.missing_feeds" = "No Feed URL / Invalid URL";
+"developer.playground.rss.failed_feeds" = "Failed Feeds";
+"developer.playground.rss.no_articles" = "Feeds With No Articles";
+"developer.playground.rss.success_feeds" = "Successful Feeds";
+"developer.playground.rss.articles" = "Normalized Articles";
+"developer.playground.rss.selected_outlets" = "Selected outlets: %lld";
+"developer.playground.rss.outlets_checked" = "Outlets checked: %lld";
+"developer.playground.rss.success_count" = "Successful feeds: %lld";
+"developer.playground.rss.no_articles_count" = "Feeds with no articles: %lld";
+"developer.playground.rss.missing_count" = "Outlets with no feed URL: %lld";
+"developer.playground.rss.failed_count" = "Failed feeds: %lld";
+"developer.playground.rss.deduped_count" = "Deduplicated articles: %lld";
+"developer.playground.rss.duration_ms" = "Last run duration: %lld ms";
+"developer.playground.rss.caption.success" = "%@ • %lld articles • %lld ms";
+"developer.playground.rss.caption.default" = "%@ • %lld ms";
+
+"developer.rss.group.all" = "All Outlets";
+"developer.rss.group.main" = "Main Outlets";
+"developer.rss.group.region" = "By Region";
+"developer.rss.status.success" = "Success";
+"developer.rss.status.no_articles" = "No Articles";
+"developer.rss.status.no_feed" = "No Feed URL";
+"developer.rss.status.invalid_url" = "Invalid Feed URL";
+"developer.rss.status.request_failed" = "Request Failed";
+"developer.rss.status.parse_failed" = "Parse Failed";
