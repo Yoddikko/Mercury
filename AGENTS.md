@@ -5,8 +5,9 @@ Read these files first:
 1. `docs/guidelines/GENERAL.md`
 2. `docs/guidelines/CODEX.md`
 3. `docs/guidelines/GIT_WORKFLOW.md`
-4. `docs/architecture/ARCHITECTURE.md`
-5. the relevant files under `docs/features/`, `docs/ai/`, and `docs/product/`
+4. `docs/guidelines/TESTING.md`
+5. `docs/architecture/ARCHITECTURE.md`
+6. the relevant files under `docs/features/`, `docs/ai/`, and `docs/product/`
 
 ## Core Rules
 
@@ -14,6 +15,10 @@ Read these files first:
 * prefer the smallest coherent change
 * if behavior, contracts, models, or architecture change, update docs in the same work session
 * do not silently diverge from the documented system
+* if behavior changes, add or update tests at the right level
+* run relevant local verification before finishing when feasible
+* if tests are skipped or cannot run, explain why explicitly
+* if preparing or opening a PR, complete the PR body; if you cannot open the PR directly, provide a fully written body ready to paste
 
 ## Commit and Versioning Rules
 
@@ -29,3 +34,4 @@ Read these files first:
 * preserve provider abstraction for AI integrations
 * treat prompt/output contract changes as important and explicit
 * prefer documentation updates over speculative redesign
+* follow `docs/guidelines/TESTING.md` for test scope and commands

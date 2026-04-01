@@ -15,10 +15,12 @@ The format is intentionally lightweight:
 * Git workflow and versioning guidelines
 * root agent instruction files for Codex-compatible agents and Claude
 * initial Xcode project scaffold for the Mercury iOS app
+* testing guidelines, local test scripts, and iOS CI guardrails
 
 ### Changed
 
 * shared contributor guidance now points to a centralized Git workflow document
+* agent and PR workflow now require testing decisions and rationale for skipped tests
 
 ### Docs
 

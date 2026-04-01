@@ -31,8 +31,11 @@ Enable these settings for `main`:
 Required status checks:
 
 * `Docs sync`
+* `Test impact`
 * `Markdown lint`
 * `Repository hygiene`
+* `App build`
+* `Unit tests`
 
 ## Approval Policy
 
@@ -80,7 +83,8 @@ When the repository is connected to GitHub:
 3. target `main`
 4. require pull requests
 5. require the docs CI checks
-6. require conversation resolution
-7. disable force pushes
-8. disable deletion
-9. add approval requirements later if and when the team grows
+6. require the iOS CI checks
+7. require conversation resolution
+8. disable force pushes
+9. disable deletion
+10. add approval requirements later if and when the team grows

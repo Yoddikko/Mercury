@@ -16,6 +16,7 @@ Codex may make small structural improvements when required by implementation, bu
 * follow `/docs/product/*`
 * follow `/docs/guidelines/GENERAL.md`
 * follow `/docs/guidelines/GIT_WORKFLOW.md`
+* follow `/docs/guidelines/TESTING.md`
 
 ---
 
@@ -112,3 +113,24 @@ Codex should not:
 * change versions unless explicitly asked or a release workflow requires it
 
 When asked to commit, Codex should follow `/docs/guidelines/GIT_WORKFLOW.md`.
+
+---
+
+## Testing Rule
+
+Codex should:
+
+* add or update tests when behavior changes
+* prefer unit tests for logic and view-model behavior
+* run relevant local verification when feasible
+* explicitly explain skipped tests or unrun commands
+
+---
+
+## PR Preparation Rule
+
+If Codex opens or prepares a PR:
+
+* complete the repository PR template
+* summarize docs and testing impact explicitly
+* provide a ready-to-paste PR body if direct PR creation is not available

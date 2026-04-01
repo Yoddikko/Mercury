@@ -34,6 +34,7 @@ Start here depending on what you need:
 * [Product Docs](docs/product/ONBOARDING.md): user-facing behavior and flows
 * [General Guidelines](docs/guidelines/GENERAL.md): contribution and implementation principles
 * [Git Workflow](docs/guidelines/GIT_WORKFLOW.md): commits, versioning, tags, and releases
+* [Testing Guidelines](docs/guidelines/TESTING.md): test policy, local commands, and CI expectations
 * [Branch Protection](docs/guidelines/BRANCH_PROTECTION.md): recommended GitHub protection settings
 
 ## Repository Structure
@@ -45,6 +46,7 @@ Start here depending on what you need:
 ├── CONTRIBUTING.md
 ├── AGENTS.md
 ├── CLAUDE.md
+├── scripts/
 ├── docs/
 │   ├── ai/
 │   ├── architecture/
@@ -65,12 +67,14 @@ Before opening a PR, read:
 1. [CONTRIBUTING.md](CONTRIBUTING.md)
 2. [General Guidelines](docs/guidelines/GENERAL.md)
 3. [Git Workflow](docs/guidelines/GIT_WORKFLOW.md)
+4. [Testing Guidelines](docs/guidelines/TESTING.md)
 
 Core rules:
 
 * keep changes focused
 * avoid unrelated edits
 * keep docs and behavior aligned
+* add or update tests for behavior changes
 * use Conventional Commits
 * treat version bumps and tags as explicit release actions
 
@@ -82,6 +86,8 @@ This repository includes dedicated entrypoints for AI tools:
 * [CLAUDE.md](CLAUDE.md)
 
 AI contributors should read the relevant guidelines first and should not commit, tag, or bump versions unless explicitly asked.
+
+They should also add or update tests for behavior changes and run relevant verification when feasible.
 
 ## Versioning and Releases
 
@@ -105,6 +111,8 @@ The repository includes:
 * a PR template
 * minimal docs-focused CI
 * a docs sync check for implementation-sensitive PRs
+* a test impact check for implementation-sensitive PRs
+* iOS build and unit-test CI
 * documented branch protection expectations
 
 The branch protection policy is defined, but it can only be applied after the repository is connected to GitHub.

@@ -10,8 +10,9 @@ Before making changes, read:
 
 1. `docs/guidelines/GENERAL.md`
 2. `docs/guidelines/GIT_WORKFLOW.md`
-3. `docs/architecture/ARCHITECTURE.md`
-4. the relevant files under `docs/features/`, `docs/ai/`, and `docs/product/`
+3. `docs/guidelines/TESTING.md`
+4. `docs/architecture/ARCHITECTURE.md`
+5. the relevant files under `docs/features/`, `docs/ai/`, and `docs/product/`
 
 If you are using an AI agent, also read:
 
@@ -25,6 +26,7 @@ If you are using an AI agent, also read:
 * prefer consistency over novelty
 * do not silently diverge from documented behavior
 * if you change behavior or contracts, update the related docs
+* if you change behavior, add or update tests at the right level
 
 ## Workflow
 
@@ -107,10 +109,33 @@ PRs should explain:
 * why it changed
 * whether docs were updated
 * whether the change is version-relevant
+* what testing was added, updated, or intentionally skipped
 
 Use the repository PR template.
 
 If implementation-sensitive files change without any documentation update, the PR must explicitly mark `no doc update needed` and explain why.
+
+If AI prepares a PR but cannot create it directly, it should still provide a completed PR body ready to paste.
+
+## Testing
+
+Read `docs/guidelines/TESTING.md` before changing app code.
+
+Default expectation:
+
+* new feature -> add tests
+* bug fix -> add a regression test when feasible
+* logic change -> update the relevant unit tests
+* UI flow change -> consider a UI smoke test if the path is high value
+
+Before opening a PR, run the relevant commands:
+
+```bash
+bash scripts/run-ios-build.sh
+bash scripts/run-ios-unit-tests.sh
+```
+
+If a test command cannot run in your environment, explain that in the PR.
 
 ## Versioning
 
@@ -152,6 +177,8 @@ Before opening or merging a PR, verify:
 * the change is focused
 * unrelated files are excluded
 * the docs are updated if needed
+* the relevant tests were added or updated
+* the relevant local checks were run, or the limitation is explained
 * the commit messages are clear
 * the version impact is understood
 * `CHANGELOG.md` is updated if the change is part of a release
@@ -163,5 +190,9 @@ AI contributors should not:
 * create commits unless explicitly asked
 * create tags unless explicitly asked
 * bump versions unless explicitly asked or a release workflow requires it
+
+AI should read `docs/guidelines/TESTING.md`, add or update tests when behavior changes, and run relevant verification commands before finishing whenever feasible.
+
+If AI prepares or opens a PR, it should complete the PR template instead of leaving the description empty.
 
 AI may prepare changes for commit, but committing and releasing should remain explicit actions.

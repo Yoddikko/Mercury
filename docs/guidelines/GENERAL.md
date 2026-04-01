@@ -104,6 +104,16 @@ AI should not create commits, tags, or version bumps unless explicitly asked.
 
 ---
 
+## Testing
+
+Testing changes should follow `/docs/guidelines/TESTING.md`.
+
+AI should not treat tests as optional for behavior changes.
+
+If behavior changes and tests are not updated, the PR should explain why.
+
+---
+
 ## Error Handling
 
 * never fail silently
