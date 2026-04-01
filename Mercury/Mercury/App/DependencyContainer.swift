@@ -9,4 +9,10 @@ struct DependencyContainer {
     func makeHomeViewModel() -> HomeViewModel {
         HomeViewModel()
     }
+
+#if DEBUG
+    func makeDeveloperPlaygroundViewModel() -> DeveloperPlaygroundViewModel {
+        DeveloperPlaygroundViewModel()
+    }
+#endif
 }

@@ -9,7 +9,7 @@ import Testing
 @testable import Mercury
 
 struct MercuryTests {
-    @Test func homeViewModelUsesMercuryScaffoldData() async throws {
+    @Test @MainActor func homeViewModelUsesMercuryScaffoldData() async throws {
         let viewModel = HomeViewModel()
 
         #expect(viewModel.title == "Mercury")

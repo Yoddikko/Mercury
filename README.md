@@ -23,6 +23,20 @@ The main source of truth still lives in the Markdown files under `docs/`.
 
 Implementation work should follow the documented architecture and update the docs whenever behavior, models, prompts, or contracts change.
 
+## Launch Instructions
+
+1. Open `Mercury/Mercury.xcodeproj` in Xcode.
+2. Select the `Mercury` scheme.
+3. Select an iOS Simulator destination.
+4. Run the app (`Cmd+R`).
+
+Developer playground access (debug-only):
+
+1. In Xcode, open `Product > Scheme > Edit Scheme...`.
+2. Under `Run > Arguments`, add launch argument `-developer-mode`.
+3. Run the app in Debug configuration.
+4. In Home, tap the top-right `Developer Tools` (ladybug) button.
+
 ## What Mercury Covers
 
 Mercury is designed to:

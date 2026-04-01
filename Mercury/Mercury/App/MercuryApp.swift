@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct MercuryApp: App {
@@ -15,5 +16,6 @@ struct MercuryApp: App {
         WindowGroup {
             AppRouter(dependencyContainer: dependencyContainer).rootView()
         }
+        .modelContainer(for: [StoredArticle.self])
     }
 }
