@@ -31,6 +31,7 @@ Enable these settings for `main`:
 Required status checks:
 
 * `Docs sync`
+* `Localization impact`
 * `Test impact`
 * `Markdown lint`
 * `Repository hygiene`

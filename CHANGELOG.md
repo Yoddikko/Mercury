@@ -16,11 +16,14 @@ The format is intentionally lightweight:
 * root agent instruction files for Codex-compatible agents and Claude
 * initial Xcode project scaffold for the Mercury iOS app
 * testing guidelines, local test scripts, and iOS CI guardrails
+* localization guidelines for English baseline, i18n locales, and accessibility text
+* localization impact PR check and template section
 
 ### Changed
 
 * shared contributor guidance now points to a centralized Git workflow document
 * agent and PR workflow now require testing decisions and rationale for skipped tests
+* contributor and AI guidance now require explicit localization decisions on PRs
 
 ### Docs
 

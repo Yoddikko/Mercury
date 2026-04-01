@@ -11,8 +11,9 @@ Before making changes, read:
 1. `docs/guidelines/GENERAL.md`
 2. `docs/guidelines/GIT_WORKFLOW.md`
 3. `docs/guidelines/TESTING.md`
-4. `docs/architecture/ARCHITECTURE.md`
-5. the relevant files under `docs/features/`, `docs/ai/`, and `docs/product/`
+4. `docs/guidelines/LOCALIZATION.md`
+5. `docs/architecture/ARCHITECTURE.md`
+6. the relevant files under `docs/features/`, `docs/ai/`, and `docs/product/`
 
 If you are using an AI agent, also read:
 
@@ -27,6 +28,7 @@ If you are using an AI agent, also read:
 * do not silently diverge from documented behavior
 * if you change behavior or contracts, update the related docs
 * if you change behavior, add or update tests at the right level
+* if you change user-facing copy or accessibility text, update localization resources
 
 ## Workflow
 
@@ -108,6 +110,7 @@ PRs should explain:
 * what changed
 * why it changed
 * whether docs were updated
+* whether localization was updated
 * whether the change is version-relevant
 * what testing was added, updated, or intentionally skipped
 
@@ -116,6 +119,19 @@ Use the repository PR template.
 If implementation-sensitive files change without any documentation update, the PR must explicitly mark `no doc update needed` and explain why.
 
 If AI prepares a PR but cannot create it directly, it should still provide a completed PR body ready to paste.
+
+## Localization and Accessibility
+
+Read `docs/guidelines/LOCALIZATION.md` before changing user-facing UI copy.
+
+Default expectation:
+
+* user-facing text changes -> update localization resources
+* accessibility label/hint/value changes -> localize the same update
+* keep English and supported i18n locales aligned for new keys
+* hardcoded product copy in SwiftUI views should be avoided
+
+If localization updates are intentionally not needed, explain that in the PR.
 
 ## Testing
 
@@ -177,6 +193,7 @@ Before opening or merging a PR, verify:
 * the change is focused
 * unrelated files are excluded
 * the docs are updated if needed
+* localization impact is explicitly addressed
 * the relevant tests were added or updated
 * the relevant local checks were run, or the limitation is explained
 * the commit messages are clear
@@ -191,7 +208,7 @@ AI contributors should not:
 * create tags unless explicitly asked
 * bump versions unless explicitly asked or a release workflow requires it
 
-AI should read `docs/guidelines/TESTING.md`, add or update tests when behavior changes, and run relevant verification commands before finishing whenever feasible.
+AI should read `docs/guidelines/TESTING.md` and `docs/guidelines/LOCALIZATION.md`, add or update tests when behavior changes, and update localization resources when user-facing copy changes.
 
 If AI prepares or opens a PR, it should complete the PR template instead of leaving the description empty.
 

@@ -114,6 +114,16 @@ If behavior changes and tests are not updated, the PR should explain why.
 
 ---
 
+## Localization
+
+Localization and accessibility text should follow `/docs/guidelines/LOCALIZATION.md`.
+
+AI should not leave user-facing copy hardcoded in UI code.
+
+If user-facing or accessibility-facing text changes and localization is not updated, the PR should explain why.
+
+---
+
 ## Error Handling
 
 * never fail silently

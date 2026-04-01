@@ -37,6 +37,18 @@ If docs were updated, mention which areas:
 
 If you selected `no doc update needed`, explain why.
 
+## Localization Impact
+
+- [ ] localization resources updated for user-facing copy changes
+- [ ] accessibility-facing text was reviewed and localized when needed
+- [ ] no localization update needed
+
+If implementation-sensitive files changed without localization updates, the third checkbox must be selected and justified below.
+
+## No-Localization Rationale
+
+If you selected `no localization update needed`, explain why.
+
 ## Testing Impact
 
 - [ ] unit tests added or updated
@@ -68,6 +80,7 @@ Describe how you validated the change. List the commands you ran when relevant.
 - [ ] unrelated changes were excluded
 - [ ] commit messages follow Conventional Commits
 - [ ] docs and behavior are aligned
+- [ ] localization impact is explicitly addressed
 - [ ] relevant tests were added or updated, or a no-tests rationale was provided
 - [ ] relevant local checks were run, or any limitation is explained above
 - [ ] docs sync check is satisfied

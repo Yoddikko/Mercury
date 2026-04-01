@@ -15,6 +15,7 @@ Claude should preserve project consistency while allowing controlled evolution.
 * avoid unnecessary redesign
 * follow `/docs/guidelines/GIT_WORKFLOW.md`
 * follow `/docs/guidelines/TESTING.md`
+* follow `/docs/guidelines/LOCALIZATION.md`
 
 ---
 
@@ -105,6 +106,17 @@ Claude should:
 * prefer unit tests for logic-heavy changes
 * ask for or provide a clear no-tests rationale when tests are intentionally skipped
 * run relevant verification when feasible and report any limitation
+
+---
+
+## Localization Rule
+
+Claude should:
+
+* require localization updates when user-facing copy changes
+* require localization updates for accessibility-facing text changes
+* avoid leaving hardcoded product copy in UI code
+* ask for or provide a clear no-localization rationale when updates are intentionally skipped
 
 ---
 
