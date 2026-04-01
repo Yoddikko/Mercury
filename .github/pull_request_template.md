@@ -49,6 +49,18 @@ If implementation-sensitive files changed without localization updates, the thir
 
 If you selected `no localization update needed`, explain why.
 
+## Logging Impact
+
+- [ ] logs added/updated for new or modified functions
+- [ ] request IDs propagated for cross-layer flows when applicable
+- [ ] no logging update needed
+
+If implementation-sensitive files changed without logging updates, the third checkbox must be selected and justified below.
+
+## No-Logging Rationale
+
+If you selected `no logging update needed`, explain why.
+
 ## Testing Impact
 
 - [ ] unit tests added or updated
@@ -81,6 +93,7 @@ Describe how you validated the change. List the commands you ran when relevant.
 - [ ] commit messages follow Conventional Commits
 - [ ] docs and behavior are aligned
 - [ ] localization impact is explicitly addressed
+- [ ] logging impact is explicitly addressed
 - [ ] relevant tests were added or updated, or a no-tests rationale was provided
 - [ ] relevant local checks were run, or any limitation is explained above
 - [ ] docs sync check is satisfied

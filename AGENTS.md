@@ -7,8 +7,9 @@ Read these files first:
 3. `docs/guidelines/GIT_WORKFLOW.md`
 4. `docs/guidelines/TESTING.md`
 5. `docs/guidelines/LOCALIZATION.md`
-6. `docs/architecture/ARCHITECTURE.md`
-7. the relevant files under `docs/features/`, `docs/ai/`, and `docs/product/`
+6. `docs/guidelines/LOGGING.md`
+7. `docs/architecture/ARCHITECTURE.md`
+8. the relevant files under `docs/features/`, `docs/ai/`, and `docs/product/`
 
 ## Core Rules
 
@@ -18,6 +19,7 @@ Read these files first:
 * do not silently diverge from the documented system
 * if behavior changes, add or update tests at the right level
 * if user-facing copy or accessibility text changes, update localization resources
+* if new or modified functions are introduced, add or update logs using `AppLogger`
 * run relevant local verification before finishing when feasible
 * if tests are skipped or cannot run, explain why explicitly
 * if preparing or opening a PR, complete the PR body; if you cannot open the PR directly, provide a fully written body ready to paste
@@ -38,3 +40,4 @@ Read these files first:
 * prefer documentation updates over speculative redesign
 * follow `docs/guidelines/TESTING.md` for test scope and commands
 * follow `docs/guidelines/LOCALIZATION.md` for i18n and accessibility text rules
+* follow `docs/guidelines/LOGGING.md` and propagate request IDs across multi-layer flows

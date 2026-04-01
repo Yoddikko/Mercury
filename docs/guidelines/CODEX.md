@@ -18,6 +18,7 @@ Codex may make small structural improvements when required by implementation, bu
 * follow `/docs/guidelines/GIT_WORKFLOW.md`
 * follow `/docs/guidelines/TESTING.md`
 * follow `/docs/guidelines/LOCALIZATION.md`
+* follow `/docs/guidelines/LOGGING.md`
 
 ---
 
@@ -136,6 +137,18 @@ Codex should:
 * localize accessibility-facing text when introduced or changed
 * avoid hardcoded product strings in SwiftUI views
 * provide a clear PR rationale when no localization update is needed
+
+---
+
+## Logging Rule
+
+Codex should:
+
+* add or update logs in every new or modified function
+* include meaningful categories and levels via `AppLogger`
+* propagate request ids across multi-step flows
+* include metadata that helps diagnostics (`duration_ms`, `status_code`, `source_id`, etc.)
+* avoid logging secrets or private data
 
 ---
 

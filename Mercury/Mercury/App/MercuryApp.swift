@@ -11,6 +11,16 @@ import SwiftData
 @main
 struct MercuryApp: App {
     private let dependencyContainer = DependencyContainer()
+    private let logger = AppLogger.shared
+
+    init() {
+        logger.info(
+            "Application initialized",
+            category: .system,
+            service: "MercuryApp",
+            metadata: ["developer_mode": "\(DeveloperMode.isEnabled)"]
+        )
+    }
 
     var body: some Scene {
         WindowGroup {

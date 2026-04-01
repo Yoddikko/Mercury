@@ -18,7 +18,17 @@ struct RSSParsedItem: Equatable, Sendable {
 }
 
 struct RSSParser: Sendable {
-    func parse(data: Data) throws -> [RSSParsedItem] {
+    private let logger = AppLogger.shared
+
+    func parse(data: Data, requestID: String? = nil) throws -> [RSSParsedItem] {
+        logger.debug(
+            "Starting RSS XML parsing",
+            category: .business,
+            service: "RSSParser",
+            requestID: requestID,
+            metadata: ["bytes": "\(data.count)"]
+        )
+
         let delegate = RSSXMLParserDelegate()
         let parser = XMLParser(data: data)
         parser.delegate = delegate
@@ -27,8 +37,24 @@ struct RSSParser: Sendable {
         parser.shouldReportNamespacePrefixes = false
 
         guard parser.parse() else {
+            let parserErrorDescription = parser.parserError?.localizedDescription ?? "unknown_parser_error"
+            logger.error(
+                "RSS XML parsing failed",
+                category: .business,
+                service: "RSSParser",
+                requestID: requestID,
+                metadata: ["error": parserErrorDescription]
+            )
             throw RSSParserError.invalidXML
         }
+
+        logger.debug(
+            "RSS XML parsing completed",
+            category: .business,
+            service: "RSSParser",
+            requestID: requestID,
+            metadata: ["items": "\(delegate.items.count)"]
+        )
 
         return delegate.items
     }

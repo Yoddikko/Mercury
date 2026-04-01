@@ -24,6 +24,13 @@
 "developer.playground.stored_debug_records" = "Record debug salvati: %lld";
 "developer.playground.simulation.empty" = "Inserisci un prompt per eseguire una simulazione locale.";
 "developer.playground.simulation.prefix" = "Riassunto simulato";
+"developer.playground.section.logging" = "Logging";
+"developer.playground.logging.entries" = "Entry log memorizzate: %lld";
+"developer.playground.logging.export" = "Esporta log";
+"developer.playground.logging.exporting" = "Preparazione export log…";
+"developer.playground.logging.clear" = "Cancella log";
+"developer.playground.logging.ready" = "File log pronto per la condivisione.";
+"developer.playground.logging.share" = "Condividi log esportati";
 
 "developer.playground.section.rss_diagnostics" = "Diagnostica RSS";
 "developer.playground.rss.group" = "Gruppo";

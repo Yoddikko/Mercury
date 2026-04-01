@@ -16,6 +16,7 @@ Claude should preserve project consistency while allowing controlled evolution.
 * follow `/docs/guidelines/GIT_WORKFLOW.md`
 * follow `/docs/guidelines/TESTING.md`
 * follow `/docs/guidelines/LOCALIZATION.md`
+* follow `/docs/guidelines/LOGGING.md`
 
 ---
 
@@ -117,6 +118,18 @@ Claude should:
 * require localization updates for accessibility-facing text changes
 * avoid leaving hardcoded product copy in UI code
 * ask for or provide a clear no-localization rationale when updates are intentionally skipped
+
+---
+
+## Logging Rule
+
+Claude should:
+
+* require logs in every new or modified function
+* enforce meaningful levels and categories via `AppLogger`
+* require request-id propagation for cross-layer flows
+* include operational metadata useful for diagnosis
+* avoid logging secrets or private user data
 
 ---
 
