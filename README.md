@@ -15,8 +15,6 @@ Unauthorized use, copying, modification, or distribution is strictly prohibited.
 
 See the LICENSE file for details.
 
-
-
 ## Repository Status
 
 This repository is currently documentation-first, with an initial Xcode project scaffold under `Mercury/`.
@@ -48,6 +46,7 @@ Start here depending on what you need:
 * [General Guidelines](docs/guidelines/GENERAL.md): contribution and implementation principles
 * [Git Workflow](docs/guidelines/GIT_WORKFLOW.md): commits, versioning, tags, and releases
 * [Testing Guidelines](docs/guidelines/TESTING.md): test policy, local commands, and CI expectations
+* [Localization Guidelines](docs/guidelines/LOCALIZATION.md): i18n, English baseline, and accessibility text rules
 * [Branch Protection](docs/guidelines/BRANCH_PROTECTION.md): recommended GitHub protection settings
 
 ## Repository Structure
@@ -81,6 +80,7 @@ Before opening a PR, read:
 2. [General Guidelines](docs/guidelines/GENERAL.md)
 3. [Git Workflow](docs/guidelines/GIT_WORKFLOW.md)
 4. [Testing Guidelines](docs/guidelines/TESTING.md)
+5. [Localization Guidelines](docs/guidelines/LOCALIZATION.md)
 
 Core rules:
 
@@ -88,6 +88,7 @@ Core rules:
 * avoid unrelated edits
 * keep docs and behavior aligned
 * add or update tests for behavior changes
+* localize user-facing and accessibility-facing text changes
 * use Conventional Commits
 * treat version bumps and tags as explicit release actions
 
@@ -101,6 +102,7 @@ This repository includes dedicated entrypoints for AI tools:
 AI contributors should read the relevant guidelines first and should not commit, tag, or bump versions unless explicitly asked.
 
 They should also add or update tests for behavior changes and run relevant verification when feasible.
+They should also update localization resources whenever user-facing copy or accessibility text changes.
 
 ## Versioning and Releases
 
@@ -125,5 +127,6 @@ The repository includes:
 * minimal docs-focused CI
 * a docs sync check for implementation-sensitive PRs
 * a test impact check for implementation-sensitive PRs
+* a localization impact check for implementation-sensitive PRs
 * iOS build and unit-test CI
 * documented branch protection expectations

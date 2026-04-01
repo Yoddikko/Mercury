@@ -17,6 +17,7 @@ Codex may make small structural improvements when required by implementation, bu
 * follow `/docs/guidelines/GENERAL.md`
 * follow `/docs/guidelines/GIT_WORKFLOW.md`
 * follow `/docs/guidelines/TESTING.md`
+* follow `/docs/guidelines/LOCALIZATION.md`
 
 ---
 
@@ -124,6 +125,17 @@ Codex should:
 * prefer unit tests for logic and view-model behavior
 * run relevant local verification when feasible
 * explicitly explain skipped tests or unrun commands
+
+---
+
+## Localization Rule
+
+Codex should:
+
+* localize user-facing UI copy using localization resources
+* localize accessibility-facing text when introduced or changed
+* avoid hardcoded product strings in SwiftUI views
+* provide a clear PR rationale when no localization update is needed
 
 ---
 
