@@ -99,6 +99,8 @@ For each run, the debug screen reports:
 * feeds with zero normalized articles
 * deduplicated normalized article list
 * debug log export (text file) for troubleshooting
+* outlet-level diagnostics export (text report with per-outlet status)
+* article inspection screen to review full fetched payload and field checks
 
 This is used to quickly verify source coverage, parser behavior, and feed health
 across regions.

@@ -27,6 +27,11 @@ struct DeveloperPlaygroundScreen: View {
     @State private var exportedLogURL: URL?
     @State private var logExportError: String?
     @State private var isPresentingShareSheet = false
+    @State private var isExportingRSSReport = false
+    @State private var exportedRSSReportURL: URL?
+    @State private var rssReportExportError: String?
+    @State private var isPresentingRSSReportShareSheet = false
+    @State private var selectedArticleForInspection: Article?
 
     var body: some View {
         Form {
@@ -205,6 +210,33 @@ struct DeveloperPlaygroundScreen: View {
                     Text(viewModel.rssFailedFeedsLabel(count: rssDiagnosticsViewModel.failedChecks.count))
                     Text(viewModel.rssDeduplicatedArticlesLabel(count: rssDiagnosticsViewModel.normalizedArticles.count))
                     Text(viewModel.rssDurationLabel(milliseconds: rssDiagnosticsViewModel.lastRunDurationMs))
+
+                    Button(viewModel.rssExportOutletsReportLabel) {
+                        Task {
+                            await exportRSSOutletsReport()
+                        }
+                    }
+                    .disabled(isExportingRSSReport)
+                    .accessibilityIdentifier("developer.playground.rss.exportReport")
+
+                    if isExportingRSSReport {
+                        ProgressView(viewModel.rssExportingOutletsReportLabel)
+                            .accessibilityIdentifier("developer.playground.rss.exportingReport")
+                    }
+
+                    if exportedRSSReportURL != nil {
+                        Text(viewModel.rssOutletsReportReadyLabel)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                            .accessibilityIdentifier("developer.playground.rss.reportReady")
+                    }
+
+                    if let rssReportExportError {
+                        Text(rssReportExportError)
+                            .font(.caption)
+                            .foregroundStyle(.red)
+                            .accessibilityIdentifier("developer.playground.rss.reportError")
+                    }
                 }
                 .accessibilityIdentifier("developer.playground.rss.summary")
 
@@ -246,18 +278,36 @@ struct DeveloperPlaygroundScreen: View {
 
                 if rssDiagnosticsViewModel.normalizedArticles.isEmpty == false {
                     Section(viewModel.rssArticlesSectionTitle) {
+                        Text(viewModel.rssTapArticleToInspectLabel)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+
                         ForEach(Array(rssDiagnosticsViewModel.normalizedArticles.prefix(80))) { article in
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(article.title)
-                                    .font(.headline)
-                                Text("\(article.sourceName) • \(Self.articleDateFormatter.string(from: article.publishedAt))")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                                Text(article.articleURL.absoluteString)
-                                    .font(.caption2)
-                                    .foregroundStyle(.secondary)
-                                    .lineLimit(1)
+                            Button {
+                                selectedArticleForInspection = article
+                                logger.debug(
+                                    "Opened RSS article inspection",
+                                    category: .ui,
+                                    service: "DeveloperPlaygroundScreen",
+                                    metadata: [
+                                        "article_id": article.id,
+                                        "source_name": article.sourceName
+                                    ]
+                                )
+                            } label: {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(article.title)
+                                        .font(.headline)
+                                    Text("\(article.sourceName) • \(Self.articleDateFormatter.string(from: article.publishedAt))")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                    Text(article.articleURL.absoluteString)
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                        .lineLimit(1)
+                                }
                             }
+                            .buttonStyle(.plain)
                         }
                     }
                     .accessibilityIdentifier("developer.playground.rss.articles")
@@ -273,6 +323,14 @@ struct DeveloperPlaygroundScreen: View {
             if let exportedLogURL {
                 ActivityViewController(activityItems: [exportedLogURL])
             }
+        }
+        .sheet(isPresented: $isPresentingRSSReportShareSheet) {
+            if let exportedRSSReportURL {
+                ActivityViewController(activityItems: [exportedRSSReportURL])
+            }
+        }
+        .sheet(item: $selectedArticleForInspection) { article in
+            DeveloperRSSArticleInspectionScreen(article: article, viewModel: viewModel)
         }
     }
 
@@ -351,6 +409,44 @@ struct DeveloperPlaygroundScreen: View {
         }
     }
 
+    private func exportRSSOutletsReport() async {
+        guard let result = rssDiagnosticsViewModel.latestResult else { return }
+        isExportingRSSReport = true
+        rssReportExportError = nil
+
+        logger.info(
+            "Preparing RSS outlets report export",
+            category: .filesystem,
+            service: "DeveloperPlaygroundScreen",
+            metadata: [
+                "checks_count": "\(result.checks.count)",
+                "group_mode": result.groupMode.rawValue
+            ]
+        )
+
+        defer { isExportingRSSReport = false }
+
+        do {
+            let fileURL = try RSSDiagnosticsReportExporter.exportReport(from: result)
+            exportedRSSReportURL = fileURL
+            isPresentingRSSReportShareSheet = true
+            logger.info(
+                "RSS outlets report export completed",
+                category: .filesystem,
+                service: "DeveloperPlaygroundScreen",
+                metadata: ["file_path": fileURL.path]
+            )
+        } catch {
+            rssReportExportError = error.localizedDescription
+            logger.error(
+                "RSS outlets report export failed",
+                category: .filesystem,
+                service: "DeveloperPlaygroundScreen",
+                metadata: ["error": error.localizedDescription]
+            )
+        }
+    }
+
     private func clearLogs() async {
         logger.warn(
             "Developer requested in-memory log clear",
@@ -379,6 +475,146 @@ private struct ActivityViewController: UIViewControllerRepresentable {
     }
 
     func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
+}
+
+private struct DeveloperRSSArticleInspectionScreen: View {
+    let article: Article
+    let viewModel: DeveloperPlaygroundViewModel
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    section(title: viewModel.rssArticleInspectorOverviewSectionTitle) {
+                        infoRow(label: viewModel.rssArticleInspectorFieldID, value: article.id)
+                        infoRow(label: viewModel.rssArticleInspectorFieldSource, value: article.sourceName)
+                        infoRow(label: viewModel.rssArticleInspectorFieldSourceURL, value: article.sourceURL.absoluteString)
+                        infoRow(label: viewModel.rssArticleInspectorFieldArticleURL, value: article.articleURL.absoluteString)
+                        infoRow(
+                            label: viewModel.rssArticleInspectorFieldPublishedAt,
+                            value: viewModel.formattedRSSInspectionDate(article.publishedAt)
+                        )
+                        infoRow(
+                            label: viewModel.rssArticleInspectorFieldLanguage,
+                            value: article.language ?? viewModel.rssArticleInspectorEmptyValue
+                        )
+                        infoRow(
+                            label: viewModel.rssArticleInspectorFieldCategory,
+                            value: article.category ?? viewModel.rssArticleInspectorEmptyValue
+                        )
+                        infoRow(
+                            label: viewModel.rssArticleInspectorFieldTags,
+                            value: article.tags.isEmpty
+                                ? viewModel.rssArticleInspectorEmptyValue
+                                : article.tags.joined(separator: ", ")
+                        )
+                    }
+
+                    section(title: viewModel.rssArticleInspectorChecksSectionTitle) {
+                        ForEach(dataChecks, id: \.label) { check in
+                            Label {
+                                Text(check.label)
+                                    .font(.subheadline)
+                            } icon: {
+                                Image(systemName: check.isPassing ? "checkmark.circle.fill" : "xmark.circle.fill")
+                                    .foregroundStyle(check.isPassing ? .green : .red)
+                            }
+                        }
+                    }
+
+                    section(title: viewModel.rssArticleInspectorContentSectionTitle) {
+                        contentBlock(
+                            label: viewModel.rssArticleInspectorFieldRawContent,
+                            value: article.rawContent ?? viewModel.rssArticleInspectorNoContentValue
+                        )
+                        contentBlock(
+                            label: viewModel.rssArticleInspectorFieldCleanedContent,
+                            value: article.cleanedContent ?? viewModel.rssArticleInspectorNoContentValue
+                        )
+                        contentBlock(
+                            label: viewModel.rssArticleInspectorFieldSummaryShort,
+                            value: article.summaryShort ?? viewModel.rssArticleInspectorNoContentValue
+                        )
+                        contentBlock(
+                            label: viewModel.rssArticleInspectorFieldSummaryBullets,
+                            value: article.summaryBullets.isEmpty
+                                ? viewModel.rssArticleInspectorNoBulletsValue
+                                : "• " + article.summaryBullets.joined(separator: "\n• ")
+                        )
+                    }
+                }
+                .padding(16)
+            }
+            .navigationTitle(viewModel.rssArticleInspectorTitle)
+            .navigationBarTitleDisplayMode(.inline)
+        }
+    }
+
+    private var dataChecks: [(label: String, isPassing: Bool)] {
+        let hasTitle = article.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
+        let hasArticleURL = article.articleURL.absoluteString.isEmpty == false
+        let hasPublishedDate = article.publishedAt != .distantPast
+        let hasContentPayload = [article.rawContent, article.cleanedContent, article.summaryShort]
+            .compactMap { value in
+                value?.trimmingCharacters(in: .whitespacesAndNewlines)
+            }
+            .contains { value in
+                value.isEmpty == false
+            }
+        let hasLanguage = article.language?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
+
+        return [
+            (viewModel.rssArticleInspectorCheckHasTitle, hasTitle),
+            (viewModel.rssArticleInspectorCheckHasArticleURL, hasArticleURL),
+            (viewModel.rssArticleInspectorCheckHasPublishedDate, hasPublishedDate),
+            (viewModel.rssArticleInspectorCheckHasContent, hasContentPayload),
+            (viewModel.rssArticleInspectorCheckHasLanguage, hasLanguage)
+        ]
+    }
+
+    @ViewBuilder
+    private func section(title: String, @ViewBuilder content: () -> some View) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text(title)
+                .font(.headline)
+            content()
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(12)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color(uiColor: .secondarySystemBackground))
+        )
+    }
+
+    private func infoRow(label: String, value: String) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(label)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            Text(value)
+                .font(.subheadline)
+                .textSelection(.enabled)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private func contentBlock(label: String, value: String) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(label)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            Text(value)
+                .font(.footnote)
+                .textSelection(.enabled)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(10)
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(Color(uiColor: .systemBackground))
+                )
+        }
+    }
 }
 
 #Preview {

@@ -108,6 +108,118 @@ struct DeveloperPlaygroundViewModel {
         String(localized: "developer.playground.rss.articles", defaultValue: "Normalized Articles")
     }
 
+    var rssExportOutletsReportLabel: String {
+        String(localized: "developer.playground.rss.export_report", defaultValue: "Export outlets report")
+    }
+
+    var rssExportingOutletsReportLabel: String {
+        String(localized: "developer.playground.rss.exporting_report", defaultValue: "Preparing outlets report…")
+    }
+
+    var rssOutletsReportReadyLabel: String {
+        String(localized: "developer.playground.rss.report_ready", defaultValue: "Outlets report ready for sharing.")
+    }
+
+    var rssTapArticleToInspectLabel: String {
+        String(localized: "developer.playground.rss.tap_to_inspect", defaultValue: "Tap an article to inspect the full fetched payload.")
+    }
+
+    var rssArticleInspectorTitle: String {
+        String(localized: "developer.playground.rss.article_inspector.title", defaultValue: "Fetched Article Detail")
+    }
+
+    var rssArticleInspectorOverviewSectionTitle: String {
+        String(localized: "developer.playground.rss.article_inspector.section.overview", defaultValue: "Overview")
+    }
+
+    var rssArticleInspectorChecksSectionTitle: String {
+        String(localized: "developer.playground.rss.article_inspector.section.checks", defaultValue: "Data Checks")
+    }
+
+    var rssArticleInspectorContentSectionTitle: String {
+        String(localized: "developer.playground.rss.article_inspector.section.content", defaultValue: "Content")
+    }
+
+    var rssArticleInspectorFieldID: String {
+        String(localized: "developer.playground.rss.article_inspector.field.id", defaultValue: "ID")
+    }
+
+    var rssArticleInspectorFieldSource: String {
+        String(localized: "developer.playground.rss.article_inspector.field.source", defaultValue: "Source")
+    }
+
+    var rssArticleInspectorFieldSourceURL: String {
+        String(localized: "developer.playground.rss.article_inspector.field.source_url", defaultValue: "Source URL")
+    }
+
+    var rssArticleInspectorFieldArticleURL: String {
+        String(localized: "developer.playground.rss.article_inspector.field.article_url", defaultValue: "Article URL")
+    }
+
+    var rssArticleInspectorFieldPublishedAt: String {
+        String(localized: "developer.playground.rss.article_inspector.field.published_at", defaultValue: "Published At")
+    }
+
+    var rssArticleInspectorFieldLanguage: String {
+        String(localized: "developer.playground.rss.article_inspector.field.language", defaultValue: "Language")
+    }
+
+    var rssArticleInspectorFieldCategory: String {
+        String(localized: "developer.playground.rss.article_inspector.field.category", defaultValue: "Category")
+    }
+
+    var rssArticleInspectorFieldTags: String {
+        String(localized: "developer.playground.rss.article_inspector.field.tags", defaultValue: "Tags")
+    }
+
+    var rssArticleInspectorFieldRawContent: String {
+        String(localized: "developer.playground.rss.article_inspector.field.raw_content", defaultValue: "Raw Content")
+    }
+
+    var rssArticleInspectorFieldCleanedContent: String {
+        String(localized: "developer.playground.rss.article_inspector.field.cleaned_content", defaultValue: "Cleaned Content")
+    }
+
+    var rssArticleInspectorFieldSummaryShort: String {
+        String(localized: "developer.playground.rss.article_inspector.field.summary_short", defaultValue: "Summary Short")
+    }
+
+    var rssArticleInspectorFieldSummaryBullets: String {
+        String(localized: "developer.playground.rss.article_inspector.field.summary_bullets", defaultValue: "Summary Bullets")
+    }
+
+    var rssArticleInspectorCheckHasTitle: String {
+        String(localized: "developer.playground.rss.article_inspector.check.has_title", defaultValue: "Title is present")
+    }
+
+    var rssArticleInspectorCheckHasArticleURL: String {
+        String(localized: "developer.playground.rss.article_inspector.check.has_article_url", defaultValue: "Article URL is present")
+    }
+
+    var rssArticleInspectorCheckHasPublishedDate: String {
+        String(localized: "developer.playground.rss.article_inspector.check.has_published_date", defaultValue: "Published date is meaningful")
+    }
+
+    var rssArticleInspectorCheckHasContent: String {
+        String(localized: "developer.playground.rss.article_inspector.check.has_content", defaultValue: "Content payload is present")
+    }
+
+    var rssArticleInspectorCheckHasLanguage: String {
+        String(localized: "developer.playground.rss.article_inspector.check.has_language", defaultValue: "Language is present")
+    }
+
+    var rssArticleInspectorEmptyValue: String {
+        String(localized: "developer.playground.rss.article_inspector.empty_value", defaultValue: "-")
+    }
+
+    var rssArticleInspectorNoContentValue: String {
+        String(localized: "developer.playground.rss.article_inspector.no_content", defaultValue: "No content available.")
+    }
+
+    var rssArticleInspectorNoBulletsValue: String {
+        String(localized: "developer.playground.rss.article_inspector.no_bullets", defaultValue: "No bullets available.")
+    }
+
     var loggingSectionTitle: String {
         String(localized: "developer.playground.section.logging", defaultValue: "Logging")
     }
@@ -265,4 +377,15 @@ struct DeveloperPlaygroundViewModel {
             Int64(result.elapsedMs)
         )
     }
+
+    func formattedRSSInspectionDate(_ date: Date) -> String {
+        Self.rssInspectionDateFormatter.string(from: date)
+    }
+
+    private static let rssInspectionDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .medium
+        return formatter
+    }()
 }
