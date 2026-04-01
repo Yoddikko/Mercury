@@ -139,6 +139,34 @@ struct RSSParserTests {
     }
 
     @Test
+    func keepsItemWithoutTitleUsingSummaryFallback() {
+        let normalizer = ArticleNormalizer()
+        let item = RSSParsedItem(
+            title: nil,
+            link: "https://example.com/summary-only",
+            summary: "Summary fallback title",
+            content: nil,
+            publishedAtRaw: "Tue, 01 Apr 2026 10:00:00 GMT",
+            categories: ["General"],
+            language: nil
+        )
+        let source = RSSFeedSource(
+            id: "summary-fallback-source",
+            outletName: "Summary Fallback Source",
+            region: .europeWide,
+            feedURLString: "https://example.com/feed.xml",
+            isMainOutlet: true,
+            languageCode: "en",
+            tags: [],
+            note: nil
+        )
+
+        let articles = normalizer.normalize(items: [item], source: source)
+        #expect(articles.count == 1)
+        #expect(articles.first?.title == "Summary fallback title")
+    }
+
+    @Test
     func usesDistantPastWhenPublishedDateIsMissing() {
         let normalizer = ArticleNormalizer()
         let item = RSSParsedItem(

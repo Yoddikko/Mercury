@@ -259,17 +259,20 @@ struct AppLogEntry: Identifiable, Sendable {
     }
 }
 
-actor AppLogStore {
+final class AppLogStore: @unchecked Sendable {
     static let shared = AppLogStore(maxEntries: 5_000)
 
     private let maxEntries: Int
     private var entries: [AppLogEntry] = []
+    private let lock = NSLock()
 
     init(maxEntries: Int) {
         self.maxEntries = maxEntries
     }
 
     func append(_ entry: AppLogEntry) {
+        lock.lock()
+        defer { lock.unlock() }
         entries.append(entry)
         if entries.count > maxEntries {
             entries.removeFirst(entries.count - maxEntries)
@@ -277,14 +280,20 @@ actor AppLogStore {
     }
 
     func entryCount() -> Int {
-        entries.count
+        lock.lock()
+        defer { lock.unlock() }
+        return entries.count
     }
 
     func entriesSnapshot() -> [AppLogEntry] {
-        entries
+        lock.lock()
+        defer { lock.unlock() }
+        return entries
     }
 
     func clear() {
+        lock.lock()
+        defer { lock.unlock() }
         entries.removeAll(keepingCapacity: true)
     }
 }
@@ -442,15 +451,15 @@ struct AppLogger: Sendable {
     }
 
     func entryCount() async -> Int {
-        await store.entryCount()
+        store.entryCount()
     }
 
     func clear() async {
-        await store.clear()
+        store.clear()
     }
 
     func exportText(minimumLevel: AppLogLevel? = nil) async -> String {
-        let entries = await store.entriesSnapshot()
+        let entries = store.entriesSnapshot()
         let filteredEntries: [AppLogEntry]
         if let minimumLevel {
             filteredEntries = entries.filter { $0.level.rawValue >= minimumLevel.rawValue }
@@ -501,9 +510,7 @@ struct AppLogger: Sendable {
             metadata: metadata
         )
 
-        Task(priority: .utility) {
-            await store.append(entry)
-        }
+        store.append(entry)
 
 #if DEBUG
         print(entry.formattedLine)

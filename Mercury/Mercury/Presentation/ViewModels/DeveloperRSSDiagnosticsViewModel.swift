@@ -94,6 +94,7 @@ final class DeveloperRSSDiagnosticsViewModel: ObservableObject {
 
         let selectedGroupMode = selectedGroupMode
         let selectedRegion = selectedGroupMode == .byRegion ? selectedRegion : nil
+        let selectedSourcesSnapshot = selectedSources
         let runID = UUID()
         activeRunID = runID
         let requestID = "dev-rss-\(runID.uuidString.lowercased())"
@@ -102,18 +103,20 @@ final class DeveloperRSSDiagnosticsViewModel: ObservableObject {
             "Developer requested RSS diagnostics run",
             category: .ui,
             service: "DeveloperRSSDiagnosticsViewModel",
-            requestID: requestID,
-            metadata: [
-                "group_mode": selectedGroupMode.rawValue,
-                "selected_region": selectedRegion?.rawValue ?? "none",
-                "selected_sources": "\(selectedSourcesCount)"
-            ]
+                requestID: requestID,
+                metadata: [
+                    "group_mode": selectedGroupMode.rawValue,
+                    "selected_region": selectedRegion?.rawValue ?? "none",
+                    "selected_sources": "\(selectedSourcesSnapshot.count)"
+                ]
         )
 
         activeTask = Task { [weak self, feedRefreshService] in
             let result = await feedRefreshService.runDiagnostics(
+                sources: selectedSourcesSnapshot,
                 groupMode: selectedGroupMode,
-                selectedRegion: selectedRegion
+                selectedRegion: selectedRegion,
+                requestID: requestID
             )
 
             let elapsedMs = Int((DispatchTime.now().uptimeNanoseconds - startedAt) / 1_000_000)

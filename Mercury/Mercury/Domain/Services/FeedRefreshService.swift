@@ -292,18 +292,22 @@ struct FeedRefreshService: Sendable {
         from checks: [RSSFeedCheckResult],
         requestID: String?
     ) -> [Article] {
-        var seenKeys = Set<String>()
-        var deduplicated: [Article] = []
+        var deduplicatedByKey: [String: Article] = [:]
 
         for check in checks {
             for article in check.articles {
                 let key = normalizer.dedupeKey(for: article)
-                guard seenKeys.insert(key).inserted else { continue }
-                deduplicated.append(article)
+                if let existing = deduplicatedByKey[key] {
+                    if article.publishedAt > existing.publishedAt {
+                        deduplicatedByKey[key] = article
+                    }
+                    continue
+                }
+                deduplicatedByKey[key] = article
             }
         }
 
-        let sortedArticles = deduplicated.sorted { lhs, rhs in
+        let sortedArticles = deduplicatedByKey.values.sorted { lhs, rhs in
             lhs.publishedAt > rhs.publishedAt
         }
 

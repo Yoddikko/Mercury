@@ -57,7 +57,7 @@ struct AppLoggerTests {
         let store = AppLogStore(maxEntries: 2)
         let logger = AppLogger(store: store, minimumLevel: .trace)
 
-        await store.append(
+        store.append(
             AppLogEntry(
                 level: .debug,
                 category: .system,
@@ -71,7 +71,7 @@ struct AppLoggerTests {
             )
         )
 
-        await store.append(
+        store.append(
             AppLogEntry(
                 level: .info,
                 category: .system,
@@ -85,7 +85,7 @@ struct AppLoggerTests {
             )
         )
 
-        await store.append(
+        store.append(
             AppLogEntry(
                 level: .warn,
                 category: .system,
@@ -103,6 +103,7 @@ struct AppLoggerTests {
         let lines = exported.split(separator: "\n")
 
         #expect(lines.count == 2)
+        guard lines.count == 2 else { return }
         #expect(lines[0].contains("second"))
         #expect(lines[1].contains("third"))
 

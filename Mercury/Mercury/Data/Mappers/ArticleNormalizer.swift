@@ -70,10 +70,10 @@ struct ArticleNormalizer: Sendable {
         source: RSSFeedSource,
         requestID: String?
     ) -> Article? {
-        let cleanedTitle = sanitizeText(item.title)
+        let cleanedTitle = resolvedTitle(item: item, source: source)
         guard cleanedTitle.isEmpty == false else {
             logger.trace(
-                "Skipped RSS item with empty title after sanitization",
+                "Skipped RSS item with no usable title candidates",
                 category: .business,
                 service: "ArticleNormalizer",
                 requestID: requestID,
@@ -168,6 +168,29 @@ struct ArticleNormalizer: Sendable {
         output = decodeHTMLEntities(output)
         output = output.replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
         return output.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    private func resolvedTitle(item: RSSParsedItem, source: RSSFeedSource) -> String {
+        let title = sanitizeText(item.title)
+        if title.isEmpty == false {
+            return title
+        }
+
+        let summaryFallback = sanitizeText(item.summary)
+        if summaryFallback.isEmpty == false {
+            return String(summaryFallback.prefix(120))
+        }
+
+        let contentFallback = sanitizeText(item.content)
+        if contentFallback.isEmpty == false {
+            return String(contentFallback.prefix(120))
+        }
+
+        if let link = item.link, link.isEmpty == false {
+            return source.outletName
+        }
+
+        return ""
     }
 
     private func decodeHTMLEntities(_ value: String) -> String {
