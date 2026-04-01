@@ -144,6 +144,10 @@ struct DeveloperPlaygroundViewModel {
         String(localized: "developer.playground.rss.article_inspector.field.id", defaultValue: "ID")
     }
 
+    var rssArticleInspectorFieldExternalID: String {
+        String(localized: "developer.playground.rss.article_inspector.field.external_id", defaultValue: "External ID")
+    }
+
     var rssArticleInspectorFieldSource: String {
         String(localized: "developer.playground.rss.article_inspector.field.source", defaultValue: "Source")
     }
@@ -162,6 +166,14 @@ struct DeveloperPlaygroundViewModel {
 
     var rssArticleInspectorFieldLanguage: String {
         String(localized: "developer.playground.rss.article_inspector.field.language", defaultValue: "Language")
+    }
+
+    var rssArticleInspectorFieldAuthor: String {
+        String(localized: "developer.playground.rss.article_inspector.field.author", defaultValue: "Author")
+    }
+
+    var rssArticleInspectorFieldImageURL: String {
+        String(localized: "developer.playground.rss.article_inspector.field.image_url", defaultValue: "Image URL")
     }
 
     var rssArticleInspectorFieldCategory: String {
@@ -188,6 +200,18 @@ struct DeveloperPlaygroundViewModel {
         String(localized: "developer.playground.rss.article_inspector.field.summary_bullets", defaultValue: "Summary Bullets")
     }
 
+    var rssArticleInspectorFieldContentSource: String {
+        String(localized: "developer.playground.rss.article_inspector.field.content_source", defaultValue: "Content Source")
+    }
+
+    var rssArticleInspectorFieldWordCount: String {
+        String(localized: "developer.playground.rss.article_inspector.field.word_count", defaultValue: "Word Count")
+    }
+
+    var rssArticleInspectorFieldLikelyComplete: String {
+        String(localized: "developer.playground.rss.article_inspector.field.likely_complete", defaultValue: "Likely Complete Body")
+    }
+
     var rssArticleInspectorCheckHasTitle: String {
         String(localized: "developer.playground.rss.article_inspector.check.has_title", defaultValue: "Title is present")
     }
@@ -206,6 +230,38 @@ struct DeveloperPlaygroundViewModel {
 
     var rssArticleInspectorCheckHasLanguage: String {
         String(localized: "developer.playground.rss.article_inspector.check.has_language", defaultValue: "Language is present")
+    }
+
+    var rssArticleInspectorCheckHasImage: String {
+        String(localized: "developer.playground.rss.article_inspector.check.has_image", defaultValue: "Image is present")
+    }
+
+    var rssArticleInspectorCheckHasAuthor: String {
+        String(localized: "developer.playground.rss.article_inspector.check.has_author", defaultValue: "Author is present")
+    }
+
+    var rssArticleInspectorCheckLikelyComplete: String {
+        String(localized: "developer.playground.rss.article_inspector.check.likely_complete", defaultValue: "Body looks complete")
+    }
+
+    var rssArticleInspectorContentSourceFeedContent: String {
+        String(localized: "developer.playground.rss.article_inspector.content_source.feed_content", defaultValue: "Feed full-content field")
+    }
+
+    var rssArticleInspectorContentSourceFeedSummary: String {
+        String(localized: "developer.playground.rss.article_inspector.content_source.feed_summary", defaultValue: "Feed summary/description")
+    }
+
+    var rssArticleInspectorContentSourceNone: String {
+        String(localized: "developer.playground.rss.article_inspector.content_source.none", defaultValue: "Unavailable")
+    }
+
+    var rssArticleInspectorBooleanYes: String {
+        String(localized: "developer.playground.rss.article_inspector.boolean.yes", defaultValue: "Yes")
+    }
+
+    var rssArticleInspectorBooleanNo: String {
+        String(localized: "developer.playground.rss.article_inspector.boolean.no", defaultValue: "No")
     }
 
     var rssArticleInspectorEmptyValue: String {
@@ -380,6 +436,17 @@ struct DeveloperPlaygroundViewModel {
 
     func formattedRSSInspectionDate(_ date: Date) -> String {
         Self.rssInspectionDateFormatter.string(from: date)
+    }
+
+    func rssContentSourceLabel(_ source: String) -> String {
+        switch source {
+        case "feed_content":
+            return rssArticleInspectorContentSourceFeedContent
+        case "feed_summary":
+            return rssArticleInspectorContentSourceFeedSummary
+        default:
+            return rssArticleInspectorContentSourceNone
+        }
     }
 
     private static let rssInspectionDateFormatter: DateFormatter = {

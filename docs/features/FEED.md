@@ -77,10 +77,32 @@ without changing the production Home feed UI.
 ### Components
 
 * `RSSFeedClient` (download XML feed data)
-* `RSSParser` (parse RSS/Atom items)
-* `ArticleNormalizer` (map raw items to `Article` + per-feed dedup)
+* `RSSParser` (parse RSS/Atom items with advanced metadata)
+* `ArticleNormalizer` (map raw items to `Article` + per-feed dedup + quality heuristics)
 * `FeedRefreshService` (run grouped checks + cross-feed dedup)
 * `AppLogger` (structured diagnostics with request-id propagation)
+
+### Parsed RSS Fields (Advanced)
+
+The parser/normalizer attempts to extract, when available:
+
+* canonical link and external ID (`guid` / Atom `id`)
+* publish date and language
+* author (`author`, `dc:creator`, Atom author name)
+* categories/tags
+* hero image URL (`media:*`, `enclosure`, `itunes:image`, first `<img>` fallback)
+* full body candidates (`content:encoded`, Atom content/fulltext fields)
+* summary/description fallback when full body is unavailable
+
+### Body Completeness Heuristic
+
+For debug diagnostics, each normalized article includes a conservative signal for
+whether the feed likely provides a complete body:
+
+* source field used (`feed_content` vs `feed_summary`)
+* extracted word count
+* truncation hints (`read more`, trailing ellipsis)
+* final `isContentLikelyComplete` flag for quick QA
 
 ### Group Modes
 
@@ -101,6 +123,7 @@ For each run, the debug screen reports:
 * debug log export (text file) for troubleshooting
 * outlet-level diagnostics export (text report with per-outlet status)
 * article inspection screen to review full fetched payload and field checks
+* article-level quality checks (author/image/body completeness)
 
 This is used to quickly verify source coverage, parser behavior, and feed health
 across regions.

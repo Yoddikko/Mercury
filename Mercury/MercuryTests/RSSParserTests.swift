@@ -62,6 +62,37 @@ struct RSSParserTests {
     }
 
     @Test
+    func extractsAdvancedFieldsFromRSSItem() throws {
+        let parser = RSSParser()
+        let data = Data(
+            """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/" xmlns:dc="http://purl.org/dc/elements/1.1/">
+              <channel>
+                <item>
+                  <guid>story-123</guid>
+                  <title>Advanced RSS Story</title>
+                  <link>https://example.com/advanced</link>
+                  <description><![CDATA[<p>Summary with <strong>HTML</strong></p>]]></description>
+                  <content:encoded xmlns:content="http://purl.org/rss/1.0/modules/content/"><![CDATA[<p>Full body paragraph.</p>]]></content:encoded>
+                  <dc:creator>Jane Doe</dc:creator>
+                  <media:thumbnail url="https://cdn.example.com/thumb.jpg" />
+                </item>
+              </channel>
+            </rss>
+            """.utf8
+        )
+
+        let items = try parser.parse(data: data)
+        #expect(items.count == 1)
+        #expect(items.first?.guid == "story-123")
+        #expect(items.first?.author == "Jane Doe")
+        #expect(items.first?.imageURL == "https://cdn.example.com/thumb.jpg")
+        #expect(items.first?.summary?.contains("Summary") == true)
+        #expect(items.first?.content?.contains("Full body paragraph") == true)
+    }
+
+    @Test
     func parsesAtomFeed() throws {
         let parser = RSSParser()
         let data = Data(
@@ -207,5 +238,74 @@ struct RSSParserTests {
         } catch {
             Issue.record("Unexpected error type: \(error)")
         }
+    }
+
+    @Test
+    func normalizerPrefersFeedContentExtractsImageAndMarksBodyAsComplete() {
+        let normalizer = ArticleNormalizer()
+        let longBody = Array(repeating: "Mercury validates complete article payloads", count: 40).joined(separator: " ")
+
+        let item = RSSParsedItem(
+            title: "Complete Body Story",
+            link: "https://example.com/complete-body",
+            summary: "Short summary text.",
+            content: "<p>\(longBody)</p><img src=\"https://cdn.example.com/full.jpg\" />",
+            publishedAtRaw: "Tue, 01 Apr 2026 10:00:00 GMT",
+            categories: ["Technology", "AI"],
+            language: "en",
+            guid: "complete-body-guid",
+            author: "Reporter",
+            imageURL: nil
+        )
+
+        let source = RSSFeedSource(
+            id: "complete-body-source",
+            outletName: "Complete Body Source",
+            region: .europeWide,
+            feedURLString: "https://example.com/feed.xml",
+            isMainOutlet: true,
+            languageCode: "en",
+            tags: ["Newsroom"],
+            note: nil
+        )
+
+        let articles = normalizer.normalize(items: [item], source: source)
+        #expect(articles.count == 1)
+        #expect(articles.first?.contentSource == "feed_content")
+        #expect(articles.first?.isContentLikelyComplete == true)
+        #expect(articles.first?.contentWordCount ?? 0 >= 120)
+        #expect(articles.first?.heroImageURL?.absoluteString == "https://cdn.example.com/full.jpg")
+        #expect(articles.first?.authorName == "Reporter")
+        #expect(articles.first?.externalID == "complete-body-guid")
+    }
+
+    @Test
+    func normalizerFlagsSummaryOnlyAsPartialContent() {
+        let normalizer = ArticleNormalizer()
+        let item = RSSParsedItem(
+            title: "Summary Only Story",
+            link: "https://example.com/summary-only",
+            summary: "A short summary and a read more marker.",
+            content: nil,
+            publishedAtRaw: "Tue, 01 Apr 2026 10:00:00 GMT",
+            categories: [],
+            language: "en"
+        )
+
+        let source = RSSFeedSource(
+            id: "summary-only-source",
+            outletName: "Summary Source",
+            region: .europeWide,
+            feedURLString: "https://example.com/feed.xml",
+            isMainOutlet: true,
+            languageCode: "en",
+            tags: [],
+            note: nil
+        )
+
+        let articles = normalizer.normalize(items: [item], source: source)
+        #expect(articles.count == 1)
+        #expect(articles.first?.contentSource == "feed_summary")
+        #expect(articles.first?.isContentLikelyComplete == false)
     }
 }

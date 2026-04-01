@@ -487,12 +487,24 @@ private struct DeveloperRSSArticleInspectionScreen: View {
                 VStack(alignment: .leading, spacing: 16) {
                     section(title: viewModel.rssArticleInspectorOverviewSectionTitle) {
                         infoRow(label: viewModel.rssArticleInspectorFieldID, value: article.id)
+                        infoRow(
+                            label: viewModel.rssArticleInspectorFieldExternalID,
+                            value: article.externalID ?? viewModel.rssArticleInspectorEmptyValue
+                        )
                         infoRow(label: viewModel.rssArticleInspectorFieldSource, value: article.sourceName)
                         infoRow(label: viewModel.rssArticleInspectorFieldSourceURL, value: article.sourceURL.absoluteString)
                         infoRow(label: viewModel.rssArticleInspectorFieldArticleURL, value: article.articleURL.absoluteString)
                         infoRow(
                             label: viewModel.rssArticleInspectorFieldPublishedAt,
                             value: viewModel.formattedRSSInspectionDate(article.publishedAt)
+                        )
+                        infoRow(
+                            label: viewModel.rssArticleInspectorFieldAuthor,
+                            value: article.authorName ?? viewModel.rssArticleInspectorEmptyValue
+                        )
+                        infoRow(
+                            label: viewModel.rssArticleInspectorFieldImageURL,
+                            value: article.heroImageURL?.absoluteString ?? viewModel.rssArticleInspectorEmptyValue
                         )
                         infoRow(
                             label: viewModel.rssArticleInspectorFieldLanguage,
@@ -508,6 +520,40 @@ private struct DeveloperRSSArticleInspectionScreen: View {
                                 ? viewModel.rssArticleInspectorEmptyValue
                                 : article.tags.joined(separator: ", ")
                         )
+                        infoRow(
+                            label: viewModel.rssArticleInspectorFieldContentSource,
+                            value: viewModel.rssContentSourceLabel(article.contentSource)
+                        )
+                        infoRow(
+                            label: viewModel.rssArticleInspectorFieldWordCount,
+                            value: "\(article.contentWordCount)"
+                        )
+                        infoRow(
+                            label: viewModel.rssArticleInspectorFieldLikelyComplete,
+                            value: article.isContentLikelyComplete
+                                ? viewModel.rssArticleInspectorBooleanYes
+                                : viewModel.rssArticleInspectorBooleanNo
+                        )
+
+                        if let heroImageURL = article.heroImageURL {
+                            AsyncImage(url: heroImageURL) { phase in
+                                switch phase {
+                                case let .success(image):
+                                    image
+                                        .resizable()
+                                        .scaledToFill()
+                                case .empty:
+                                    ProgressView()
+                                case .failure:
+                                    Color.gray.opacity(0.15)
+                                @unknown default:
+                                    Color.gray.opacity(0.15)
+                                }
+                            }
+                            .frame(height: 140)
+                            .frame(maxWidth: .infinity)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                        }
                     }
 
                     section(title: viewModel.rssArticleInspectorChecksSectionTitle) {
@@ -562,13 +608,18 @@ private struct DeveloperRSSArticleInspectionScreen: View {
                 value.isEmpty == false
             }
         let hasLanguage = article.language?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
+        let hasImage = article.heroImageURL != nil
+        let hasAuthor = article.authorName?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
 
         return [
             (viewModel.rssArticleInspectorCheckHasTitle, hasTitle),
             (viewModel.rssArticleInspectorCheckHasArticleURL, hasArticleURL),
             (viewModel.rssArticleInspectorCheckHasPublishedDate, hasPublishedDate),
             (viewModel.rssArticleInspectorCheckHasContent, hasContentPayload),
-            (viewModel.rssArticleInspectorCheckHasLanguage, hasLanguage)
+            (viewModel.rssArticleInspectorCheckHasLanguage, hasLanguage),
+            (viewModel.rssArticleInspectorCheckHasImage, hasImage),
+            (viewModel.rssArticleInspectorCheckHasAuthor, hasAuthor),
+            (viewModel.rssArticleInspectorCheckLikelyComplete, article.isContentLikelyComplete)
         ]
     }
 
