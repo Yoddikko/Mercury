@@ -9,6 +9,9 @@ import SwiftUI
 
 struct HomeScreen: View {
     let viewModel: HomeViewModel
+#if DEBUG
+    let developerPlaygroundViewModel: DeveloperPlaygroundViewModel
+#endif
 
     var body: some View {
         NavigationStack {
@@ -27,7 +30,7 @@ struct HomeScreen: View {
                     .padding(.vertical, 8)
                 }
 
-                Section("Feed Modes") {
+                Section(viewModel.feedModesSectionTitle) {
                     ForEach(viewModel.feedModes) { mode in
                         VStack(alignment: .leading, spacing: 4) {
                             Text(mode.title)
@@ -40,12 +43,17 @@ struct HomeScreen: View {
                     }
                 }
 
-                Section("Sample Articles") {
+                Section(viewModel.sampleArticlesSectionTitle) {
                     ForEach(viewModel.featuredArticles) { article in
                         VStack(alignment: .leading, spacing: 6) {
                             Text(article.title)
                                 .font(.headline)
-                            Text("\(article.sourceName) • \(article.category ?? "Uncategorized")")
+                            Text(
+                                viewModel.articleMetadataLine(
+                                    sourceName: article.sourceName,
+                                    category: article.category
+                                )
+                            )
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
                             if let summaryShort = article.summaryShort {
@@ -57,11 +65,32 @@ struct HomeScreen: View {
                     }
                 }
             }
-            .navigationTitle("Mercury")
+            .navigationTitle(viewModel.navigationTitle)
+#if DEBUG
+            .toolbar {
+                if viewModel.isDeveloperModeEnabled {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        NavigationLink {
+                            DeveloperPlaygroundScreen(viewModel: developerPlaygroundViewModel)
+                        } label: {
+                            Label(viewModel.developerToolsLabel, systemImage: "ladybug.fill")
+                        }
+                        .accessibilityIdentifier("home.developerTools")
+                    }
+                }
+            }
+#endif
         }
     }
 }
 
 #Preview {
+#if DEBUG
+    HomeScreen(
+        viewModel: HomeViewModel(),
+        developerPlaygroundViewModel: DeveloperPlaygroundViewModel()
+    )
+#else
     HomeScreen(viewModel: HomeViewModel())
+#endif
 }

@@ -23,7 +23,13 @@ fi
 
 if [[ "${destination}" == id=* ]]; then
   simulator_id="${destination#id=}"
+  echo "Booting simulator: ${simulator_id}"
   xcrun simctl boot "${simulator_id}" >/dev/null 2>&1 || true
+  if ! xcrun simctl bootstatus "${simulator_id}" -b; then
+    echo "Simulator failed to boot: ${simulator_id}"
+    xcrun simctl list devices | rg "${simulator_id}" || true
+    exit 1
+  fi
 fi
 
 echo "Running Mercury unit tests on destination: ${destination}"

@@ -1,0 +1,26 @@
+"home.title" = "Mercury";
+"home.subtitle" = "Mercury trasforma gli RSS in un'esperienza news strutturata e supportata dall'AI.";
+"home.navigation.title" = "Mercury";
+"home.section.feed_modes" = "Modalita feed";
+"home.section.sample_articles" = "Articoli di esempio";
+"home.article.uncategorized" = "Senza categoria";
+"home.developer_tools" = "Strumenti sviluppatore";
+"home.feed_mode.default.title" = "Feed predefinito";
+"home.feed_mode.default.detail" = "Fallback cronologico per mostrare sempre notizie, anche senza personalizzazione.";
+"home.feed_mode.personalized.title" = "Feed personalizzato";
+"home.feed_mode.personalized.detail" = "Ranking basato su categorie preferite, topic e cronologia interazioni.";
+"home.feed_mode.clustered.title" = "Feed a cluster";
+"home.feed_mode.clustered.detail" = "Raggruppamento opzionale per eventi, per ridurre articoli multipli a una sola storia rappresentativa.";
+
+"developer.playground.title" = "Developer Playground";
+"developer.playground.subtitle" = "Sandbox solo debug per testare servizi applicativi e flussi di sviluppo.";
+"developer.playground.section.ai_simulation" = "Simulazione AI";
+"developer.playground.provider" = "Provider";
+"developer.playground.prompt_input" = "Prompt";
+"developer.playground.run_simulation" = "Esegui simulazione";
+"developer.playground.section.swiftdata_sandbox" = "Sandbox SwiftData";
+"developer.playground.insert_sample_record" = "Inserisci record di esempio";
+"developer.playground.clear_records" = "Cancella record";
+"developer.playground.stored_debug_records" = "Record debug salvati: %lld";
+"developer.playground.simulation.empty" = "Inserisci un prompt per eseguire una simulazione locale.";
+"developer.playground.simulation.prefix" = "Riassunto simulato";

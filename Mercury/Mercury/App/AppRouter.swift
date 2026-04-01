@@ -12,6 +12,13 @@ struct AppRouter {
 
     @ViewBuilder
     func rootView() -> some View {
+#if DEBUG
+        HomeScreen(
+            viewModel: dependencyContainer.makeHomeViewModel(),
+            developerPlaygroundViewModel: dependencyContainer.makeDeveloperPlaygroundViewModel()
+        )
+#else
         HomeScreen(viewModel: dependencyContainer.makeHomeViewModel())
+#endif
     }
 }

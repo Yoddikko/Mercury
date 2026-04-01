@@ -1,0 +1,26 @@
+"home.title" = "Mercury";
+"home.subtitle" = "Mercury turns RSS into a structured AI-assisted news experience.";
+"home.navigation.title" = "Mercury";
+"home.section.feed_modes" = "Feed Modes";
+"home.section.sample_articles" = "Sample Articles";
+"home.article.uncategorized" = "Uncategorized";
+"home.developer_tools" = "Developer Tools";
+"home.feed_mode.default.title" = "Default Feed";
+"home.feed_mode.default.detail" = "Chronological fallback so the app always returns news, even without personalization.";
+"home.feed_mode.personalized.title" = "Personalized Feed";
+"home.feed_mode.personalized.detail" = "Ranking based on preferred categories, topics, and interaction history.";
+"home.feed_mode.clustered.title" = "Clustered Feed";
+"home.feed_mode.clustered.detail" = "Optional event grouping so multiple articles can be reduced to one representative story.";
+
+"developer.playground.title" = "Developer Playground";
+"developer.playground.subtitle" = "Debug-only sandbox to test app services and development flows.";
+"developer.playground.section.ai_simulation" = "AI Simulation";
+"developer.playground.provider" = "Provider";
+"developer.playground.prompt_input" = "Prompt input";
+"developer.playground.run_simulation" = "Run simulation";
+"developer.playground.section.swiftdata_sandbox" = "SwiftData Sandbox";
+"developer.playground.insert_sample_record" = "Insert sample record";
+"developer.playground.clear_records" = "Clear records";
+"developer.playground.stored_debug_records" = "Stored debug records: %lld";
+"developer.playground.simulation.empty" = "Enter a prompt to run a local simulation.";
+"developer.playground.simulation.prefix" = "Simulated summary";
