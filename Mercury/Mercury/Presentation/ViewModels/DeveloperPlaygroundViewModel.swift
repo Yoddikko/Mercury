@@ -64,6 +64,50 @@ struct DeveloperPlaygroundViewModel {
         String(localized: "developer.playground.clear_records", defaultValue: "Clear records")
     }
 
+    var rssDiagnosticsSectionTitle: String {
+        String(localized: "developer.playground.section.rss_diagnostics", defaultValue: "RSS Diagnostics")
+    }
+
+    var rssGroupLabel: String {
+        String(localized: "developer.playground.rss.group", defaultValue: "Group")
+    }
+
+    var rssRegionLabel: String {
+        String(localized: "developer.playground.rss.region", defaultValue: "Region")
+    }
+
+    var runRSSDiagnosticsLabel: String {
+        String(localized: "developer.playground.rss.run", defaultValue: "Run RSS diagnostics")
+    }
+
+    var runningRSSDiagnosticsLabel: String {
+        String(localized: "developer.playground.rss.running", defaultValue: "Fetching and validating feeds…")
+    }
+
+    var rssSummarySectionTitle: String {
+        String(localized: "developer.playground.rss.summary", defaultValue: "RSS Summary")
+    }
+
+    var rssMissingFeedsSectionTitle: String {
+        String(localized: "developer.playground.rss.missing_feeds", defaultValue: "No Feed URL / Invalid URL")
+    }
+
+    var rssFailedFeedsSectionTitle: String {
+        String(localized: "developer.playground.rss.failed_feeds", defaultValue: "Failed Feeds")
+    }
+
+    var rssNoArticlesSectionTitle: String {
+        String(localized: "developer.playground.rss.no_articles", defaultValue: "Feeds With No Articles")
+    }
+
+    var rssSuccessSectionTitle: String {
+        String(localized: "developer.playground.rss.success_feeds", defaultValue: "Successful Feeds")
+    }
+
+    var rssArticlesSectionTitle: String {
+        String(localized: "developer.playground.rss.articles", defaultValue: "Normalized Articles")
+    }
+
     func simulatedSummary(prompt: String, providerID: String) -> String {
         let normalizedPrompt = prompt.trimmingCharacters(in: .whitespacesAndNewlines)
         guard normalizedPrompt.isEmpty == false else {
@@ -96,5 +140,97 @@ struct DeveloperPlaygroundViewModel {
             defaultValue: "Stored debug records: %lld"
         )
         return String(format: format, locale: .current, Int64(count))
+    }
+
+    func rssSelectedOutletsLabel(count: Int) -> String {
+        let format = String(
+            localized: "developer.playground.rss.selected_outlets",
+            defaultValue: "Selected outlets: %lld"
+        )
+        return String(format: format, locale: .current, Int64(count))
+    }
+
+    func rssOutletsCheckedLabel(count: Int) -> String {
+        let format = String(
+            localized: "developer.playground.rss.outlets_checked",
+            defaultValue: "Outlets checked: %lld"
+        )
+        return String(format: format, locale: .current, Int64(count))
+    }
+
+    func rssSuccessfulFeedsLabel(count: Int) -> String {
+        let format = String(
+            localized: "developer.playground.rss.success_count",
+            defaultValue: "Successful feeds: %lld"
+        )
+        return String(format: format, locale: .current, Int64(count))
+    }
+
+    func rssNoArticlesFeedsLabel(count: Int) -> String {
+        let format = String(
+            localized: "developer.playground.rss.no_articles_count",
+            defaultValue: "Feeds with no articles: %lld"
+        )
+        return String(format: format, locale: .current, Int64(count))
+    }
+
+    func rssMissingFeedsLabel(count: Int) -> String {
+        let format = String(
+            localized: "developer.playground.rss.missing_count",
+            defaultValue: "Outlets with no feed URL: %lld"
+        )
+        return String(format: format, locale: .current, Int64(count))
+    }
+
+    func rssFailedFeedsLabel(count: Int) -> String {
+        let format = String(
+            localized: "developer.playground.rss.failed_count",
+            defaultValue: "Failed feeds: %lld"
+        )
+        return String(format: format, locale: .current, Int64(count))
+    }
+
+    func rssDeduplicatedArticlesLabel(count: Int) -> String {
+        let format = String(
+            localized: "developer.playground.rss.deduped_count",
+            defaultValue: "Deduplicated articles: %lld"
+        )
+        return String(format: format, locale: .current, Int64(count))
+    }
+
+    func rssDurationLabel(milliseconds: Int?) -> String {
+        let value = milliseconds ?? 0
+        let format = String(
+            localized: "developer.playground.rss.duration_ms",
+            defaultValue: "Last run duration: %lld ms"
+        )
+        return String(format: format, locale: .current, Int64(value))
+    }
+
+    func rssCheckCaption(result: RSSFeedCheckResult, statusTitle: String) -> String {
+        if result.status == .success {
+            let format = String(
+                localized: "developer.playground.rss.caption.success",
+                defaultValue: "%@ • %lld articles • %lld ms"
+            )
+            return String(
+                format: format,
+                locale: .current,
+                statusTitle,
+                Int64(result.articles.count),
+                Int64(result.elapsedMs)
+            )
+        }
+
+        let format = String(
+            localized: "developer.playground.rss.caption.default",
+            defaultValue: "%@ • %lld ms"
+        )
+        return String(
+            format: format,
+            locale: .current,
+            statusTitle,
+            Int64(result.elapsedMs)
+        )
     }
 }

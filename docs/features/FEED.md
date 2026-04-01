@@ -69,6 +69,40 @@ Score is based on:
 
 ---
 
+## RSS Ingestion (Debug)
+
+Debug mode includes a dedicated RSS diagnostics flow to validate ingestion quality
+without changing the production Home feed UI.
+
+### Components
+
+* `RSSFeedClient` (download XML feed data)
+* `RSSParser` (parse RSS/Atom items)
+* `ArticleNormalizer` (map raw items to `Article` + per-feed dedup)
+* `FeedRefreshService` (run grouped checks + cross-feed dedup)
+
+### Group Modes
+
+* all outlets (all documented sources)
+* main outlets (subset marked as primary)
+* by region (single selected region)
+
+### Diagnostics Output
+
+For each run, the debug screen reports:
+
+* successful feeds
+* feeds with no feed URL / invalid URL
+* request failures
+* parse failures
+* feeds with zero normalized articles
+* deduplicated normalized article list
+
+This is used to quickly verify source coverage, parser behavior, and feed health
+across regions.
+
+---
+
 ## Rules
 
 * Feed must always return content (fallback to chronological)
