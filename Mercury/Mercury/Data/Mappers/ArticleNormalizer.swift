@@ -9,11 +9,28 @@ import CryptoKit
 import Foundation
 
 struct ArticleNormalizer: Sendable {
-    func normalize(items: [RSSParsedItem], source: RSSFeedSource) -> [Article] {
+    private let logger = AppLogger.shared
+
+    func normalize(
+        items: [RSSParsedItem],
+        source: RSSFeedSource,
+        requestID: String? = nil
+    ) -> [Article] {
+        logger.debug(
+            "Starting article normalization",
+            category: .business,
+            service: "ArticleNormalizer",
+            requestID: requestID,
+            metadata: [
+                "source_id": source.id,
+                "items_in": "\(items.count)"
+            ]
+        )
+
         var deduplicatedByKey: [String: Article] = [:]
 
         for item in items {
-            guard let article = normalize(item: item, source: source) else { continue }
+            guard let article = normalize(item: item, source: source, requestID: requestID) else { continue }
             let dedupeKey = dedupeKey(for: article)
 
             if let existing = deduplicatedByKey[dedupeKey] {
@@ -26,18 +43,44 @@ struct ArticleNormalizer: Sendable {
             deduplicatedByKey[dedupeKey] = article
         }
 
-        return deduplicatedByKey.values.sorted { lhs, rhs in
+        let normalized = deduplicatedByKey.values.sorted { lhs, rhs in
             lhs.publishedAt > rhs.publishedAt
         }
+
+        logger.debug(
+            "Completed article normalization",
+            category: .business,
+            service: "ArticleNormalizer",
+            requestID: requestID,
+            metadata: [
+                "source_id": source.id,
+                "articles_out": "\(normalized.count)"
+            ]
+        )
+
+        return normalized
     }
 
     func dedupeKey(for article: Article) -> String {
         canonicalURLString(article.articleURL) ?? article.id
     }
 
-    private func normalize(item: RSSParsedItem, source: RSSFeedSource) -> Article? {
-        let cleanedTitle = sanitizeText(item.title)
-        guard cleanedTitle.isEmpty == false else { return nil }
+    private func normalize(
+        item: RSSParsedItem,
+        source: RSSFeedSource,
+        requestID: String?
+    ) -> Article? {
+        let cleanedTitle = resolvedTitle(item: item, source: source)
+        guard cleanedTitle.isEmpty == false else {
+            logger.trace(
+                "Skipped RSS item with no usable title candidates",
+                category: .business,
+                service: "ArticleNormalizer",
+                requestID: requestID,
+                metadata: ["source_id": source.id]
+            )
+            return nil
+        }
 
         let now = Date()
         let articleURL = resolvedArticleURL(item.link, fallback: source.resolvedURL)
@@ -125,6 +168,29 @@ struct ArticleNormalizer: Sendable {
         output = decodeHTMLEntities(output)
         output = output.replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
         return output.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    private func resolvedTitle(item: RSSParsedItem, source: RSSFeedSource) -> String {
+        let title = sanitizeText(item.title)
+        if title.isEmpty == false {
+            return title
+        }
+
+        let summaryFallback = sanitizeText(item.summary)
+        if summaryFallback.isEmpty == false {
+            return String(summaryFallback.prefix(120))
+        }
+
+        let contentFallback = sanitizeText(item.content)
+        if contentFallback.isEmpty == false {
+            return String(contentFallback.prefix(120))
+        }
+
+        if let link = item.link, link.isEmpty == false {
+            return source.outletName
+        }
+
+        return ""
     }
 
     private func decodeHTMLEntities(_ value: String) -> String {

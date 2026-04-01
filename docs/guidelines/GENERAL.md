@@ -124,6 +124,15 @@ If user-facing or accessibility-facing text changes and localization is not upda
 
 ---
 
+## Logging
+
+Logging should follow `/docs/guidelines/LOGGING.md`.
+
+AI should add or update logs for newly added or modified functions and
+should propagate request IDs across multi-step flows when applicable.
+
+---
+
 ## Error Handling
 
 * never fail silently

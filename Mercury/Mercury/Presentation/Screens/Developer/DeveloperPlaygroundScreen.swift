@@ -9,6 +9,7 @@
 
 import SwiftData
 import SwiftUI
+import UIKit
 
 struct DeveloperPlaygroundScreen: View {
     let viewModel: DeveloperPlaygroundViewModel
@@ -16,10 +17,16 @@ struct DeveloperPlaygroundScreen: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \StoredArticle.createdAt, order: .reverse) private var storedArticles: [StoredArticle]
     @StateObject private var rssDiagnosticsViewModel = DeveloperRSSDiagnosticsViewModel()
+    private let logger = AppLogger.shared
 
     @State private var selectedProviderID = DeveloperPlaygroundViewModel.defaultProviderID
     @State private var promptInput = ""
     @State private var simulationOutput = ""
+    @State private var storedLogEntries = 0
+    @State private var isExportingLogs = false
+    @State private var exportedLogURL: URL?
+    @State private var logExportError: String?
+    @State private var isPresentingShareSheet = false
 
     var body: some View {
         Form {
@@ -47,6 +54,18 @@ struct DeveloperPlaygroundScreen: View {
                         prompt: promptInput,
                         providerID: selectedProviderID
                     )
+                    logger.debug(
+                        "Ran local AI simulation",
+                        category: .ui,
+                        service: "DeveloperPlaygroundScreen",
+                        metadata: [
+                            "provider_id": selectedProviderID,
+                            "prompt_length": "\(promptInput.count)"
+                        ]
+                    )
+                    Task {
+                        await refreshLogEntryCount()
+                    }
                 }
                 .accessibilityIdentifier("developer.playground.run")
 
@@ -67,6 +86,15 @@ struct DeveloperPlaygroundScreen: View {
                         modelContext.insert(
                             viewModel.makeSampleStoredArticle(existingCount: storedArticles.count)
                         )
+                        logger.debug(
+                            "Inserted debug sample record",
+                            category: .database,
+                            service: "DeveloperPlaygroundScreen",
+                            metadata: ["records_before_insert": "\(storedArticles.count)"]
+                        )
+                        Task {
+                            await refreshLogEntryCount()
+                        }
                     }
                     .accessibilityIdentifier("developer.playground.insert")
 
@@ -87,6 +115,47 @@ struct DeveloperPlaygroundScreen: View {
                         }
                         .padding(.vertical, 2)
                     }
+                }
+            }
+
+            Section(viewModel.loggingSectionTitle) {
+                Text(viewModel.logEntriesLabel(count: storedLogEntries))
+                    .accessibilityIdentifier("developer.playground.logging.count")
+
+                HStack {
+                    Button(viewModel.exportLogsLabel) {
+                        Task {
+                            await exportLogs()
+                        }
+                    }
+                    .disabled(isExportingLogs)
+                    .accessibilityIdentifier("developer.playground.logging.export")
+
+                    Button(viewModel.clearLogsLabel, role: .destructive) {
+                        Task {
+                            await clearLogs()
+                        }
+                    }
+                    .accessibilityIdentifier("developer.playground.logging.clear")
+                }
+
+                if isExportingLogs {
+                    ProgressView(viewModel.exportingLogsLabel)
+                        .accessibilityIdentifier("developer.playground.logging.exporting")
+                }
+
+                if exportedLogURL != nil {
+                    Text(viewModel.logExportReadyLabel)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .accessibilityIdentifier("developer.playground.logging.ready")
+                }
+
+                if let logExportError {
+                    Text(logExportError)
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                        .accessibilityIdentifier("developer.playground.logging.error")
                 }
             }
 
@@ -197,6 +266,14 @@ struct DeveloperPlaygroundScreen: View {
         }
         .navigationTitle(viewModel.title)
         .accessibilityIdentifier("developer.playground.screen")
+        .task {
+            await refreshLogEntryCount()
+        }
+        .sheet(isPresented: $isPresentingShareSheet) {
+            if let exportedLogURL {
+                ActivityViewController(activityItems: [exportedLogURL])
+            }
+        }
     }
 
     private func feedCheckRow(for result: RSSFeedCheckResult) -> some View {
@@ -226,9 +303,64 @@ struct DeveloperPlaygroundScreen: View {
     }
 
     private func clearStoredArticles() {
+        logger.warn(
+            "Clearing debug SwiftData records",
+            category: .database,
+            service: "DeveloperPlaygroundScreen",
+            metadata: ["records_count": "\(storedArticles.count)"]
+        )
+
         for article in storedArticles {
             modelContext.delete(article)
         }
+
+        Task {
+            await refreshLogEntryCount()
+        }
+    }
+
+    private func refreshLogEntryCount() async {
+        storedLogEntries = await logger.entryCount()
+    }
+
+    private func exportLogs() async {
+        isExportingLogs = true
+        logExportError = nil
+
+        logger.info(
+            "Preparing log export from developer playground",
+            category: .filesystem,
+            service: "DeveloperPlaygroundScreen"
+        )
+
+        defer { isExportingLogs = false }
+
+        do {
+            let fileURL = try await logger.exportToTemporaryFile()
+            exportedLogURL = fileURL
+            isPresentingShareSheet = true
+            await refreshLogEntryCount()
+        } catch {
+            logExportError = error.localizedDescription
+            logger.error(
+                "Failed to export logs from developer playground",
+                category: .filesystem,
+                service: "DeveloperPlaygroundScreen",
+                metadata: ["error": error.localizedDescription]
+            )
+        }
+    }
+
+    private func clearLogs() async {
+        logger.warn(
+            "Developer requested in-memory log clear",
+            category: .filesystem,
+            service: "DeveloperPlaygroundScreen"
+        )
+        logExportError = nil
+        exportedLogURL = nil
+        await logger.clear()
+        await refreshLogEntryCount()
     }
 
     private static let articleDateFormatter: DateFormatter = {
@@ -237,6 +369,16 @@ struct DeveloperPlaygroundScreen: View {
         formatter.timeStyle = .short
         return formatter
     }()
+}
+
+private struct ActivityViewController: UIViewControllerRepresentable {
+    let activityItems: [Any]
+
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
+    }
+
+    func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
 
 #Preview {

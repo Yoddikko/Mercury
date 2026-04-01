@@ -17,14 +17,25 @@ final class DeveloperRSSDiagnosticsViewModel: ObservableObject {
     @Published private(set) var lastRunDurationMs: Int?
 
     private let feedRefreshService: FeedRefreshService
+    private let logger = AppLogger.shared
     private var activeTask: Task<Void, Never>?
     private var activeRunID: UUID?
 
     init(feedRefreshService: FeedRefreshService? = nil) {
         self.feedRefreshService = feedRefreshService ?? FeedRefreshService()
+        logger.debug(
+            "Initialized RSS diagnostics view model",
+            category: .ui,
+            service: "DeveloperRSSDiagnosticsViewModel"
+        )
     }
 
     deinit {
+        logger.debug(
+            "Deinitializing RSS diagnostics view model",
+            category: .ui,
+            service: "DeveloperRSSDiagnosticsViewModel"
+        )
         activeTask?.cancel()
     }
 
@@ -83,13 +94,29 @@ final class DeveloperRSSDiagnosticsViewModel: ObservableObject {
 
         let selectedGroupMode = selectedGroupMode
         let selectedRegion = selectedGroupMode == .byRegion ? selectedRegion : nil
+        let selectedSourcesSnapshot = selectedSources
         let runID = UUID()
         activeRunID = runID
+        let requestID = "dev-rss-\(runID.uuidString.lowercased())"
+
+        logger.info(
+            "Developer requested RSS diagnostics run",
+            category: .ui,
+            service: "DeveloperRSSDiagnosticsViewModel",
+                requestID: requestID,
+                metadata: [
+                    "group_mode": selectedGroupMode.rawValue,
+                    "selected_region": selectedRegion?.rawValue ?? "none",
+                    "selected_sources": "\(selectedSourcesSnapshot.count)"
+                ]
+        )
 
         activeTask = Task { [weak self, feedRefreshService] in
             let result = await feedRefreshService.runDiagnostics(
+                sources: selectedSourcesSnapshot,
                 groupMode: selectedGroupMode,
-                selectedRegion: selectedRegion
+                selectedRegion: selectedRegion,
+                requestID: requestID
             )
 
             let elapsedMs = Int((DispatchTime.now().uptimeNanoseconds - startedAt) / 1_000_000)
@@ -103,12 +130,29 @@ final class DeveloperRSSDiagnosticsViewModel: ObservableObject {
 
                 if Task.isCancelled {
                     self.isRunning = false
+                    self.logger.warn(
+                        "RSS diagnostics run was cancelled",
+                        category: .ui,
+                        service: "DeveloperRSSDiagnosticsViewModel",
+                        requestID: requestID
+                    )
                     return
                 }
 
                 self.latestResult = result
                 self.lastRunDurationMs = elapsedMs
                 self.isRunning = false
+                self.logger.info(
+                    "RSS diagnostics run completed",
+                    category: .ui,
+                    service: "DeveloperRSSDiagnosticsViewModel",
+                    requestID: requestID,
+                    metadata: [
+                        "checks_total": "\(result.checks.count)",
+                        "articles_out": "\(result.deduplicatedArticles.count)",
+                        "elapsed_ms": "\(elapsedMs)"
+                    ]
+                )
             }
         }
     }

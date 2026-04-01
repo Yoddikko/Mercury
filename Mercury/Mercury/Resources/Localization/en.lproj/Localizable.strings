@@ -24,6 +24,13 @@
 "developer.playground.stored_debug_records" = "Stored debug records: %lld";
 "developer.playground.simulation.empty" = "Enter a prompt to run a local simulation.";
 "developer.playground.simulation.prefix" = "Simulated summary";
+"developer.playground.section.logging" = "Logging";
+"developer.playground.logging.entries" = "Stored log entries: %lld";
+"developer.playground.logging.export" = "Export logs";
+"developer.playground.logging.exporting" = "Preparing log export…";
+"developer.playground.logging.clear" = "Clear logs";
+"developer.playground.logging.ready" = "Log file ready for sharing.";
+"developer.playground.logging.share" = "Share exported logs";
 
 "developer.playground.section.rss_diagnostics" = "RSS Diagnostics";
 "developer.playground.rss.group" = "Group";

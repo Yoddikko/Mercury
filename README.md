@@ -61,6 +61,7 @@ Start here depending on what you need:
 * [Git Workflow](docs/guidelines/GIT_WORKFLOW.md): commits, versioning, tags, and releases
 * [Testing Guidelines](docs/guidelines/TESTING.md): test policy, local commands, and CI expectations
 * [Localization Guidelines](docs/guidelines/LOCALIZATION.md): i18n, English baseline, and accessibility text rules
+* [Logging Guidelines](docs/guidelines/LOGGING.md): structured logs, categories/levels, request IDs, and export policy
 * [Branch Protection](docs/guidelines/BRANCH_PROTECTION.md): recommended GitHub protection settings
 
 ## Repository Structure
@@ -95,6 +96,7 @@ Before opening a PR, read:
 3. [Git Workflow](docs/guidelines/GIT_WORKFLOW.md)
 4. [Testing Guidelines](docs/guidelines/TESTING.md)
 5. [Localization Guidelines](docs/guidelines/LOCALIZATION.md)
+6. [Logging Guidelines](docs/guidelines/LOGGING.md)
 
 Core rules:
 
@@ -117,6 +119,7 @@ AI contributors should read the relevant guidelines first and should not commit,
 
 They should also add or update tests for behavior changes and run relevant verification when feasible.
 They should also update localization resources whenever user-facing copy or accessibility text changes.
+They should also add or update logs in new/modified functions and propagate request IDs in cross-layer flows.
 
 ## Versioning and Releases
 
@@ -143,4 +146,5 @@ The repository includes:
 * a test impact check for implementation-sensitive PRs
 * a localization impact check for implementation-sensitive PRs
 * iOS build and unit-test CI
+* centralized app logging with debug export from the developer playground
 * documented branch protection expectations

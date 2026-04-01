@@ -302,6 +302,9 @@ Mercury/
 └── Resources/
 ```
 
+`Shared/Utilities/` includes cross-cutting helpers such as `DeveloperMode` and
+the centralized `AppLogger` used across Presentation, Domain, and Data layers.
+
 ---
 
 ## 6. Core Modules
@@ -322,6 +325,7 @@ Mercury/
 * `RSSParser`
 * `ArticleNormalizer`
 * `FeedRefreshService`
+* `AppLogger` (cross-cutting diagnostics)
 
 ---
 
@@ -358,6 +362,23 @@ Mercury/
 * `AIProviderProtocol`
 * `PromptBuilder`
 * `SummaryMapper`
+
+---
+
+## 6.4 Logging and Observability
+
+### Responsibilities
+
+* emit structured logs with consistent format
+* classify events by level and category
+* propagate request IDs across multi-step flows
+* retain logs in memory for debug export
+
+### Main components
+
+* `AppLogger`
+* `AppLogStore`
+* Developer Playground logging export action (debug-only)
 * `CategoryMapper`
 
 ---

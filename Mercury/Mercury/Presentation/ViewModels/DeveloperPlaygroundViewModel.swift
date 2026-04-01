@@ -108,6 +108,38 @@ struct DeveloperPlaygroundViewModel {
         String(localized: "developer.playground.rss.articles", defaultValue: "Normalized Articles")
     }
 
+    var loggingSectionTitle: String {
+        String(localized: "developer.playground.section.logging", defaultValue: "Logging")
+    }
+
+    var exportLogsLabel: String {
+        String(localized: "developer.playground.logging.export", defaultValue: "Export logs")
+    }
+
+    var exportingLogsLabel: String {
+        String(localized: "developer.playground.logging.exporting", defaultValue: "Preparing log export…")
+    }
+
+    var clearLogsLabel: String {
+        String(localized: "developer.playground.logging.clear", defaultValue: "Clear logs")
+    }
+
+    var logExportReadyLabel: String {
+        String(localized: "developer.playground.logging.ready", defaultValue: "Log file ready for sharing.")
+    }
+
+    var logExportShareLabel: String {
+        String(localized: "developer.playground.logging.share", defaultValue: "Share exported logs")
+    }
+
+    func logEntriesLabel(count: Int) -> String {
+        let format = String(
+            localized: "developer.playground.logging.entries",
+            defaultValue: "Stored log entries: %lld"
+        )
+        return String(format: format, locale: .current, Int64(count))
+    }
+
     func simulatedSummary(prompt: String, providerID: String) -> String {
         let normalizedPrompt = prompt.trimmingCharacters(in: .whitespacesAndNewlines)
         guard normalizedPrompt.isEmpty == false else {

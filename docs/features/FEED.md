@@ -80,6 +80,7 @@ without changing the production Home feed UI.
 * `RSSParser` (parse RSS/Atom items)
 * `ArticleNormalizer` (map raw items to `Article` + per-feed dedup)
 * `FeedRefreshService` (run grouped checks + cross-feed dedup)
+* `AppLogger` (structured diagnostics with request-id propagation)
 
 ### Group Modes
 
@@ -97,6 +98,7 @@ For each run, the debug screen reports:
 * parse failures
 * feeds with zero normalized articles
 * deduplicated normalized article list
+* debug log export (text file) for troubleshooting
 
 This is used to quickly verify source coverage, parser behavior, and feed health
 across regions.

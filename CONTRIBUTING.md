@@ -12,8 +12,9 @@ Before making changes, read:
 2. `docs/guidelines/GIT_WORKFLOW.md`
 3. `docs/guidelines/TESTING.md`
 4. `docs/guidelines/LOCALIZATION.md`
-5. `docs/architecture/ARCHITECTURE.md`
-6. the relevant files under `docs/features/`, `docs/ai/`, and `docs/product/`
+5. `docs/guidelines/LOGGING.md`
+6. `docs/architecture/ARCHITECTURE.md`
+7. the relevant files under `docs/features/`, `docs/ai/`, and `docs/product/`
 
 If you are using an AI agent, also read:
 
@@ -29,6 +30,7 @@ If you are using an AI agent, also read:
 * if you change behavior or contracts, update the related docs
 * if you change behavior, add or update tests at the right level
 * if you change user-facing copy or accessibility text, update localization resources
+* if you add or modify functions, add or update logs with `AppLogger`
 
 ## Workflow
 
@@ -209,6 +211,7 @@ AI contributors should not:
 * bump versions unless explicitly asked or a release workflow requires it
 
 AI should read `docs/guidelines/TESTING.md` and `docs/guidelines/LOCALIZATION.md`, add or update tests when behavior changes, and update localization resources when user-facing copy changes.
+AI should also follow `docs/guidelines/LOGGING.md`, including request-id propagation for cross-layer flows.
 
 If AI prepares or opens a PR, it should complete the PR template instead of leaving the description empty.
 

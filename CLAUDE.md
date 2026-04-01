@@ -7,8 +7,9 @@ Start with:
 3. `docs/guidelines/GIT_WORKFLOW.md`
 4. `docs/guidelines/TESTING.md`
 5. `docs/guidelines/LOCALIZATION.md`
-6. `docs/architecture/ARCHITECTURE.md`
-7. the relevant feature, AI, and product docs
+6. `docs/guidelines/LOGGING.md`
+7. `docs/architecture/ARCHITECTURE.md`
+8. the relevant feature, AI, and product docs
 
 ## Repo Rules
 
@@ -18,6 +19,7 @@ Start with:
 * avoid unrelated redesign
 * add or update tests for behavior changes
 * if user-facing copy or accessibility text changes, update localization resources
+* for new or modified functions, add or update logs using `AppLogger`
 * run relevant local verification when feasible and explain any skipped testing
 * if preparing or opening a PR, complete the PR body; if you cannot open the PR directly, provide a fully written body ready to paste
 
