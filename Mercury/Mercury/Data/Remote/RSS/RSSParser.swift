@@ -44,6 +44,7 @@ private final class RSSXMLParserDelegate: NSObject, XMLParserDelegate {
     private struct ItemBuilder {
         var title: String?
         var link: String?
+        var atomSelfLink: String?
         var summary: String?
         var content: String?
         var publishedAtRaw: String?
@@ -97,9 +98,14 @@ private final class RSSXMLParserDelegate: NSObject, XMLParserDelegate {
 
         if name == "link" {
             let rel = attributeDict["rel"]?.lowercased()
-            let href = attributeDict["href"]
-            if let href, (rel == nil || rel == "alternate" || rel == "self"), currentItem.link == nil {
-                currentItem.link = href
+            if let href = attributeDict["href"], href.isEmpty == false {
+                if rel == nil || rel == "alternate" {
+                    if currentItem.link == nil {
+                        currentItem.link = href
+                    }
+                } else if rel == "self", currentItem.atomSelfLink == nil {
+                    currentItem.atomSelfLink = href
+                }
             }
         }
 
@@ -162,6 +168,10 @@ private final class RSSXMLParserDelegate: NSObject, XMLParserDelegate {
     }
 
     private func finishCurrentItemIfNeeded() {
+        if currentItem.link == nil {
+            currentItem.link = currentItem.atomSelfLink
+        }
+
         guard currentItem.hasMeaningfulContent else { return }
         let item = RSSParsedItem(
             title: currentItem.title,

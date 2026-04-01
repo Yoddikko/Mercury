@@ -127,7 +127,7 @@ struct DeveloperPlaygroundScreen: View {
                 }
             }
 
-            if rssDiagnosticsViewModel.latestResult != nil {
+            if rssDiagnosticsViewModel.hasResultForCurrentSelection {
                 Section(viewModel.rssSummarySectionTitle) {
                     Text(viewModel.rssOutletsCheckedLabel(count: rssDiagnosticsViewModel.checks.count))
                     Text(viewModel.rssSuccessfulFeedsLabel(count: rssDiagnosticsViewModel.successChecks.count))

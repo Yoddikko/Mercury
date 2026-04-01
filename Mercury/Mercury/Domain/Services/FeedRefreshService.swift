@@ -144,6 +144,8 @@ struct FeedRefreshService: Sendable {
 
     private func requestFailureMessage(_ error: RSSFeedClientError) -> String {
         switch error {
+        case .insecureTransport:
+            return "Feed URL must use HTTPS transport."
         case .invalidResponse:
             return "The feed response was not an HTTP response."
         case let .httpStatusCode(code):

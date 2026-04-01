@@ -139,6 +139,7 @@ struct RSSFeedBatchResult: Sendable {
 }
 
 enum RSSFeedClientError: Error, Sendable, Equatable {
+    case insecureTransport
     case invalidResponse
     case httpStatusCode(Int)
     case emptyResponseData

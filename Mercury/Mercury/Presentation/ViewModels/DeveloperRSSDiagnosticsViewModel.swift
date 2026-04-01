@@ -18,6 +18,7 @@ final class DeveloperRSSDiagnosticsViewModel: ObservableObject {
 
     private let feedRefreshService: FeedRefreshService
     private var activeTask: Task<Void, Never>?
+    private var activeRunID: UUID?
 
     init(feedRefreshService: FeedRefreshService? = nil) {
         self.feedRefreshService = feedRefreshService ?? FeedRefreshService()
@@ -66,6 +67,15 @@ final class DeveloperRSSDiagnosticsViewModel: ObservableObject {
         latestResult?.deduplicatedArticles ?? []
     }
 
+    var hasResultForCurrentSelection: Bool {
+        guard let latestResult else { return false }
+        guard latestResult.groupMode == selectedGroupMode else { return false }
+        if latestResult.groupMode == .byRegion {
+            return latestResult.selectedRegion == selectedRegion
+        }
+        return true
+    }
+
     func runDiagnostics() {
         activeTask?.cancel()
         isRunning = true
@@ -73,17 +83,29 @@ final class DeveloperRSSDiagnosticsViewModel: ObservableObject {
 
         let selectedGroupMode = selectedGroupMode
         let selectedRegion = selectedGroupMode == .byRegion ? selectedRegion : nil
+        let runID = UUID()
+        activeRunID = runID
 
-        activeTask = Task { [feedRefreshService] in
+        activeTask = Task { [weak self, feedRefreshService] in
             let result = await feedRefreshService.runDiagnostics(
                 groupMode: selectedGroupMode,
                 selectedRegion: selectedRegion
             )
 
             let elapsedMs = Int((DispatchTime.now().uptimeNanoseconds - startedAt) / 1_000_000)
-            guard Task.isCancelled == false else { return }
-
             await MainActor.run {
+                guard let self else { return }
+                guard self.activeRunID == runID else { return }
+                defer {
+                    self.activeTask = nil
+                    self.activeRunID = nil
+                }
+
+                if Task.isCancelled {
+                    self.isRunning = false
+                    return
+                }
+
                 self.latestResult = result
                 self.lastRunDurationMs = elapsedMs
                 self.isRunning = false

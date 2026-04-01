@@ -22,7 +22,7 @@ enum RSSFeedCatalog {
             id: "dw-europe",
             outlet: "Deutsche Welle – Europe",
             region: .europeWide,
-            url: "http://rss.dw.com/rdf/rss-en-eu",
+            url: "https://rss.dw.com/rdf/rss-en-eu",
             main: true,
             language: "en",
             tags: ["general", "europe"]
@@ -65,7 +65,7 @@ enum RSSFeedCatalog {
             id: "bbc-uk-frontpage",
             outlet: "BBC News – UK Front Page",
             region: .unitedKingdom,
-            url: "http://newsrss.bbc.co.uk/rss/newsonline_uk_edition/front_page/rss.xml",
+            url: "https://feeds.bbci.co.uk/news/rss.xml",
             main: true,
             language: "en",
             tags: ["general"]
@@ -74,7 +74,7 @@ enum RSSFeedCatalog {
             id: "bbc-uk-politics",
             outlet: "BBC News – UK Politics",
             region: .unitedKingdom,
-            url: "http://newsrss.bbc.co.uk/rss/newsonline_uk_edition/uk_politics/rss.xml",
+            url: "https://feeds.bbci.co.uk/news/politics/rss.xml",
             language: "en",
             tags: ["politics"]
         ),
@@ -82,7 +82,7 @@ enum RSSFeedCatalog {
             id: "bbc-world-frontpage",
             outlet: "BBC News – World Front Page",
             region: .europeWide,
-            url: "http://newsrss.bbc.co.uk/rss/newsonline_world_edition/front_page/rss.xml",
+            url: "https://feeds.bbci.co.uk/news/world/rss.xml",
             language: "en",
             tags: ["world"]
         ),
@@ -449,7 +449,7 @@ enum RSSFeedCatalog {
             id: "rai-primopiano",
             outlet: "RAI News 24 – In Primo Piano",
             region: .italy,
-            url: "http://www.rai.it/dl/portale/html/PublishingBlock-15c2c340-e282-473d-b944-661e818d667b-rss.xml",
+            url: "https://www.rai.it/dl/portale/html/PublishingBlock-15c2c340-e282-473d-b944-661e818d667b-rss.xml",
             main: true,
             language: "it",
             tags: ["general"]
@@ -476,16 +476,15 @@ enum RSSFeedCatalog {
             id: "rai-sport-feed-page",
             outlet: "RAI – Sport Feed Page",
             region: .italy,
-            url: "http://www.rai.it/dl/portale/html/rss-72135149-7f35-4e5a-bec0-e739a52952da.html",
             language: "it",
             tags: ["sports"],
-            note: "Listed in docs as feed reference; endpoint may be an HTML landing page."
+            note: "Listed in docs as feed reference; concrete XML feed endpoint not confirmed."
         ),
         source(
             id: "rai-radio-giornale",
             outlet: "RAI Radio – Giornale Radio",
             region: .italy,
-            url: "http://www.rai.it/dl/portaleAudio/Giornale_Radio_index.rss",
+            url: "https://www.rai.it/dl/portaleAudio/Giornale_Radio_index.rss",
             language: "it",
             tags: ["radio", "general"]
         ),

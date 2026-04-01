@@ -11,9 +11,13 @@ struct RSSFeedClient: Sendable {
     private let userAgent = "MercuryRSSClient/1.0"
 
     func fetchFeedData(from url: URL) async throws -> Data {
+        guard url.scheme?.lowercased() == "https" else {
+            throw RSSFeedClientError.insecureTransport
+        }
+
         var request = URLRequest(url: url)
         request.timeoutInterval = 12
-        request.cachePolicy = .reloadRevalidatingCacheData
+        request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
         request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
 
         let (data, response) = try await URLSession.shared.data(for: request)

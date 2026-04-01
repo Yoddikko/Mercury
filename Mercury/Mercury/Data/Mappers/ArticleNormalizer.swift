@@ -10,17 +10,23 @@ import Foundation
 
 struct ArticleNormalizer: Sendable {
     func normalize(items: [RSSParsedItem], source: RSSFeedSource) -> [Article] {
-        var deduplicatedKeys = Set<String>()
-        var normalizedArticles: [Article] = []
+        var deduplicatedByKey: [String: Article] = [:]
 
         for item in items {
             guard let article = normalize(item: item, source: source) else { continue }
             let dedupeKey = dedupeKey(for: article)
-            guard deduplicatedKeys.insert(dedupeKey).inserted else { continue }
-            normalizedArticles.append(article)
+
+            if let existing = deduplicatedByKey[dedupeKey] {
+                if article.publishedAt > existing.publishedAt {
+                    deduplicatedByKey[dedupeKey] = article
+                }
+                continue
+            }
+
+            deduplicatedByKey[dedupeKey] = article
         }
 
-        return normalizedArticles.sorted { lhs, rhs in
+        return deduplicatedByKey.values.sorted { lhs, rhs in
             lhs.publishedAt > rhs.publishedAt
         }
     }
@@ -35,7 +41,7 @@ struct ArticleNormalizer: Sendable {
 
         let now = Date()
         let articleURL = resolvedArticleURL(item.link, fallback: source.resolvedURL)
-        let publishedAt = RSSDateParser.parse(item.publishedAtRaw) ?? now
+        let publishedAt = RSSDateParser.parse(item.publishedAtRaw) ?? .distantPast
         let rawContent = firstNonEmpty(item.content, item.summary)
         let cleanedContent = sanitizeText(rawContent)
         let tags = Array(item.categories.prefix(6))
@@ -72,9 +78,18 @@ struct ArticleNormalizer: Sendable {
     }
 
     private func resolvedArticleURL(_ link: String?, fallback: URL?) -> URL {
-        if let link, let resolved = URL(string: link), let scheme = resolved.scheme?.lowercased(),
-           scheme == "http" || scheme == "https" {
-            return resolved
+        if let link {
+            if let resolved = URL(string: link), let scheme = resolved.scheme?.lowercased(),
+               scheme == "http" || scheme == "https" {
+                return resolved
+            }
+
+            if let fallback,
+               let resolved = URL(string: link, relativeTo: fallback)?.absoluteURL,
+               let scheme = resolved.scheme?.lowercased(),
+               scheme == "http" || scheme == "https" {
+                return resolved
+            }
         }
 
         if let fallback {
@@ -148,49 +163,36 @@ struct ArticleNormalizer: Sendable {
 }
 
 private enum RSSDateParser {
-    private static let rfc822Formatters: [DateFormatter] = {
-        let formats = [
-            "EEE, d MMM yyyy HH:mm:ss Z",
-            "EEE, d MMM yyyy HH:mm Z",
-            "EEE, d MMM yyyy HH:mm:ss zzz",
-            "EEE, d MMM yyyy HH:mm zzz"
-        ]
+    private static let rfc822Formats = [
+        "EEE, d MMM yyyy HH:mm:ss Z",
+        "EEE, d MMM yyyy HH:mm Z",
+        "EEE, d MMM yyyy HH:mm:ss zzz",
+        "EEE, d MMM yyyy HH:mm zzz"
+    ]
 
-        return formats.map { format in
-            let formatter = DateFormatter()
-            formatter.locale = Locale(identifier: "en_US_POSIX")
-            formatter.timeZone = TimeZone(secondsFromGMT: 0)
-            formatter.dateFormat = format
-            return formatter
-        }
-    }()
-
-    private static let iso8601Full: ISO8601DateFormatter = {
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        return formatter
-    }()
-
-    private static let iso8601Basic: ISO8601DateFormatter = {
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime]
-        return formatter
-    }()
+    private static let iso8601Options: [ISO8601DateFormatter.Options] = [
+        [.withInternetDateTime, .withFractionalSeconds],
+        [.withInternetDateTime]
+    ]
 
     static func parse(_ raw: String?) -> Date? {
         guard let raw else { return nil }
         let value = raw.trimmingCharacters(in: .whitespacesAndNewlines)
         guard value.isEmpty == false else { return nil }
 
-        if let date = iso8601Full.date(from: value) {
-            return date
+        for options in iso8601Options {
+            let formatter = ISO8601DateFormatter()
+            formatter.formatOptions = options
+            if let date = formatter.date(from: value) {
+                return date
+            }
         }
 
-        if let date = iso8601Basic.date(from: value) {
-            return date
-        }
-
-        for formatter in rfc822Formatters {
+        for format in rfc822Formats {
+            let formatter = DateFormatter()
+            formatter.locale = Locale(identifier: "en_US_POSIX")
+            formatter.timeZone = TimeZone(secondsFromGMT: 0)
+            formatter.dateFormat = format
             if let date = formatter.date(from: value) {
                 return date
             }
