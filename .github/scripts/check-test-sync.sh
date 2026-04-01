@@ -22,7 +22,7 @@ if [[ -z "${CHANGED_FILES}" ]]; then
 fi
 
 TESTS_REGEX='(^Mercury/MercuryTests/|^Mercury/MercuryUITests/|(^|/).*(Tests|UITests)\.swift$)'
-IGNORE_REGEX='(^\.github/|^docs/|\.md$|(^|/).*(Tests|UITests)\.swift$)'
+IGNORE_REGEX='(^\.github/|^docs/|\.md$|(^|/).*(Tests|UITests)\.swift$|(^|/).+\.xcodeproj/xcshareddata/xcschemes/.+\.xcscheme$)'
 IMPLEMENTATION_REGEX='(^App/|^Presentation/|^Application/|^Domain/|^Data/|^AI/|^Mercury/|^Sources/|(^|/).+\.swift$|(^|/).+\.plist$|(^|/).+\.xcodeproj/|(^|/).+\.xcworkspace/|^Package\.swift$)'
 
 tests_changed=0
