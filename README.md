@@ -127,5 +127,3 @@ The repository includes:
 * a test impact check for implementation-sensitive PRs
 * iOS build and unit-test CI
 * documented branch protection expectations
-
-The branch protection policy is defined, but it can only be applied after the repository is connected to GitHub.
