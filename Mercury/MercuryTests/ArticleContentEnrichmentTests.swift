@@ -55,8 +55,9 @@ struct ArticleContentEnrichmentTests {
         """
 
         let pageClient = ArticlePageClient { request in
+            let responseURL = request.url ?? URL(string: "https://example.invalid/article")!
             let response = HTTPURLResponse(
-                url: request.url!,
+                url: responseURL,
                 statusCode: 200,
                 httpVersion: nil,
                 headerFields: ["Content-Type": "text/html; charset=utf-8"]

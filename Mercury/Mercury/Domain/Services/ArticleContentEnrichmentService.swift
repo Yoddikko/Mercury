@@ -17,12 +17,12 @@ struct ArticleContentEnrichmentService: Sendable {
         pageClient: ArticlePageClient = ArticlePageClient(),
         extractor: ArticlePageContentExtractor = ArticlePageContentExtractor(),
         logger: AppLogger = .shared,
-        maxFetchesPerSource: Int = 6
+        maxFetchesPerSource: Int = 3
     ) {
         self.pageClient = pageClient
         self.extractor = extractor
         self.logger = logger
-        self.maxFetchesPerSource = maxFetchesPerSource
+        self.maxFetchesPerSource = max(0, maxFetchesPerSource)
     }
 
     func enrichArticlesIfNeeded(
