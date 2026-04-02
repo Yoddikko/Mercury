@@ -13,7 +13,7 @@ struct ArticlePageClient: Sendable {
     private let logger: AppLogger
     private let performRequest: @Sendable (URLRequest) async throws -> (Data, URLResponse)
 
-    init(
+    nonisolated init(
         logger: AppLogger = .shared,
         performRequest: @escaping @Sendable (URLRequest) async throws -> (Data, URLResponse) = { request in
             try await URLSession.shared.data(for: request)

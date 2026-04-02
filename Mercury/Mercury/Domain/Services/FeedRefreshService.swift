@@ -13,19 +13,25 @@ struct FeedRefreshService: Sendable {
     private let normalizer: ArticleNormalizer
     private let articleContentEnrichmentService: ArticleContentEnrichmentService
     private let logger: AppLogger
+    private let maxConcurrentSourceChecks: Int
+    private let maxArticlesPerSource: Int
 
     init(
         feedClient: RSSFeedClient = RSSFeedClient(),
         parser: RSSParser = RSSParser(),
         normalizer: ArticleNormalizer = ArticleNormalizer(),
         articleContentEnrichmentService: ArticleContentEnrichmentService = ArticleContentEnrichmentService(),
-        logger: AppLogger = .shared
+        logger: AppLogger = .shared,
+        maxConcurrentSourceChecks: Int = 4,
+        maxArticlesPerSource: Int = 30
     ) {
         self.feedClient = feedClient
         self.parser = parser
         self.normalizer = normalizer
         self.articleContentEnrichmentService = articleContentEnrichmentService
         self.logger = logger
+        self.maxConcurrentSourceChecks = max(1, maxConcurrentSourceChecks)
+        self.maxArticlesPerSource = max(1, maxArticlesPerSource)
     }
 
     func runDiagnostics(
@@ -64,16 +70,25 @@ struct FeedRefreshService: Sendable {
         let startedAt = DispatchTime.now().uptimeNanoseconds
         var checks: [RSSFeedCheckResult] = []
         checks.reserveCapacity(sources.count)
+        let concurrencyLimit = sources.isEmpty ? 0 : min(maxConcurrentSourceChecks, sources.count)
 
         await withTaskGroup(of: RSSFeedCheckResult.self) { group in
-            for source in sources {
+            var sourceIterator = sources.makeIterator()
+
+            for _ in 0..<concurrencyLimit {
+                guard let source = sourceIterator.next() else { break }
                 group.addTask {
                     await checkSource(source, requestID: requestID)
                 }
             }
 
-            for await check in group {
+            while let check = await group.next() {
                 checks.append(check)
+                if let nextSource = sourceIterator.next() {
+                    group.addTask {
+                        await checkSource(nextSource, requestID: requestID)
+                    }
+                }
             }
         }
 
@@ -99,6 +114,8 @@ struct FeedRefreshService: Sendable {
                 "checks_success": "\(orderedChecks.filter { $0.status == .success }.count)",
                 "checks_failed": "\(orderedChecks.filter { $0.status == .requestFailed || $0.status == .parseFailed }.count)",
                 "deduplicated_articles": "\(deduplicated.count)",
+                "max_concurrent_sources": "\(concurrencyLimit)",
+                "max_articles_per_source": "\(maxArticlesPerSource)",
                 "duration_ms": "\(elapsedMs)"
             ]
         )
@@ -168,13 +185,30 @@ struct FeedRefreshService: Sendable {
         do {
             let data = try await feedClient.fetchFeedData(from: url, requestID: sourceRequestID)
             let parsedItems = try parser.parse(data: data, requestID: sourceRequestID)
-            let articles = normalizer.normalize(
+            let normalizedArticles = normalizer.normalize(
                 items: parsedItems,
                 source: source,
                 requestID: sourceRequestID
             )
+            let articlesForDiagnostics = Array(normalizedArticles.prefix(maxArticlesPerSource))
+
+            if normalizedArticles.count > articlesForDiagnostics.count {
+                logger.trace(
+                    "Trimmed normalized articles to diagnostics cap",
+                    category: .business,
+                    service: "FeedRefreshService",
+                    requestID: sourceRequestID,
+                    metadata: [
+                        "source_id": source.id,
+                        "articles_in": "\(normalizedArticles.count)",
+                        "articles_kept": "\(articlesForDiagnostics.count)",
+                        "articles_dropped": "\(normalizedArticles.count - articlesForDiagnostics.count)"
+                    ]
+                )
+            }
+
             let enrichedArticles = await articleContentEnrichmentService.enrichArticlesIfNeeded(
-                articles,
+                articlesForDiagnostics,
                 requestID: sourceRequestID
             )
             let elapsedMs = elapsedMilliseconds(since: start)
