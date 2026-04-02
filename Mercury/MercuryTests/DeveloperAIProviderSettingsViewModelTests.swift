@@ -82,6 +82,33 @@ struct DeveloperAIProviderSettingsViewModelTests {
     }
 
     @Test @MainActor
+    func saveConfigurationAcceptsCommaSeparatedTimeout() async {
+        let configurationStore = InMemoryAIProviderConfigurationStore2(
+            initialConfiguration: completeConfiguration2(active: .openAI)
+        )
+        let credentialStore = InMemoryAIProviderCredentialStore2(
+            initialTokens: [.openAI: "token-openai"]
+        )
+        let service = AIService(
+            configurationStore: configurationStore,
+            credentialStore: credentialStore,
+            providerFactory: { context in
+                FixedAIProvider2(id: context.providerID)
+            }
+        )
+
+        let viewModel = DeveloperAIProviderSettingsViewModel(aiService: service)
+        await viewModel.load()
+        viewModel.timeoutSecondsText = "2,5"
+        await viewModel.saveConfiguration()
+
+        #expect(viewModel.errorMessage == nil)
+
+        let reloadedConfiguration = await service.loadProviderConfiguration()
+        #expect(abs(reloadedConfiguration.timeoutSeconds - 2.5) < 0.001)
+    }
+
+    @Test @MainActor
     func runChecksPopulatesSummaryCategoryAndTags() async {
         let configurationStore = InMemoryAIProviderConfigurationStore2(
             initialConfiguration: completeConfiguration2(active: .openAI)

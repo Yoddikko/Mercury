@@ -113,16 +113,15 @@ actor AIService {
 
     func saveToken(_ token: String?, for providerID: AIProviderID) throws {
         do {
-            try credentialStore.saveToken(token, for: providerID)
+            let normalizedToken = Self.normalizedToken(token)
+            try credentialStore.saveToken(normalizedToken, for: providerID)
             logger.info(
                 "Saved provider token",
                 category: .security,
                 service: "AIService",
                 metadata: [
                     "provider": providerID.rawValue,
-                    "has_token": token?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
-                        ? "true"
-                        : "false"
+                    "has_token": normalizedToken == nil ? "false" : "true"
                 ]
             )
         } catch {
@@ -141,14 +140,14 @@ actor AIService {
 
     func loadToken(for providerID: AIProviderID) throws -> String? {
         do {
-            let token = try credentialStore.loadToken(for: providerID)
+            let token = Self.normalizedToken(try credentialStore.loadToken(for: providerID))
             logger.trace(
                 "Loaded provider token state",
                 category: .security,
                 service: "AIService",
                 metadata: [
                     "provider": providerID.rawValue,
-                    "has_token": token?.isEmpty == false ? "true" : "false"
+                    "has_token": token == nil ? "false" : "true"
                 ]
             )
             return token
@@ -387,12 +386,12 @@ actor AIService {
         let model = configuration.model(for: providerID)
         let token: String?
         do {
-            token = try credentialStore.loadToken(for: providerID)
+            token = Self.normalizedToken(try credentialStore.loadToken(for: providerID))
         } catch {
             throw AIServiceError.unknown(error.localizedDescription)
         }
 
-        if providerID.requiresToken, token?.isEmpty != false {
+        if providerID.requiresToken, token == nil {
             logger.warn(
                 "Active provider missing token",
                 category: .security,
@@ -645,5 +644,11 @@ actor AIService {
         return output.sorted {
             $0.localizedCaseInsensitiveCompare($1) == .orderedAscending
         }
+    }
+
+    private static func normalizedToken(_ value: String?) -> String? {
+        guard let value else { return nil }
+        let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed.isEmpty ? nil : trimmed
     }
 }

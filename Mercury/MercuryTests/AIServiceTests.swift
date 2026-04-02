@@ -160,6 +160,39 @@ struct AIServiceTests {
     }
 
     @Test
+    func whitespaceOnlyTokenIsStoredAsMissingAndFailsFast() async {
+        let configurationStore = InMemoryAIProviderConfigurationStore(
+            initialConfiguration: completeConfiguration(active: .openAI)
+        )
+        let credentialStore = InMemoryAIProviderCredentialStore()
+
+        let service = AIService(
+            configurationStore: configurationStore,
+            credentialStore: credentialStore,
+            providerFactory: { context in
+                FixedAIProvider(id: context.providerID)
+            }
+        )
+
+        do {
+            try await service.saveToken("   ", for: .openAI)
+            let loadedToken = try await service.loadToken(for: .openAI)
+            #expect(loadedToken == nil)
+
+            _ = try await service.summarizeArticle("Body")
+            Issue.record("Expected missing token error.")
+        } catch let error as AIServiceError {
+            guard case let .missingToken(providerID) = error else {
+                Issue.record("Expected .missingToken, got \(error)")
+                return
+            }
+            #expect(providerID == .openAI)
+        } catch {
+            Issue.record("Unexpected error type: \(error)")
+        }
+    }
+
+    @Test
     func propagatesRequestIDToProvider() async throws {
         let configurationStore = InMemoryAIProviderConfigurationStore(
             initialConfiguration: completeConfiguration(active: .openAI)

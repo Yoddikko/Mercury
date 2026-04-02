@@ -328,7 +328,7 @@ final class DeveloperAIProviderSettingsViewModel: ObservableObject {
     }
 
     private func buildConfiguration() throws -> AIProviderConfiguration {
-        guard let timeoutSeconds = Double(timeoutSecondsText.trimmingCharacters(in: .whitespacesAndNewlines)),
+        guard let timeoutSeconds = parseTimeoutSeconds(timeoutSecondsText),
               timeoutSeconds > 0 else {
             throw AIServiceError.invalidConfiguration(
                 String(
@@ -349,6 +349,35 @@ final class DeveloperAIProviderSettingsViewModel: ObservableObject {
         configuration.setModel(geminiModel, for: .gemini)
         configuration.setModel(ollamaModel, for: .ollama)
         return configuration
+    }
+
+    private func parseTimeoutSeconds(_ value: String) -> Double? {
+        let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard trimmed.isEmpty == false else {
+            return nil
+        }
+
+        let localizedFormatter = NumberFormatter()
+        localizedFormatter.locale = .current
+        localizedFormatter.numberStyle = .decimal
+        if let localizedValue = localizedFormatter.number(from: trimmed)?.doubleValue {
+            return localizedValue
+        }
+
+        let currentDecimalSeparator = localizedFormatter.decimalSeparator ?? "."
+        let alternateSeparator = currentDecimalSeparator == "," ? "." : ","
+        let normalizedForCurrentLocale = trimmed.replacingOccurrences(
+            of: alternateSeparator,
+            with: currentDecimalSeparator
+        )
+        if let normalizedValue = localizedFormatter.number(from: normalizedForCurrentLocale)?.doubleValue {
+            return normalizedValue
+        }
+
+        let posixFormatter = NumberFormatter()
+        posixFormatter.locale = Locale(identifier: "en_US_POSIX")
+        posixFormatter.numberStyle = .decimal
+        return posixFormatter.number(from: trimmed)?.doubleValue
     }
 
     private func refreshTokenFlags() async {
