@@ -25,11 +25,11 @@ The app must not depend on a single provider.
 
 ```swift id="7d2k9x"
 protocol AIProvider {
-    var name: String { get }
+    var id: AIProviderID { get }
     
-    func summarize(_ text: String) async throws -> SummaryResult
-    func categorize(_ text: String) async throws -> CategoryResult
-    func generateEmbedding(_ text: String) async throws -> [Float]
+    func summarizeArticle(_ content: String, requestID: String?) async throws -> AISummaryResult
+    func categorizeArticle(_ content: String, requestID: String?) async throws -> AICategoryResult
+    func generateTags(_ content: String, requestID: String?) async throws -> [String]
 }
 ```
 
@@ -41,7 +41,7 @@ The active provider is selected based on:
 
 * user settings
 * available API tokens
-* fallback logic (optional)
+* valid provider configuration
 
 ---
 
@@ -49,20 +49,20 @@ The active provider is selected based on:
 
 ### OpenAI
 
-* supports: summarization, categorization, embeddings
+* supports: summarization, categorization, tags
 
 ---
 
 ### Claude
 
 * supports: summarization, categorization
-* [Inferenza] embedding support may vary
+* supports: tags
 
 ---
 
 ### Gemini
 
-* supports: summarization, categorization, embeddings
+* supports: summarization, categorization, tags
 
 ---
 
@@ -70,6 +70,7 @@ The active provider is selected based on:
 
 * local model support
 * requires local endpoint
+* token optional
 
 ---
 
@@ -77,11 +78,15 @@ The active provider is selected based on:
 
 Each provider requires:
 
-* API key or endpoint configuration
+* model name
+* timeout
+* endpoint (Ollama only)
+* token for OpenAI, Claude, and Gemini
 
 Suggested storage:
 
-* Keychain (for sensitive data)
+* Keychain for tokens
+* settings store for non-sensitive values
 
 ---
 
@@ -90,15 +95,17 @@ Suggested storage:
 * handle timeouts
 * handle invalid tokens
 * handle rate limits
+* map provider responses into shared `AIProviderError`
 
 ---
 
-## Fallback Strategy (Optional)
+## Fallback Strategy
 
-If provider fails:
+`AIService` is fail-fast by design:
 
-* retry
-* switch provider (if configured)
+* no automatic provider switch
+* no implicit mock fallback
+* caller decides retries or provider changes
 
 ---
 
@@ -107,10 +114,12 @@ If provider fails:
 * never call providers directly from UI
 * always go through AIService
 * normalize outputs across providers
+* keep output deterministic (`shortSummary`, `bullets`, `category`, `tags`)
 
 ---
 
 ## Notes
 
-* providers may differ in capabilities
-* abstraction layer must hide differences
+* providers may differ in response shape
+* abstraction layer hides provider-specific request/response details
+* no default models are assumed; every provider model must be explicitly configured

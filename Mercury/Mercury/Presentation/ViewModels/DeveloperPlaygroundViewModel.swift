@@ -8,20 +8,6 @@
 import Foundation
 
 struct DeveloperPlaygroundViewModel {
-    struct ProviderOption: Identifiable, Hashable {
-        let id: String
-        let displayName: String
-    }
-
-    static let defaultProviderID = "openai"
-
-    let providerOptions: [ProviderOption] = [
-        ProviderOption(id: "openai", displayName: "OpenAI"),
-        ProviderOption(id: "claude", displayName: "Claude"),
-        ProviderOption(id: "gemini", displayName: "Gemini"),
-        ProviderOption(id: "ollama", displayName: "Ollama")
-    ]
-
     var title: String {
         String(
             localized: "developer.playground.title",
@@ -36,20 +22,135 @@ struct DeveloperPlaygroundViewModel {
         )
     }
 
-    var aiSimulationSectionTitle: String {
-        String(localized: "developer.playground.section.ai_simulation", defaultValue: "AI Simulation")
+    var aiProviderConfigurationSectionTitle: String {
+        String(localized: "developer.playground.section.ai_provider_configuration", defaultValue: "AI Provider Configuration")
     }
 
-    var providerLabel: String {
-        String(localized: "developer.playground.provider", defaultValue: "Provider")
+    var aiProviderConfigurationDescription: String {
+        String(
+            localized: "developer.playground.ai_provider_configuration.description",
+            defaultValue: "Select one provider, save token, load live models, then choose one model and run checks."
+        )
     }
 
-    var promptInputLabel: String {
-        String(localized: "developer.playground.prompt_input", defaultValue: "Prompt input")
+    var aiProviderActiveProviderLabel: String {
+        String(localized: "developer.playground.ai_provider_configuration.active_provider", defaultValue: "Active provider")
     }
 
-    var runSimulationLabel: String {
-        String(localized: "developer.playground.run_simulation", defaultValue: "Run simulation")
+    var aiProviderModelsSectionTitle: String {
+        String(localized: "developer.playground.ai_provider_configuration.models_section", defaultValue: "Models")
+    }
+
+    var aiProviderModelPickerLabel: String {
+        String(localized: "developer.playground.ai_provider_configuration.model_picker", defaultValue: "Available models")
+    }
+
+    var aiProviderManualModelLabel: String {
+        String(localized: "developer.playground.ai_provider_configuration.model_manual", defaultValue: "Selected model")
+    }
+
+    var aiProviderNoModelsLoadedLabel: String {
+        String(
+            localized: "developer.playground.ai_provider_configuration.models_empty",
+            defaultValue: "No models loaded yet. Enter a token and load models."
+        )
+    }
+
+    var aiProviderOllamaEndpointLabel: String {
+        String(localized: "developer.playground.ai_provider_configuration.ollama_endpoint", defaultValue: "Ollama endpoint")
+    }
+
+    var aiProviderTimeoutLabel: String {
+        String(localized: "developer.playground.ai_provider_configuration.timeout", defaultValue: "Timeout (seconds)")
+    }
+
+    var aiProviderSaveConfigurationLabel: String {
+        String(localized: "developer.playground.ai_provider_configuration.save_configuration", defaultValue: "Save configuration")
+    }
+
+    var aiProviderSavingConfigurationLabel: String {
+        String(localized: "developer.playground.ai_provider_configuration.saving_configuration", defaultValue: "Saving configuration…")
+    }
+
+    var aiProviderCredentialsSectionTitle: String {
+        String(localized: "developer.playground.ai_provider_configuration.credentials_section", defaultValue: "Credentials")
+    }
+
+    var aiProviderOpenAITokenLabel: String {
+        String(localized: "developer.playground.ai_provider_configuration.token.openai", defaultValue: "OpenAI token")
+    }
+
+    var aiProviderClaudeTokenLabel: String {
+        String(localized: "developer.playground.ai_provider_configuration.token.claude", defaultValue: "Claude token")
+    }
+
+    var aiProviderGeminiTokenLabel: String {
+        String(localized: "developer.playground.ai_provider_configuration.token.gemini", defaultValue: "Gemini token")
+    }
+
+    var aiProviderOllamaTokenLabel: String {
+        String(localized: "developer.playground.ai_provider_configuration.token.ollama", defaultValue: "Ollama token (optional)")
+    }
+
+    var aiProviderSaveCredentialsLabel: String {
+        String(localized: "developer.playground.ai_provider_configuration.save_credentials", defaultValue: "Save credentials")
+    }
+
+    var aiProviderSavingCredentialsLabel: String {
+        String(localized: "developer.playground.ai_provider_configuration.saving_credentials", defaultValue: "Saving credentials…")
+    }
+
+    var aiProviderLoadModelsLabel: String {
+        String(localized: "developer.playground.ai_provider_configuration.load_models", defaultValue: "Load models")
+    }
+
+    var aiProviderLoadingModelsLabel: String {
+        String(localized: "developer.playground.ai_provider_configuration.loading_models", defaultValue: "Loading models…")
+    }
+
+    var aiProviderTokenPresentLabel: String {
+        String(localized: "developer.playground.ai_provider_configuration.token.present", defaultValue: "Token stored")
+    }
+
+    var aiProviderTokenMissingLabel: String {
+        String(localized: "developer.playground.ai_provider_configuration.token.missing", defaultValue: "Token missing")
+    }
+
+    func aiProviderTokenLabel(for providerID: AIProviderID) -> String {
+        switch providerID {
+        case .openAI:
+            return aiProviderOpenAITokenLabel
+        case .claude:
+            return aiProviderClaudeTokenLabel
+        case .gemini:
+            return aiProviderGeminiTokenLabel
+        case .ollama:
+            return aiProviderOllamaTokenLabel
+        }
+    }
+
+    var aiProviderCheckPromptLabel: String {
+        String(localized: "developer.playground.ai_provider_configuration.check_prompt", defaultValue: "Prompt for AI checks")
+    }
+
+    var aiProviderRunChecksLabel: String {
+        String(localized: "developer.playground.ai_provider_configuration.run_checks", defaultValue: "Run AI checks")
+    }
+
+    var aiProviderRunningChecksLabel: String {
+        String(localized: "developer.playground.ai_provider_configuration.running_checks", defaultValue: "Running AI checks…")
+    }
+
+    var aiProviderCheckSummaryLabel: String {
+        String(localized: "developer.playground.ai_provider_configuration.check_summary", defaultValue: "Summary")
+    }
+
+    var aiProviderCheckCategoryLabel: String {
+        String(localized: "developer.playground.ai_provider_configuration.check_category", defaultValue: "Category")
+    }
+
+    var aiProviderCheckTagsLabel: String {
+        String(localized: "developer.playground.ai_provider_configuration.check_tags", defaultValue: "Tags")
     }
 
     var swiftDataSandboxSectionTitle: String {
@@ -344,23 +445,8 @@ struct DeveloperPlaygroundViewModel {
         return String(format: format, locale: .current, Int64(count))
     }
 
-    func simulatedSummary(prompt: String, providerID: String) -> String {
-        let normalizedPrompt = prompt.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard normalizedPrompt.isEmpty == false else {
-            return String(
-                localized: "developer.playground.simulation.empty",
-                defaultValue: "Enter a prompt to run a local simulation."
-            )
-        }
-
-        let providerName = providerOptions.first(where: { $0.id == providerID })?.displayName ?? providerID
-        let prefix = String(
-            localized: "developer.playground.simulation.prefix",
-            defaultValue: "Simulated summary"
-        )
-        let trimmedPrompt = String(normalizedPrompt.prefix(140))
-
-        return "\(prefix) [\(providerName)]: \(trimmedPrompt)"
+    func aiProviderTokenStateLabel(hasToken: Bool) -> String {
+        hasToken ? aiProviderTokenPresentLabel : aiProviderTokenMissingLabel
     }
 
     func makeSampleStoredArticle(existingCount: Int) -> StoredArticle {

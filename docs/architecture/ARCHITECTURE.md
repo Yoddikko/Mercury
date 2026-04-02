@@ -548,11 +548,11 @@ That should remain primarily local unless a specific product reason requires clo
 
 ```swift
 protocol AIProvider {
-    var providerName: String { get }
+    var id: AIProviderID { get }
     
-    func summarizeArticle(_ content: String) async throws -> SummaryResult
-    func categorizeArticle(_ content: String) async throws -> CategoryResult
-    func tagArticle(_ content: String) async throws -> [String]
+    func summarizeArticle(_ content: String, requestID: String?) async throws -> AISummaryResult
+    func categorizeArticle(_ content: String, requestID: String?) async throws -> AICategoryResult
+    func generateTags(_ content: String, requestID: String?) async throws -> [String]
 }
 ```
 
@@ -573,6 +573,7 @@ Each provider should:
 * normalize request and response
 * expose the same interface
 * support provider-specific settings internally
+* enforce strict JSON prompt-output contracts
 
 ---
 
@@ -586,6 +587,8 @@ Example responsibilities:
 * validate token presence
 * fail gracefully
 * switch provider if user changes preference
+* propagate request IDs to provider calls
+* fail fast without auto-fallback to other providers
 
 ---
 
@@ -594,8 +597,8 @@ Example responsibilities:
 ## Suggested settings model
 
 * active provider
-* provider token
-* optional custom model name
+* provider token (Keychain)
+* explicit model name for each provider (required)
 * local Ollama endpoint
 * timeout settings
 
@@ -606,6 +609,7 @@ Example responsibilities:
 Recommended options:
 
 * for personal/dev use: local secure storage via Keychain
+* keep non-sensitive provider settings in a separate local settings store
 * for shared/public release: move sensitive provider access behind your own backend when needed
 
 ---

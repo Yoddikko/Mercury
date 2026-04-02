@@ -260,7 +260,7 @@ struct AppLogEntry: Identifiable, Sendable {
 }
 
 final class AppLogStore: @unchecked Sendable {
-    static let shared = AppLogStore(maxEntries: 5_000)
+    nonisolated static let shared = AppLogStore(maxEntries: 5_000)
 
     private let maxEntries: Int
     private var entries: [AppLogEntry] = []
@@ -270,7 +270,7 @@ final class AppLogStore: @unchecked Sendable {
         self.maxEntries = maxEntries
     }
 
-    func append(_ entry: AppLogEntry) {
+    nonisolated func append(_ entry: AppLogEntry) {
         lock.lock()
         defer { lock.unlock() }
         entries.append(entry)
@@ -279,19 +279,19 @@ final class AppLogStore: @unchecked Sendable {
         }
     }
 
-    func entryCount() -> Int {
+    nonisolated func entryCount() -> Int {
         lock.lock()
         defer { lock.unlock() }
         return entries.count
     }
 
-    func entriesSnapshot() -> [AppLogEntry] {
+    nonisolated func entriesSnapshot() -> [AppLogEntry] {
         lock.lock()
         defer { lock.unlock() }
         return entries
     }
 
-    func clear() {
+    nonisolated func clear() {
         lock.lock()
         defer { lock.unlock() }
         entries.removeAll(keepingCapacity: true)
@@ -299,12 +299,12 @@ final class AppLogStore: @unchecked Sendable {
 }
 
 struct AppLogger: Sendable {
-    static let shared = AppLogger(store: .shared)
+    nonisolated static let shared = AppLogger(store: .shared)
 
     private let store: AppLogStore
     private let minimumLevel: AppLogLevel
 
-    init(
+    nonisolated init(
         store: AppLogStore,
         minimumLevel: AppLogLevel = AppLogger.defaultMinimumLevel
     ) {
@@ -312,7 +312,7 @@ struct AppLogger: Sendable {
         self.minimumLevel = minimumLevel
     }
 
-    func trace(
+    nonisolated func trace(
         _ message: String,
         category: AppLogCategory,
         service: String,
@@ -335,7 +335,7 @@ struct AppLogger: Sendable {
         )
     }
 
-    func debug(
+    nonisolated func debug(
         _ message: String,
         category: AppLogCategory,
         service: String,
@@ -358,7 +358,7 @@ struct AppLogger: Sendable {
         )
     }
 
-    func info(
+    nonisolated func info(
         _ message: String,
         category: AppLogCategory,
         service: String,
@@ -381,7 +381,7 @@ struct AppLogger: Sendable {
         )
     }
 
-    func warn(
+    nonisolated func warn(
         _ message: String,
         category: AppLogCategory,
         service: String,
@@ -404,7 +404,7 @@ struct AppLogger: Sendable {
         )
     }
 
-    func error(
+    nonisolated func error(
         _ message: String,
         category: AppLogCategory,
         service: String,
@@ -427,7 +427,7 @@ struct AppLogger: Sendable {
         )
     }
 
-    func fatal(
+    nonisolated func fatal(
         _ message: String,
         category: AppLogCategory,
         service: String,
@@ -450,15 +450,15 @@ struct AppLogger: Sendable {
         )
     }
 
-    func entryCount() async -> Int {
+    nonisolated func entryCount() async -> Int {
         store.entryCount()
     }
 
-    func clear() async {
+    nonisolated func clear() async {
         store.clear()
     }
 
-    func exportText(minimumLevel: AppLogLevel? = nil) async -> String {
+    nonisolated func exportText(minimumLevel: AppLogLevel? = nil) async -> String {
         let entries = store.entriesSnapshot()
         let filteredEntries: [AppLogEntry]
         if let minimumLevel {
@@ -469,7 +469,7 @@ struct AppLogger: Sendable {
         return filteredEntries.map(\.formattedLine).joined(separator: "\n")
     }
 
-    func exportToTemporaryFile(minimumLevel: AppLogLevel? = nil) async throws -> URL {
+    nonisolated func exportToTemporaryFile(minimumLevel: AppLogLevel? = nil) async throws -> URL {
         let logText = await exportText(minimumLevel: minimumLevel)
         let output = logText.isEmpty ? "No logs collected yet." : logText
         let directory = FileManager.default.temporaryDirectory
@@ -485,7 +485,7 @@ struct AppLogger: Sendable {
         return fileURL
     }
 
-    private func log(
+    nonisolated private func log(
         level: AppLogLevel,
         category: AppLogCategory,
         service: String,
@@ -517,7 +517,7 @@ struct AppLogger: Sendable {
 #endif
     }
 
-    private static var defaultMinimumLevel: AppLogLevel {
+    nonisolated private static var defaultMinimumLevel: AppLogLevel {
 #if DEBUG
         .trace
 #else
@@ -525,7 +525,7 @@ struct AppLogger: Sendable {
 #endif
     }
 
-    private static func exportTimestamp(_ date: Date) -> String {
+    nonisolated private static func exportTimestamp(_ date: Date) -> String {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = .current
         let components = calendar.dateComponents(
