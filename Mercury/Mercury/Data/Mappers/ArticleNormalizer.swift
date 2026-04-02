@@ -22,7 +22,7 @@ struct ArticleNormalizer: Sendable {
 
     private let logger = AppLogger.shared
     private static let htmlImageRegex = try? NSRegularExpression(
-        pattern: "<img\\b[^>]*?\\bsrc\\s*=\\s*['\\\"]([^'\\\"]+)['\\\"][^>]*>",
+        pattern: "<img\\b[^>]*?\\bsrc\\s*=\\s*(?:['\\\"]?)([^'\\\"\\s>]+)(?:['\\\"]?)[^>]*>",
         options: [.caseInsensitive]
     )
 
@@ -304,9 +304,11 @@ struct ArticleNormalizer: Sendable {
             return absolute
         }
 
-        if trimmed.hasPrefix("//"),
-           let protocolRelative = URL(string: "https:\(trimmed)") {
-            return protocolRelative
+        if trimmed.hasPrefix("//") {
+            let scheme = resolvedHTTPFallbackScheme(from: fallback)
+            if let protocolRelative = URL(string: "\(scheme):\(trimmed)") {
+                return protocolRelative
+            }
         }
 
         if trimmed.lowercased().hasPrefix("www."),
@@ -322,6 +324,16 @@ struct ArticleNormalizer: Sendable {
         }
 
         return nil
+    }
+
+    private func resolvedHTTPFallbackScheme(from fallback: URL?) -> String {
+        guard let scheme = fallback?.scheme?.lowercased() else {
+            return "https"
+        }
+        if scheme == "http" || scheme == "https" {
+            return scheme
+        }
+        return "https"
     }
 
     private func deduplicatedNormalizedTags(_ values: [String]) -> [String] {

@@ -353,12 +353,12 @@ private final class RSSXMLParserDelegate: NSObject, XMLParserDelegate {
     }
 
     private func isImageMedia(type: String?, medium: String?, urlString: String) -> Bool {
-        if let type, type.hasPrefix("image/") {
-            return true
+        if let type {
+            return type.hasPrefix("image/")
         }
 
-        if let medium, medium == "image" {
-            return true
+        if let medium {
+            return medium == "image"
         }
 
         return hasKnownImageFileExtension(urlString)
