@@ -8,20 +8,6 @@
 import Foundation
 
 struct DeveloperPlaygroundViewModel {
-    struct ProviderOption: Identifiable, Hashable {
-        let id: String
-        let displayName: String
-    }
-
-    static let defaultProviderID = "openai"
-
-    let providerOptions: [ProviderOption] = [
-        ProviderOption(id: "openai", displayName: "OpenAI"),
-        ProviderOption(id: "claude", displayName: "Claude"),
-        ProviderOption(id: "gemini", displayName: "Gemini"),
-        ProviderOption(id: "ollama", displayName: "Ollama")
-    ]
-
     var title: String {
         String(
             localized: "developer.playground.title",
@@ -36,22 +22,6 @@ struct DeveloperPlaygroundViewModel {
         )
     }
 
-    var aiSimulationSectionTitle: String {
-        String(localized: "developer.playground.section.ai_simulation", defaultValue: "AI Simulation")
-    }
-
-    var providerLabel: String {
-        String(localized: "developer.playground.provider", defaultValue: "Provider")
-    }
-
-    var promptInputLabel: String {
-        String(localized: "developer.playground.prompt_input", defaultValue: "Prompt input")
-    }
-
-    var runSimulationLabel: String {
-        String(localized: "developer.playground.run_simulation", defaultValue: "Run simulation")
-    }
-
     var aiProviderConfigurationSectionTitle: String {
         String(localized: "developer.playground.section.ai_provider_configuration", defaultValue: "AI Provider Configuration")
     }
@@ -59,7 +29,7 @@ struct DeveloperPlaygroundViewModel {
     var aiProviderConfigurationDescription: String {
         String(
             localized: "developer.playground.ai_provider_configuration.description",
-            defaultValue: "Configure active AI provider, models, credentials, and run live provider checks."
+            defaultValue: "Select one provider, save token, load live models, then choose one model and run checks."
         )
     }
 
@@ -71,20 +41,19 @@ struct DeveloperPlaygroundViewModel {
         String(localized: "developer.playground.ai_provider_configuration.models_section", defaultValue: "Models")
     }
 
-    var aiProviderOpenAIModelLabel: String {
-        String(localized: "developer.playground.ai_provider_configuration.model.openai", defaultValue: "OpenAI model")
+    var aiProviderModelPickerLabel: String {
+        String(localized: "developer.playground.ai_provider_configuration.model_picker", defaultValue: "Available models")
     }
 
-    var aiProviderClaudeModelLabel: String {
-        String(localized: "developer.playground.ai_provider_configuration.model.claude", defaultValue: "Claude model")
+    var aiProviderManualModelLabel: String {
+        String(localized: "developer.playground.ai_provider_configuration.model_manual", defaultValue: "Selected model")
     }
 
-    var aiProviderGeminiModelLabel: String {
-        String(localized: "developer.playground.ai_provider_configuration.model.gemini", defaultValue: "Gemini model")
-    }
-
-    var aiProviderOllamaModelLabel: String {
-        String(localized: "developer.playground.ai_provider_configuration.model.ollama", defaultValue: "Ollama model")
+    var aiProviderNoModelsLoadedLabel: String {
+        String(
+            localized: "developer.playground.ai_provider_configuration.models_empty",
+            defaultValue: "No models loaded yet. Enter a token and load models."
+        )
     }
 
     var aiProviderOllamaEndpointLabel: String {
@@ -131,12 +100,33 @@ struct DeveloperPlaygroundViewModel {
         String(localized: "developer.playground.ai_provider_configuration.saving_credentials", defaultValue: "Saving credentials…")
     }
 
+    var aiProviderLoadModelsLabel: String {
+        String(localized: "developer.playground.ai_provider_configuration.load_models", defaultValue: "Load models")
+    }
+
+    var aiProviderLoadingModelsLabel: String {
+        String(localized: "developer.playground.ai_provider_configuration.loading_models", defaultValue: "Loading models…")
+    }
+
     var aiProviderTokenPresentLabel: String {
         String(localized: "developer.playground.ai_provider_configuration.token.present", defaultValue: "Token stored")
     }
 
     var aiProviderTokenMissingLabel: String {
         String(localized: "developer.playground.ai_provider_configuration.token.missing", defaultValue: "Token missing")
+    }
+
+    func aiProviderTokenLabel(for providerID: AIProviderID) -> String {
+        switch providerID {
+        case .openAI:
+            return aiProviderOpenAITokenLabel
+        case .claude:
+            return aiProviderClaudeTokenLabel
+        case .gemini:
+            return aiProviderGeminiTokenLabel
+        case .ollama:
+            return aiProviderOllamaTokenLabel
+        }
     }
 
     var aiProviderCheckPromptLabel: String {
@@ -457,25 +447,6 @@ struct DeveloperPlaygroundViewModel {
 
     func aiProviderTokenStateLabel(hasToken: Bool) -> String {
         hasToken ? aiProviderTokenPresentLabel : aiProviderTokenMissingLabel
-    }
-
-    func simulatedSummary(prompt: String, providerID: String) -> String {
-        let normalizedPrompt = prompt.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard normalizedPrompt.isEmpty == false else {
-            return String(
-                localized: "developer.playground.simulation.empty",
-                defaultValue: "Enter a prompt to run a local simulation."
-            )
-        }
-
-        let providerName = providerOptions.first(where: { $0.id == providerID })?.displayName ?? providerID
-        let prefix = String(
-            localized: "developer.playground.simulation.prefix",
-            defaultValue: "Simulated summary"
-        )
-        let trimmedPrompt = String(normalizedPrompt.prefix(140))
-
-        return "\(prefix) [\(providerName)]: \(trimmedPrompt)"
     }
 
     func makeSampleStoredArticle(existingCount: Int) -> StoredArticle {

@@ -13,13 +13,21 @@ final class DeveloperAIProviderSettingsViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var isSavingConfiguration = false
     @Published var isSavingCredentials = false
+    @Published var isFetchingModels = false
     @Published var isRunningChecks = false
 
-    @Published var activeProviderID: AIProviderID = .openAI
+    @Published var activeProviderID: AIProviderID = .openAI {
+        didSet {
+            syncAvailableModelsForActiveProvider()
+            errorMessage = nil
+            statusMessage = nil
+        }
+    }
     @Published var openAIModel = ""
     @Published var claudeModel = ""
     @Published var geminiModel = ""
     @Published var ollamaModel = ""
+    @Published var availableModels: [String] = []
     @Published var ollamaEndpoint = "http://localhost:11434"
     @Published var timeoutSecondsText = "20"
 
@@ -43,6 +51,7 @@ final class DeveloperAIProviderSettingsViewModel: ObservableObject {
 
     private let aiService: AIService
     private let logger: AppLogger
+    private var modelCatalogByProvider: [AIProviderID: [String]] = [:]
 
     init(
         aiService: AIService = AIService(),
@@ -72,6 +81,7 @@ final class DeveloperAIProviderSettingsViewModel: ObservableObject {
         let configuration = await aiService.loadProviderConfiguration()
         apply(configuration: configuration)
         await refreshTokenFlags()
+        syncAvailableModelsForActiveProvider()
 
         logger.info(
             "Loaded AI provider settings state",
@@ -106,6 +116,7 @@ final class DeveloperAIProviderSettingsViewModel: ObservableObject {
                 service: "DeveloperAIProviderSettingsViewModel",
                 metadata: ["active_provider": configuration.activeProviderID.rawValue]
             )
+            syncAvailableModelsForActiveProvider()
         } catch {
             errorMessage = error.localizedDescription
             logger.warn(
@@ -118,6 +129,10 @@ final class DeveloperAIProviderSettingsViewModel: ObservableObject {
     }
 
     func saveCredentials() async {
+        await saveActiveCredential()
+    }
+
+    func saveActiveCredential() async {
         if isSavingCredentials {
             return
         }
@@ -130,15 +145,9 @@ final class DeveloperAIProviderSettingsViewModel: ObservableObject {
         }
 
         do {
-            try await aiService.saveToken(normalizedToken(openAITokenInput), for: .openAI)
-            try await aiService.saveToken(normalizedToken(claudeTokenInput), for: .claude)
-            try await aiService.saveToken(normalizedToken(geminiTokenInput), for: .gemini)
-            try await aiService.saveToken(normalizedToken(ollamaTokenInput), for: .ollama)
-
-            openAITokenInput = ""
-            claudeTokenInput = ""
-            geminiTokenInput = ""
-            ollamaTokenInput = ""
+            let token = normalizedToken(activeTokenInput)
+            try await aiService.saveToken(token, for: activeProviderID)
+            clearActiveTokenInput()
 
             await refreshTokenFlags()
 
@@ -158,6 +167,81 @@ final class DeveloperAIProviderSettingsViewModel: ObservableObject {
                 category: .ui,
                 service: "DeveloperAIProviderSettingsViewModel",
                 metadata: ["error": error.localizedDescription]
+            )
+        }
+    }
+
+    func fetchAvailableModelsForActiveProvider() async {
+        if isFetchingModels {
+            return
+        }
+        isFetchingModels = true
+        errorMessage = nil
+        statusMessage = nil
+
+        defer {
+            isFetchingModels = false
+        }
+
+        let tokenOverride = normalizedToken(activeTokenInput)
+        let requestID = "debug-ai-models-\(UUID().uuidString.lowercased())"
+
+        logger.info(
+            "Fetching model list for active provider",
+            category: .ui,
+            service: "DeveloperAIProviderSettingsViewModel",
+            requestID: requestID,
+            metadata: [
+                "provider": activeProviderID.rawValue,
+                "has_token_override": tokenOverride == nil ? "false" : "true"
+            ]
+        )
+
+        do {
+            if tokenOverride != nil {
+                try await aiService.saveToken(tokenOverride, for: activeProviderID)
+                clearActiveTokenInput()
+                await refreshTokenFlags()
+            }
+
+            let models = try await aiService.fetchAvailableModels(
+                for: activeProviderID,
+                requestID: requestID
+            )
+            modelCatalogByProvider[activeProviderID] = models
+            availableModels = models
+
+            let currentModel = activeModel.trimmingCharacters(in: .whitespacesAndNewlines)
+            if currentModel.isEmpty || models.contains(currentModel) == false {
+                activeModel = models.first ?? ""
+            }
+
+            statusMessage = String(
+                localized: "developer.playground.ai_provider_configuration.status.models_loaded",
+                defaultValue: "Models loaded."
+            )
+
+            logger.info(
+                "Fetched model list for active provider",
+                category: .ui,
+                service: "DeveloperAIProviderSettingsViewModel",
+                requestID: requestID,
+                metadata: [
+                    "provider": activeProviderID.rawValue,
+                    "models_count": "\(models.count)"
+                ]
+            )
+        } catch {
+            errorMessage = error.localizedDescription
+            logger.warn(
+                "Failed to fetch model list for active provider",
+                category: .ui,
+                service: "DeveloperAIProviderSettingsViewModel",
+                requestID: requestID,
+                metadata: [
+                    "provider": activeProviderID.rawValue,
+                    "error": error.localizedDescription
+                ]
             )
         }
     }
@@ -272,6 +356,90 @@ final class DeveloperAIProviderSettingsViewModel: ObservableObject {
         hasClaudeToken = (try? await aiService.loadToken(for: .claude))?.isEmpty == false
         hasGeminiToken = (try? await aiService.loadToken(for: .gemini))?.isEmpty == false
         hasOllamaToken = (try? await aiService.loadToken(for: .ollama))?.isEmpty == false
+    }
+
+    private func syncAvailableModelsForActiveProvider() {
+        availableModels = modelCatalogByProvider[activeProviderID] ?? []
+    }
+
+    private func clearActiveTokenInput() {
+        switch activeProviderID {
+        case .openAI:
+            openAITokenInput = ""
+        case .claude:
+            claudeTokenInput = ""
+        case .gemini:
+            geminiTokenInput = ""
+        case .ollama:
+            ollamaTokenInput = ""
+        }
+    }
+
+    var activeModel: String {
+        get {
+            switch activeProviderID {
+            case .openAI:
+                return openAIModel
+            case .claude:
+                return claudeModel
+            case .gemini:
+                return geminiModel
+            case .ollama:
+                return ollamaModel
+            }
+        }
+        set {
+            switch activeProviderID {
+            case .openAI:
+                openAIModel = newValue
+            case .claude:
+                claudeModel = newValue
+            case .gemini:
+                geminiModel = newValue
+            case .ollama:
+                ollamaModel = newValue
+            }
+        }
+    }
+
+    var activeTokenInput: String {
+        get {
+            switch activeProviderID {
+            case .openAI:
+                return openAITokenInput
+            case .claude:
+                return claudeTokenInput
+            case .gemini:
+                return geminiTokenInput
+            case .ollama:
+                return ollamaTokenInput
+            }
+        }
+        set {
+            switch activeProviderID {
+            case .openAI:
+                openAITokenInput = newValue
+            case .claude:
+                claudeTokenInput = newValue
+            case .gemini:
+                geminiTokenInput = newValue
+            case .ollama:
+                ollamaTokenInput = newValue
+            }
+        }
+    }
+
+    var hasActiveToken: Bool {
+        switch activeProviderID {
+        case .openAI:
+            return hasOpenAIToken
+        case .claude:
+            return hasClaudeToken
+        case .gemini:
+            return hasGeminiToken
+        case .ollama:
+            return hasOllamaToken
+        }
     }
 
     private func normalizedToken(_ token: String) -> String? {

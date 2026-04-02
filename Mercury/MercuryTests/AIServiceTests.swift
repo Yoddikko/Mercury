@@ -11,6 +11,79 @@ import Testing
 
 struct AIServiceTests {
     @Test
+    func fetchAvailableModelsParsesAndDeduplicatesOpenAIResults() async throws {
+        let configurationStore = InMemoryAIProviderConfigurationStore(
+            initialConfiguration: completeConfiguration(active: .openAI)
+        )
+        let credentialStore = InMemoryAIProviderCredentialStore()
+        let responseData = Data(
+            """
+            {
+              "data": [
+                { "id": "gpt-4.1-mini" },
+                { "id": "gpt-4.1-mini" },
+                { "id": "gpt-4o-mini" }
+              ]
+            }
+            """.utf8
+        )
+
+        let service = AIService(
+            configurationStore: configurationStore,
+            credentialStore: credentialStore,
+            providerFactory: { context in
+                FixedAIProvider(id: context.providerID)
+            },
+            performRequest: { _ in
+                let responseURL = URL(string: "https://api.openai.com/v1/models")!
+                let response = HTTPURLResponse(
+                    url: responseURL,
+                    statusCode: 200,
+                    httpVersion: nil,
+                    headerFields: ["Content-Type": "application/json"]
+                )!
+                return (responseData, response)
+            }
+        )
+
+        let models = try await service.fetchAvailableModels(
+            for: .openAI,
+            tokenOverride: "token-openai"
+        )
+
+        #expect(models == ["gpt-4.1-mini", "gpt-4o-mini"])
+    }
+
+    @Test
+    func fetchAvailableModelsFailsWhenTokenMissingForCloudProvider() async {
+        let configurationStore = InMemoryAIProviderConfigurationStore(
+            initialConfiguration: completeConfiguration(active: .openAI)
+        )
+        let credentialStore = InMemoryAIProviderCredentialStore()
+
+        let service = AIService(
+            configurationStore: configurationStore,
+            credentialStore: credentialStore,
+            providerFactory: { context in
+                FixedAIProvider(id: context.providerID)
+            }
+        )
+
+        do {
+            _ = try await service.fetchAvailableModels(for: .openAI)
+            Issue.record("Expected missing token error.")
+        } catch let error as AIServiceError {
+            guard case let .missingToken(providerID) = error else {
+                Issue.record("Expected .missingToken, got \(error)")
+                return
+            }
+            #expect(providerID == .openAI)
+        } catch {
+            Issue.record("Unexpected error type: \(error)")
+        }
+    }
+
+    @Test
     func switchesActiveProviderSuccessfully() async throws {
         let configurationStore = InMemoryAIProviderConfigurationStore(
             initialConfiguration: completeConfiguration(active: .openAI)

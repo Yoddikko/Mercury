@@ -11,6 +11,53 @@ import Testing
 
 struct DeveloperAIProviderSettingsViewModelTests {
     @Test @MainActor
+    func fetchModelsForActiveProviderLoadsCatalogAndSetsModel() async {
+        let configurationStore = InMemoryAIProviderConfigurationStore2(
+            initialConfiguration: completeConfiguration2(active: .openAI)
+        )
+        let credentialStore = InMemoryAIProviderCredentialStore2()
+        let responseData = Data(
+            """
+            {
+              "data": [
+                { "id": "gpt-4.1-mini" },
+                { "id": "gpt-4o-mini" }
+              ]
+            }
+            """.utf8
+        )
+        let service = AIService(
+            configurationStore: configurationStore,
+            credentialStore: credentialStore,
+            providerFactory: { context in
+                FixedAIProvider2(id: context.providerID)
+            },
+            performRequest: { _ in
+                let responseURL = URL(string: "https://api.openai.com/v1/models")!
+                let response = HTTPURLResponse(
+                    url: responseURL,
+                    statusCode: 200,
+                    httpVersion: nil,
+                    headerFields: ["Content-Type": "application/json"]
+                )!
+                return (responseData, response)
+            }
+        )
+
+        let viewModel = DeveloperAIProviderSettingsViewModel(aiService: service)
+        await viewModel.load()
+        viewModel.openAIModel = ""
+        viewModel.openAITokenInput = "token-openai"
+
+        await viewModel.fetchAvailableModelsForActiveProvider()
+
+        #expect(viewModel.errorMessage == nil)
+        #expect(viewModel.availableModels == ["gpt-4.1-mini", "gpt-4o-mini"])
+        #expect(viewModel.openAIModel == "gpt-4.1-mini")
+        #expect(viewModel.hasOpenAIToken == true)
+    }
+
+    @Test @MainActor
     func saveConfigurationShowsValidationErrorForInvalidTimeout() async {
         let configurationStore = InMemoryAIProviderConfigurationStore2(
             initialConfiguration: completeConfiguration2(active: .openAI)
@@ -143,4 +190,3 @@ private struct FixedAIProvider2: AIProvider {
         ["AI", "News", "Product"]
     }
 }
-

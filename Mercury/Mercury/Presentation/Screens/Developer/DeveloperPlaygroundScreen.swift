@@ -37,9 +37,6 @@ struct DeveloperPlaygroundScreen: View {
     @StateObject private var aiProviderSettingsViewModel = DeveloperAIProviderSettingsViewModel()
     private let logger = AppLogger.shared
 
-    @State private var selectedProviderID = DeveloperPlaygroundViewModel.defaultProviderID
-    @State private var promptInput = ""
-    @State private var simulationOutput = ""
     @State private var storedLogEntries = 0
     @State private var isExportingLogs = false
     @State private var exportedLogURL: URL?
@@ -58,46 +55,6 @@ struct DeveloperPlaygroundScreen: View {
                     .accessibilityIdentifier("developer.playground.subtitle")
             }
 
-            Section(viewModel.aiSimulationSectionTitle) {
-                Picker(viewModel.providerLabel, selection: $selectedProviderID) {
-                    ForEach(viewModel.providerOptions) { option in
-                        Text(option.displayName).tag(option.id)
-                    }
-                }
-                .accessibilityIdentifier("developer.playground.provider")
-
-                TextField(viewModel.promptInputLabel, text: $promptInput, axis: .vertical)
-                    .lineLimit(3...6)
-                    .accessibilityIdentifier("developer.playground.prompt")
-
-                Button(viewModel.runSimulationLabel) {
-                    simulationOutput = viewModel.simulatedSummary(
-                        prompt: promptInput,
-                        providerID: selectedProviderID
-                    )
-                    logger.debug(
-                        "Ran local AI simulation",
-                        category: .ui,
-                        service: "DeveloperPlaygroundScreen",
-                        metadata: [
-                            "provider_id": selectedProviderID,
-                            "prompt_length": "\(promptInput.count)"
-                        ]
-                    )
-                    Task {
-                        await refreshLogEntryCount()
-                    }
-                }
-                .accessibilityIdentifier("developer.playground.run")
-
-                if simulationOutput.isEmpty == false {
-                    Text(simulationOutput)
-                        .font(.callout)
-                        .textSelection(.enabled)
-                        .accessibilityIdentifier("developer.playground.output")
-                }
-            }
-
             Section(viewModel.aiProviderConfigurationSectionTitle) {
                 Text(viewModel.aiProviderConfigurationDescription)
                     .font(.caption)
@@ -113,48 +70,94 @@ struct DeveloperPlaygroundScreen: View {
                 }
                 .accessibilityIdentifier("developer.playground.ai.activeProvider")
 
+                Text(viewModel.aiProviderCredentialsSectionTitle)
+                    .font(.subheadline.weight(.semibold))
+
+                tokenInputRow(
+                    title: viewModel.aiProviderTokenLabel(for: aiProviderSettingsViewModel.activeProviderID),
+                    text: Binding(
+                        get: { aiProviderSettingsViewModel.activeTokenInput },
+                        set: { aiProviderSettingsViewModel.activeTokenInput = $0 }
+                    ),
+                    hasToken: aiProviderSettingsViewModel.hasActiveToken
+                )
+                .accessibilityIdentifier("developer.playground.ai.token.active")
+
+                HStack {
+                    Button(viewModel.aiProviderSaveCredentialsLabel) {
+                        Task {
+                            await aiProviderSettingsViewModel.saveActiveCredential()
+                            await refreshLogEntryCount()
+                        }
+                    }
+                    .disabled(aiProviderSettingsViewModel.isSavingCredentials)
+                    .accessibilityIdentifier("developer.playground.ai.saveCredentials")
+
+                    Button(viewModel.aiProviderLoadModelsLabel) {
+                        Task {
+                            await aiProviderSettingsViewModel.fetchAvailableModelsForActiveProvider()
+                            await refreshLogEntryCount()
+                        }
+                    }
+                    .disabled(aiProviderSettingsViewModel.isFetchingModels)
+                    .accessibilityIdentifier("developer.playground.ai.loadModels")
+                }
+
+                if aiProviderSettingsViewModel.isSavingCredentials {
+                    ProgressView(viewModel.aiProviderSavingCredentialsLabel)
+                        .accessibilityIdentifier("developer.playground.ai.savingCredentials")
+                }
+
+                if aiProviderSettingsViewModel.isFetchingModels {
+                    ProgressView(viewModel.aiProviderLoadingModelsLabel)
+                        .accessibilityIdentifier("developer.playground.ai.loadingModels")
+                }
+
+                Divider()
+
                 Text(viewModel.aiProviderModelsSectionTitle)
                     .font(.subheadline.weight(.semibold))
 
-                TextField(
-                    viewModel.aiProviderOpenAIModelLabel,
-                    text: $aiProviderSettingsViewModel.openAIModel
-                )
-                .textInputAutocapitalization(.never)
-                .autocorrectionDisabled()
-                .accessibilityIdentifier("developer.playground.ai.model.openai")
+                if aiProviderSettingsViewModel.availableModels.isEmpty {
+                    Text(viewModel.aiProviderNoModelsLoadedLabel)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .accessibilityIdentifier("developer.playground.ai.noModels")
+                } else {
+                    Picker(
+                        viewModel.aiProviderModelPickerLabel,
+                        selection: Binding(
+                            get: { aiProviderSettingsViewModel.activeModel },
+                            set: { aiProviderSettingsViewModel.activeModel = $0 }
+                        )
+                    ) {
+                        ForEach(aiProviderSettingsViewModel.availableModels, id: \.self) { model in
+                            Text(model).tag(model)
+                        }
+                    }
+                    .accessibilityIdentifier("developer.playground.ai.modelPicker")
+                }
 
                 TextField(
-                    viewModel.aiProviderClaudeModelLabel,
-                    text: $aiProviderSettingsViewModel.claudeModel
+                    viewModel.aiProviderManualModelLabel,
+                    text: Binding(
+                        get: { aiProviderSettingsViewModel.activeModel },
+                        set: { aiProviderSettingsViewModel.activeModel = $0 }
+                    )
                 )
                 .textInputAutocapitalization(.never)
                 .autocorrectionDisabled()
-                .accessibilityIdentifier("developer.playground.ai.model.claude")
+                .accessibilityIdentifier("developer.playground.ai.model.active")
 
-                TextField(
-                    viewModel.aiProviderGeminiModelLabel,
-                    text: $aiProviderSettingsViewModel.geminiModel
-                )
-                .textInputAutocapitalization(.never)
-                .autocorrectionDisabled()
-                .accessibilityIdentifier("developer.playground.ai.model.gemini")
-
-                TextField(
-                    viewModel.aiProviderOllamaModelLabel,
-                    text: $aiProviderSettingsViewModel.ollamaModel
-                )
-                .textInputAutocapitalization(.never)
-                .autocorrectionDisabled()
-                .accessibilityIdentifier("developer.playground.ai.model.ollama")
-
-                TextField(
-                    viewModel.aiProviderOllamaEndpointLabel,
-                    text: $aiProviderSettingsViewModel.ollamaEndpoint
-                )
-                .textInputAutocapitalization(.never)
-                .autocorrectionDisabled()
-                .accessibilityIdentifier("developer.playground.ai.ollamaEndpoint")
+                if aiProviderSettingsViewModel.activeProviderID == .ollama {
+                    TextField(
+                        viewModel.aiProviderOllamaEndpointLabel,
+                        text: $aiProviderSettingsViewModel.ollamaEndpoint
+                    )
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
+                    .accessibilityIdentifier("developer.playground.ai.ollamaEndpoint")
+                }
 
                 TextField(
                     viewModel.aiProviderTimeoutLabel,
@@ -177,53 +180,6 @@ struct DeveloperPlaygroundScreen: View {
                 if aiProviderSettingsViewModel.isSavingConfiguration {
                     ProgressView(viewModel.aiProviderSavingConfigurationLabel)
                         .accessibilityIdentifier("developer.playground.ai.savingConfiguration")
-                }
-
-                Divider()
-
-                Text(viewModel.aiProviderCredentialsSectionTitle)
-                    .font(.subheadline.weight(.semibold))
-
-                tokenInputRow(
-                    title: viewModel.aiProviderOpenAITokenLabel,
-                    text: $aiProviderSettingsViewModel.openAITokenInput,
-                    hasToken: aiProviderSettingsViewModel.hasOpenAIToken
-                )
-                .accessibilityIdentifier("developer.playground.ai.token.openai")
-
-                tokenInputRow(
-                    title: viewModel.aiProviderClaudeTokenLabel,
-                    text: $aiProviderSettingsViewModel.claudeTokenInput,
-                    hasToken: aiProviderSettingsViewModel.hasClaudeToken
-                )
-                .accessibilityIdentifier("developer.playground.ai.token.claude")
-
-                tokenInputRow(
-                    title: viewModel.aiProviderGeminiTokenLabel,
-                    text: $aiProviderSettingsViewModel.geminiTokenInput,
-                    hasToken: aiProviderSettingsViewModel.hasGeminiToken
-                )
-                .accessibilityIdentifier("developer.playground.ai.token.gemini")
-
-                tokenInputRow(
-                    title: viewModel.aiProviderOllamaTokenLabel,
-                    text: $aiProviderSettingsViewModel.ollamaTokenInput,
-                    hasToken: aiProviderSettingsViewModel.hasOllamaToken
-                )
-                .accessibilityIdentifier("developer.playground.ai.token.ollama")
-
-                Button(viewModel.aiProviderSaveCredentialsLabel) {
-                    Task {
-                        await aiProviderSettingsViewModel.saveCredentials()
-                        await refreshLogEntryCount()
-                    }
-                }
-                .disabled(aiProviderSettingsViewModel.isSavingCredentials)
-                .accessibilityIdentifier("developer.playground.ai.saveCredentials")
-
-                if aiProviderSettingsViewModel.isSavingCredentials {
-                    ProgressView(viewModel.aiProviderSavingCredentialsLabel)
-                        .accessibilityIdentifier("developer.playground.ai.savingCredentials")
                 }
 
                 Divider()
