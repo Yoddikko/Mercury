@@ -140,8 +140,16 @@ struct DeveloperPlaygroundViewModel {
         String(localized: "developer.playground.rss.article_inspector.section.content", defaultValue: "Content")
     }
 
+    var rssArticleInspectorPageFetchSectionTitle: String {
+        String(localized: "developer.playground.rss.article_inspector.section.page_fetch", defaultValue: "Article Page Fetch")
+    }
+
     var rssArticleInspectorFieldID: String {
         String(localized: "developer.playground.rss.article_inspector.field.id", defaultValue: "ID")
+    }
+
+    var rssArticleInspectorFieldExternalID: String {
+        String(localized: "developer.playground.rss.article_inspector.field.external_id", defaultValue: "External ID")
     }
 
     var rssArticleInspectorFieldSource: String {
@@ -162,6 +170,14 @@ struct DeveloperPlaygroundViewModel {
 
     var rssArticleInspectorFieldLanguage: String {
         String(localized: "developer.playground.rss.article_inspector.field.language", defaultValue: "Language")
+    }
+
+    var rssArticleInspectorFieldAuthor: String {
+        String(localized: "developer.playground.rss.article_inspector.field.author", defaultValue: "Author")
+    }
+
+    var rssArticleInspectorFieldImageURL: String {
+        String(localized: "developer.playground.rss.article_inspector.field.image_url", defaultValue: "Image URL")
     }
 
     var rssArticleInspectorFieldCategory: String {
@@ -188,6 +204,22 @@ struct DeveloperPlaygroundViewModel {
         String(localized: "developer.playground.rss.article_inspector.field.summary_bullets", defaultValue: "Summary Bullets")
     }
 
+    var rssArticleInspectorFieldContentSource: String {
+        String(localized: "developer.playground.rss.article_inspector.field.content_source", defaultValue: "Content Source")
+    }
+
+    var rssArticleInspectorFieldWordCount: String {
+        String(localized: "developer.playground.rss.article_inspector.field.word_count", defaultValue: "Word Count")
+    }
+
+    var rssArticleInspectorFieldLikelyComplete: String {
+        String(localized: "developer.playground.rss.article_inspector.field.likely_complete", defaultValue: "Likely Complete Body")
+    }
+
+    var rssArticleInspectorFieldDisplayedContent: String {
+        String(localized: "developer.playground.rss.article_inspector.field.displayed_content", defaultValue: "Displayed Content")
+    }
+
     var rssArticleInspectorCheckHasTitle: String {
         String(localized: "developer.playground.rss.article_inspector.check.has_title", defaultValue: "Title is present")
     }
@@ -208,6 +240,42 @@ struct DeveloperPlaygroundViewModel {
         String(localized: "developer.playground.rss.article_inspector.check.has_language", defaultValue: "Language is present")
     }
 
+    var rssArticleInspectorCheckHasImage: String {
+        String(localized: "developer.playground.rss.article_inspector.check.has_image", defaultValue: "Image is present")
+    }
+
+    var rssArticleInspectorCheckHasAuthor: String {
+        String(localized: "developer.playground.rss.article_inspector.check.has_author", defaultValue: "Author is present")
+    }
+
+    var rssArticleInspectorCheckLikelyComplete: String {
+        String(localized: "developer.playground.rss.article_inspector.check.likely_complete", defaultValue: "Body looks complete")
+    }
+
+    var rssArticleInspectorContentSourceFeedContent: String {
+        String(localized: "developer.playground.rss.article_inspector.content_source.feed_content", defaultValue: "Feed full-content field")
+    }
+
+    var rssArticleInspectorContentSourceFeedSummary: String {
+        String(localized: "developer.playground.rss.article_inspector.content_source.feed_summary", defaultValue: "Feed summary/description")
+    }
+
+    var rssArticleInspectorContentSourceArticlePage: String {
+        String(localized: "developer.playground.rss.article_inspector.content_source.article_page", defaultValue: "Article page extraction")
+    }
+
+    var rssArticleInspectorContentSourceNone: String {
+        String(localized: "developer.playground.rss.article_inspector.content_source.none", defaultValue: "Unavailable")
+    }
+
+    var rssArticleInspectorBooleanYes: String {
+        String(localized: "developer.playground.rss.article_inspector.boolean.yes", defaultValue: "Yes")
+    }
+
+    var rssArticleInspectorBooleanNo: String {
+        String(localized: "developer.playground.rss.article_inspector.boolean.no", defaultValue: "No")
+    }
+
     var rssArticleInspectorEmptyValue: String {
         String(localized: "developer.playground.rss.article_inspector.empty_value", defaultValue: "-")
     }
@@ -218,6 +286,30 @@ struct DeveloperPlaygroundViewModel {
 
     var rssArticleInspectorNoBulletsValue: String {
         String(localized: "developer.playground.rss.article_inspector.no_bullets", defaultValue: "No bullets available.")
+    }
+
+    var rssArticleInspectorFetchFullTextLabel: String {
+        String(localized: "developer.playground.rss.article_inspector.fetch_full_text", defaultValue: "Fetch full article text")
+    }
+
+    var rssArticleInspectorRefetchFullTextLabel: String {
+        String(localized: "developer.playground.rss.article_inspector.refetch_full_text", defaultValue: "Refetch article text")
+    }
+
+    var rssArticleInspectorFetchingFullTextLabel: String {
+        String(localized: "developer.playground.rss.article_inspector.fetching_full_text", defaultValue: "Fetching article page content…")
+    }
+
+    var rssArticleInspectorFullTextReadyLabel: String {
+        String(localized: "developer.playground.rss.article_inspector.full_text_ready", defaultValue: "Full article content loaded from page.")
+    }
+
+    var rssArticleInspectorDisplayedContentFeed: String {
+        String(localized: "developer.playground.rss.article_inspector.displayed_content.feed", defaultValue: "Feed payload")
+    }
+
+    var rssArticleInspectorDisplayedContentArticlePage: String {
+        String(localized: "developer.playground.rss.article_inspector.displayed_content.article_page", defaultValue: "Article page fetch")
     }
 
     var loggingSectionTitle: String {
@@ -380,6 +472,33 @@ struct DeveloperPlaygroundViewModel {
 
     func formattedRSSInspectionDate(_ date: Date) -> String {
         Self.rssInspectionDateFormatter.string(from: date)
+    }
+
+    func rssContentSourceLabel(_ source: String) -> String {
+        switch source {
+        case "feed_content":
+            return rssArticleInspectorContentSourceFeedContent
+        case "feed_summary":
+            return rssArticleInspectorContentSourceFeedSummary
+        case "article_page":
+            return rssArticleInspectorContentSourceArticlePage
+        default:
+            return rssArticleInspectorContentSourceNone
+        }
+    }
+
+    func rssDisplayedContentLabel(isUsingArticlePageFetch: Bool) -> String {
+        isUsingArticlePageFetch
+            ? rssArticleInspectorDisplayedContentArticlePage
+            : rssArticleInspectorDisplayedContentFeed
+    }
+
+    func rssArticleInspectorFetchErrorMessage(_ message: String) -> String {
+        let format = String(
+            localized: "developer.playground.rss.article_inspector.fetch_error",
+            defaultValue: "Unable to fetch full article text: %@"
+        )
+        return String(format: format, locale: .current, message)
     }
 
     private static let rssInspectionDateFormatter: DateFormatter = {

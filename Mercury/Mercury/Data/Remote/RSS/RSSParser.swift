@@ -15,6 +15,33 @@ struct RSSParsedItem: Equatable, Sendable {
     let publishedAtRaw: String?
     let categories: [String]
     let language: String?
+    let guid: String?
+    let author: String?
+    let imageURL: String?
+
+    init(
+        title: String?,
+        link: String?,
+        summary: String?,
+        content: String?,
+        publishedAtRaw: String?,
+        categories: [String],
+        language: String?,
+        guid: String? = nil,
+        author: String? = nil,
+        imageURL: String? = nil
+    ) {
+        self.title = title
+        self.link = link
+        self.summary = summary
+        self.content = content
+        self.publishedAtRaw = publishedAtRaw
+        self.categories = categories
+        self.language = language
+        self.guid = guid
+        self.author = author
+        self.imageURL = imageURL
+    }
 }
 
 struct RSSParser: Sendable {
@@ -72,13 +99,17 @@ private final class RSSXMLParserDelegate: NSObject, XMLParserDelegate {
         var link: String?
         var atomSelfLink: String?
         var summary: String?
+        var description: String?
         var content: String?
         var publishedAtRaw: String?
         var categories: [String] = []
         var language: String?
+        var guid: String?
+        var author: String?
+        var imageCandidates: [String] = []
 
         var hasMeaningfulContent: Bool {
-            [title, link, summary, content, publishedAtRaw].contains { value in
+            [title, link, summary, description, content, publishedAtRaw, guid].contains { value in
                 guard let value else { return false }
                 return value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
             }
@@ -91,6 +122,7 @@ private final class RSSXMLParserDelegate: NSObject, XMLParserDelegate {
     private var feedLanguage: String?
 
     private var isInsideItem = false
+    private var isInsideAtomAuthor = false
     private var currentItem = ItemBuilder()
     private var textBuffer = ""
 
@@ -120,9 +152,12 @@ private final class RSSXMLParserDelegate: NSObject, XMLParserDelegate {
         }
 
         guard isInsideItem else { return }
-        guard feedType == .atom else { return }
 
-        if name == "link" {
+        if name == "author", feedType == .atom {
+            isInsideAtomAuthor = true
+        }
+
+        if name == "link", feedType == .atom {
             let rel = attributeDict["rel"]?.lowercased()
             if let href = attributeDict["href"], href.isEmpty == false {
                 if rel == nil || rel == "alternate" {
@@ -131,12 +166,44 @@ private final class RSSXMLParserDelegate: NSObject, XMLParserDelegate {
                     }
                 } else if rel == "self", currentItem.atomSelfLink == nil {
                     currentItem.atomSelfLink = href
+                } else if rel == "enclosure" {
+                    let type = attributeDict["type"]?.lowercased()
+                    if isImageMedia(type: type, medium: nil, urlString: href) {
+                        appendImageCandidateIfPresent(href)
+                    }
                 }
             }
         }
 
         if name == "category", let term = attributeDict["term"], term.isEmpty == false {
             currentItem.categories.append(term)
+        }
+
+        if name == "enclosure" {
+            let type = attributeDict["type"]?.lowercased() ?? ""
+            if type.hasPrefix("image/"), let url = attributeDict["url"], url.isEmpty == false {
+                appendImageCandidateIfPresent(url)
+            }
+        }
+
+        if name == "media:content" {
+            let type = attributeDict["type"]?.lowercased()
+            let medium = attributeDict["medium"]?.lowercased()
+            if let url = attributeDict["url"], isImageMedia(type: type, medium: medium, urlString: url) {
+                appendImageCandidateIfPresent(url)
+            }
+        }
+
+        if name == "media:thumbnail" {
+            if let url = attributeDict["url"], url.isEmpty == false {
+                appendImageCandidateIfPresent(url)
+            }
+        }
+
+        if name == "itunes:image" {
+            if let href = attributeDict["href"], href.isEmpty == false {
+                appendImageCandidateIfPresent(href)
+            }
         }
     }
 
@@ -166,9 +233,11 @@ private final class RSSXMLParserDelegate: NSObject, XMLParserDelegate {
                 if feedType == .rss {
                     assignIfPresent(value, to: &currentItem.link)
                 }
-            case "description", "summary":
+            case "description":
+                assignIfPresent(value, to: &currentItem.description)
+            case "summary":
                 assignIfPresent(value, to: &currentItem.summary)
-            case "content:encoded", "content":
+            case "content:encoded", "content", "content:fulltext", "fulltext", "full-content":
                 assignIfPresent(value, to: &currentItem.content)
             case "pubdate", "published", "updated", "dc:date":
                 assignIfPresent(value, to: &currentItem.publishedAtRaw)
@@ -178,9 +247,27 @@ private final class RSSXMLParserDelegate: NSObject, XMLParserDelegate {
                 }
             case "language", "dc:language":
                 assignIfPresent(value, to: &currentItem.language)
+            case "guid", "id":
+                assignIfPresent(value, to: &currentItem.guid)
+            case "author":
+                if isInsideAtomAuthor == false || feedType == .rss {
+                    assignIfPresent(value, to: &currentItem.author)
+                }
+                if feedType == .atom {
+                    isInsideAtomAuthor = false
+                }
+            case "dc:creator":
+                assignIfPresent(value, to: &currentItem.author)
+            case "name":
+                if isInsideAtomAuthor {
+                    assignIfPresent(value, to: &currentItem.author)
+                }
+            case "media:description":
+                assignIfPresent(value, to: &currentItem.description)
             case "item", "entry":
                 finishCurrentItemIfNeeded()
                 isInsideItem = false
+                isInsideAtomAuthor = false
             default:
                 break
             }
@@ -199,14 +286,18 @@ private final class RSSXMLParserDelegate: NSObject, XMLParserDelegate {
         }
 
         guard currentItem.hasMeaningfulContent else { return }
+        let mergedSummary = firstNonEmpty(currentItem.summary, currentItem.description)
         let item = RSSParsedItem(
             title: currentItem.title,
             link: currentItem.link,
-            summary: currentItem.summary,
+            summary: mergedSummary,
             content: currentItem.content,
             publishedAtRaw: currentItem.publishedAtRaw,
             categories: deduplicated(currentItem.categories),
-            language: currentItem.language ?? feedLanguage
+            language: currentItem.language ?? feedLanguage,
+            guid: currentItem.guid,
+            author: currentItem.author,
+            imageURL: deduplicated(currentItem.imageCandidates).first
         )
         items.append(item)
     }
@@ -227,6 +318,29 @@ private final class RSSXMLParserDelegate: NSObject, XMLParserDelegate {
         }
     }
 
+    private func appendImageCandidateIfPresent(_ value: String?) {
+        guard let value else { return }
+        let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard trimmed.isEmpty == false else { return }
+        currentItem.imageCandidates.append(trimmed)
+    }
+
+    private func firstNonEmpty(_ first: String?, _ second: String?) -> String? {
+        if let first {
+            let trimmed = first.trimmingCharacters(in: .whitespacesAndNewlines)
+            if trimmed.isEmpty == false {
+                return trimmed
+            }
+        }
+        if let second {
+            let trimmed = second.trimmingCharacters(in: .whitespacesAndNewlines)
+            if trimmed.isEmpty == false {
+                return trimmed
+            }
+        }
+        return nil
+    }
+
     private func deduplicated(_ values: [String]) -> [String] {
         var seen = Set<String>()
         return values.compactMap { value in
@@ -236,5 +350,28 @@ private final class RSSXMLParserDelegate: NSObject, XMLParserDelegate {
             guard seen.insert(lowered).inserted else { return nil }
             return normalized
         }
+    }
+
+    private func isImageMedia(type: String?, medium: String?, urlString: String) -> Bool {
+        if let type {
+            return type.hasPrefix("image/")
+        }
+
+        if let medium {
+            return medium == "image"
+        }
+
+        return hasKnownImageFileExtension(urlString)
+    }
+
+    private func hasKnownImageFileExtension(_ urlString: String) -> Bool {
+        guard let url = URL(string: urlString) else { return false }
+        let pathExtension = url.pathExtension.lowercased()
+        guard pathExtension.isEmpty == false else { return false }
+
+        let knownImageExtensions: Set<String> = [
+            "jpg", "jpeg", "png", "webp", "gif", "bmp", "tiff", "svg", "avif", "heic", "heif"
+        ]
+        return knownImageExtensions.contains(pathExtension)
     }
 }

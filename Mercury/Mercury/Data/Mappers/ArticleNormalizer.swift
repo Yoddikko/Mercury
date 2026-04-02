@@ -9,7 +9,22 @@ import CryptoKit
 import Foundation
 
 struct ArticleNormalizer: Sendable {
+    private enum FeedContentSource: String {
+        case feedContent = "feed_content"
+        case feedSummary = "feed_summary"
+        case unavailable = "none"
+    }
+
+    private struct ResolvedContent {
+        let raw: String?
+        let source: FeedContentSource
+    }
+
     private let logger = AppLogger.shared
+    private static let htmlImageRegex = try? NSRegularExpression(
+        pattern: "<img\\b[^>]*?\\bsrc\\s*=\\s*(?:['\\\"]?)([^'\\\"\\s>]+)(?:['\\\"]?)[^>]*>",
+        options: [.caseInsensitive]
+    )
 
     func normalize(
         items: [RSSParsedItem],
@@ -85,12 +100,23 @@ struct ArticleNormalizer: Sendable {
         let now = Date()
         let articleURL = resolvedArticleURL(item.link, fallback: source.resolvedURL)
         let publishedAt = RSSDateParser.parse(item.publishedAtRaw) ?? .distantPast
-        let rawContent = firstNonEmpty(item.content, item.summary)
+        let resolvedContent = resolvedContent(for: item)
+        let rawContent = resolvedContent.raw
         let cleanedContent = sanitizeText(rawContent)
-        let tags = Array(item.categories.prefix(6))
+        let contentWordCount = wordCount(in: cleanedContent)
+        let likelyCompleteContent = isLikelyCompleteContent(
+            rawContent: rawContent,
+            cleanedContent: cleanedContent,
+            source: resolvedContent.source
+        )
+        let tags = deduplicatedNormalizedTags(item.categories + source.tags)
+        let summaryShort = resolvedSummaryShort(item: item, cleanedContent: cleanedContent)
+        let authorName = sanitizedOptionalText(item.author)
+        let heroImageURL = resolvedHeroImageURL(item: item, articleURL: articleURL, sourceURL: source.resolvedURL)
 
         let idSeed = [
             source.id,
+            item.guid ?? "",
             canonicalURLString(articleURL) ?? "",
             cleanedTitle.lowercased()
         ].joined(separator: "|")
@@ -100,14 +126,20 @@ struct ArticleNormalizer: Sendable {
 
         return Article(
             id: stableID,
+            externalID: sanitizedOptionalText(item.guid),
             title: cleanedTitle,
             sourceName: source.outletName,
             sourceURL: sourceURL,
             articleURL: articleURL,
             publishedAt: publishedAt,
+            authorName: authorName,
+            heroImageURL: heroImageURL,
             rawContent: rawContent,
             cleanedContent: cleanedContent.isEmpty ? nil : cleanedContent,
-            summaryShort: nil,
+            contentSource: resolvedContent.source.rawValue,
+            contentWordCount: contentWordCount,
+            isContentLikelyComplete: likelyCompleteContent,
+            summaryShort: summaryShort,
             summaryBullets: [],
             category: tags.first,
             tags: tags,
@@ -142,6 +174,18 @@ struct ArticleNormalizer: Sendable {
         return URL(string: "https://example.invalid/")!
     }
 
+    private func resolvedContent(for item: RSSParsedItem) -> ResolvedContent {
+        if let content = firstNonEmpty(item.content, nil) {
+            return ResolvedContent(raw: content, source: .feedContent)
+        }
+
+        if let summary = firstNonEmpty(item.summary, nil) {
+            return ResolvedContent(raw: summary, source: .feedSummary)
+        }
+
+        return ResolvedContent(raw: nil, source: .unavailable)
+    }
+
     private func canonicalURLString(_ url: URL) -> String? {
         guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
             return nil
@@ -170,6 +214,11 @@ struct ArticleNormalizer: Sendable {
         return output.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
+    private func sanitizedOptionalText(_ value: String?) -> String? {
+        let sanitized = sanitizeText(value)
+        return sanitized.isEmpty ? nil : sanitized
+    }
+
     private func resolvedTitle(item: RSSParsedItem, source: RSSFeedSource) -> String {
         let title = sanitizeText(item.title)
         if title.isEmpty == false {
@@ -191,6 +240,153 @@ struct ArticleNormalizer: Sendable {
         }
 
         return ""
+    }
+
+    private func resolvedSummaryShort(item: RSSParsedItem, cleanedContent: String) -> String? {
+        let explicitSummary = sanitizeText(item.summary)
+        if explicitSummary.isEmpty == false {
+            return String(explicitSummary.prefix(280))
+        }
+
+        if cleanedContent.isEmpty == false {
+            if cleanedContent.count <= 280 {
+                return cleanedContent
+            }
+            let snippet = String(cleanedContent.prefix(280)).trimmingCharacters(in: .whitespacesAndNewlines)
+            return snippet.isEmpty ? nil : "\(snippet)…"
+        }
+
+        return nil
+    }
+
+    private func resolvedHeroImageURL(
+        item: RSSParsedItem,
+        articleURL: URL,
+        sourceURL: URL?
+    ) -> URL? {
+        let directCandidate = sanitizedOptionalText(item.imageURL)
+        let contentCandidate = firstImageSourceInHTML(item.content)
+        let summaryCandidate = firstImageSourceInHTML(item.summary)
+        let candidates = [directCandidate, contentCandidate, summaryCandidate]
+
+        for candidate in candidates {
+            guard let candidate else { continue }
+            if let resolved = resolvedHTTPURL(candidate, fallback: articleURL) {
+                return resolved
+            }
+            if let resolved = resolvedHTTPURL(candidate, fallback: sourceURL) {
+                return resolved
+            }
+            if let resolved = resolvedHTTPURL(candidate, fallback: nil) {
+                return resolved
+            }
+        }
+
+        return nil
+    }
+
+    private func firstImageSourceInHTML(_ html: String?) -> String? {
+        guard let html, html.isEmpty == false else { return nil }
+        guard let regex = Self.htmlImageRegex else { return nil }
+        let range = NSRange(html.startIndex..<html.endIndex, in: html)
+        guard let match = regex.firstMatch(in: html, options: [], range: range) else { return nil }
+        guard match.numberOfRanges > 1 else { return nil }
+        guard let captureRange = Range(match.range(at: 1), in: html) else { return nil }
+        return String(html[captureRange])
+    }
+
+    private func resolvedHTTPURL(_ value: String, fallback: URL?) -> URL? {
+        let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        if let absolute = URL(string: trimmed),
+           let scheme = absolute.scheme?.lowercased(),
+           scheme == "http" || scheme == "https" {
+            return absolute
+        }
+
+        if trimmed.hasPrefix("//") {
+            let scheme = resolvedHTTPFallbackScheme(from: fallback)
+            if let protocolRelative = URL(string: "\(scheme):\(trimmed)") {
+                return protocolRelative
+            }
+        }
+
+        if trimmed.lowercased().hasPrefix("www."),
+           let normalized = URL(string: "https://\(trimmed)") {
+            return normalized
+        }
+
+        if let fallback,
+           let relative = URL(string: trimmed, relativeTo: fallback)?.absoluteURL,
+           let scheme = relative.scheme?.lowercased(),
+           scheme == "http" || scheme == "https" {
+            return relative
+        }
+
+        return nil
+    }
+
+    private func resolvedHTTPFallbackScheme(from fallback: URL?) -> String {
+        guard let scheme = fallback?.scheme?.lowercased() else {
+            return "https"
+        }
+        if scheme == "http" || scheme == "https" {
+            return scheme
+        }
+        return "https"
+    }
+
+    private func deduplicatedNormalizedTags(_ values: [String]) -> [String] {
+        var seen = Set<String>()
+        var output: [String] = []
+        output.reserveCapacity(8)
+
+        for value in values {
+            let normalized = sanitizeText(value)
+            guard normalized.isEmpty == false else { continue }
+            let lowered = normalized.lowercased()
+            guard seen.insert(lowered).inserted else { continue }
+            output.append(normalized)
+            if output.count == 8 {
+                break
+            }
+        }
+
+        return output
+    }
+
+    private func wordCount(in value: String) -> Int {
+        value.split { $0.isWhitespace || $0.isNewline }.count
+    }
+
+    private func isLikelyCompleteContent(
+        rawContent: String?,
+        cleanedContent: String,
+        source: FeedContentSource
+    ) -> Bool {
+        guard source == .feedContent else { return false }
+
+        let words = wordCount(in: cleanedContent)
+        guard words >= 120 else { return false }
+
+        let lowercased = cleanedContent.lowercased()
+        if lowercased.contains("read more") || lowercased.contains("continue reading") {
+            return false
+        }
+
+        let trailing = cleanedContent.trimmingCharacters(in: .whitespacesAndNewlines)
+        if trailing.hasSuffix("...") || trailing.hasSuffix("…") || trailing.hasSuffix("[…]") {
+            return false
+        }
+
+        if let rawContent {
+            let lowerRaw = rawContent.lowercased()
+            if lowerRaw.contains("href") && lowerRaw.contains("read more") {
+                return false
+            }
+        }
+
+        return true
     }
 
     private func decodeHTMLEntities(_ value: String) -> String {

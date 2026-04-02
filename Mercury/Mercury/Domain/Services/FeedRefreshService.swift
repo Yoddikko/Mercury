@@ -11,17 +11,20 @@ struct FeedRefreshService: Sendable {
     private let feedClient: RSSFeedClient
     private let parser: RSSParser
     private let normalizer: ArticleNormalizer
+    private let articleContentEnrichmentService: ArticleContentEnrichmentService
     private let logger: AppLogger
 
     init(
         feedClient: RSSFeedClient = RSSFeedClient(),
         parser: RSSParser = RSSParser(),
         normalizer: ArticleNormalizer = ArticleNormalizer(),
+        articleContentEnrichmentService: ArticleContentEnrichmentService = ArticleContentEnrichmentService(),
         logger: AppLogger = .shared
     ) {
         self.feedClient = feedClient
         self.parser = parser
         self.normalizer = normalizer
+        self.articleContentEnrichmentService = articleContentEnrichmentService
         self.logger = logger
     }
 
@@ -170,9 +173,13 @@ struct FeedRefreshService: Sendable {
                 source: source,
                 requestID: sourceRequestID
             )
+            let enrichedArticles = await articleContentEnrichmentService.enrichArticlesIfNeeded(
+                articles,
+                requestID: sourceRequestID
+            )
             let elapsedMs = elapsedMilliseconds(since: start)
 
-            if articles.isEmpty {
+            if enrichedArticles.isEmpty {
                 logger.info(
                     "Feed parsed with no normalized articles",
                     category: .business,
@@ -199,7 +206,7 @@ struct FeedRefreshService: Sendable {
                 requestID: sourceRequestID,
                 metadata: [
                     "source_id": source.id,
-                    "articles_count": "\(articles.count)",
+                    "articles_count": "\(enrichedArticles.count)",
                     "elapsed_ms": "\(elapsedMs)"
                 ]
             )
@@ -207,7 +214,7 @@ struct FeedRefreshService: Sendable {
             return RSSFeedCheckResult(
                 source: source,
                 status: .success,
-                articles: articles,
+                articles: enrichedArticles,
                 elapsedMs: elapsedMs,
                 message: nil
             )

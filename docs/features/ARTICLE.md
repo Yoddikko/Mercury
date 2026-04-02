@@ -61,8 +61,9 @@ type Article = {
 1. RSS item is fetched
 2. Article metadata is extracted
 3. Article is normalized
-4. Article is stored in SwiftData
-5. AI enrichment may update fields later
+4. If RSS body is partial, article page extraction may enrich body/image fields
+5. Article is stored in SwiftData
+6. AI enrichment may update fields later
 
 ---
 
@@ -80,6 +81,7 @@ type Article = {
 
 * duplicate articles → must be deduplicated
 * missing content → still store metadata
+* partial RSS snippet → keep it, then try best-effort page extraction
 * invalid date → fallback to current date
 * broken RSS → skip item
 

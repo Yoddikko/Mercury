@@ -12,6 +12,23 @@ import SwiftUI
 import UIKit
 
 struct DeveloperPlaygroundScreen: View {
+    private enum ActiveSheet: Identifiable {
+        case logExport(URL)
+        case rssReport(URL)
+        case articleInspection(Article)
+
+        var id: String {
+            switch self {
+            case let .logExport(url):
+                return "log:\(url.absoluteString)"
+            case let .rssReport(url):
+                return "rss-report:\(url.absoluteString)"
+            case let .articleInspection(article):
+                return "article:\(article.id)"
+            }
+        }
+    }
+
     let viewModel: DeveloperPlaygroundViewModel
 
     @Environment(\.modelContext) private var modelContext
@@ -26,12 +43,10 @@ struct DeveloperPlaygroundScreen: View {
     @State private var isExportingLogs = false
     @State private var exportedLogURL: URL?
     @State private var logExportError: String?
-    @State private var isPresentingShareSheet = false
     @State private var isExportingRSSReport = false
     @State private var exportedRSSReportURL: URL?
     @State private var rssReportExportError: String?
-    @State private var isPresentingRSSReportShareSheet = false
-    @State private var selectedArticleForInspection: Article?
+    @State private var activeSheet: ActiveSheet?
 
     var body: some View {
         Form {
@@ -283,18 +298,7 @@ struct DeveloperPlaygroundScreen: View {
                             .foregroundStyle(.secondary)
 
                         ForEach(Array(rssDiagnosticsViewModel.normalizedArticles.prefix(80))) { article in
-                            Button {
-                                selectedArticleForInspection = article
-                                logger.debug(
-                                    "Opened RSS article inspection",
-                                    category: .ui,
-                                    service: "DeveloperPlaygroundScreen",
-                                    metadata: [
-                                        "article_id": article.id,
-                                        "source_name": article.sourceName
-                                    ]
-                                )
-                            } label: {
+                            HStack(alignment: .top, spacing: 8) {
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text(article.title)
                                         .font(.headline)
@@ -306,8 +310,19 @@ struct DeveloperPlaygroundScreen: View {
                                         .foregroundStyle(.secondary)
                                         .lineLimit(1)
                                 }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+
+                                Image(systemName: "chevron.right")
+                                    .font(.caption)
+                                    .foregroundStyle(.tertiary)
                             }
-                            .buttonStyle(.plain)
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                openArticleInspection(article)
+                            }
+                            .accessibilityElement(children: .combine)
+                            .accessibilityAddTraits(.isButton)
+                            .accessibilityIdentifier("developer.playground.rss.article.row.\(article.id)")
                         }
                     }
                     .accessibilityIdentifier("developer.playground.rss.articles")
@@ -319,19 +334,29 @@ struct DeveloperPlaygroundScreen: View {
         .task {
             await refreshLogEntryCount()
         }
-        .sheet(isPresented: $isPresentingShareSheet) {
-            if let exportedLogURL {
-                ActivityViewController(activityItems: [exportedLogURL])
+        .sheet(item: $activeSheet) { sheet in
+            switch sheet {
+            case let .logExport(url):
+                ActivityViewController(activityItems: [url])
+            case let .rssReport(url):
+                ActivityViewController(activityItems: [url])
+            case let .articleInspection(article):
+                DeveloperRSSArticleInspectionScreen(article: article, viewModel: viewModel)
             }
         }
-        .sheet(isPresented: $isPresentingRSSReportShareSheet) {
-            if let exportedRSSReportURL {
-                ActivityViewController(activityItems: [exportedRSSReportURL])
-            }
-        }
-        .sheet(item: $selectedArticleForInspection) { article in
-            DeveloperRSSArticleInspectionScreen(article: article, viewModel: viewModel)
-        }
+    }
+
+    private func openArticleInspection(_ article: Article) {
+        activeSheet = .articleInspection(article)
+        logger.debug(
+            "Opened RSS article inspection",
+            category: .ui,
+            service: "DeveloperPlaygroundScreen",
+            metadata: [
+                "article_id": article.id,
+                "source_name": article.sourceName
+            ]
+        )
     }
 
     private func feedCheckRow(for result: RSSFeedCheckResult) -> some View {
@@ -396,7 +421,7 @@ struct DeveloperPlaygroundScreen: View {
         do {
             let fileURL = try await logger.exportToTemporaryFile()
             exportedLogURL = fileURL
-            isPresentingShareSheet = true
+            activeSheet = .logExport(fileURL)
             await refreshLogEntryCount()
         } catch {
             logExportError = error.localizedDescription
@@ -429,7 +454,7 @@ struct DeveloperPlaygroundScreen: View {
         do {
             let fileURL = try RSSDiagnosticsReportExporter.exportReport(from: result)
             exportedRSSReportURL = fileURL
-            isPresentingRSSReportShareSheet = true
+            activeSheet = .rssReport(fileURL)
             logger.info(
                 "RSS outlets report export completed",
                 category: .filesystem,
@@ -481,18 +506,47 @@ private struct DeveloperRSSArticleInspectionScreen: View {
     let article: Article
     let viewModel: DeveloperPlaygroundViewModel
 
+    @State private var pageExtraction: ArticlePageExtractionResult?
+    @State private var isFetchingFullText = false
+    @State private var fullTextFetchError: String?
+
+    private let pageClient = ArticlePageClient()
+    private let extractor = ArticlePageContentExtractor()
+    private let logger = AppLogger.shared
+
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     section(title: viewModel.rssArticleInspectorOverviewSectionTitle) {
                         infoRow(label: viewModel.rssArticleInspectorFieldID, value: article.id)
+                        infoRow(
+                            label: viewModel.rssArticleInspectorFieldExternalID,
+                            value: article.externalID ?? viewModel.rssArticleInspectorEmptyValue
+                        )
                         infoRow(label: viewModel.rssArticleInspectorFieldSource, value: article.sourceName)
                         infoRow(label: viewModel.rssArticleInspectorFieldSourceURL, value: article.sourceURL.absoluteString)
                         infoRow(label: viewModel.rssArticleInspectorFieldArticleURL, value: article.articleURL.absoluteString)
+                        Link(destination: article.articleURL) {
+                            Text(article.articleURL.absoluteString)
+                                .font(.footnote)
+                                .foregroundStyle(.blue)
+                                .underline()
+                                .lineLimit(1)
+                                .truncationMode(.middle)
+                        }
+                        .accessibilityIdentifier("developer.playground.rss.article.link")
                         infoRow(
                             label: viewModel.rssArticleInspectorFieldPublishedAt,
                             value: viewModel.formattedRSSInspectionDate(article.publishedAt)
+                        )
+                        infoRow(
+                            label: viewModel.rssArticleInspectorFieldAuthor,
+                            value: article.authorName ?? viewModel.rssArticleInspectorEmptyValue
+                        )
+                        infoRow(
+                            label: viewModel.rssArticleInspectorFieldImageURL,
+                            value: article.heroImageURL?.absoluteString ?? viewModel.rssArticleInspectorEmptyValue
                         )
                         infoRow(
                             label: viewModel.rssArticleInspectorFieldLanguage,
@@ -508,6 +562,75 @@ private struct DeveloperRSSArticleInspectionScreen: View {
                                 ? viewModel.rssArticleInspectorEmptyValue
                                 : article.tags.joined(separator: ", ")
                         )
+                        infoRow(
+                            label: viewModel.rssArticleInspectorFieldContentSource,
+                            value: viewModel.rssContentSourceLabel(displayedContentSource)
+                        )
+                        infoRow(
+                            label: viewModel.rssArticleInspectorFieldWordCount,
+                            value: "\(displayedWordCount)"
+                        )
+                        infoRow(
+                            label: viewModel.rssArticleInspectorFieldLikelyComplete,
+                            value: displayedLikelyComplete
+                                ? viewModel.rssArticleInspectorBooleanYes
+                                : viewModel.rssArticleInspectorBooleanNo
+                        )
+                        infoRow(
+                            label: viewModel.rssArticleInspectorFieldDisplayedContent,
+                            value: viewModel.rssDisplayedContentLabel(
+                                isUsingArticlePageFetch: pageExtraction != nil
+                            )
+                        )
+
+                        if let heroImageURL = displayedHeroImageURL {
+                            AsyncImage(url: heroImageURL) { phase in
+                                switch phase {
+                                case let .success(image):
+                                    image
+                                        .resizable()
+                                        .scaledToFill()
+                                case .empty:
+                                    ProgressView()
+                                case .failure:
+                                    Color.gray.opacity(0.15)
+                                @unknown default:
+                                    Color.gray.opacity(0.15)
+                                }
+                            }
+                            .frame(height: 140)
+                            .frame(maxWidth: .infinity)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                        }
+                    }
+
+                    section(title: viewModel.rssArticleInspectorPageFetchSectionTitle) {
+                        Button(pageExtraction == nil
+                            ? viewModel.rssArticleInspectorFetchFullTextLabel
+                            : viewModel.rssArticleInspectorRefetchFullTextLabel
+                        ) {
+                            Task {
+                                await fetchFullArticleText(force: true)
+                            }
+                        }
+                        .disabled(isFetchingFullText)
+                        .accessibilityIdentifier("developer.playground.rss.article.fetchFullText")
+
+                        if isFetchingFullText {
+                            ProgressView(viewModel.rssArticleInspectorFetchingFullTextLabel)
+                        }
+
+                        if pageExtraction != nil {
+                            Text(viewModel.rssArticleInspectorFullTextReadyLabel)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+
+                        if let fullTextFetchError {
+                            Text(fullTextFetchError)
+                                .font(.caption)
+                                .foregroundStyle(.red)
+                        }
                     }
 
                     section(title: viewModel.rssArticleInspectorChecksSectionTitle) {
@@ -525,11 +648,11 @@ private struct DeveloperRSSArticleInspectionScreen: View {
                     section(title: viewModel.rssArticleInspectorContentSectionTitle) {
                         contentBlock(
                             label: viewModel.rssArticleInspectorFieldRawContent,
-                            value: article.rawContent ?? viewModel.rssArticleInspectorNoContentValue
+                            value: displayedRawContent
                         )
                         contentBlock(
                             label: viewModel.rssArticleInspectorFieldCleanedContent,
-                            value: article.cleanedContent ?? viewModel.rssArticleInspectorNoContentValue
+                            value: displayedCleanedContent
                         )
                         contentBlock(
                             label: viewModel.rssArticleInspectorFieldSummaryShort,
@@ -547,14 +670,62 @@ private struct DeveloperRSSArticleInspectionScreen: View {
             }
             .navigationTitle(viewModel.rssArticleInspectorTitle)
             .navigationBarTitleDisplayMode(.inline)
+            .task(id: article.id) {
+                await fetchFullArticleText()
+            }
         }
+    }
+
+    private var displayedRawContent: String {
+        pageExtraction?.rawHTML ?? article.rawContent ?? viewModel.rssArticleInspectorNoContentValue
+    }
+
+    private var displayedCleanedContent: String {
+        pageExtraction?.cleanedText ?? article.cleanedContent ?? viewModel.rssArticleInspectorNoContentValue
+    }
+
+    private var displayedContentSource: String {
+        pageExtraction == nil ? article.contentSource : "article_page"
+    }
+
+    private var displayedWordCount: Int {
+        pageExtraction?.wordCount ?? article.contentWordCount
+    }
+
+    private var displayedLikelyComplete: Bool {
+        pageExtraction?.isLikelyComplete ?? article.isContentLikelyComplete
+    }
+
+    private var displayedHeroImageURL: URL? {
+        if let heroImageURL = article.heroImageURL {
+            return heroImageURL
+        }
+
+        guard let heroImageURLString = pageExtraction?.heroImageURLString else {
+            return nil
+        }
+
+        let trimmed = heroImageURLString.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard trimmed.isEmpty == false else { return nil }
+
+        if let absolute = URL(string: trimmed),
+           let scheme = absolute.scheme?.lowercased(),
+           scheme == "http" || scheme == "https" {
+            return absolute
+        }
+
+        if trimmed.hasPrefix("//"), let protocolRelative = URL(string: "https:\(trimmed)") {
+            return protocolRelative
+        }
+
+        return URL(string: trimmed, relativeTo: article.articleURL)?.absoluteURL
     }
 
     private var dataChecks: [(label: String, isPassing: Bool)] {
         let hasTitle = article.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
         let hasArticleURL = article.articleURL.absoluteString.isEmpty == false
         let hasPublishedDate = article.publishedAt != .distantPast
-        let hasContentPayload = [article.rawContent, article.cleanedContent, article.summaryShort]
+        let hasContentPayload = [pageExtraction?.rawHTML, pageExtraction?.cleanedText, article.summaryShort]
             .compactMap { value in
                 value?.trimmingCharacters(in: .whitespacesAndNewlines)
             }
@@ -562,14 +733,84 @@ private struct DeveloperRSSArticleInspectionScreen: View {
                 value.isEmpty == false
             }
         let hasLanguage = article.language?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
+        let hasImage = displayedHeroImageURL != nil
+        let hasAuthor = article.authorName?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
 
         return [
             (viewModel.rssArticleInspectorCheckHasTitle, hasTitle),
             (viewModel.rssArticleInspectorCheckHasArticleURL, hasArticleURL),
             (viewModel.rssArticleInspectorCheckHasPublishedDate, hasPublishedDate),
             (viewModel.rssArticleInspectorCheckHasContent, hasContentPayload),
-            (viewModel.rssArticleInspectorCheckHasLanguage, hasLanguage)
+            (viewModel.rssArticleInspectorCheckHasLanguage, hasLanguage),
+            (viewModel.rssArticleInspectorCheckHasImage, hasImage),
+            (viewModel.rssArticleInspectorCheckHasAuthor, hasAuthor),
+            (viewModel.rssArticleInspectorCheckLikelyComplete, displayedLikelyComplete)
         ]
+    }
+
+    @MainActor
+    private func fetchFullArticleText(force: Bool = false) async {
+        if isFetchingFullText {
+            return
+        }
+        if force == false, pageExtraction != nil {
+            return
+        }
+
+        isFetchingFullText = true
+        fullTextFetchError = nil
+        let requestID = "debug-article-\(UUID().uuidString.lowercased())"
+
+        logger.debug(
+            "Fetching full article text in debug inspector",
+            category: .ui,
+            service: "DeveloperRSSArticleInspectionScreen",
+            requestID: requestID,
+            metadata: [
+                "article_id": article.id,
+                "url": article.articleURL.absoluteString
+            ]
+        )
+
+        defer { isFetchingFullText = false }
+
+        do {
+            let html = try await pageClient.fetchPageHTML(from: article.articleURL, requestID: requestID)
+            guard let extraction = extractor.extract(from: html, requestID: requestID) else {
+                fullTextFetchError = viewModel.rssArticleInspectorFetchErrorMessage(
+                    viewModel.rssArticleInspectorNoContentValue
+                )
+                return
+            }
+
+            pageExtraction = extraction
+            logger.info(
+                "Full article text loaded in debug inspector",
+                category: .ui,
+                service: "DeveloperRSSArticleInspectionScreen",
+                requestID: requestID,
+                metadata: [
+                    "article_id": article.id,
+                    "word_count": "\(extraction.wordCount)"
+                ]
+            )
+        } catch {
+            pageExtraction = nil
+            fullTextFetchError = viewModel.rssArticleInspectorFetchErrorMessage(
+                String(describing: error)
+            )
+            logger.warn(
+                "Failed to fetch full article text in debug inspector",
+                category: .ui,
+                service: "DeveloperRSSArticleInspectionScreen",
+                requestID: requestID,
+                metadata: [
+                    "article_id": article.id,
+                    "url": article.articleURL.absoluteString,
+                    "error": String(describing: error)
+                ]
+            )
+        }
     }
 
     @ViewBuilder
