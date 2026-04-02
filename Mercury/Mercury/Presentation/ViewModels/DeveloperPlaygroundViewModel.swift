@@ -140,6 +140,10 @@ struct DeveloperPlaygroundViewModel {
         String(localized: "developer.playground.rss.article_inspector.section.content", defaultValue: "Content")
     }
 
+    var rssArticleInspectorPageFetchSectionTitle: String {
+        String(localized: "developer.playground.rss.article_inspector.section.page_fetch", defaultValue: "Article Page Fetch")
+    }
+
     var rssArticleInspectorFieldID: String {
         String(localized: "developer.playground.rss.article_inspector.field.id", defaultValue: "ID")
     }
@@ -212,6 +216,10 @@ struct DeveloperPlaygroundViewModel {
         String(localized: "developer.playground.rss.article_inspector.field.likely_complete", defaultValue: "Likely Complete Body")
     }
 
+    var rssArticleInspectorFieldDisplayedContent: String {
+        String(localized: "developer.playground.rss.article_inspector.field.displayed_content", defaultValue: "Displayed Content")
+    }
+
     var rssArticleInspectorCheckHasTitle: String {
         String(localized: "developer.playground.rss.article_inspector.check.has_title", defaultValue: "Title is present")
     }
@@ -252,6 +260,10 @@ struct DeveloperPlaygroundViewModel {
         String(localized: "developer.playground.rss.article_inspector.content_source.feed_summary", defaultValue: "Feed summary/description")
     }
 
+    var rssArticleInspectorContentSourceArticlePage: String {
+        String(localized: "developer.playground.rss.article_inspector.content_source.article_page", defaultValue: "Article page extraction")
+    }
+
     var rssArticleInspectorContentSourceNone: String {
         String(localized: "developer.playground.rss.article_inspector.content_source.none", defaultValue: "Unavailable")
     }
@@ -274,6 +286,30 @@ struct DeveloperPlaygroundViewModel {
 
     var rssArticleInspectorNoBulletsValue: String {
         String(localized: "developer.playground.rss.article_inspector.no_bullets", defaultValue: "No bullets available.")
+    }
+
+    var rssArticleInspectorFetchFullTextLabel: String {
+        String(localized: "developer.playground.rss.article_inspector.fetch_full_text", defaultValue: "Fetch full article text")
+    }
+
+    var rssArticleInspectorRefetchFullTextLabel: String {
+        String(localized: "developer.playground.rss.article_inspector.refetch_full_text", defaultValue: "Refetch article text")
+    }
+
+    var rssArticleInspectorFetchingFullTextLabel: String {
+        String(localized: "developer.playground.rss.article_inspector.fetching_full_text", defaultValue: "Fetching article page content…")
+    }
+
+    var rssArticleInspectorFullTextReadyLabel: String {
+        String(localized: "developer.playground.rss.article_inspector.full_text_ready", defaultValue: "Full article content loaded from page.")
+    }
+
+    var rssArticleInspectorDisplayedContentFeed: String {
+        String(localized: "developer.playground.rss.article_inspector.displayed_content.feed", defaultValue: "Feed payload")
+    }
+
+    var rssArticleInspectorDisplayedContentArticlePage: String {
+        String(localized: "developer.playground.rss.article_inspector.displayed_content.article_page", defaultValue: "Article page fetch")
     }
 
     var loggingSectionTitle: String {
@@ -444,9 +480,25 @@ struct DeveloperPlaygroundViewModel {
             return rssArticleInspectorContentSourceFeedContent
         case "feed_summary":
             return rssArticleInspectorContentSourceFeedSummary
+        case "article_page":
+            return rssArticleInspectorContentSourceArticlePage
         default:
             return rssArticleInspectorContentSourceNone
         }
+    }
+
+    func rssDisplayedContentLabel(isUsingArticlePageFetch: Bool) -> String {
+        isUsingArticlePageFetch
+            ? rssArticleInspectorDisplayedContentArticlePage
+            : rssArticleInspectorDisplayedContentFeed
+    }
+
+    func rssArticleInspectorFetchErrorMessage(_ message: String) -> String {
+        let format = String(
+            localized: "developer.playground.rss.article_inspector.fetch_error",
+            defaultValue: "Unable to fetch full article text: %@"
+        )
+        return String(format: format, locale: .current, message)
     }
 
     private static let rssInspectionDateFormatter: DateFormatter = {

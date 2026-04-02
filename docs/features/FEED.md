@@ -79,6 +79,9 @@ without changing the production Home feed UI.
 * `RSSFeedClient` (download XML feed data)
 * `RSSParser` (parse RSS/Atom items with advanced metadata)
 * `ArticleNormalizer` (map raw items to `Article` + per-feed dedup + quality heuristics)
+* `ArticlePageClient` (download HTML pages for article URLs when RSS body looks partial)
+* `ArticlePageContentExtractor` (extract likely main body text + hero image from HTML)
+* `ArticleContentEnrichmentService` (best-effort upgrade from RSS snippet to page body)
 * `FeedRefreshService` (run grouped checks + cross-feed dedup)
 * `AppLogger` (structured diagnostics with request-id propagation)
 
@@ -103,6 +106,10 @@ whether the feed likely provides a complete body:
 * extracted word count
 * truncation hints (`read more`, trailing ellipsis)
 * final `isContentLikelyComplete` flag for quick QA
+
+When RSS body looks incomplete, the diagnostics pipeline attempts a best-effort
+page extraction from `articleURL` and updates content source to `article_page`
+only if the extracted body is meaningfully richer than the RSS payload.
 
 ### Group Modes
 

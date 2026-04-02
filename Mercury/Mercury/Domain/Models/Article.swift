@@ -35,6 +35,44 @@ struct Article: Identifiable, Equatable, Sendable {
 }
 
 extension Article {
+    func updatingContent(
+        rawContent: String?,
+        cleanedContent: String?,
+        contentSource: String,
+        contentWordCount: Int,
+        isContentLikelyComplete: Bool,
+        heroImageURL: URL?,
+        summaryShort: String?,
+        updatedAt: Date
+    ) -> Article {
+        Article(
+            id: id,
+            externalID: externalID,
+            title: title,
+            sourceName: sourceName,
+            sourceURL: sourceURL,
+            articleURL: articleURL,
+            publishedAt: publishedAt,
+            authorName: authorName,
+            heroImageURL: heroImageURL,
+            rawContent: rawContent,
+            cleanedContent: cleanedContent,
+            contentSource: contentSource,
+            contentWordCount: contentWordCount,
+            isContentLikelyComplete: isContentLikelyComplete,
+            summaryShort: summaryShort,
+            summaryBullets: summaryBullets,
+            category: category,
+            tags: tags,
+            language: language,
+            isBookmarked: isBookmarked,
+            isRead: isRead,
+            clusterID: clusterID,
+            createdAt: createdAt,
+            updatedAt: updatedAt
+        )
+    }
+
     static let previewFeed: [Article] = [
         Article(
             id: "mercury-preview-1",

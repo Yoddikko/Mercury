@@ -1,0 +1,139 @@
+//
+//  ArticleContentEnrichmentTests.swift
+//  MercuryTests
+//
+//  Created by Codex on 02/04/26.
+//
+
+import Foundation
+import Testing
+@testable import Mercury
+
+struct ArticleContentEnrichmentTests {
+    @Test
+    func extractorParsesMainArticleTextAndHeroImage() {
+        let extractor = ArticlePageContentExtractor()
+        let html = """
+        <html>
+          <head>
+            <meta property="og:image" content="https://cdn.example.com/hero.jpg" />
+          </head>
+          <body>
+            <article>
+              <h1>Example Story</h1>
+              <p>Paragraph one with enough words to simulate a real article body for extraction quality checks.</p>
+              <p>Paragraph two continues the text and should remain visible after sanitization and HTML stripping.</p>
+              <script>console.log('ignore me');</script>
+            </article>
+          </body>
+        </html>
+        """
+
+        let result = extractor.extract(from: html)
+        #expect(result != nil)
+        #expect(result?.heroImageURLString == "https://cdn.example.com/hero.jpg")
+        #expect(result?.cleanedText.contains("Paragraph one") == true)
+        #expect(result?.cleanedText.contains("console.log") == false)
+        #expect((result?.wordCount ?? 0) > 20)
+    }
+
+    @Test
+    func enrichmentServiceUpgradesSummaryOnlyArticleUsingPageExtraction() async {
+        let html = """
+        <html>
+          <head>
+            <meta property="og:image" content="https://cdn.example.com/fetched.jpg" />
+          </head>
+          <body>
+            <article>
+              <p>This fetched body contains significantly more detail than the feed summary and should be used.</p>
+              <p>It includes additional context and enough length to exceed the replacement threshold.</p>
+              <p>A third paragraph keeps the extracted word count high for completeness heuristics.</p>
+            </article>
+          </body>
+        </html>
+        """
+
+        let pageClient = ArticlePageClient { request in
+            let response = HTTPURLResponse(
+                url: request.url!,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: ["Content-Type": "text/html; charset=utf-8"]
+            )!
+            return (Data(html.utf8), response)
+        }
+        let service = ArticleContentEnrichmentService(
+            pageClient: pageClient,
+            extractor: ArticlePageContentExtractor(),
+            maxFetchesPerSource: 1
+        )
+
+        let input = makeArticle(
+            contentSource: "feed_summary",
+            contentWordCount: 12,
+            cleanedContent: "Short feed summary only."
+        )
+
+        let enriched = await service.enrichArticlesIfNeeded([input])
+        #expect(enriched.count == 1)
+        #expect(enriched[0].contentSource == "article_page")
+        #expect(enriched[0].contentWordCount > input.contentWordCount)
+        #expect(enriched[0].cleanedContent?.contains("significantly more detail") == true)
+        #expect(enriched[0].heroImageURL?.absoluteString == "https://cdn.example.com/fetched.jpg")
+    }
+
+    @Test
+    func enrichmentServiceKeepsOriginalArticleWhenFetchFails() async {
+        let pageClient = ArticlePageClient { _ in
+            throw URLError(.timedOut)
+        }
+        let service = ArticleContentEnrichmentService(
+            pageClient: pageClient,
+            extractor: ArticlePageContentExtractor(),
+            maxFetchesPerSource: 1
+        )
+
+        let input = makeArticle(
+            contentSource: "feed_summary",
+            contentWordCount: 12,
+            cleanedContent: "Short feed summary only."
+        )
+
+        let enriched = await service.enrichArticlesIfNeeded([input])
+        #expect(enriched == [input])
+    }
+
+    private func makeArticle(
+        contentSource: String,
+        contentWordCount: Int,
+        cleanedContent: String?
+    ) -> Article {
+        Article(
+            id: "article-test-1",
+            externalID: "external-1",
+            title: "Test Story",
+            sourceName: "Test Source",
+            sourceURL: URL(string: "https://example.com/feed.xml")!,
+            articleURL: URL(string: "https://example.com/articles/1")!,
+            publishedAt: Date(timeIntervalSince1970: 1_700_000_000),
+            authorName: "Test Author",
+            heroImageURL: nil,
+            rawContent: cleanedContent,
+            cleanedContent: cleanedContent,
+            contentSource: contentSource,
+            contentWordCount: contentWordCount,
+            isContentLikelyComplete: false,
+            summaryShort: cleanedContent,
+            summaryBullets: [],
+            category: "General",
+            tags: ["test"],
+            language: "en",
+            isBookmarked: false,
+            isRead: false,
+            clusterID: nil,
+            createdAt: Date(timeIntervalSince1970: 1_700_000_000),
+            updatedAt: Date(timeIntervalSince1970: 1_700_000_000)
+        )
+    }
+}

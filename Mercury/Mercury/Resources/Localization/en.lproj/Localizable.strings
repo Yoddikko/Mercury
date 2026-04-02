@@ -61,6 +61,7 @@
 "developer.playground.rss.article_inspector.section.overview" = "Overview";
 "developer.playground.rss.article_inspector.section.checks" = "Data Checks";
 "developer.playground.rss.article_inspector.section.content" = "Content";
+"developer.playground.rss.article_inspector.section.page_fetch" = "Article Page Fetch";
 "developer.playground.rss.article_inspector.field.id" = "ID";
 "developer.playground.rss.article_inspector.field.external_id" = "External ID";
 "developer.playground.rss.article_inspector.field.source" = "Source";
@@ -79,6 +80,7 @@
 "developer.playground.rss.article_inspector.field.content_source" = "Content Source";
 "developer.playground.rss.article_inspector.field.word_count" = "Word Count";
 "developer.playground.rss.article_inspector.field.likely_complete" = "Likely Complete Body";
+"developer.playground.rss.article_inspector.field.displayed_content" = "Displayed Content";
 "developer.playground.rss.article_inspector.check.has_title" = "Title is present";
 "developer.playground.rss.article_inspector.check.has_article_url" = "Article URL is present";
 "developer.playground.rss.article_inspector.check.has_published_date" = "Published date is meaningful";
@@ -89,12 +91,20 @@
 "developer.playground.rss.article_inspector.check.likely_complete" = "Body looks complete";
 "developer.playground.rss.article_inspector.content_source.feed_content" = "Feed full-content field";
 "developer.playground.rss.article_inspector.content_source.feed_summary" = "Feed summary/description";
+"developer.playground.rss.article_inspector.content_source.article_page" = "Article page extraction";
 "developer.playground.rss.article_inspector.content_source.none" = "Unavailable";
 "developer.playground.rss.article_inspector.boolean.yes" = "Yes";
 "developer.playground.rss.article_inspector.boolean.no" = "No";
 "developer.playground.rss.article_inspector.empty_value" = "-";
 "developer.playground.rss.article_inspector.no_content" = "No content available.";
 "developer.playground.rss.article_inspector.no_bullets" = "No bullets available.";
+"developer.playground.rss.article_inspector.fetch_full_text" = "Fetch full article text";
+"developer.playground.rss.article_inspector.refetch_full_text" = "Refetch article text";
+"developer.playground.rss.article_inspector.fetching_full_text" = "Fetching article page content…";
+"developer.playground.rss.article_inspector.full_text_ready" = "Full article content loaded from page.";
+"developer.playground.rss.article_inspector.fetch_error" = "Unable to fetch full article text: %@";
+"developer.playground.rss.article_inspector.displayed_content.feed" = "Feed payload";
+"developer.playground.rss.article_inspector.displayed_content.article_page" = "Article page fetch";
 
 "developer.rss.group.all" = "All Outlets";
 "developer.rss.group.main" = "Main Outlets";
