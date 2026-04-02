@@ -120,6 +120,28 @@ struct RSSParserTests {
     }
 
     @Test
+    func ignoresAtomEnclosureWhenTypeIsNotImage() throws {
+        let parser = RSSParser()
+        let data = Data(
+            """
+            <?xml version="1.0" encoding="utf-8"?>
+            <feed xmlns="http://www.w3.org/2005/Atom">
+              <entry>
+                <title>Atom Audio Enclosure</title>
+                <link rel="alternate" href="https://example.com/atom/audio" />
+                <link rel="enclosure" href="https://cdn.example.com/audio.mp3" type="audio/mpeg" />
+                <updated>2026-04-01T12:00:00Z</updated>
+              </entry>
+            </feed>
+            """.utf8
+        )
+
+        let items = try parser.parse(data: data)
+        #expect(items.count == 1)
+        #expect(items.first?.imageURL == nil)
+    }
+
+    @Test
     func prefersAtomAlternateLinkOverSelfLink() throws {
         let parser = RSSParser()
         let data = Data(
@@ -139,6 +161,29 @@ struct RSSParserTests {
         let items = try parser.parse(data: data)
         #expect(items.count == 1)
         #expect(items.first?.link == "https://example.com/articles/1")
+    }
+
+    @Test
+    func ignoresMediaContentWhenTypeIsVideo() throws {
+        let parser = RSSParser()
+        let data = Data(
+            """
+            <?xml version="1.0" encoding="UTF-8"?>
+            <rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/">
+              <channel>
+                <item>
+                  <title>Video Item</title>
+                  <link>https://example.com/video-item</link>
+                  <media:content url="https://cdn.example.com/video.mp4" type="video/mp4" />
+                </item>
+              </channel>
+            </rss>
+            """.utf8
+        )
+
+        let items = try parser.parse(data: data)
+        #expect(items.count == 1)
+        #expect(items.first?.imageURL == nil)
     }
 
     @Test
@@ -307,5 +352,35 @@ struct RSSParserTests {
         #expect(articles.count == 1)
         #expect(articles.first?.contentSource == "feed_summary")
         #expect(articles.first?.isContentLikelyComplete == false)
+    }
+
+    @Test
+    func normalizerConvertsWWWImageURLToHTTPSAbsoluteURL() {
+        let normalizer = ArticleNormalizer()
+        let item = RSSParsedItem(
+            title: "WWW Image Story",
+            link: "https://example.com/www-image-story",
+            summary: nil,
+            content: "Some full content body to keep normalization valid.",
+            publishedAtRaw: "Tue, 01 Apr 2026 10:00:00 GMT",
+            categories: [],
+            language: "en",
+            imageURL: "www.cdn.example.com/hero.jpg"
+        )
+
+        let source = RSSFeedSource(
+            id: "www-image-source",
+            outletName: "WWW Image Source",
+            region: .europeWide,
+            feedURLString: "https://example.com/feed.xml",
+            isMainOutlet: true,
+            languageCode: "en",
+            tags: [],
+            note: nil
+        )
+
+        let articles = normalizer.normalize(items: [item], source: source)
+        #expect(articles.count == 1)
+        #expect(articles.first?.heroImageURL?.absoluteString == "https://www.cdn.example.com/hero.jpg")
     }
 }

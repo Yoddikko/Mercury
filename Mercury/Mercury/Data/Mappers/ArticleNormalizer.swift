@@ -21,6 +21,10 @@ struct ArticleNormalizer: Sendable {
     }
 
     private let logger = AppLogger.shared
+    private static let htmlImageRegex = try? NSRegularExpression(
+        pattern: "<img\\b[^>]*?\\bsrc\\s*=\\s*['\\\"]([^'\\\"]+)['\\\"][^>]*>",
+        options: [.caseInsensitive]
+    )
 
     func normalize(
         items: [RSSParsedItem],
@@ -283,10 +287,7 @@ struct ArticleNormalizer: Sendable {
 
     private func firstImageSourceInHTML(_ html: String?) -> String? {
         guard let html, html.isEmpty == false else { return nil }
-        let pattern = "<img\\b[^>]*?\\bsrc\\s*=\\s*['\\\"]([^'\\\"]+)['\\\"][^>]*>"
-        guard let regex = try? NSRegularExpression(pattern: pattern, options: [.caseInsensitive]) else {
-            return nil
-        }
+        guard let regex = Self.htmlImageRegex else { return nil }
         let range = NSRange(html.startIndex..<html.endIndex, in: html)
         guard let match = regex.firstMatch(in: html, options: [], range: range) else { return nil }
         guard match.numberOfRanges > 1 else { return nil }
@@ -295,14 +296,26 @@ struct ArticleNormalizer: Sendable {
     }
 
     private func resolvedHTTPURL(_ value: String, fallback: URL?) -> URL? {
-        if let absolute = URL(string: value),
+        let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        if let absolute = URL(string: trimmed),
            let scheme = absolute.scheme?.lowercased(),
            scheme == "http" || scheme == "https" {
             return absolute
         }
 
+        if trimmed.hasPrefix("//"),
+           let protocolRelative = URL(string: "https:\(trimmed)") {
+            return protocolRelative
+        }
+
+        if trimmed.lowercased().hasPrefix("www."),
+           let normalized = URL(string: "https://\(trimmed)") {
+            return normalized
+        }
+
         if let fallback,
-           let relative = URL(string: value, relativeTo: fallback)?.absoluteURL,
+           let relative = URL(string: trimmed, relativeTo: fallback)?.absoluteURL,
            let scheme = relative.scheme?.lowercased(),
            scheme == "http" || scheme == "https" {
             return relative

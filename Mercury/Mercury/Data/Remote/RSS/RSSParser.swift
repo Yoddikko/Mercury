@@ -167,7 +167,10 @@ private final class RSSXMLParserDelegate: NSObject, XMLParserDelegate {
                 } else if rel == "self", currentItem.atomSelfLink == nil {
                     currentItem.atomSelfLink = href
                 } else if rel == "enclosure" {
-                    appendImageCandidateIfPresent(href)
+                    let type = attributeDict["type"]?.lowercased()
+                    if isImageMedia(type: type, medium: nil, urlString: href) {
+                        appendImageCandidateIfPresent(href)
+                    }
                 }
             }
         }
@@ -183,7 +186,15 @@ private final class RSSXMLParserDelegate: NSObject, XMLParserDelegate {
             }
         }
 
-        if name == "media:content" || name == "media:thumbnail" {
+        if name == "media:content" {
+            let type = attributeDict["type"]?.lowercased()
+            let medium = attributeDict["medium"]?.lowercased()
+            if let url = attributeDict["url"], isImageMedia(type: type, medium: medium, urlString: url) {
+                appendImageCandidateIfPresent(url)
+            }
+        }
+
+        if name == "media:thumbnail" {
             if let url = attributeDict["url"], url.isEmpty == false {
                 appendImageCandidateIfPresent(url)
             }
@@ -253,8 +264,6 @@ private final class RSSXMLParserDelegate: NSObject, XMLParserDelegate {
                 }
             case "media:description":
                 assignIfPresent(value, to: &currentItem.description)
-            case "media:thumbnail", "media:content":
-                appendImageCandidateIfPresent(value)
             case "item", "entry":
                 finishCurrentItemIfNeeded()
                 isInsideItem = false
@@ -341,5 +350,28 @@ private final class RSSXMLParserDelegate: NSObject, XMLParserDelegate {
             guard seen.insert(lowered).inserted else { return nil }
             return normalized
         }
+    }
+
+    private func isImageMedia(type: String?, medium: String?, urlString: String) -> Bool {
+        if let type, type.hasPrefix("image/") {
+            return true
+        }
+
+        if let medium, medium == "image" {
+            return true
+        }
+
+        return hasKnownImageFileExtension(urlString)
+    }
+
+    private func hasKnownImageFileExtension(_ urlString: String) -> Bool {
+        guard let url = URL(string: urlString) else { return false }
+        let pathExtension = url.pathExtension.lowercased()
+        guard pathExtension.isEmpty == false else { return false }
+
+        let knownImageExtensions: Set<String> = [
+            "jpg", "jpeg", "png", "webp", "gif", "bmp", "tiff", "svg", "avif", "heic", "heif"
+        ]
+        return knownImageExtensions.contains(pathExtension)
     }
 }
