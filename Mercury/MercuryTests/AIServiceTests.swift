@@ -105,9 +105,25 @@ struct AIServiceTests {
     }
 
     @Test
-    func updateConfigurationFailsWhenAnyModelIsMissing() async {
+    func updateConfigurationAllowsMissingModelsForInactiveProviders() async throws {
         var configuration = completeConfiguration(active: .openAI)
         configuration.setModel("", for: .claude)
+
+        let service = AIService(
+            configurationStore: InMemoryAIProviderConfigurationStore(initialConfiguration: .empty),
+            credentialStore: InMemoryAIProviderCredentialStore(),
+            providerFactory: { context in
+                FixedAIProvider(id: context.providerID)
+            }
+        )
+
+        _ = try await service.updateProviderConfiguration(configuration)
+    }
+
+    @Test
+    func updateConfigurationFailsWhenActiveProviderModelIsMissing() async {
+        var configuration = completeConfiguration(active: .openAI)
+        configuration.setModel("", for: .openAI)
 
         let service = AIService(
             configurationStore: InMemoryAIProviderConfigurationStore(initialConfiguration: .empty),

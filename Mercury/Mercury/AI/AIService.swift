@@ -434,9 +434,7 @@ actor AIService {
     private func validateCompleteConfiguration(_ configuration: AIProviderConfiguration) throws {
         try validateTimeout(configuration.timeoutSeconds)
         _ = try AIProviderSupport.validatedURL(from: configuration.ollamaEndpoint, allowHTTP: true)
-        for providerID in AIProviderID.allCases {
-            try validateModelPresence(for: providerID, configuration: configuration)
-        }
+        try validateModelPresence(for: configuration.activeProviderID, configuration: configuration)
     }
 
     private func validateModelPresence(

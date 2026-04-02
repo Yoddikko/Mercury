@@ -283,6 +283,9 @@ final class DeveloperAIProviderSettingsViewModel: ObservableObject {
         }
 
         do {
+            let configuration = try buildConfiguration()
+            _ = try await aiService.updateProviderConfiguration(configuration)
+
             let summary = try await aiService.summarizeArticle(normalizedPrompt, requestID: requestID)
             let category = try await aiService.categorizeArticle(normalizedPrompt, requestID: requestID)
             let tags = try await aiService.generateTags(normalizedPrompt, requestID: requestID)

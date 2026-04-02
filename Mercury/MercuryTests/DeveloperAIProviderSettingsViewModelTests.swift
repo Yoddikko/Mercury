@@ -134,6 +134,36 @@ struct DeveloperAIProviderSettingsViewModelTests {
         #expect(viewModel.checkCategoryOutput == "Technology")
         #expect(viewModel.checkTagsOutput == "AI, News, Product")
     }
+
+    @Test @MainActor
+    func runChecksUsesCurrentModelSelectionWithoutManualSave() async {
+        let configurationStore = InMemoryAIProviderConfigurationStore2(
+            initialConfiguration: .empty
+        )
+        let credentialStore = InMemoryAIProviderCredentialStore2(
+            initialTokens: [.openAI: "token-openai"]
+        )
+        let service = AIService(
+            configurationStore: configurationStore,
+            credentialStore: credentialStore,
+            providerFactory: { context in
+                FixedAIProvider2(id: context.providerID)
+            }
+        )
+
+        let viewModel = DeveloperAIProviderSettingsViewModel(aiService: service)
+        await viewModel.load()
+        viewModel.openAIModel = "gpt-4.1-mini"
+        viewModel.checkPrompt = "Mercury test prompt"
+
+        await viewModel.runChecks()
+
+        #expect(viewModel.errorMessage == nil)
+        #expect(viewModel.checkSummaryOutput.contains("Fixed summary"))
+
+        let reloadedConfiguration = await service.loadProviderConfiguration()
+        #expect(reloadedConfiguration.model(for: .openAI) == "gpt-4.1-mini")
+    }
 }
 
 private func completeConfiguration2(active: AIProviderID) -> AIProviderConfiguration {
