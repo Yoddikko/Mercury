@@ -58,6 +58,61 @@ struct DeveloperAIProviderSettingsViewModelTests {
     }
 
     @Test @MainActor
+    func fetchModelsUsesCapturedProviderWhenSelectionChangesMidRequest() async {
+        let configurationStore = InMemoryAIProviderConfigurationStore2(
+            initialConfiguration: completeConfiguration2(active: .openAI)
+        )
+        let credentialStore = InMemoryAIProviderCredentialStore2()
+        let responseData = Data(
+            """
+            {
+              "data": [
+                { "id": "gpt-4.1-mini" },
+                { "id": "gpt-4o-mini" }
+              ]
+            }
+            """.utf8
+        )
+        let service = AIService(
+            configurationStore: configurationStore,
+            credentialStore: credentialStore,
+            providerFactory: { context in
+                FixedAIProvider2(id: context.providerID)
+            },
+            performRequest: { _ in
+                try await Task.sleep(nanoseconds: 150_000_000)
+                let responseURL = URL(string: "https://api.openai.com/v1/models")!
+                let response = HTTPURLResponse(
+                    url: responseURL,
+                    statusCode: 200,
+                    httpVersion: nil,
+                    headerFields: ["Content-Type": "application/json"]
+                )!
+                return (responseData, response)
+            }
+        )
+
+        let viewModel = DeveloperAIProviderSettingsViewModel(aiService: service)
+        await viewModel.load()
+        viewModel.openAIModel = ""
+        viewModel.claudeModel = "claude-3-5-sonnet-latest"
+        viewModel.openAITokenInput = "token-openai"
+
+        let fetchTask = Task { @MainActor in
+            await viewModel.fetchAvailableModelsForActiveProvider()
+        }
+        try? await Task.sleep(nanoseconds: 30_000_000)
+        viewModel.activeProviderID = .claude
+        await fetchTask.value
+
+        #expect(viewModel.errorMessage == nil)
+        #expect(viewModel.activeProviderID == .claude)
+        #expect(viewModel.openAIModel == "gpt-4.1-mini")
+        #expect(viewModel.claudeModel == "claude-3-5-sonnet-latest")
+        #expect(viewModel.availableModels.isEmpty)
+    }
+
+    @Test @MainActor
     func saveConfigurationShowsValidationErrorForInvalidTimeout() async {
         let configurationStore = InMemoryAIProviderConfigurationStore2(
             initialConfiguration: completeConfiguration2(active: .openAI)

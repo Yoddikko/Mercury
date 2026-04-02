@@ -183,7 +183,8 @@ final class DeveloperAIProviderSettingsViewModel: ObservableObject {
             isFetchingModels = false
         }
 
-        let tokenOverride = normalizedToken(activeTokenInput)
+        let providerID = activeProviderID
+        let tokenOverride = normalizedToken(tokenInput(for: providerID))
         let requestID = "debug-ai-models-\(UUID().uuidString.lowercased())"
 
         logger.info(
@@ -192,29 +193,29 @@ final class DeveloperAIProviderSettingsViewModel: ObservableObject {
             service: "DeveloperAIProviderSettingsViewModel",
             requestID: requestID,
             metadata: [
-                "provider": activeProviderID.rawValue,
+                "provider": providerID.rawValue,
                 "has_token_override": tokenOverride == nil ? "false" : "true"
             ]
         )
 
         do {
             if tokenOverride != nil {
-                try await aiService.saveToken(tokenOverride, for: activeProviderID)
-                clearActiveTokenInput()
+                try await aiService.saveToken(tokenOverride, for: providerID)
+                clearTokenInput(for: providerID)
                 await refreshTokenFlags()
             }
 
             let models = try await aiService.fetchAvailableModels(
-                for: activeProviderID,
+                for: providerID,
                 requestID: requestID
             )
-            modelCatalogByProvider[activeProviderID] = models
-            availableModels = models
+            modelCatalogByProvider[providerID] = models
 
-            let currentModel = activeModel.trimmingCharacters(in: .whitespacesAndNewlines)
+            let currentModel = model(for: providerID).trimmingCharacters(in: .whitespacesAndNewlines)
             if currentModel.isEmpty || models.contains(currentModel) == false {
-                activeModel = models.first ?? ""
+                setModel(models.first ?? "", for: providerID)
             }
+            syncAvailableModelsForActiveProvider()
 
             statusMessage = String(
                 localized: "developer.playground.ai_provider_configuration.status.models_loaded",
@@ -227,7 +228,7 @@ final class DeveloperAIProviderSettingsViewModel: ObservableObject {
                 service: "DeveloperAIProviderSettingsViewModel",
                 requestID: requestID,
                 metadata: [
-                    "provider": activeProviderID.rawValue,
+                    "provider": providerID.rawValue,
                     "models_count": "\(models.count)"
                 ]
             )
@@ -239,7 +240,7 @@ final class DeveloperAIProviderSettingsViewModel: ObservableObject {
                 service: "DeveloperAIProviderSettingsViewModel",
                 requestID: requestID,
                 metadata: [
-                    "provider": activeProviderID.rawValue,
+                    "provider": providerID.rawValue,
                     "error": error.localizedDescription
                 ]
             )
@@ -395,7 +396,11 @@ final class DeveloperAIProviderSettingsViewModel: ObservableObject {
     }
 
     private func clearActiveTokenInput() {
-        switch activeProviderID {
+        clearTokenInput(for: activeProviderID)
+    }
+
+    private func clearTokenInput(for providerID: AIProviderID) {
+        switch providerID {
         case .openAI:
             openAITokenInput = ""
         case .claude:
@@ -404,6 +409,45 @@ final class DeveloperAIProviderSettingsViewModel: ObservableObject {
             geminiTokenInput = ""
         case .ollama:
             ollamaTokenInput = ""
+        }
+    }
+
+    private func tokenInput(for providerID: AIProviderID) -> String {
+        switch providerID {
+        case .openAI:
+            openAITokenInput
+        case .claude:
+            claudeTokenInput
+        case .gemini:
+            geminiTokenInput
+        case .ollama:
+            ollamaTokenInput
+        }
+    }
+
+    private func model(for providerID: AIProviderID) -> String {
+        switch providerID {
+        case .openAI:
+            openAIModel
+        case .claude:
+            claudeModel
+        case .gemini:
+            geminiModel
+        case .ollama:
+            ollamaModel
+        }
+    }
+
+    private func setModel(_ model: String, for providerID: AIProviderID) {
+        switch providerID {
+        case .openAI:
+            openAIModel = model
+        case .claude:
+            claudeModel = model
+        case .gemini:
+            geminiModel = model
+        case .ollama:
+            ollamaModel = model
         }
     }
 
