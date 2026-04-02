@@ -10,13 +10,13 @@ import Foundation
 typealias AIProviderRequestExecutor = @Sendable (URLRequest) async throws -> (Data, URLResponse)
 
 enum AIProviderSupport {
-    static func providerRequestExecutor() -> AIProviderRequestExecutor {
+    nonisolated static func providerRequestExecutor() -> AIProviderRequestExecutor {
         { request in
             try await URLSession.shared.data(for: request)
         }
     }
 
-    static func performRequest(
+    nonisolated static func performRequest(
         _ request: URLRequest,
         requestID: String?,
         service: String,
@@ -114,7 +114,7 @@ enum AIProviderSupport {
         }
     }
 
-    static func encodeJSONBody(_ object: Any) throws -> Data {
+    nonisolated static func encodeJSONBody(_ object: Any) throws -> Data {
         do {
             return try JSONSerialization.data(withJSONObject: object, options: [])
         } catch {
@@ -122,7 +122,7 @@ enum AIProviderSupport {
         }
     }
 
-    static func decodeJSONObject(from data: Data) throws -> [String: Any] {
+    nonisolated static func decodeJSONObject(from data: Data) throws -> [String: Any] {
         do {
             let value = try JSONSerialization.jsonObject(with: data)
             guard let object = value as? [String: Any] else {
@@ -136,7 +136,7 @@ enum AIProviderSupport {
         }
     }
 
-    static func decodeJSONArray(from data: Data) throws -> [Any] {
+    nonisolated static func decodeJSONArray(from data: Data) throws -> [Any] {
         do {
             let value = try JSONSerialization.jsonObject(with: data)
             guard let array = value as? [Any] else {
@@ -150,7 +150,7 @@ enum AIProviderSupport {
         }
     }
 
-    static func parseJSONObjectString(from text: String) throws -> [String: Any] {
+    nonisolated static func parseJSONObjectString(from text: String) throws -> [String: Any] {
         let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
         guard trimmed.isEmpty == false else {
             throw AIProviderError.emptyResponse
@@ -168,7 +168,7 @@ enum AIProviderSupport {
         return object
     }
 
-    static func normalizedSummary(from object: [String: Any]) throws -> AISummaryResult {
+    nonisolated static func normalizedSummary(from object: [String: Any]) throws -> AISummaryResult {
         let shortSummary = sanitizeText(object["shortSummary"] as? String)
         guard shortSummary.isEmpty == false else {
             throw AIProviderError.parsingFailure("Missing shortSummary.")
@@ -188,7 +188,7 @@ enum AIProviderSupport {
         return AISummaryResult(shortSummary: shortSummary, bullets: resolvedBullets)
     }
 
-    static func normalizedCategory(from object: [String: Any]) throws -> AICategoryResult {
+    nonisolated static func normalizedCategory(from object: [String: Any]) throws -> AICategoryResult {
         let category = sanitizeText(object["category"] as? String)
         guard category.isEmpty == false else {
             throw AIProviderError.parsingFailure("Missing category.")
@@ -196,7 +196,7 @@ enum AIProviderSupport {
         return AICategoryResult(category: category)
     }
 
-    static func normalizedTags(from object: [String: Any]) throws -> [String] {
+    nonisolated static func normalizedTags(from object: [String: Any]) throws -> [String] {
         let tags = deduplicatedList(
             (object["tags"] as? [Any] ?? []).compactMap { element in
                 sanitizeText(element as? String)
@@ -209,13 +209,13 @@ enum AIProviderSupport {
         return resolved
     }
 
-    static func ensureHTTPS(_ url: URL) throws {
+    nonisolated static func ensureHTTPS(_ url: URL) throws {
         guard url.scheme?.lowercased() == "https" else {
             throw AIProviderError.invalidEndpoint(url.absoluteString)
         }
     }
 
-    static func validatedURL(from value: String, allowHTTP: Bool = false) throws -> URL {
+    nonisolated static func validatedURL(from value: String, allowHTTP: Bool = false) throws -> URL {
         guard let url = URL(string: value.trimmingCharacters(in: .whitespacesAndNewlines)) else {
             throw AIProviderError.invalidEndpoint(value)
         }
@@ -237,14 +237,14 @@ enum AIProviderSupport {
         return url
     }
 
-    private static func firstJSONObjectCandidate(in text: String) -> String? {
+    nonisolated private static func firstJSONObjectCandidate(in text: String) -> String? {
         guard let start = text.firstIndex(of: "{") else { return nil }
         guard let end = text.lastIndex(of: "}") else { return nil }
         guard start < end else { return nil }
         return String(text[start...end])
     }
 
-    private static func deduplicatedList(_ values: [String]) -> [String] {
+    nonisolated private static func deduplicatedList(_ values: [String]) -> [String] {
         var seen: Set<String> = []
         var output: [String] = []
         output.reserveCapacity(values.count)
@@ -259,7 +259,7 @@ enum AIProviderSupport {
         return output
     }
 
-    private static func sanitizeText(_ value: String?) -> String {
+    nonisolated private static func sanitizeText(_ value: String?) -> String {
         guard let value else { return "" }
         let collapsed = value
             .replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
@@ -267,7 +267,7 @@ enum AIProviderSupport {
         return collapsed
     }
 
-    private static func mapURLError(_ error: URLError) -> AIProviderError {
+    nonisolated private static func mapURLError(_ error: URLError) -> AIProviderError {
         switch error.code {
         case .timedOut:
             return .timeout
@@ -278,7 +278,7 @@ enum AIProviderSupport {
         }
     }
 
-    private static func mapHTTPStatusCode(_ code: Int) -> AIProviderError {
+    nonisolated private static func mapHTTPStatusCode(_ code: Int) -> AIProviderError {
         switch code {
         case 401, 403:
             return .unauthorized
@@ -291,7 +291,7 @@ enum AIProviderSupport {
         }
     }
 
-    private static func elapsedMilliseconds(since start: UInt64) -> Int {
+    nonisolated private static func elapsedMilliseconds(since start: UInt64) -> Int {
         let now = DispatchTime.now().uptimeNanoseconds
         let delta = now >= start ? now - start : 0
         return Int(delta / 1_000_000)

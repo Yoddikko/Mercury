@@ -13,9 +13,9 @@ enum AIProviderID: String, CaseIterable, Codable, Sendable, Identifiable {
     case gemini = "gemini"
     case ollama = "ollama"
 
-    var id: String { rawValue }
+    nonisolated var id: String { rawValue }
 
-    var displayName: String {
+    nonisolated var displayName: String {
         switch self {
         case .openAI:
             return "OpenAI"
@@ -28,7 +28,7 @@ enum AIProviderID: String, CaseIterable, Codable, Sendable, Identifiable {
         }
     }
 
-    var requiresToken: Bool {
+    nonisolated var requiresToken: Bool {
         switch self {
         case .openAI, .claude, .gemini:
             return true
@@ -39,12 +39,12 @@ enum AIProviderID: String, CaseIterable, Codable, Sendable, Identifiable {
 }
 
 struct AISummaryResult: Sendable, Equatable {
-    let shortSummary: String
-    let bullets: [String]
+    nonisolated let shortSummary: String
+    nonisolated let bullets: [String]
 }
 
 struct AICategoryResult: Sendable, Equatable {
-    let category: String
+    nonisolated let category: String
 }
 
 typealias AITagsResult = [String]
@@ -67,15 +67,15 @@ struct AIProviderConfiguration: Sendable, Equatable, Codable {
         self.timeoutSeconds = timeoutSeconds
     }
 
-    func model(for providerID: AIProviderID) -> String {
+    nonisolated func model(for providerID: AIProviderID) -> String {
         modelByProvider[providerID]?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
     }
 
-    mutating func setModel(_ model: String, for providerID: AIProviderID) {
+    nonisolated mutating func setModel(_ model: String, for providerID: AIProviderID) {
         modelByProvider[providerID] = model.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
-    static var empty: AIProviderConfiguration { AIProviderConfiguration() }
+    nonisolated static var empty: AIProviderConfiguration { AIProviderConfiguration() }
 }
 
 enum AIProviderError: Error, Sendable, Equatable, LocalizedError {
@@ -138,4 +138,3 @@ enum AIServiceError: Error, Sendable, Equatable, LocalizedError {
         }
     }
 }
-

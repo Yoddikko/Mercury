@@ -8,9 +8,9 @@
 import Foundation
 
 protocol AIProvider: Sendable {
-    var id: AIProviderID { get }
+    nonisolated var id: AIProviderID { get }
 
-    func summarizeArticle(_ content: String, requestID: String?) async throws -> AISummaryResult
-    func categorizeArticle(_ content: String, requestID: String?) async throws -> AICategoryResult
-    func generateTags(_ content: String, requestID: String?) async throws -> [String]
+    nonisolated func summarizeArticle(_ content: String, requestID: String?) async throws -> AISummaryResult
+    nonisolated func categorizeArticle(_ content: String, requestID: String?) async throws -> AICategoryResult
+    nonisolated func generateTags(_ content: String, requestID: String?) async throws -> [String]
 }

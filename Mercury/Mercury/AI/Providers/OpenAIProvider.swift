@@ -8,7 +8,7 @@
 import Foundation
 
 struct OpenAIProvider: AIProvider {
-    let id: AIProviderID = .openAI
+    nonisolated let id: AIProviderID = .openAI
 
     private let model: String
     private let token: String
@@ -16,7 +16,7 @@ struct OpenAIProvider: AIProvider {
     private let logger: AppLogger
     private let performRequest: AIProviderRequestExecutor
 
-    init(
+    nonisolated init(
         model: String,
         token: String,
         timeoutSeconds: Double,
@@ -30,7 +30,7 @@ struct OpenAIProvider: AIProvider {
         self.performRequest = performRequest
     }
 
-    func summarizeArticle(_ content: String, requestID: String?) async throws -> AISummaryResult {
+    nonisolated func summarizeArticle(_ content: String, requestID: String?) async throws -> AISummaryResult {
         logger.debug(
             "Running summary operation",
             category: .business,
@@ -49,7 +49,7 @@ struct OpenAIProvider: AIProvider {
         return try AIProviderSupport.normalizedSummary(from: output)
     }
 
-    func categorizeArticle(_ content: String, requestID: String?) async throws -> AICategoryResult {
+    nonisolated func categorizeArticle(_ content: String, requestID: String?) async throws -> AICategoryResult {
         logger.debug(
             "Running category operation",
             category: .business,
@@ -68,7 +68,7 @@ struct OpenAIProvider: AIProvider {
         return try AIProviderSupport.normalizedCategory(from: output)
     }
 
-    func generateTags(_ content: String, requestID: String?) async throws -> [String] {
+    nonisolated func generateTags(_ content: String, requestID: String?) async throws -> [String] {
         logger.debug(
             "Running tag generation operation",
             category: .business,
@@ -87,7 +87,7 @@ struct OpenAIProvider: AIProvider {
         return try AIProviderSupport.normalizedTags(from: output)
     }
 
-    private func runPrompt(
+    nonisolated private func runPrompt(
         prompt: String,
         requestID: String?
     ) async throws -> [String: Any] {
@@ -137,7 +137,7 @@ struct OpenAIProvider: AIProvider {
         return try AIProviderSupport.parseJSONObjectString(from: text)
     }
 
-    private func extractedText(from object: [String: Any]) throws -> String {
+    nonisolated private func extractedText(from object: [String: Any]) throws -> String {
         guard let choices = object["choices"] as? [[String: Any]], let first = choices.first else {
             throw AIProviderError.unsupportedResponse("Missing choices in OpenAI response.")
         }
@@ -164,4 +164,3 @@ struct OpenAIProvider: AIProvider {
         throw AIProviderError.unsupportedResponse("Unsupported OpenAI content format.")
     }
 }
-

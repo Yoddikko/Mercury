@@ -11,6 +11,48 @@ import Testing
 
 struct AIProvidersTests {
     @Test
+    func openAIProviderExecutorReceivesStableRequestSnapshot() async throws {
+        let responseData = Data(
+            """
+            {
+              "choices": [
+                {
+                  "message": {
+                    "content": "{\\"shortSummary\\":\\"Short summary\\",\\"bullets\\":[\\"One\\",\\"Two\\"]}"
+                  }
+                }
+              ]
+            }
+            """.utf8
+        )
+        let observer = RequestObserver()
+
+        let provider = OpenAIProvider(
+            model: "gpt-test",
+            token: "openai-token",
+            timeoutSeconds: 10,
+            performRequest: { request in
+                await observer.capture(from: request)
+                let responseURL = URL(string: "https://example.invalid/openai")!
+                let response = HTTPURLResponse(
+                    url: responseURL,
+                    statusCode: 200,
+                    httpVersion: nil,
+                    headerFields: ["Content-Type": "application/json"]
+                )!
+                return (responseData, response)
+            }
+        )
+
+        _ = try await provider.summarizeArticle("Example article", requestID: "req-openai-stable-request")
+        let snapshot = await observer.snapshot()
+
+        #expect(snapshot.url == "https://api.openai.com/v1/chat/completions")
+        #expect(snapshot.method == "POST")
+        #expect(snapshot.authorizationHeader?.hasPrefix("Bearer ") == true)
+    }
+
+    @Test
     func openAIProviderBuildsRequestAndParsesSummary() async throws {
         let responseData = Data(
             """
@@ -183,5 +225,25 @@ struct AIProvidersTests {
         } catch {
             Issue.record("Unexpected error type: \(error)")
         }
+    }
+}
+
+private actor RequestObserver {
+    struct Snapshot {
+        var url: String?
+        var method: String?
+        var authorizationHeader: String?
+    }
+
+    private var snapshotValue = Snapshot()
+
+    func capture(from request: URLRequest) {
+        snapshotValue.url = request.url?.absoluteString
+        snapshotValue.method = request.httpMethod
+        snapshotValue.authorizationHeader = request.value(forHTTPHeaderField: "Authorization")
+    }
+
+    func snapshot() -> Snapshot {
+        snapshotValue
     }
 }
