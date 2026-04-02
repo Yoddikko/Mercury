@@ -13,7 +13,7 @@ struct ArticleContentEnrichmentService: Sendable {
     private let logger: AppLogger
     private let maxFetchesPerSource: Int
 
-    init(
+    nonisolated init(
         pageClient: ArticlePageClient = ArticlePageClient(),
         extractor: ArticlePageContentExtractor = ArticlePageContentExtractor(),
         logger: AppLogger = .shared,
