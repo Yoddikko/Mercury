@@ -35,6 +35,7 @@ struct DeveloperPlaygroundScreen: View {
     @Query(sort: \StoredArticle.createdAt, order: .reverse) private var storedArticles: [StoredArticle]
     @StateObject private var rssDiagnosticsViewModel = DeveloperRSSDiagnosticsViewModel()
     @StateObject private var aiProviderSettingsViewModel = DeveloperAIProviderSettingsViewModel()
+    @StateObject private var aiFeatureTestsViewModel = DeveloperAIFeatureTestsViewModel()
     private let logger = AppLogger.shared
 
     @State private var storedLogEntries = 0
@@ -253,6 +254,8 @@ struct DeveloperPlaygroundScreen: View {
                         .accessibilityIdentifier("developer.playground.ai.error")
                 }
             }
+
+            aiFeatureTestsSection
 
             Section(viewModel.swiftDataSandboxSectionTitle) {
                 Text(viewModel.storedDebugRecordsLabel(count: storedArticles.count))
@@ -551,6 +554,192 @@ struct DeveloperPlaygroundScreen: View {
             Text(viewModel.aiProviderTokenStateLabel(hasToken: hasToken))
                 .font(.caption2)
                 .foregroundStyle(hasToken ? .green : .secondary)
+        }
+    }
+
+    @ViewBuilder
+    private var aiFeatureTestsSection: some View {
+        Section(viewModel.aiFeatureTestsSectionTitle) {
+            Text(viewModel.aiFeatureTestsDescription)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+
+            Picker(
+                viewModel.aiFeatureTestsSamplePickerLabel,
+                selection: $aiFeatureTestsViewModel.selectedSampleID
+            ) {
+                ForEach(aiFeatureTestsViewModel.availableSamples) { sample in
+                    Text(aiFeatureTestsViewModel.sampleTitle(sample)).tag(sample.id)
+                }
+            }
+            .accessibilityHint(viewModel.aiFeatureTestsSamplePickerAccessibilityHint)
+            .accessibilityIdentifier("developer.playground.ai_features.samplePicker")
+
+            if let sample = aiFeatureTestsViewModel.currentSample {
+                Text(aiFeatureTestsViewModel.sampleDescription(sample))
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    .accessibilityIdentifier("developer.playground.ai_features.sampleDescription")
+            }
+
+            TextField(
+                viewModel.aiFeatureTestsCustomPromptLabel,
+                text: $aiFeatureTestsViewModel.customPromptOverride,
+                axis: .vertical
+            )
+            .lineLimit(3...8)
+            .accessibilityHint(viewModel.aiFeatureTestsCustomPromptAccessibilityHint)
+            .accessibilityIdentifier("developer.playground.ai_features.customPrompt")
+
+            ForEach(DeveloperAIFeatureKind.allCases) { kind in
+                aiFeatureRow(for: kind)
+            }
+
+            HStack {
+                Button(viewModel.aiFeatureTestsRunAllLabel) {
+                    Task {
+                        await aiFeatureTestsViewModel.runAllFeatures()
+                    }
+                }
+                .disabled(aiFeatureTestsViewModel.isRunningAny)
+                .accessibilityHint(viewModel.aiFeatureTestsRunAllAccessibilityHint)
+                .accessibilityIdentifier("developer.playground.ai_features.runAll")
+
+                Button(viewModel.aiFeatureTestsClearLabel, role: .destructive) {
+                    aiFeatureTestsViewModel.clearResults()
+                }
+                .disabled(aiFeatureTestsViewModel.outcomesByFeature.isEmpty)
+                .accessibilityHint(viewModel.aiFeatureTestsClearAccessibilityHint)
+                .accessibilityIdentifier("developer.playground.ai_features.clear")
+            }
+
+            if let statusMessage = aiFeatureTestsViewModel.lastStatusMessage {
+                Text(statusMessage)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .accessibilityIdentifier("developer.playground.ai_features.status")
+            }
+
+            if let errorMessage = aiFeatureTestsViewModel.lastErrorMessage {
+                Text(errorMessage)
+                    .font(.caption)
+                    .foregroundStyle(.red)
+                    .accessibilityIdentifier("developer.playground.ai_features.error")
+            }
+        }
+        .accessibilityIdentifier("developer.playground.ai_features.section")
+    }
+
+    @ViewBuilder
+    private func aiFeatureRow(for kind: DeveloperAIFeatureKind) -> some View {
+        let featureName = aiFeatureTestsViewModel.displayName(for: kind)
+        let isRunning = aiFeatureTestsViewModel.isRunning(kind)
+        let outcome = aiFeatureTestsViewModel.outcomesByFeature[kind]
+        let stateLabel = aiFeatureStateLabel(isRunning: isRunning, outcome: outcome)
+
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(alignment: .firstTextBaseline) {
+                Text(featureName)
+                    .font(.headline)
+                Spacer()
+                Text(stateLabel)
+                    .font(.caption)
+                    .foregroundStyle(aiFeatureStateColor(isRunning: isRunning, outcome: outcome))
+            }
+
+            Text(aiFeatureTestsViewModel.promptSource(for: kind))
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+
+            Button(viewModel.aiFeatureTestsRunButtonLabel(featureName)) {
+                Task {
+                    await aiFeatureTestsViewModel.runFeature(kind)
+                }
+            }
+            .disabled(isRunning)
+            .accessibilityHint(viewModel.aiFeatureTestsRunButtonAccessibilityHint)
+            .accessibilityIdentifier("developer.playground.ai_features.run.\(kind.rawValue)")
+
+            if isRunning {
+                ProgressView()
+                    .accessibilityIdentifier("developer.playground.ai_features.progress.\(kind.rawValue)")
+            }
+
+            if let outcome {
+                Text(
+                    viewModel.aiFeatureTestsMetadataLabel(
+                        providerName: outcome.providerID.displayName,
+                        model: outcome.model,
+                        durationMs: outcome.durationMs
+                    )
+                )
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+                .accessibilityIdentifier("developer.playground.ai_features.metadata.\(kind.rawValue)")
+
+                switch outcome.status {
+                case .success:
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(viewModel.aiFeatureTestsResultLabel)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        Text(outcome.output)
+                            .font(.footnote)
+                            .textSelection(.enabled)
+                            .accessibilityIdentifier("developer.playground.ai_features.result.\(kind.rawValue)")
+                    }
+                case let .failure(message):
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(viewModel.aiFeatureTestsErrorLabel)
+                            .font(.caption)
+                            .foregroundStyle(.red)
+                        Text(message)
+                            .font(.footnote)
+                            .foregroundStyle(.red)
+                            .textSelection(.enabled)
+                            .accessibilityIdentifier("developer.playground.ai_features.failure.\(kind.rawValue)")
+                    }
+                }
+            }
+        }
+        .padding(.vertical, 4)
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("developer.playground.ai_features.row.\(kind.rawValue)")
+    }
+
+    private func aiFeatureStateLabel(
+        isRunning: Bool,
+        outcome: DeveloperAIFeatureRunOutcome?
+    ) -> String {
+        if isRunning {
+            return viewModel.aiFeatureTestsStateRunningLabel
+        }
+        guard let outcome else {
+            return viewModel.aiFeatureTestsStateIdleLabel
+        }
+        switch outcome.status {
+        case .success:
+            return viewModel.aiFeatureTestsStateSuccessLabel
+        case .failure:
+            return viewModel.aiFeatureTestsStateFailedLabel
+        }
+    }
+
+    private func aiFeatureStateColor(
+        isRunning: Bool,
+        outcome: DeveloperAIFeatureRunOutcome?
+    ) -> Color {
+        if isRunning {
+            return .blue
+        }
+        guard let outcome else {
+            return .gray
+        }
+        switch outcome.status {
+        case .success:
+            return .green
+        case .failure:
+            return .red
         }
     }
 

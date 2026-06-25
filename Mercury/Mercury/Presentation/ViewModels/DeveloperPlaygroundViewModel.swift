@@ -419,6 +419,141 @@ struct DeveloperPlaygroundViewModel {
         String(localized: "developer.playground.rss.article_inspector.displayed_content.article_page", defaultValue: "Article page fetch")
     }
 
+    var aiFeatureTestsSectionTitle: String {
+        String(
+            localized: "developer.playground.section.ai_feature_tests",
+            defaultValue: "AI Feature Tests"
+        )
+    }
+
+    var aiFeatureTestsDescription: String {
+        String(
+            localized: "developer.playground.ai_features.description",
+            defaultValue: "Run a single AI feature against a curated sample article or your own prompt. Useful for isolating summarization, categorization, or tag generation regressions."
+        )
+    }
+
+    var aiFeatureTestsSamplePickerLabel: String {
+        String(
+            localized: "developer.playground.ai_features.sample_picker",
+            defaultValue: "Sample article"
+        )
+    }
+
+    var aiFeatureTestsSamplePickerAccessibilityHint: String {
+        String(
+            localized: "developer.playground.ai_features.sample_picker.accessibility_hint",
+            defaultValue: "Pick the dummy article that will be sent to the AI feature."
+        )
+    }
+
+    var aiFeatureTestsCustomPromptLabel: String {
+        String(
+            localized: "developer.playground.ai_features.custom_prompt",
+            defaultValue: "Custom prompt (optional)"
+        )
+    }
+
+    var aiFeatureTestsCustomPromptAccessibilityHint: String {
+        String(
+            localized: "developer.playground.ai_features.custom_prompt.accessibility_hint",
+            defaultValue: "When non-empty, this text replaces the selected sample article."
+        )
+    }
+
+    var aiFeatureTestsRunAllLabel: String {
+        String(
+            localized: "developer.playground.ai_features.run_all_button",
+            defaultValue: "Run all features"
+        )
+    }
+
+    var aiFeatureTestsRunAllAccessibilityHint: String {
+        String(
+            localized: "developer.playground.ai_features.run_all_button.accessibility_hint",
+            defaultValue: "Sequentially runs every AI feature against the resolved prompt."
+        )
+    }
+
+    var aiFeatureTestsClearLabel: String {
+        String(
+            localized: "developer.playground.ai_features.clear_button",
+            defaultValue: "Clear results"
+        )
+    }
+
+    var aiFeatureTestsClearAccessibilityHint: String {
+        String(
+            localized: "developer.playground.ai_features.clear_button.accessibility_hint",
+            defaultValue: "Removes the cached outcomes from the per-feature panels."
+        )
+    }
+
+    var aiFeatureTestsResultLabel: String {
+        String(
+            localized: "developer.playground.ai_features.result.label",
+            defaultValue: "Output"
+        )
+    }
+
+    var aiFeatureTestsErrorLabel: String {
+        String(
+            localized: "developer.playground.ai_features.error.label",
+            defaultValue: "Error"
+        )
+    }
+
+    var aiFeatureTestsStateIdleLabel: String {
+        String(
+            localized: "developer.playground.ai_features.state.idle",
+            defaultValue: "Idle"
+        )
+    }
+
+    var aiFeatureTestsStateRunningLabel: String {
+        String(
+            localized: "developer.playground.ai_features.state.running",
+            defaultValue: "Running…"
+        )
+    }
+
+    var aiFeatureTestsStateSuccessLabel: String {
+        String(
+            localized: "developer.playground.ai_features.state.success",
+            defaultValue: "Success"
+        )
+    }
+
+    var aiFeatureTestsStateFailedLabel: String {
+        String(
+            localized: "developer.playground.ai_features.state.failed",
+            defaultValue: "Failed"
+        )
+    }
+
+    var aiFeatureTestsRunButtonAccessibilityHint: String {
+        String(
+            localized: "developer.playground.ai_features.run_button.accessibility_hint",
+            defaultValue: "Sends the resolved prompt to the active AI provider for the selected feature."
+        )
+    }
+
+    func aiFeatureTestsRunButtonLabel(_ featureName: String) -> String {
+        let format = String(
+            localized: "developer.playground.ai_features.run_button",
+            defaultValue: "Run %@"
+        )
+        return String(format: format, locale: .current, featureName)
+    }
+
+    func aiFeatureTestsMetadataLabel(providerName: String, model: String, durationMs: Int) -> String {
+        let format = String(
+            localized: "developer.playground.ai_features.metadata.format",
+            defaultValue: "%@ • %@ • %lld ms"
+        )
+        return String(format: format, locale: .current, providerName, model, Int64(durationMs))
+    }
+
     var loggingSectionTitle: String {
         String(localized: "developer.playground.section.logging", defaultValue: "Logging")
     }
