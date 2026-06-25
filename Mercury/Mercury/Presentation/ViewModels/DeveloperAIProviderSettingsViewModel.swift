@@ -27,6 +27,7 @@ final class DeveloperAIProviderSettingsViewModel: ObservableObject {
     @Published var claudeModel = ""
     @Published var geminiModel = ""
     @Published var ollamaModel = ""
+    @Published var deepSeekModel = ""
     @Published var availableModels: [String] = []
     @Published var ollamaEndpoint = "http://localhost:11434"
     @Published var timeoutSecondsText = "20"
@@ -35,11 +36,13 @@ final class DeveloperAIProviderSettingsViewModel: ObservableObject {
     @Published var claudeTokenInput = ""
     @Published var geminiTokenInput = ""
     @Published var ollamaTokenInput = ""
+    @Published var deepSeekTokenInput = ""
 
     @Published var hasOpenAIToken = false
     @Published var hasClaudeToken = false
     @Published var hasGeminiToken = false
     @Published var hasOllamaToken = false
+    @Published var hasDeepSeekToken = false
 
     @Published var checkPrompt = ""
     @Published var checkSummaryOutput = ""
@@ -327,6 +330,7 @@ final class DeveloperAIProviderSettingsViewModel: ObservableObject {
         claudeModel = configuration.model(for: .claude)
         geminiModel = configuration.model(for: .gemini)
         ollamaModel = configuration.model(for: .ollama)
+        deepSeekModel = configuration.model(for: .deepSeek)
         ollamaEndpoint = configuration.ollamaEndpoint
         timeoutSecondsText = formattedTimeout(configuration.timeoutSeconds)
     }
@@ -352,6 +356,7 @@ final class DeveloperAIProviderSettingsViewModel: ObservableObject {
         configuration.setModel(claudeModel, for: .claude)
         configuration.setModel(geminiModel, for: .gemini)
         configuration.setModel(ollamaModel, for: .ollama)
+        configuration.setModel(deepSeekModel, for: .deepSeek)
         return configuration
     }
 
@@ -389,6 +394,7 @@ final class DeveloperAIProviderSettingsViewModel: ObservableObject {
         hasClaudeToken = (try? await aiService.loadToken(for: .claude))?.isEmpty == false
         hasGeminiToken = (try? await aiService.loadToken(for: .gemini))?.isEmpty == false
         hasOllamaToken = (try? await aiService.loadToken(for: .ollama))?.isEmpty == false
+        hasDeepSeekToken = (try? await aiService.loadToken(for: .deepSeek))?.isEmpty == false
     }
 
     private func syncAvailableModelsForActiveProvider() {
@@ -409,6 +415,8 @@ final class DeveloperAIProviderSettingsViewModel: ObservableObject {
             geminiTokenInput = ""
         case .ollama:
             ollamaTokenInput = ""
+        case .deepSeek:
+            deepSeekTokenInput = ""
         }
     }
 
@@ -422,6 +430,8 @@ final class DeveloperAIProviderSettingsViewModel: ObservableObject {
             geminiTokenInput
         case .ollama:
             ollamaTokenInput
+        case .deepSeek:
+            deepSeekTokenInput
         }
     }
 
@@ -435,6 +445,8 @@ final class DeveloperAIProviderSettingsViewModel: ObservableObject {
             geminiModel
         case .ollama:
             ollamaModel
+        case .deepSeek:
+            deepSeekModel
         }
     }
 
@@ -448,6 +460,8 @@ final class DeveloperAIProviderSettingsViewModel: ObservableObject {
             geminiModel = model
         case .ollama:
             ollamaModel = model
+        case .deepSeek:
+            deepSeekModel = model
         }
     }
 
@@ -462,6 +476,8 @@ final class DeveloperAIProviderSettingsViewModel: ObservableObject {
                 return geminiModel
             case .ollama:
                 return ollamaModel
+            case .deepSeek:
+                return deepSeekModel
             }
         }
         set {
@@ -474,6 +490,8 @@ final class DeveloperAIProviderSettingsViewModel: ObservableObject {
                 geminiModel = newValue
             case .ollama:
                 ollamaModel = newValue
+            case .deepSeek:
+                deepSeekModel = newValue
             }
         }
     }
@@ -489,6 +507,8 @@ final class DeveloperAIProviderSettingsViewModel: ObservableObject {
                 return geminiTokenInput
             case .ollama:
                 return ollamaTokenInput
+            case .deepSeek:
+                return deepSeekTokenInput
             }
         }
         set {
@@ -501,6 +521,8 @@ final class DeveloperAIProviderSettingsViewModel: ObservableObject {
                 geminiTokenInput = newValue
             case .ollama:
                 ollamaTokenInput = newValue
+            case .deepSeek:
+                deepSeekTokenInput = newValue
             }
         }
     }
@@ -515,6 +537,8 @@ final class DeveloperAIProviderSettingsViewModel: ObservableObject {
             return hasGeminiToken
         case .ollama:
             return hasOllamaToken
+        case .deepSeek:
+            return hasDeepSeekToken
         }
     }
 

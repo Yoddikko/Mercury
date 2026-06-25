@@ -484,6 +484,13 @@ actor AIService {
                 timeoutSeconds: context.timeoutSeconds,
                 logger: context.logger
             )
+        case .deepSeek:
+            return DeepSeekProvider(
+                model: context.model,
+                token: context.token ?? "",
+                timeoutSeconds: context.timeoutSeconds,
+                logger: context.logger
+            )
         }
     }
 
@@ -574,6 +581,16 @@ actor AIService {
                 request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
             }
             return request
+        case .deepSeek:
+            guard let token else {
+                throw AIServiceError.missingToken(.deepSeek)
+            }
+            let endpoint = try AIProviderSupport.validatedURL(from: "https://api.deepseek.com/v1/models")
+            var request = URLRequest(url: endpoint)
+            request.httpMethod = "GET"
+            request.timeoutInterval = configuration.timeoutSeconds
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+            return request
         }
     }
 
@@ -607,6 +624,12 @@ actor AIService {
             let rows = object["models"] as? [[String: Any]] ?? []
             let models = rows.compactMap { row in
                 Self.normalizedModelIdentifier(row["name"] as? String)
+            }
+            return Self.uniqueSortedModels(models)
+        case .deepSeek:
+            let rows = object["data"] as? [[String: Any]] ?? []
+            let models = rows.compactMap { row in
+                Self.normalizedModelIdentifier(row["id"] as? String)
             }
             return Self.uniqueSortedModels(models)
         }

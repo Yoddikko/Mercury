@@ -92,6 +92,10 @@ struct DeveloperPlaygroundViewModel {
         String(localized: "developer.playground.ai_provider_configuration.token.ollama", defaultValue: "Ollama token (optional)")
     }
 
+    var aiProviderDeepSeekTokenLabel: String {
+        String(localized: "developer.playground.ai_provider_configuration.token.deepseek", defaultValue: "DeepSeek token")
+    }
+
     var aiProviderSaveCredentialsLabel: String {
         String(localized: "developer.playground.ai_provider_configuration.save_credentials", defaultValue: "Save credentials")
     }
@@ -126,6 +130,8 @@ struct DeveloperPlaygroundViewModel {
             return aiProviderGeminiTokenLabel
         case .ollama:
             return aiProviderOllamaTokenLabel
+        case .deepSeek:
+            return aiProviderDeepSeekTokenLabel
         }
     }
 

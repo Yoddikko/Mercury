@@ -44,6 +44,7 @@
 "developer.playground.ai_provider_configuration.token.claude" = "Claude token";
 "developer.playground.ai_provider_configuration.token.gemini" = "Gemini token";
 "developer.playground.ai_provider_configuration.token.ollama" = "Ollama token (optional)";
+"developer.playground.ai_provider_configuration.token.deepseek" = "DeepSeek token";
 "developer.playground.ai_provider_configuration.save_credentials" = "Save credentials";
 "developer.playground.ai_provider_configuration.saving_credentials" = "Saving credentials…";
 "developer.playground.ai_provider_configuration.load_models" = "Load models";

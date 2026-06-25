@@ -12,6 +12,7 @@ enum AIProviderID: String, CaseIterable, Codable, Sendable, Identifiable {
     case claude = "claude"
     case gemini = "gemini"
     case ollama = "ollama"
+    case deepSeek = "deepseek"
 
     nonisolated var id: String { rawValue }
 
@@ -25,12 +26,14 @@ enum AIProviderID: String, CaseIterable, Codable, Sendable, Identifiable {
             return "Gemini"
         case .ollama:
             return "Ollama"
+        case .deepSeek:
+            return "DeepSeek"
         }
     }
 
     nonisolated var requiresToken: Bool {
         switch self {
-        case .openAI, .claude, .gemini:
+        case .openAI, .claude, .gemini, .deepSeek:
             return true
         case .ollama:
             return false

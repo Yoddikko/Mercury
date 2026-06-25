@@ -10,6 +10,7 @@ Supported providers:
 * Anthropic (Claude)
 * Google (Gemini)
 * Ollama (local)
+* DeepSeek
 
 ---
 
@@ -74,6 +75,21 @@ The active provider is selected based on:
 
 ---
 
+### DeepSeek
+
+* supports: summarization, categorization, tags
+* OpenAI-compatible chat completions API
+* base URL: `https://api.deepseek.com`
+* models:
+  * `deepseek-chat` (V3, general purpose)
+  * `deepseek-reasoner` (reasoning-tuned)
+* sample config:
+  * provider id: `deepseek`
+  * default model: `deepseek-chat`
+  * timeout: 20s
+
+---
+
 ## Token Management
 
 Each provider requires:
@@ -81,7 +97,7 @@ Each provider requires:
 * model name
 * timeout
 * endpoint (Ollama only)
-* token for OpenAI, Claude, and Gemini
+* token for OpenAI, Claude, Gemini, and DeepSeek
 
 Suggested storage:
 
