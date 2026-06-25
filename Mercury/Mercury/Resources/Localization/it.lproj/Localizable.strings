@@ -154,3 +154,24 @@
 "developer.rss.status.invalid_url" = "Feed URL non valido";
 "developer.rss.status.request_failed" = "Richiesta fallita";
 "developer.rss.status.parse_failed" = "Parsing fallito";
+
+"article.detail.navigation.title" = "Articolo";
+"article.detail.state.loading" = "Caricamento articolo…";
+"article.detail.state.empty.title" = "Niente da mostrare";
+"article.detail.state.empty.subtitle" = "Non è stato possibile trovare il corpo di questo articolo.";
+"article.detail.state.error.title" = "Impossibile caricare l'articolo";
+"article.detail.state.error.retry" = "Riprova";
+"article.detail.metadata.format" = "%@ • %@";
+"article.detail.author.format" = "Di %@";
+"article.detail.body.placeholder" = "Il corpo completo dell'articolo non è ancora disponibile. Trascina per aggiornare.";
+"article.detail.body.enriching" = "Recupero del testo completo in corso…";
+"article.detail.body.enrichment_failed" = "Non è stato possibile recuperare il testo completo. Puoi comunque leggere quanto disponibile.";
+"article.detail.actions.bookmark.add" = "Salva articolo";
+"article.detail.actions.bookmark.remove" = "Rimuovi dai salvati";
+"article.detail.actions.share" = "Condividi articolo";
+"article.detail.actions.open_in_safari" = "Apri in Safari";
+"article.detail.section.summary" = "Riassunto";
+"article.detail.section.body" = "Articolo";
+"article.detail.hero.accessibility" = "Immagine principale articolo";
+"article.detail.bookmarked.accessibility" = "Aggiunto ai salvati";
+"article.detail.not_bookmarked.accessibility" = "Non salvato";
