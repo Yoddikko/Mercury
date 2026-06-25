@@ -34,6 +34,84 @@ struct FeedRefreshService: Sendable {
         self.maxArticlesPerSource = max(1, maxArticlesPerSource)
     }
 
+    // MARK: - Production surface
+
+    /// Production-facing fetch used by the Home feed pipeline. Returns the
+    /// same `RSSFeedBatchResult` shape as `runDiagnostics`, but logs at a
+    /// level appropriate for normal user-facing refreshes and skips the
+    /// developer-only batch summary lines.
+    ///
+    /// Use this method from view models and use cases that need feed
+    /// content. Use `runDiagnostics(...)` only from the Developer
+    /// Playground where the extra batch instrumentation is the point.
+    func refreshFeed(
+        groupMode: RSSFeedGroupMode,
+        selectedRegion: RSSFeedRegion?,
+        requestID: String? = nil
+    ) async -> RSSFeedBatchResult {
+        let sources = RSSFeedCatalog.sources(for: groupMode, region: selectedRegion)
+        return await refreshFeed(
+            sources: sources,
+            groupMode: groupMode,
+            selectedRegion: selectedRegion,
+            requestID: requestID
+        )
+    }
+
+    /// Production fetch overload that lets callers pre-select the
+    /// `RSSFeedSource` list. Primarily used by tests so the production
+    /// surface can be exercised without spinning up the live RSS stack.
+    func refreshFeed(
+        sources: [RSSFeedSource],
+        groupMode: RSSFeedGroupMode,
+        selectedRegion: RSSFeedRegion?,
+        requestID: String? = nil
+    ) async -> RSSFeedBatchResult {
+        let resolvedRequestID = requestID ?? "rss-refresh-\(UUID().uuidString.lowercased())"
+
+        logger.info(
+            "Starting RSS feed refresh",
+            category: .business,
+            service: "FeedRefreshService",
+            requestID: resolvedRequestID,
+            metadata: [
+                "group_mode": groupMode.rawValue,
+                "selected_region": selectedRegion?.rawValue ?? "none",
+                "sources_count": "\(sources.count)"
+            ]
+        )
+
+        let startedAt = DispatchTime.now().uptimeNanoseconds
+        let result = await performFetch(
+            sources: sources,
+            groupMode: groupMode,
+            selectedRegion: selectedRegion,
+            requestID: resolvedRequestID
+        )
+        let elapsedMs = elapsedMilliseconds(since: startedAt)
+
+        logger.info(
+            "RSS feed refresh completed",
+            category: .business,
+            service: "FeedRefreshService",
+            requestID: resolvedRequestID,
+            metadata: [
+                "group_mode": groupMode.rawValue,
+                "selected_region": selectedRegion?.rawValue ?? "none",
+                "articles_out": "\(result.deduplicatedArticles.count)",
+                "duration_ms": "\(elapsedMs)"
+            ]
+        )
+
+        return result
+    }
+
+    // MARK: - Diagnostics surface
+
+    /// Developer-Playground entrypoint. Performs the same fetch as
+    /// `refreshFeed` but emits a richer batch-level summary log with
+    /// per-status counts so the diagnostics screen can be reasoned about
+    /// from exported logs alone.
     func runDiagnostics(
         groupMode: RSSFeedGroupMode,
         selectedRegion: RSSFeedRegion?
@@ -61,6 +139,10 @@ struct FeedRefreshService: Sendable {
         )
     }
 
+    /// Developer-Playground entrypoint that lets callers pre-select the
+    /// `RSSFeedSource` list (for example to re-run a single failed
+    /// outlet). Mirrors `runDiagnostics(groupMode:selectedRegion:)` in
+    /// instrumentation.
     func runDiagnostics(
         sources: [RSSFeedSource],
         groupMode: RSSFeedGroupMode,
@@ -68,6 +150,49 @@ struct FeedRefreshService: Sendable {
         requestID: String? = nil
     ) async -> RSSFeedBatchResult {
         let startedAt = DispatchTime.now().uptimeNanoseconds
+        let result = await performFetch(
+            sources: sources,
+            groupMode: groupMode,
+            selectedRegion: selectedRegion,
+            requestID: requestID
+        )
+        let elapsedMs = elapsedMilliseconds(since: startedAt)
+        let concurrencyLimit = sources.isEmpty ? 0 : min(maxConcurrentSourceChecks, sources.count)
+
+        logger.info(
+            "RSS diagnostics batch completed",
+            category: .business,
+            service: "FeedRefreshService",
+            requestID: requestID,
+            metadata: [
+                "group_mode": groupMode.rawValue,
+                "selected_region": selectedRegion?.rawValue ?? "none",
+                "checks_total": "\(result.checks.count)",
+                "checks_success": "\(result.checks.filter { $0.status == .success }.count)",
+                "checks_failed": "\(result.checks.filter { $0.status == .requestFailed || $0.status == .parseFailed }.count)",
+                "deduplicated_articles": "\(result.deduplicatedArticles.count)",
+                "max_concurrent_sources": "\(concurrencyLimit)",
+                "max_articles_per_source": "\(maxArticlesPerSource)",
+                "duration_ms": "\(elapsedMs)"
+            ]
+        )
+
+        return result
+    }
+
+    // MARK: - Shared fetch core
+
+    /// Shared implementation behind `refreshFeed` and `runDiagnostics`.
+    /// Fans out source checks under the configured concurrency cap and
+    /// returns the deduplicated batch result. Per-source instrumentation
+    /// stays on `checkSource` so both callers benefit from the same
+    /// trace-level visibility when investigating a feed.
+    private func performFetch(
+        sources: [RSSFeedSource],
+        groupMode: RSSFeedGroupMode,
+        selectedRegion: RSSFeedRegion?,
+        requestID: String?
+    ) async -> RSSFeedBatchResult {
         var checks: [RSSFeedCheckResult] = []
         checks.reserveCapacity(sources.count)
         let concurrencyLimit = sources.isEmpty ? 0 : min(maxConcurrentSourceChecks, sources.count)
@@ -100,25 +225,6 @@ struct FeedRefreshService: Sendable {
         }
 
         let deduplicated = deduplicatedArticles(from: orderedChecks, requestID: requestID)
-        let elapsedMs = elapsedMilliseconds(since: startedAt)
-
-        logger.info(
-            "RSS diagnostics batch completed",
-            category: .business,
-            service: "FeedRefreshService",
-            requestID: requestID,
-            metadata: [
-                "group_mode": groupMode.rawValue,
-                "selected_region": selectedRegion?.rawValue ?? "none",
-                "checks_total": "\(orderedChecks.count)",
-                "checks_success": "\(orderedChecks.filter { $0.status == .success }.count)",
-                "checks_failed": "\(orderedChecks.filter { $0.status == .requestFailed || $0.status == .parseFailed }.count)",
-                "deduplicated_articles": "\(deduplicated.count)",
-                "max_concurrent_sources": "\(concurrencyLimit)",
-                "max_articles_per_source": "\(maxArticlesPerSource)",
-                "duration_ms": "\(elapsedMs)"
-            ]
-        )
 
         return RSSFeedBatchResult(
             checkedAt: Date(),
@@ -190,25 +296,25 @@ struct FeedRefreshService: Sendable {
                 source: source,
                 requestID: sourceRequestID
             )
-            let articlesForDiagnostics = Array(normalizedArticles.prefix(maxArticlesPerSource))
+            let articlesForBatch = Array(normalizedArticles.prefix(maxArticlesPerSource))
 
-            if normalizedArticles.count > articlesForDiagnostics.count {
+            if normalizedArticles.count > articlesForBatch.count {
                 logger.trace(
-                    "Trimmed normalized articles to diagnostics cap",
+                    "Trimmed normalized articles to per-source cap",
                     category: .business,
                     service: "FeedRefreshService",
                     requestID: sourceRequestID,
                     metadata: [
                         "source_id": source.id,
                         "articles_in": "\(normalizedArticles.count)",
-                        "articles_kept": "\(articlesForDiagnostics.count)",
-                        "articles_dropped": "\(normalizedArticles.count - articlesForDiagnostics.count)"
+                        "articles_kept": "\(articlesForBatch.count)",
+                        "articles_dropped": "\(normalizedArticles.count - articlesForBatch.count)"
                     ]
                 )
             }
 
             let enrichedArticles = await articleContentEnrichmentService.enrichArticlesIfNeeded(
-                articlesForDiagnostics,
+                articlesForBatch,
                 requestID: sourceRequestID
             )
             let elapsedMs = elapsedMilliseconds(since: start)

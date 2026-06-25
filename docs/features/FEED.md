@@ -82,7 +82,10 @@ without changing the production Home feed UI.
 * `ArticlePageClient` (download HTML pages for article URLs when RSS body looks partial)
 * `ArticlePageContentExtractor` (extract likely main body text + hero image from HTML)
 * `ArticleContentEnrichmentService` (best-effort upgrade from RSS snippet to page body)
-* `FeedRefreshService` (run grouped checks + cross-feed dedup)
+* `FeedRefreshService` (run grouped checks + cross-feed dedup; exposes
+  `refreshFeed(...)` for the production Home pipeline and
+  `runDiagnostics(...)` for the Developer Playground — both share the
+  same fetch core so the per-source statuses always agree)
 * `AppLogger` (structured diagnostics with request-id propagation)
 
 ### Parsed RSS Fields (Advanced)
