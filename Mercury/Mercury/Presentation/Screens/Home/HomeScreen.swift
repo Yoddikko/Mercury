@@ -101,8 +101,25 @@ struct HomeScreen: View {
         List {
             Section {
                 ForEach(articles) { article in
-                    ArticleCard(article: article, viewModel: viewModel)
-                        .listRowSeparator(.hidden)
+                    NavigationLink {
+                        ArticleDetailScreen(
+                            viewModel: ArticleDetailViewModel(
+                                article: article,
+                                bookmarkToggle: { [modelContext] id in
+                                    let store = ArticleLocalStore(modelContainer: modelContext.container)
+                                    return try await store.toggleFavorite(articleID: id)
+                                },
+                                recordOpen: { [modelContext] id in
+                                    let store = ArticleLocalStore(modelContainer: modelContext.container)
+                                    try await store.recordOpen(articleID: id, markAsRead: true)
+                                }
+                            )
+                        )
+                    } label: {
+                        ArticleCard(article: article, viewModel: viewModel)
+                    }
+                    .buttonStyle(.plain)
+                    .listRowSeparator(.hidden)
                 }
             } header: {
                 HStack(alignment: .firstTextBaseline) {
