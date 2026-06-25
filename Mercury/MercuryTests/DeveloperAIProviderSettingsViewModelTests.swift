@@ -232,6 +232,7 @@ private func completeConfiguration2(active: AIProviderID) -> AIProviderConfigura
     configuration.setModel("claude-3-5-sonnet-latest", for: .claude)
     configuration.setModel("gemini-2.5-flash", for: .gemini)
     configuration.setModel("llama3.1:8b", for: .ollama)
+    configuration.setModel("deepseek-chat", for: .deepSeek)
     return configuration
 }
 

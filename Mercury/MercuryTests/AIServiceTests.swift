@@ -55,6 +55,51 @@ struct AIServiceTests {
     }
 
     @Test
+    func fetchAvailableModelsParsesAndDeduplicatesDeepSeekResults() async throws {
+        let configurationStore = InMemoryAIProviderConfigurationStore(
+            initialConfiguration: completeConfiguration(active: .deepSeek)
+        )
+        let credentialStore = InMemoryAIProviderCredentialStore(
+            initialTokens: [.deepSeek: "token-deepseek"]
+        )
+        let responseData = Data(
+            """
+            {
+              "data": [
+                { "id": "deepseek-chat" },
+                { "id": "deepseek-chat" },
+                { "id": "deepseek-reasoner" }
+              ]
+            }
+            """.utf8
+        )
+
+        let service = AIService(
+            configurationStore: configurationStore,
+            credentialStore: credentialStore,
+            providerFactory: { context in
+                FixedAIProvider(id: context.providerID)
+            },
+            performRequest: { request in
+                #expect(request.url?.absoluteString == "https://api.deepseek.com/v1/models")
+                #expect(request.value(forHTTPHeaderField: "Authorization")?.hasPrefix("Bearer ") == true)
+                let responseURL = URL(string: "https://api.deepseek.com/v1/models")!
+                let response = HTTPURLResponse(
+                    url: responseURL,
+                    statusCode: 200,
+                    httpVersion: nil,
+                    headerFields: ["Content-Type": "application/json"]
+                )!
+                return (responseData, response)
+            }
+        )
+
+        let models = try await service.fetchAvailableModels(for: .deepSeek)
+
+        #expect(models == ["deepseek-chat", "deepseek-reasoner"])
+    }
+
+    @Test
     func fetchAvailableModelsFailsWhenTokenMissingForCloudProvider() async {
         let configurationStore = InMemoryAIProviderConfigurationStore(
             initialConfiguration: completeConfiguration(active: .openAI)
@@ -288,6 +333,7 @@ private func completeConfiguration(active: AIProviderID) -> AIProviderConfigurat
     configuration.setModel("claude-3-5-sonnet-latest", for: .claude)
     configuration.setModel("gemini-2.5-flash", for: .gemini)
     configuration.setModel("llama3.1:8b", for: .ollama)
+    configuration.setModel("deepseek-chat", for: .deepSeek)
     return configuration
 }
 

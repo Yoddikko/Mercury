@@ -33,6 +33,7 @@ struct AIProviderStoresTests {
         configuration.setModel("claude-test", for: .claude)
         configuration.setModel("gemini-test", for: .gemini)
         configuration.setModel("llama3.1:8b", for: .ollama)
+        configuration.setModel("deepseek-chat", for: .deepSeek)
 
         try store.saveConfiguration(configuration)
         let loaded = store.loadConfiguration()

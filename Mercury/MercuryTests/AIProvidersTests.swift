@@ -200,6 +200,152 @@ struct AIProvidersTests {
     }
 
     @Test
+    func deepSeekProviderBuildsRequestAndParsesSummary() async throws {
+        let responseData = Data(
+            """
+            {
+              "choices": [
+                {
+                  "message": {
+                    "content": "{\\"shortSummary\\":\\"DeepSeek summary\\",\\"bullets\\":[\\"One\\",\\"Two\\",\\"Three\\"]}"
+                  }
+                }
+              ]
+            }
+            """.utf8
+        )
+        let observer = RequestObserver()
+
+        let provider = DeepSeekProvider(
+            model: "deepseek-chat",
+            token: "deepseek-token",
+            timeoutSeconds: 10,
+            performRequest: { request in
+                await observer.capture(from: request)
+                let responseURL = URL(string: "https://example.invalid/deepseek")!
+                let response = HTTPURLResponse(
+                    url: responseURL,
+                    statusCode: 200,
+                    httpVersion: nil,
+                    headerFields: ["Content-Type": "application/json"]
+                )!
+                return (responseData, response)
+            }
+        )
+
+        let result = try await provider.summarizeArticle("Example article", requestID: "req-deepseek-summary")
+        let snapshot = await observer.snapshot()
+
+        #expect(snapshot.url == "https://api.deepseek.com/v1/chat/completions")
+        #expect(snapshot.method == "POST")
+        #expect(snapshot.authorizationHeader?.hasPrefix("Bearer ") == true)
+        #expect(result.shortSummary == "DeepSeek summary")
+        #expect(result.bullets == ["One", "Two", "Three"])
+    }
+
+    @Test
+    func deepSeekProviderMapsUnauthorizedStatus() async {
+        let provider = DeepSeekProvider(
+            model: "deepseek-chat",
+            token: "deepseek-token",
+            timeoutSeconds: 10,
+            performRequest: { _ in
+                let responseURL = URL(string: "https://example.invalid/deepseek")!
+                let response = HTTPURLResponse(
+                    url: responseURL,
+                    statusCode: 401,
+                    httpVersion: nil,
+                    headerFields: ["Content-Type": "application/json"]
+                )!
+                return (Data("{}".utf8), response)
+            }
+        )
+
+        do {
+            _ = try await provider.categorizeArticle("Example article", requestID: "req-deepseek-unauthorized")
+            Issue.record("Expected unauthorized error.")
+        } catch let error as AIProviderError {
+            #expect(error == .unauthorized)
+        } catch {
+            Issue.record("Unexpected error type: \(error)")
+        }
+    }
+
+    @Test
+    func deepSeekProviderMapsRateLimitedStatus() async {
+        let provider = DeepSeekProvider(
+            model: "deepseek-chat",
+            token: "deepseek-token",
+            timeoutSeconds: 10,
+            performRequest: { _ in
+                let responseURL = URL(string: "https://example.invalid/deepseek")!
+                let response = HTTPURLResponse(
+                    url: responseURL,
+                    statusCode: 429,
+                    httpVersion: nil,
+                    headerFields: ["Content-Type": "application/json"]
+                )!
+                return (Data("{}".utf8), response)
+            }
+        )
+
+        do {
+            _ = try await provider.generateTags("Example article", requestID: "req-deepseek-rate-limit")
+            Issue.record("Expected rate limited error.")
+        } catch let error as AIProviderError {
+            #expect(error == .rateLimited)
+        } catch {
+            Issue.record("Unexpected error type: \(error)")
+        }
+    }
+
+    @Test
+    func deepSeekProviderRejectsMalformedResponse() async {
+        let responseData = Data(
+            """
+            {
+              "choices": [
+                {
+                  "message": {
+                    "content": "not valid json at all"
+                  }
+                }
+              ]
+            }
+            """.utf8
+        )
+
+        let provider = DeepSeekProvider(
+            model: "deepseek-chat",
+            token: "deepseek-token",
+            timeoutSeconds: 10,
+            performRequest: { _ in
+                let responseURL = URL(string: "https://example.invalid/deepseek")!
+                let response = HTTPURLResponse(
+                    url: responseURL,
+                    statusCode: 200,
+                    httpVersion: nil,
+                    headerFields: ["Content-Type": "application/json"]
+                )!
+                return (responseData, response)
+            }
+        )
+
+        do {
+            _ = try await provider.summarizeArticle("Example article", requestID: "req-deepseek-malformed")
+            Issue.record("Expected parsing failure.")
+        } catch let error as AIProviderError {
+            if case .parsingFailure = error {
+                // expected
+            } else {
+                Issue.record("Expected .parsingFailure, got \(error)")
+            }
+        } catch {
+            Issue.record("Unexpected error type: \(error)")
+        }
+    }
+
+    @Test
     func providerMapsUnauthorizedStatus() async {
         let provider = OpenAIProvider(
             model: "gpt-test",
