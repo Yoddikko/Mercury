@@ -48,12 +48,14 @@ final class HomeViewModel: ObservableObject {
 
     /// Production initializer that wires the default `FeedRefreshService`
     /// configured for the documented default feed (chronological,
-    /// all-outlets).
+    /// main-outlets). Uses the production `refreshFeed` surface so the
+    /// Home pipeline is no longer entangled with developer-only
+    /// diagnostics instrumentation.
     convenience init(isDeveloperModeEnabled: Bool = DeveloperMode.isEnabled) {
         let service = FeedRefreshService()
         self.init(
             feedRefreshAction: {
-                await service.runDiagnostics(
+                await service.refreshFeed(
                     groupMode: .mainOutlets,
                     selectedRegion: nil
                 )
