@@ -16,13 +16,19 @@ struct SwiftDataModelEntitiesTests {
         let now = Date(timeIntervalSince1970: 1_700_000_000)
         let entity = ArticleEntity(
             id: "article-1",
+            externalID: "guid-1",
             title: "Sample title",
             sourceName: "Mercury Source",
             sourceURL: "https://example.com/source",
             articleURL: "https://example.com/article",
             publishedAt: now,
+            authorName: "Jane Reporter",
+            heroImageURL: "https://example.com/hero.jpg",
             rawContent: "raw",
             cleanedContent: "clean",
+            contentSource: "rss",
+            contentWordCount: 128,
+            isContentLikelyComplete: true,
             summaryShort: "summary",
             summaryBullets: ["b1", "b2"],
             category: "Technology",
@@ -36,13 +42,19 @@ struct SwiftDataModelEntitiesTests {
         )
 
         #expect(entity.id == "article-1")
+        #expect(entity.externalID == "guid-1")
         #expect(entity.title == "Sample title")
         #expect(entity.sourceName == "Mercury Source")
         #expect(entity.sourceURL == "https://example.com/source")
         #expect(entity.articleURL == "https://example.com/article")
         #expect(entity.publishedAt == now)
+        #expect(entity.authorName == "Jane Reporter")
+        #expect(entity.heroImageURL == "https://example.com/hero.jpg")
         #expect(entity.rawContent == "raw")
         #expect(entity.cleanedContent == "clean")
+        #expect(entity.contentSource == "rss")
+        #expect(entity.contentWordCount == 128)
+        #expect(entity.isContentLikelyComplete == true)
         #expect(entity.summaryShort == "summary")
         #expect(entity.summaryBullets == ["b1", "b2"])
         #expect(entity.category == "Technology")
@@ -53,6 +65,24 @@ struct SwiftDataModelEntitiesTests {
         #expect(entity.clusterID == "cluster-1")
         #expect(entity.createdAt == now)
         #expect(entity.updatedAt == now)
+    }
+
+    @Test
+    func articleEntityDefaultsMediaAndSourceOriginFields() {
+        let entity = ArticleEntity(
+            id: "article-defaults",
+            title: "Defaults",
+            sourceName: "Mercury Source",
+            sourceURL: "https://example.com/source",
+            articleURL: "https://example.com/article"
+        )
+
+        #expect(entity.externalID == nil)
+        #expect(entity.authorName == nil)
+        #expect(entity.heroImageURL == nil)
+        #expect(entity.contentSource == nil)
+        #expect(entity.contentWordCount == 0)
+        #expect(entity.isContentLikelyComplete == false)
     }
 
     @Test
