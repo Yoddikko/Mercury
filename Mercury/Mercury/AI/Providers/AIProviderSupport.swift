@@ -161,7 +161,12 @@ enum AIProviderSupport {
             throw AIProviderError.parsingFailure("Failed to encode model output as UTF-8.")
         }
 
-        let value = try JSONSerialization.jsonObject(with: data)
+        let value: Any
+        do {
+            value = try JSONSerialization.jsonObject(with: data)
+        } catch {
+            throw AIProviderError.parsingFailure("Invalid JSON in model output: \(error.localizedDescription)")
+        }
         guard let object = value as? [String: Any] else {
             throw AIProviderError.parsingFailure("Model output JSON root is not an object.")
         }
