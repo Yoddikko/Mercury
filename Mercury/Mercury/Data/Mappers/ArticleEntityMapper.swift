@@ -22,13 +22,19 @@ enum ArticleEntityMapper {
     static func makeEntity(from article: Article) -> ArticleEntity {
         ArticleEntity(
             id: article.id,
+            externalID: article.externalID,
             title: article.title,
             sourceName: article.sourceName,
             sourceURL: article.sourceURL.absoluteString,
             articleURL: article.articleURL.absoluteString,
             publishedAt: article.publishedAt,
+            authorName: article.authorName,
+            heroImageURL: article.heroImageURL?.absoluteString,
             rawContent: article.rawContent,
             cleanedContent: article.cleanedContent,
+            contentSource: article.contentSource,
+            contentWordCount: article.contentWordCount,
+            isContentLikelyComplete: article.isContentLikelyComplete,
             summaryShort: article.summaryShort,
             summaryBullets: article.summaryBullets,
             category: article.category,
@@ -46,13 +52,19 @@ enum ArticleEntityMapper {
     /// domain `Article`, preserving the entity's identity and keeping
     /// SwiftData change-tracking intact.
     static func apply(_ article: Article, to entity: ArticleEntity) {
+        entity.externalID = article.externalID
         entity.title = article.title
         entity.sourceName = article.sourceName
         entity.sourceURL = article.sourceURL.absoluteString
         entity.articleURL = article.articleURL.absoluteString
         entity.publishedAt = article.publishedAt
+        entity.authorName = article.authorName
+        entity.heroImageURL = article.heroImageURL?.absoluteString
         entity.rawContent = article.rawContent
         entity.cleanedContent = article.cleanedContent
+        entity.contentSource = article.contentSource
+        entity.contentWordCount = article.contentWordCount
+        entity.isContentLikelyComplete = article.isContentLikelyComplete
         entity.summaryShort = article.summaryShort
         entity.summaryBullets = article.summaryBullets
         entity.category = article.category
@@ -65,28 +77,30 @@ enum ArticleEntityMapper {
     /// Project a stored `ArticleEntity` into the immutable domain `Article`
     /// used by the presentation layer.
     ///
-    /// Fields that are not persisted yet (for example the body completeness
-    /// signals captured during diagnostics) are filled with conservative
-    /// defaults so the UI keeps working until richer schemas land.
+    /// All persisted fields are projected back as stored. The `contentSource`
+    /// falls back to an empty string when missing so the domain model can
+    /// remain non-optional while still flagging legacy rows.
     static func makeArticle(from entity: ArticleEntity) -> Article? {
         guard let sourceURL = URL(string: entity.sourceURL) else { return nil }
         guard let articleURL = URL(string: entity.articleURL) else { return nil }
 
+        let heroImageURL = entity.heroImageURL.flatMap(URL.init(string:))
+
         return Article(
             id: entity.id,
-            externalID: nil,
+            externalID: entity.externalID,
             title: entity.title,
             sourceName: entity.sourceName,
             sourceURL: sourceURL,
             articleURL: articleURL,
             publishedAt: entity.publishedAt,
-            authorName: nil,
-            heroImageURL: nil,
+            authorName: entity.authorName,
+            heroImageURL: heroImageURL,
             rawContent: entity.rawContent,
             cleanedContent: entity.cleanedContent,
-            contentSource: "swiftdata_cache",
-            contentWordCount: 0,
-            isContentLikelyComplete: false,
+            contentSource: entity.contentSource ?? "",
+            contentWordCount: entity.contentWordCount,
+            isContentLikelyComplete: entity.isContentLikelyComplete,
             summaryShort: entity.summaryShort,
             summaryBullets: entity.summaryBullets,
             category: entity.category,

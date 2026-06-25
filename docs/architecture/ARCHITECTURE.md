@@ -454,13 +454,19 @@ In this project, "Model" includes:
 Suggested fields:
 
 * `id`
+* `externalID`
 * `title`
 * `sourceName`
 * `sourceURL`
 * `articleURL`
 * `publishedAt`
+* `authorName`
+* `heroImageURL`
 * `rawContent`
 * `cleanedContent`
+* `contentSource`
+* `contentWordCount`
+* `isContentLikelyComplete`
 * `summaryShort`
 * `summaryBullets`
 * `category`
@@ -471,6 +477,13 @@ Suggested fields:
 * `clusterID`
 * `createdAt`
 * `updatedAt`
+
+The media (`authorName`, `heroImageURL`) and source-origin
+(`externalID`, `contentSource`, `contentWordCount`, `isContentLikelyComplete`)
+fields keep cached articles aligned with the domain `Article` so the home feed
+preserves thumbnails, authorship, and content-completeness signals after a
+SwiftData load. All new fields are optional or default-valued so SwiftData
+lightweight migration handles existing stores without manual code.
 
 ---
 

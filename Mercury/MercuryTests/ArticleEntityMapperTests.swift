@@ -27,6 +27,19 @@ struct ArticleEntityMapperTests {
     }
 
     @Test
+    func makeEntityCopiesMediaAndSourceOriginFields() {
+        let article = sampleArticle()
+        let entity = ArticleEntityMapper.makeEntity(from: article)
+
+        #expect(entity.externalID == article.externalID)
+        #expect(entity.authorName == article.authorName)
+        #expect(entity.heroImageURL == article.heroImageURL?.absoluteString)
+        #expect(entity.contentSource == article.contentSource)
+        #expect(entity.contentWordCount == article.contentWordCount)
+        #expect(entity.isContentLikelyComplete == article.isContentLikelyComplete)
+    }
+
+    @Test
     func applyUpdatesMutableFieldsButPreservesIdentity() {
         let original = sampleArticle()
         let entity = ArticleEntityMapper.makeEntity(from: original)
@@ -71,6 +84,49 @@ struct ArticleEntityMapperTests {
     }
 
     @Test
+    func applyUpdatesMediaAndSourceOriginFields() {
+        let original = sampleArticle()
+        let entity = ArticleEntityMapper.makeEntity(from: original)
+
+        let refreshedHero = URL(string: "https://example.com/refreshed-hero.jpg")!
+        let updated = Article(
+            id: original.id,
+            externalID: "ext-refreshed",
+            title: original.title,
+            sourceName: original.sourceName,
+            sourceURL: original.sourceURL,
+            articleURL: original.articleURL,
+            publishedAt: original.publishedAt,
+            authorName: "Refreshed Author",
+            heroImageURL: refreshedHero,
+            rawContent: original.rawContent,
+            cleanedContent: original.cleanedContent,
+            contentSource: "page_extract",
+            contentWordCount: 512,
+            isContentLikelyComplete: true,
+            summaryShort: original.summaryShort,
+            summaryBullets: original.summaryBullets,
+            category: original.category,
+            tags: original.tags,
+            language: original.language,
+            isBookmarked: original.isBookmarked,
+            isRead: original.isRead,
+            clusterID: original.clusterID,
+            createdAt: original.createdAt,
+            updatedAt: original.updatedAt
+        )
+
+        ArticleEntityMapper.apply(updated, to: entity)
+
+        #expect(entity.externalID == "ext-refreshed")
+        #expect(entity.authorName == "Refreshed Author")
+        #expect(entity.heroImageURL == refreshedHero.absoluteString)
+        #expect(entity.contentSource == "page_extract")
+        #expect(entity.contentWordCount == 512)
+        #expect(entity.isContentLikelyComplete == true)
+    }
+
+    @Test
     func makeArticleRoundTripsBackToDomainModel() {
         let entity = ArticleEntity(
             id: "round-trip",
@@ -94,6 +150,69 @@ struct ArticleEntityMapperTests {
         #expect(article?.summaryShort == entity.summaryShort)
         #expect(article?.summaryBullets == entity.summaryBullets)
         #expect(article?.tags == entity.tags)
+    }
+
+    @Test
+    func makeArticlePreservesMediaAndSourceOriginFields() {
+        let entity = ArticleEntity(
+            id: "round-trip-media",
+            externalID: "guid-42",
+            title: "Title",
+            sourceName: "Source",
+            sourceURL: "https://example.com/source",
+            articleURL: "https://example.com/article",
+            publishedAt: Date(timeIntervalSinceReferenceDate: 1_000),
+            authorName: "Jane Reporter",
+            heroImageURL: "https://example.com/hero.jpg",
+            contentSource: "rss",
+            contentWordCount: 256,
+            isContentLikelyComplete: true
+        )
+
+        let article = ArticleEntityMapper.makeArticle(from: entity)
+
+        #expect(article?.externalID == "guid-42")
+        #expect(article?.authorName == "Jane Reporter")
+        #expect(article?.heroImageURL?.absoluteString == "https://example.com/hero.jpg")
+        #expect(article?.contentSource == "rss")
+        #expect(article?.contentWordCount == 256)
+        #expect(article?.isContentLikelyComplete == true)
+    }
+
+    @Test
+    func makeArticleHandlesMissingOptionalMediaFields() {
+        // Legacy rows persisted before this schema extension will have
+        // `externalID`, `authorName`, `heroImageURL`, and `contentSource`
+        // missing (nil) plus default zero/false values for the numeric and
+        // boolean fields. The projection must not crash and must preserve
+        // those defaults verbatim.
+        let entity = ArticleEntity(
+            id: "round-trip-legacy",
+            title: "Legacy",
+            sourceName: "Source",
+            sourceURL: "https://example.com/source",
+            articleURL: "https://example.com/article",
+            publishedAt: Date(timeIntervalSinceReferenceDate: 1_000)
+        )
+
+        let article = ArticleEntityMapper.makeArticle(from: entity)
+
+        #expect(article?.externalID == nil)
+        #expect(article?.authorName == nil)
+        #expect(article?.heroImageURL == nil)
+        #expect(article?.contentSource == "")
+        #expect(article?.contentWordCount == 0)
+        #expect(article?.isContentLikelyComplete == false)
+    }
+
+    @Test
+    func entityToArticleAndBackPreservesAllSchemaFields() {
+        let original = sampleArticle()
+
+        let entity = ArticleEntityMapper.makeEntity(from: original)
+        let roundTripped = ArticleEntityMapper.makeArticle(from: entity)
+
+        #expect(roundTripped == original)
     }
 
     @Test
