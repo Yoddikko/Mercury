@@ -24,7 +24,7 @@ struct MercuryApp: App {
 
     var body: some Scene {
         WindowGroup {
-            AppRouter(dependencyContainer: dependencyContainer).rootView()
+            AppRouter(dependencyContainer: dependencyContainer)
         }
         .modelContainer(
             for: [
