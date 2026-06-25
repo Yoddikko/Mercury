@@ -3,48 +3,140 @@
 //  Mercury
 //
 //  Created by Codex on 31/03/26.
+//  Wired to live RSS feed on 25/06/26.
 //
 
+import Combine
 import Foundation
+import SwiftData
 
-struct HomeViewModel {
-    struct FeedMode: Identifiable, Equatable {
-        let id: String
-        let title: String
-        let detail: String
+/// Presentation-layer view model that powers the Home screen.
+///
+/// The view model exposes a simple state machine (`idle` → `loading` →
+/// `loaded` | `empty` | `failed`) backed by the existing RSS ingestion
+/// pipeline and persists fetched articles into the SwiftData stack so the
+/// app stays usable offline once content has been retrieved.
+///
+/// The repository layer and dedicated use cases are tracked by separate
+/// issues, so this view model wires the existing services directly
+/// without introducing new abstractions.
+@MainActor
+final class HomeViewModel: ObservableObject {
+    enum FeedState: Equatable {
+        case idle
+        case loading
+        case loaded(articles: [Article])
+        case empty
+        case failed(message: String)
     }
 
-    let title: String
-    let subtitle: String
-    let feedModes: [FeedMode]
-    let featuredArticles: [Article]
+    typealias FeedRefreshAction = @Sendable () async -> RSSFeedBatchResult
+
+    @Published private(set) var state: FeedState = .idle
+    @Published private(set) var isRefreshing: Bool = false
+    @Published private(set) var lastUpdatedAt: Date?
+
     let isDeveloperModeEnabled: Bool
 
+    private let feedRefreshAction: FeedRefreshAction
+    private let logger: AppLogger
+    private let maxDisplayedArticles: Int
+    private var modelContext: ModelContext?
+    private var activeTask: Task<RSSFeedBatchResult, Never>?
+    private var activeRequestID: String?
+    private var hasLoadedOnce: Bool = false
+
+    /// Production initializer that wires the default `FeedRefreshService`
+    /// configured for the documented default feed (chronological,
+    /// all-outlets).
+    convenience init(isDeveloperModeEnabled: Bool = DeveloperMode.isEnabled) {
+        let service = FeedRefreshService()
+        self.init(
+            feedRefreshAction: {
+                await service.runDiagnostics(
+                    groupMode: .mainOutlets,
+                    selectedRegion: nil
+                )
+            },
+            isDeveloperModeEnabled: isDeveloperModeEnabled
+        )
+    }
+
+    /// Designated initializer accepting a closure-based fetch seam so
+    /// tests can drive every branch of the state machine without
+    /// spinning up the live RSS stack.
     init(
-        feedModes: [FeedMode]? = nil,
-        featuredArticles: [Article] = Article.previewFeed,
-        isDeveloperModeEnabled: Bool = DeveloperMode.isEnabled
+        feedRefreshAction: @escaping FeedRefreshAction,
+        isDeveloperModeEnabled: Bool = DeveloperMode.isEnabled,
+        logger: AppLogger = .shared,
+        maxDisplayedArticles: Int = 50
     ) {
-        self.title = String(localized: "home.title", defaultValue: "Mercury")
-        self.subtitle = String(
+        self.feedRefreshAction = feedRefreshAction
+        self.isDeveloperModeEnabled = isDeveloperModeEnabled
+        self.logger = logger
+        self.maxDisplayedArticles = max(1, maxDisplayedArticles)
+        logger.debug(
+            "Initialized Home view model",
+            category: .ui,
+            service: "HomeViewModel",
+            metadata: [
+                "developer_mode": "\(isDeveloperModeEnabled)",
+                "max_displayed_articles": "\(self.maxDisplayedArticles)"
+            ]
+        )
+    }
+
+    deinit {
+        activeTask?.cancel()
+        logger.debug(
+            "Deinitializing Home view model",
+            category: .ui,
+            service: "HomeViewModel"
+        )
+    }
+
+    // MARK: - Public localized copy
+
+    var title: String {
+        String(localized: "home.title", defaultValue: "Mercury")
+    }
+
+    var subtitle: String {
+        String(
             localized: "home.subtitle",
             defaultValue: "Mercury turns RSS into a structured AI-assisted news experience."
         )
-        self.feedModes = feedModes ?? Self.defaultFeedModes()
-        self.featuredArticles = featuredArticles
-        self.isDeveloperModeEnabled = isDeveloperModeEnabled
     }
 
     var navigationTitle: String {
         String(localized: "home.navigation.title", defaultValue: "Mercury")
     }
 
-    var feedModesSectionTitle: String {
-        String(localized: "home.section.feed_modes", defaultValue: "Feed Modes")
+    var articlesSectionTitle: String {
+        String(localized: "home.section.articles", defaultValue: "Latest Articles")
     }
 
-    var sampleArticlesSectionTitle: String {
-        String(localized: "home.section.sample_articles", defaultValue: "Sample Articles")
+    var loadingLabel: String {
+        String(localized: "home.state.loading", defaultValue: "Loading the latest news…")
+    }
+
+    var emptyTitle: String {
+        String(localized: "home.state.empty.title", defaultValue: "No articles yet")
+    }
+
+    var emptySubtitle: String {
+        String(
+            localized: "home.state.empty.subtitle",
+            defaultValue: "Pull to refresh to fetch the latest stories from the configured RSS sources."
+        )
+    }
+
+    var errorTitle: String {
+        String(localized: "home.state.error.title", defaultValue: "We couldn't load the feed")
+    }
+
+    var errorRetryLabel: String {
+        String(localized: "home.state.error.retry", defaultValue: "Try again")
     }
 
     var uncategorizedLabel: String {
@@ -55,37 +147,334 @@ struct HomeViewModel {
         String(localized: "home.developer_tools", defaultValue: "Developer Tools")
     }
 
-    func articleMetadataLine(sourceName: String, category: String?) -> String {
-        let resolvedCategory = category ?? uncategorizedLabel
-        return "\(sourceName) • \(resolvedCategory)"
+    var refreshAccessibilityLabel: String {
+        String(
+            localized: "home.refresh.accessibility",
+            defaultValue: "Refresh the feed"
+        )
     }
 
-    private static func defaultFeedModes() -> [FeedMode] {
-        [
-            FeedMode(
-                id: "default",
-                title: String(localized: "home.feed_mode.default.title", defaultValue: "Default Feed"),
-                detail: String(
-                    localized: "home.feed_mode.default.detail",
-                    defaultValue: "Chronological fallback so the app always returns news, even without personalization."
-                )
-            ),
-            FeedMode(
-                id: "personalized",
-                title: String(localized: "home.feed_mode.personalized.title", defaultValue: "Personalized Feed"),
-                detail: String(
-                    localized: "home.feed_mode.personalized.detail",
-                    defaultValue: "Ranking based on preferred categories, topics, and interaction history."
-                )
-            ),
-            FeedMode(
-                id: "clustered",
-                title: String(localized: "home.feed_mode.clustered.title", defaultValue: "Clustered Feed"),
-                detail: String(
-                    localized: "home.feed_mode.clustered.detail",
-                    defaultValue: "Optional event grouping so multiple articles can be reduced to one representative story."
-                )
-            )
-        ]
+    func lastUpdatedLabel(for date: Date) -> String {
+        let format = String(
+            localized: "home.last_updated",
+            defaultValue: "Last updated %@"
+        )
+        return String(
+            format: format,
+            locale: .current,
+            Self.lastUpdatedDateFormatter.string(from: date)
+        )
     }
+
+    func articleMetadataLine(sourceName: String, publishedAt: Date) -> String {
+        let format = String(
+            localized: "home.article.metadata.format",
+            defaultValue: "%@ • %@"
+        )
+        return String(
+            format: format,
+            locale: .current,
+            sourceName,
+            Self.articleDateFormatter.localizedString(for: publishedAt, relativeTo: Date())
+        )
+    }
+
+    // MARK: - Lifecycle hooks
+
+    /// Wire the SwiftData model context once the view becomes available.
+    /// Safe to call repeatedly: subsequent calls are no-ops unless the
+    /// underlying context actually changes.
+    func attach(modelContext: ModelContext) {
+        guard self.modelContext !== modelContext else { return }
+        self.modelContext = modelContext
+        logger.debug(
+            "Attached SwiftData model context",
+            category: .database,
+            service: "HomeViewModel"
+        )
+    }
+
+    /// Run an initial load: replay cached articles from SwiftData first
+    /// (so the UI is not empty offline) and then kick off a network
+    /// refresh in the background.
+    func loadInitialFeedIfNeeded() async {
+        guard hasLoadedOnce == false else { return }
+        hasLoadedOnce = true
+
+        let cached = loadCachedArticles()
+        if cached.isEmpty == false {
+            applyArticles(cached, source: "cache")
+        } else {
+            state = .loading
+        }
+
+        await refresh()
+    }
+
+    /// Force a refresh from the RSS pipeline. Used by pull-to-refresh and
+    /// the error-state retry button.
+    func refresh() async {
+        activeTask?.cancel()
+
+        let requestID = "home-feed-\(UUID().uuidString.lowercased())"
+        activeRequestID = requestID
+        isRefreshing = true
+
+        switch state {
+        case .loaded:
+            // keep showing cached content while refreshing in the background
+            break
+        case .idle, .empty, .failed, .loading:
+            state = .loading
+        }
+
+        logger.info(
+            "Home feed refresh requested",
+            category: .ui,
+            service: "HomeViewModel",
+            requestID: requestID
+        )
+
+        let startedAt = DispatchTime.now().uptimeNanoseconds
+        let task = Task { [feedRefreshAction] in
+            await feedRefreshAction()
+        }
+        activeTask = task
+
+        let result = await task.value
+        await handle(result: result, requestID: requestID, startedAt: startedAt)
+    }
+
+    // MARK: - State helpers
+
+    var hasArticles: Bool {
+        if case .loaded = state { return true }
+        return false
+    }
+
+    var displayedArticles: [Article] {
+        if case let .loaded(articles) = state { return articles }
+        return []
+    }
+
+    var errorMessage: String? {
+        if case let .failed(message) = state { return message }
+        return nil
+    }
+
+    // MARK: - Private
+
+    private func handle(
+        result: RSSFeedBatchResult,
+        requestID: String,
+        startedAt: UInt64
+    ) async {
+        guard activeRequestID == requestID else {
+            logger.debug(
+                "Discarding outdated feed result",
+                category: .ui,
+                service: "HomeViewModel",
+                requestID: requestID
+            )
+            return
+        }
+
+        defer {
+            activeTask = nil
+            activeRequestID = nil
+            isRefreshing = false
+        }
+
+        if Task.isCancelled {
+            logger.warn(
+                "Home feed refresh was cancelled",
+                category: .ui,
+                service: "HomeViewModel",
+                requestID: requestID
+            )
+            return
+        }
+
+        let trimmed = Array(result.deduplicatedArticles.prefix(maxDisplayedArticles))
+        let elapsedMs = Int((DispatchTime.now().uptimeNanoseconds - startedAt) / 1_000_000)
+        let failedChecks = result.checks.filter { $0.status == .requestFailed || $0.status == .parseFailed }
+        let successChecks = result.checks.filter { $0.status == .success }
+
+        if trimmed.isEmpty {
+            if successChecks.isEmpty && failedChecks.isEmpty == false {
+                let message = String(
+                    localized: "home.state.error.subtitle",
+                    defaultValue: "All RSS sources failed to respond. Check your connection and try again."
+                )
+                state = .failed(message: message)
+                logger.error(
+                    "Home feed refresh produced no articles and all sources failed",
+                    category: .ui,
+                    service: "HomeViewModel",
+                    requestID: requestID,
+                    metadata: [
+                        "failed_checks": "\(failedChecks.count)",
+                        "elapsed_ms": "\(elapsedMs)"
+                    ]
+                )
+            } else {
+                state = .empty
+                logger.info(
+                    "Home feed refresh completed with no articles",
+                    category: .ui,
+                    service: "HomeViewModel",
+                    requestID: requestID,
+                    metadata: [
+                        "checks_total": "\(result.checks.count)",
+                        "elapsed_ms": "\(elapsedMs)"
+                    ]
+                )
+            }
+            lastUpdatedAt = Date()
+            return
+        }
+
+        persist(articles: trimmed, requestID: requestID)
+        applyArticles(trimmed, source: "network")
+        lastUpdatedAt = Date()
+        logger.info(
+            "Home feed refresh completed",
+            category: .ui,
+            service: "HomeViewModel",
+            requestID: requestID,
+            metadata: [
+                "articles_out": "\(trimmed.count)",
+                "checks_success": "\(successChecks.count)",
+                "checks_failed": "\(failedChecks.count)",
+                "elapsed_ms": "\(elapsedMs)"
+            ]
+        )
+    }
+
+    private func applyArticles(_ articles: [Article], source: String) {
+        if articles.isEmpty {
+            state = .empty
+        } else {
+            state = .loaded(articles: articles)
+        }
+        logger.debug(
+            "Applied articles to Home state",
+            category: .ui,
+            service: "HomeViewModel",
+            metadata: [
+                "articles_count": "\(articles.count)",
+                "origin": source
+            ]
+        )
+    }
+
+    private func loadCachedArticles() -> [Article] {
+        guard let modelContext else {
+            logger.debug(
+                "No model context attached when loading cached articles",
+                category: .database,
+                service: "HomeViewModel"
+            )
+            return []
+        }
+
+        var descriptor = FetchDescriptor<ArticleEntity>(
+            sortBy: [SortDescriptor(\.publishedAt, order: .reverse)]
+        )
+        descriptor.fetchLimit = maxDisplayedArticles
+
+        do {
+            let entities = try modelContext.fetch(descriptor)
+            let articles = entities.compactMap { ArticleEntityMapper.makeArticle(from: $0) }
+            logger.debug(
+                "Loaded cached articles from SwiftData",
+                category: .database,
+                service: "HomeViewModel",
+                metadata: [
+                    "entities_in": "\(entities.count)",
+                    "articles_out": "\(articles.count)"
+                ]
+            )
+            return articles
+        } catch {
+            logger.error(
+                "Failed to fetch cached articles",
+                category: .database,
+                service: "HomeViewModel",
+                metadata: ["error": error.localizedDescription]
+            )
+            return []
+        }
+    }
+
+    private func persist(articles: [Article], requestID: String) {
+        guard let modelContext else {
+            logger.debug(
+                "No model context attached when persisting articles",
+                category: .database,
+                service: "HomeViewModel",
+                requestID: requestID
+            )
+            return
+        }
+
+        let identifiers = articles.map(\.id)
+        let descriptor = FetchDescriptor<ArticleEntity>(
+            predicate: #Predicate { entity in
+                identifiers.contains(entity.id)
+            }
+        )
+
+        do {
+            let existing = try modelContext.fetch(descriptor)
+            let existingByID = Dictionary(uniqueKeysWithValues: existing.map { ($0.id, $0) })
+
+            var inserted = 0
+            var updated = 0
+            for article in articles {
+                if let entity = existingByID[article.id] {
+                    ArticleEntityMapper.apply(article, to: entity)
+                    updated += 1
+                } else {
+                    let entity = ArticleEntityMapper.makeEntity(from: article)
+                    modelContext.insert(entity)
+                    inserted += 1
+                }
+            }
+
+            try modelContext.save()
+            logger.debug(
+                "Persisted Home feed articles into SwiftData",
+                category: .database,
+                service: "HomeViewModel",
+                requestID: requestID,
+                metadata: [
+                    "articles_in": "\(articles.count)",
+                    "inserted": "\(inserted)",
+                    "updated": "\(updated)"
+                ]
+            )
+        } catch {
+            logger.error(
+                "Failed to persist Home feed articles",
+                category: .database,
+                service: "HomeViewModel",
+                requestID: requestID,
+                metadata: ["error": error.localizedDescription]
+            )
+        }
+    }
+
+    private static let articleDateFormatter: RelativeDateTimeFormatter = {
+        let formatter = RelativeDateTimeFormatter()
+        formatter.unitsStyle = .short
+        return formatter
+    }()
+
+    private static let lastUpdatedDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
+        return formatter
+    }()
 }

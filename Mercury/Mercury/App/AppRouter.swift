@@ -3,22 +3,34 @@
 //  Mercury
 //
 //  Created by Codex on 31/03/26.
+//  Updated to own the Home view-model lifecycle on 25/06/26.
 //
 
 import SwiftUI
 
-struct AppRouter {
+/// Lightweight composition root that owns the screen-level view models so
+/// SwiftUI can keep them alive across the root view's lifecycle.
+///
+/// Note: this stays intentionally thin — full DI orchestration is tracked
+/// by separate issues that will introduce the repository/use-case layers.
+struct AppRouter: View {
     let dependencyContainer: DependencyContainer
 
-    @ViewBuilder
-    func rootView() -> some View {
+    @StateObject private var homeViewModel: HomeViewModel
+
+    init(dependencyContainer: DependencyContainer) {
+        self.dependencyContainer = dependencyContainer
+        _homeViewModel = StateObject(wrappedValue: dependencyContainer.makeHomeViewModel())
+    }
+
+    var body: some View {
 #if DEBUG
         HomeScreen(
-            viewModel: dependencyContainer.makeHomeViewModel(),
+            viewModel: homeViewModel,
             developerPlaygroundViewModel: dependencyContainer.makeDeveloperPlaygroundViewModel()
         )
 #else
-        HomeScreen(viewModel: dependencyContainer.makeHomeViewModel())
+        HomeScreen(viewModel: homeViewModel)
 #endif
     }
 }
