@@ -410,49 +410,172 @@ enum RSSFeedCatalog {
             tags: ["sports"]
         ),
 
+        // Italy — ported from docs/rss/research/candidates-2026-06-26.json (Phase B, issue #50).
+        // Outlets are listed alphabetically by name. Endpoints marked with `note` are flagged
+        // for validation in Phase 3.
         source(
-            id: "rainews-primopiano-europe-doc",
-            outlet: "RAI News – Primo Piano",
+            id: "adnkronos-prima",
+            outlet: "Adnkronos – Prima Pagina",
             region: .italy,
-            url: "https://www.rainews.it/rss.rss",
-            main: true,
+            url: "http://rss.adnkronos.com/RSS_PrimaPagina.xml",
             language: "it",
-            tags: ["general", "country-pick"]
+            tags: ["wire"],
+            note: "HTTP-only endpoint; https variant to evaluate in Phase 3."
         ),
         source(
-            id: "ansa-ansait",
-            outlet: "ANSA – ANSA.it RSS",
+            id: "agi-cronaca",
+            outlet: "AGI – Agenzia Italia (Top News)",
             region: .italy,
-            url: "https://ansa.it/sito/ansait_rss.xml",
+            url: "https://www.agi.it/feed/cronaca/rss",
             language: "it",
-            tags: ["general"]
+            tags: ["wire"],
+            note: "Endpoint pattern to verify in Phase 3."
         ),
         source(
             id: "ansa-cronaca",
             outlet: "ANSA – Cronaca",
             region: .italy,
             url: "https://www.ansa.it/sito/notizie/cronaca/cronaca_rss.xml",
-            main: true,
-            language: "it",
-            tags: ["general", "country-pick"]
-        ),
-        source(
-            id: "tgcom24-homepage",
-            outlet: "TGCOM24 – Homepage",
-            region: .italy,
-            url: "https://www.tgcom24.mediaset.it/rss/homepage.xml",
-            main: true,
-            language: "it",
-            tags: ["general", "country-pick"]
-        ),
-        source(
-            id: "rai-primopiano",
-            outlet: "RAI News 24 – In Primo Piano",
-            region: .italy,
-            url: "https://www.rai.it/dl/portale/html/PublishingBlock-15c2c340-e282-473d-b944-661e818d667b-rss.xml",
-            main: true,
             language: "it",
             tags: ["general"]
+        ),
+        source(
+            id: "ansa-cultura",
+            outlet: "ANSA – Cultura",
+            region: .italy,
+            url: "https://www.ansa.it/sito/notizie/cultura/cultura_rss.xml",
+            language: "it",
+            tags: ["culture"]
+        ),
+        source(
+            id: "ansa-economia",
+            outlet: "ANSA – Economia",
+            region: .italy,
+            url: "https://www.ansa.it/sito/notizie/economia/economia_rss.xml",
+            language: "it",
+            tags: ["economy"]
+        ),
+        source(
+            id: "ansa-english",
+            outlet: "ANSA – English",
+            region: .italy,
+            url: "https://www.ansa.it/english/news/english_notizie.xml",
+            language: "en",
+            tags: ["english"]
+        ),
+        source(
+            id: "ansa-homepage",
+            outlet: "ANSA – Homepage",
+            region: .italy,
+            url: "https://www.ansa.it/sito/ansait_rss.xml",
+            language: "it",
+            tags: ["general"]
+        ),
+        source(
+            id: "ansa-lifestyle",
+            outlet: "ANSA – Lifestyle",
+            region: .italy,
+            url: "https://www.ansa.it/canale_lifestyle/notizie/lifestyle_rss.xml",
+            language: "it",
+            tags: ["lifestyle"]
+        ),
+        source(
+            id: "ansa-mondo",
+            outlet: "ANSA – Mondo",
+            region: .italy,
+            url: "https://www.ansa.it/sito/notizie/mondo/mondo_rss.xml",
+            language: "it",
+            tags: ["world"]
+        ),
+        source(
+            id: "ansa-politica",
+            outlet: "ANSA – Politica",
+            region: .italy,
+            url: "https://www.ansa.it/sito/notizie/politica/politica_rss.xml",
+            language: "it",
+            tags: ["politics"]
+        ),
+        source(
+            id: "ansa-salute-benessere",
+            outlet: "ANSA – Salute & Benessere",
+            region: .italy,
+            url: "https://www.ansa.it/canale_saluteebenessere/notizie/saluteebenessere_rss.xml",
+            language: "it",
+            tags: ["health"]
+        ),
+        source(
+            id: "ansa-scienza",
+            outlet: "ANSA – Scienza",
+            region: .italy,
+            url: "https://www.ansa.it/canale_scienza_tecnica/notizie/scienzaetecnica_rss.xml",
+            language: "it",
+            tags: ["science"]
+        ),
+        source(
+            id: "ansa-sicilia",
+            outlet: "ANSA – Sicilia (regionale)",
+            region: .italy,
+            url: "https://www.ansa.it/sicilia/notizie/sicilia_rss.xml",
+            language: "it",
+            tags: ["regional"],
+            note: "Updated to canonical /sicilia/notizie/sicilia_rss.xml pattern."
+        ),
+        source(
+            id: "ansa-sport-calcio",
+            outlet: "ANSA – Sport Calcio",
+            region: .italy,
+            url: "https://www.ansa.it/sito/notizie/sport/calcio/calcio_rss.xml",
+            language: "it",
+            tags: ["sports"]
+        ),
+        source(
+            id: "ansa-sport-generale",
+            outlet: "ANSA – Sport (Generale)",
+            region: .italy,
+            url: "https://www.ansa.it/sito/notizie/sport/sport_rss.xml",
+            language: "it",
+            tags: ["sports"]
+        ),
+        source(
+            id: "ansa-tecnologia",
+            outlet: "ANSA – Tecnologia",
+            region: .italy,
+            url: "https://www.ansa.it/canale_tecnologia/notizie/tecnologia_rss.xml",
+            language: "it",
+            tags: ["technology"]
+        ),
+        source(
+            id: "ansa-topnews",
+            outlet: "ANSA – Top News",
+            region: .italy,
+            url: "https://www.ansa.it/sito/notizie/topnews/topnews_rss.xml",
+            main: true,
+            language: "it",
+            tags: ["general", "country-pick"]
+        ),
+        source(
+            id: "corriere-cronaca",
+            outlet: "Corriere della Sera – Cronaca",
+            region: .italy,
+            url: "https://www.corriere.it/rss/cronaca.xml",
+            language: "it",
+            tags: ["general"]
+        ),
+        source(
+            id: "corriere-economia",
+            outlet: "Corriere della Sera – Economia",
+            region: .italy,
+            url: "https://www.corriere.it/rss/economia.xml",
+            language: "it",
+            tags: ["economy"]
+        ),
+        source(
+            id: "corriere-esteri",
+            outlet: "Corriere della Sera – Esteri",
+            region: .italy,
+            url: "https://www.corriere.it/rss/esteri.xml",
+            language: "it",
+            tags: ["world"]
         ),
         source(
             id: "corriere-homepage",
@@ -464,21 +587,159 @@ enum RSSFeedCatalog {
             tags: ["general"]
         ),
         source(
-            id: "ansa-english",
-            outlet: "ANSA – English",
+            id: "corriere-politica",
+            outlet: "Corriere della Sera – Politica",
             region: .italy,
-            url: "https://www.ansa.it/english/news/english_notizie.xml",
-            main: true,
-            language: "en",
-            tags: ["english", "international"]
+            url: "https://www.corriere.it/rss/politica.xml",
+            language: "it",
+            tags: ["politics"]
         ),
         source(
-            id: "rai-sport-feed-page",
-            outlet: "RAI – Sport Feed Page",
+            id: "corriere-sport",
+            outlet: "Corriere della Sera – Sport",
             region: .italy,
+            url: "https://www.corriere.it/rss/sport.xml",
+            language: "it",
+            tags: ["sports"]
+        ),
+        source(
+            id: "fanpage",
+            outlet: "Fanpage",
+            region: .italy,
+            url: "https://www.fanpage.it/feed/",
+            language: "it",
+            tags: ["digital"]
+        ),
+        source(
+            id: "gazzetta-dello-sport",
+            outlet: "Gazzetta dello Sport",
+            region: .italy,
+            url: "https://www.gazzetta.it/rss/homepage.xml",
             language: "it",
             tags: ["sports"],
-            note: "Listed in docs as feed reference; concrete XML feed endpoint not confirmed."
+            note: "Endpoint pattern to verify in Phase 3."
+        ),
+        source(
+            id: "guardian-italy",
+            outlet: "The Guardian – Italy",
+            region: .italy,
+            url: "https://www.theguardian.com/world/italy/rss",
+            language: "en",
+            tags: ["english"]
+        ),
+        source(
+            id: "il-fatto-quotidiano",
+            outlet: "Il Fatto Quotidiano",
+            region: .italy,
+            url: "https://www.ilfattoquotidiano.it/feed/",
+            language: "it",
+            tags: ["investigative"]
+        ),
+        source(
+            id: "il-foglio",
+            outlet: "Il Foglio",
+            region: .italy,
+            url: "https://www.ilfoglio.it/sezioni/112/rss",
+            language: "it",
+            tags: ["opinion"],
+            note: "Section 112 assumed to be front page; verify in Phase 3."
+        ),
+        source(
+            id: "il-giornale",
+            outlet: "Il Giornale",
+            region: .italy,
+            url: "https://www.ilgiornale.it/feed.xml",
+            language: "it",
+            tags: ["general"]
+        ),
+        source(
+            id: "il-post",
+            outlet: "Il Post",
+            region: .italy,
+            url: "https://www.ilpost.it/feed/",
+            language: "it",
+            tags: ["explainer"]
+        ),
+        source(
+            id: "ilsole24ore-finanza",
+            outlet: "Il Sole 24 Ore – Finanza",
+            region: .italy,
+            url: "https://www.ilsole24ore.com/rss/finanza.xml",
+            language: "it",
+            tags: ["finance"]
+        ),
+        source(
+            id: "ilsole24ore-italia",
+            outlet: "Il Sole 24 Ore – Italia",
+            region: .italy,
+            url: "https://www.ilsole24ore.com/rss/italia.xml",
+            main: true,
+            language: "it",
+            tags: ["economy", "country-pick"]
+        ),
+        source(
+            id: "ilsole24ore-mondo",
+            outlet: "Il Sole 24 Ore – Mondo",
+            region: .italy,
+            url: "https://www.ilsole24ore.com/rss/mondo.xml",
+            language: "it",
+            tags: ["world"]
+        ),
+        source(
+            id: "internazionale",
+            outlet: "Internazionale",
+            region: .italy,
+            url: "https://www.internazionale.it/sitemaps/rss.xml",
+            language: "it",
+            tags: ["weekly"]
+        ),
+        source(
+            id: "lastampa-copertina",
+            outlet: "La Stampa – Copertina",
+            region: .italy,
+            url: "https://www.lastampa.it/rss/copertina.xml",
+            language: "it",
+            tags: ["general"]
+        ),
+        source(
+            id: "libero-quotidiano",
+            outlet: "Libero Quotidiano",
+            region: .italy,
+            url: "https://www.liberoquotidiano.it/rss.xml",
+            language: "it",
+            tags: ["general"]
+        ),
+        source(
+            id: "linkiesta",
+            outlet: "Linkiesta",
+            region: .italy,
+            url: "https://www.linkiesta.it/it/feed/",
+            language: "it",
+            tags: ["opinion"]
+        ),
+        source(
+            id: "milan-news",
+            outlet: "Milan News",
+            region: .italy,
+            url: "https://www.milannews.it/rss/",
+            language: "it",
+            tags: ["sports"]
+        ),
+        source(
+            id: "panorama",
+            outlet: "Panorama",
+            region: .italy,
+            url: "https://www.panorama.it/feeds/feed.rss",
+            language: "it",
+            tags: ["magazine"]
+        ),
+        source(
+            id: "rai-portale-rss",
+            outlet: "RAI News – Portale RSS",
+            region: .italy,
+            url: "https://www.rai.it/dl/portale/html/PublishingBlock-15c2c340-e282-473d-b944-661e818d667b-rss.xml",
+            language: "it",
+            tags: ["public-broadcaster"]
         ),
         source(
             id: "rai-radio-giornale",
@@ -486,10 +747,10 @@ enum RSSFeedCatalog {
             region: .italy,
             url: "https://www.rai.it/dl/portaleAudio/Giornale_Radio_index.rss",
             language: "it",
-            tags: ["radio", "general"]
+            tags: ["radio"]
         ),
         source(
-            id: "rainews-tgr-piemonte",
+            id: "rai-tgr-piemonte",
             outlet: "RAI TGR Piemonte",
             region: .italy,
             url: "https://www.rainews.it/tgr/rss/piemonte.xml",
@@ -497,28 +758,85 @@ enum RSSFeedCatalog {
             tags: ["regional"]
         ),
         source(
-            id: "ansa-politica",
-            outlet: "ANSA – Politica",
+            id: "rainews-primopiano",
+            outlet: "RAI News 24 – Primo Piano",
             region: .italy,
-            url: "https://www.ansa.it/sito/notizie/politica/politica_rss.xml",
+            url: "https://www.rainews.it/rss.rss",
+            main: true,
             language: "it",
-            tags: ["politics"]
+            tags: ["public-broadcaster"]
         ),
         source(
-            id: "ansa-economia",
-            outlet: "ANSA – Economia",
+            id: "repubblica-cronaca",
+            outlet: "La Repubblica – Cronaca",
             region: .italy,
-            url: "https://www.ansa.it/sito/notizie/economia/economia_rss.xml",
+            url: "https://www.repubblica.it/rss/cronaca/rss2.0.xml",
             language: "it",
-            tags: ["economy"]
+            tags: ["general"],
+            note: "Endpoint pattern to verify in Phase 3."
         ),
         source(
-            id: "tgcom24-politica",
-            outlet: "TGCOM24 – Politica",
+            id: "repubblica-economia",
+            outlet: "La Repubblica – Economia",
             region: .italy,
-            url: "https://www.tgcom24.mediaset.it/rss/politica.xml",
+            url: "https://www.repubblica.it/rss/economia/rss2.0.xml",
             language: "it",
-            tags: ["politics"]
+            tags: ["economy"],
+            note: "Endpoint pattern to verify in Phase 3."
+        ),
+        source(
+            id: "repubblica-esteri",
+            outlet: "La Repubblica – Esteri",
+            region: .italy,
+            url: "https://www.repubblica.it/rss/esteri/rss2.0.xml",
+            language: "it",
+            tags: ["world"],
+            note: "Endpoint pattern to verify in Phase 3."
+        ),
+        source(
+            id: "repubblica-homepage",
+            outlet: "La Repubblica – Homepage",
+            region: .italy,
+            url: "https://www.repubblica.it/rss/homepage/rss2.0.xml",
+            main: true,
+            language: "it",
+            tags: ["general", "country-pick"]
+        ),
+        source(
+            id: "repubblica-politica",
+            outlet: "La Repubblica – Politica",
+            region: .italy,
+            url: "https://www.repubblica.it/rss/politica/rss2.0.xml",
+            language: "it",
+            tags: ["politics"],
+            note: "Endpoint pattern to verify in Phase 3."
+        ),
+        source(
+            id: "sky-tg24-cronaca",
+            outlet: "Sky TG24 – Cronaca",
+            region: .italy,
+            url: "https://tg24.sky.it/rss/cronaca.xml",
+            language: "it",
+            tags: ["general"],
+            note: "Endpoint pattern to verify in Phase 3."
+        ),
+        source(
+            id: "sky-tg24-mondo",
+            outlet: "Sky TG24 – Mondo",
+            region: .italy,
+            url: "https://tg24.sky.it/rss/mondo.xml",
+            language: "it",
+            tags: ["world"],
+            note: "Endpoint pattern to verify in Phase 3."
+        ),
+        source(
+            id: "sky-tg24-politica",
+            outlet: "Sky TG24 – Politica",
+            region: .italy,
+            url: "https://tg24.sky.it/rss/politica.xml",
+            language: "it",
+            tags: ["politics"],
+            note: "Endpoint pattern to verify in Phase 3."
         ),
         source(
             id: "tgcom24-economia",
@@ -529,28 +847,21 @@ enum RSSFeedCatalog {
             tags: ["economy"]
         ),
         source(
-            id: "ansa-salute",
-            outlet: "ANSA – Salute",
+            id: "tgcom24-homepage",
+            outlet: "TGCOM24 – Homepage",
             region: .italy,
-            url: "https://www.ansa.it/sito/notizie/salute/salute_rss.xml",
+            url: "https://www.tgcom24.mediaset.it/rss/homepage.xml",
+            main: true,
             language: "it",
-            tags: ["health"]
+            tags: ["general", "country-pick"]
         ),
         source(
-            id: "tgcom24-tgtech",
-            outlet: "TGCOM24 – TGTech",
+            id: "tgcom24-politica",
+            outlet: "TGCOM24 – Politica",
             region: .italy,
-            url: "https://www.tgcom24.mediaset.it/rss/tgtech.xml",
+            url: "https://www.tgcom24.mediaset.it/rss/politica.xml",
             language: "it",
-            tags: ["technology"]
-        ),
-        source(
-            id: "ansa-cultura",
-            outlet: "ANSA – Cultura",
-            region: .italy,
-            url: "https://www.ansa.it/sito/notizie/cultura/cultura_rss.xml",
-            language: "it",
-            tags: ["culture"]
+            tags: ["politics"]
         ),
         source(
             id: "tgcom24-spettacolo",
@@ -561,14 +872,6 @@ enum RSSFeedCatalog {
             tags: ["entertainment"]
         ),
         source(
-            id: "ansa-calcio",
-            outlet: "ANSA – Sport Calcio",
-            region: .italy,
-            url: "https://www.ansa.it/sito/notizie/sport/calcio/calcio_rss.xml",
-            language: "it",
-            tags: ["sports"]
-        ),
-        source(
             id: "tgcom24-sport",
             outlet: "TGCOM24 – Sport",
             region: .italy,
@@ -577,153 +880,20 @@ enum RSSFeedCatalog {
             tags: ["sports"]
         ),
         source(
-            id: "ansa-sicilia",
-            outlet: "ANSA – Sicilia",
+            id: "tgcom24-tgtech",
+            outlet: "TGCOM24 – TGTech",
             region: .italy,
-            url: "https://www.ansa.it/sicilia_rss.xml",
+            url: "https://www.tgcom24.mediaset.it/rss/tgtech.xml",
             language: "it",
-            tags: ["regional"]
-        ),
-        source(
-            id: "corriere-cronaca",
-            outlet: "Corriere della Sera – Cronaca",
-            region: .italy,
-            url: "https://www.corriere.it/rss/cronaca.xml",
-            language: "it",
-            tags: ["general"]
-        ),
-        source(
-            id: "adnkronos",
-            outlet: "Adnkronos",
-            region: .italy,
-            main: true,
-            language: "it",
-            tags: ["wire"],
-            note: "Documented as major outlet with unspecified concrete feed URLs."
-        ),
-        source(
-            id: "la-repubblica",
-            outlet: "La Repubblica",
-            region: .italy,
-            main: true,
-            language: "it",
-            tags: ["general"],
-            note: "Documented in RSS list with unspecified endpoint."
-        ),
-        source(
-            id: "il-sole-24-ore",
-            outlet: "Il Sole 24 Ore",
-            region: .italy,
-            main: true,
-            language: "it",
-            tags: ["economy"],
-            note: "Documented in RSS list with unspecified endpoint."
-        ),
-        source(
-            id: "sky-tg24",
-            outlet: "Sky TG24",
-            region: .italy,
-            main: true,
-            language: "it",
-            tags: ["general"],
-            note: "Documented in RSS list with unspecified endpoint."
-        ),
-        source(
-            id: "la-stampa",
-            outlet: "La Stampa",
-            region: .italy,
-            language: "it",
-            tags: ["general"],
-            note: "Documented in RSS list with unspecified endpoint."
-        ),
-        source(
-            id: "la-stampa-rss",
-            outlet: "La Stampa – RSS",
-            region: .italy,
-            url: "https://lastampa.it/rss",
-            language: "it",
-            tags: ["general"],
-            note: "Documented in docs as candidate endpoint."
-        ),
-        source(
-            id: "il-fatto-quotidiano",
-            outlet: "Il Fatto Quotidiano",
-            region: .italy,
-            language: "it",
-            tags: ["investigative"],
-            note: "Documented in RSS list with unspecified endpoint."
-        ),
-        source(
-            id: "gazzetta-dello-sport",
-            outlet: "Gazzetta dello Sport",
-            region: .italy,
-            language: "it",
-            tags: ["sports"],
-            note: "Documented in RSS list with unspecified endpoint."
-        ),
-        source(
-            id: "report-rai",
-            outlet: "Report (RAI)",
-            region: .italy,
-            language: "it",
-            tags: ["investigative"],
-            note: "Documented in RSS list with unspecified endpoint."
-        ),
-        source(
-            id: "internazionale",
-            outlet: "Internazionale",
-            region: .italy,
-            language: "it",
-            tags: ["magazine"],
-            note: "Documented in RSS list with unspecified endpoint."
-        ),
-        source(
-            id: "panorama",
-            outlet: "Panorama",
-            region: .italy,
-            language: "it",
-            tags: ["magazine"],
-            note: "Documented in RSS list with unspecified endpoint."
+            tags: ["technology"]
         ),
         source(
             id: "the-local-italy",
-            outlet: "The Local (Italy)",
+            outlet: "The Local Italy",
             region: .italy,
+            url: "https://feeds.thelocal.com/rss/it",
             language: "en",
-            tags: ["expat"],
-            note: "Documented in RSS list with unspecified endpoint."
-        ),
-        source(
-            id: "wanted-in-rome",
-            outlet: "Wanted in Rome",
-            region: .italy,
-            language: "en",
-            tags: ["expat", "local"],
-            note: "Documented in RSS list with unspecified endpoint."
-        ),
-        source(
-            id: "wanted-in-florence",
-            outlet: "Wanted in Florence",
-            region: .italy,
-            language: "en",
-            tags: ["expat", "local"],
-            note: "Documented in RSS list with unspecified endpoint."
-        ),
-        source(
-            id: "il-mattino",
-            outlet: "Il Mattino",
-            region: .italy,
-            language: "it",
-            tags: ["local"],
-            note: "Documented as local outlet in RSS notes with unspecified endpoint."
-        ),
-        source(
-            id: "il-piccolo",
-            outlet: "Il Piccolo",
-            region: .italy,
-            language: "it",
-            tags: ["local"],
-            note: "Documented as local outlet in RSS notes with unspecified endpoint."
+            tags: ["english"]
         ),
 
         source(
