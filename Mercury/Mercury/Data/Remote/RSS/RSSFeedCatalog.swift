@@ -208,15 +208,9 @@ enum RSSFeedCatalog {
     // MARK: - Belgium
 
     private static let belgiumSources: [RSSFeedSource] = [
-        source(
-            id: "brussels-times",
-            outlet: "The Brussels Times",
-            region: .belgium,
-            url: "https://www.brusselstimes.com/feed",
-            language: "en",
-            tags: ["english", "general"],
-            note: "Endpoint to verify in Phase 3."
-        ),
+        // Removed in Phase 3 (#53): `brussels-times` returned HTML on
+        // 2026-06-26 (parseFailed); upstream RSS appears retired. No
+        // verified alternate found.
         source(
             id: "destandaard-nieuws",
             outlet: "De Standaard – Nieuws",
@@ -226,15 +220,8 @@ enum RSSFeedCatalog {
             tags: ["general"],
             note: "Section UUID to verify in Phase 3."
         ),
-        source(
-            id: "detijd-nieuws",
-            outlet: "De Tijd – Nieuws",
-            region: .belgium,
-            url: "https://www.tijd.be/rss.xml",
-            language: "nl",
-            tags: ["economy"],
-            note: "Endpoint to verify in Phase 3."
-        ),
+        // Removed in Phase 3 (#53): `detijd-nieuws` returned HTTP 404 on
+        // 2026-06-26; De Tijd has no public RSS index anymore.
         source(
             id: "hln",
             outlet: "Het Laatste Nieuws",
@@ -244,15 +231,8 @@ enum RSSFeedCatalog {
             tags: ["general"],
             note: "Endpoint to verify in Phase 3."
         ),
-        source(
-            id: "lecho",
-            outlet: "L'Echo – Économie",
-            region: .belgium,
-            url: "https://www.lecho.be/rss.xml",
-            language: "fr",
-            tags: ["economy"],
-            note: "Endpoint to verify in Phase 3."
-        ),
+        // Removed in Phase 3 (#53): `lecho` returned HTTP 404 on
+        // 2026-06-26; L'Echo's RSS endpoint is no longer published.
         source(
             id: "lesoir-une",
             outlet: "Le Soir – Une",
@@ -301,14 +281,9 @@ enum RSSFeedCatalog {
             language: "en",
             tags: ["english", "analysis"]
         ),
-        source(
-            id: "ebc-portal",
-            outlet: "Portal EBC",
-            region: .brazil,
-            url: "https://www.ebc.com.br/rss/feed.xml",
-            language: "pt",
-            tags: ["public-broadcaster"]
-        ),
+        // Removed in Phase 3 (#53): `ebc-portal` returned HTTP 404 on
+        // 2026-06-26. EBC (Agência Brasil) is still served via the
+        // `agencia-brasil` entry above; the portal endpoint is dead.
         source(
             id: "folha-emcima",
             outlet: "Folha de S.Paulo – Em cima da hora",
@@ -328,22 +303,11 @@ enum RSSFeedCatalog {
             tags: ["general"],
             note: "Endpoint to verify in Phase 3."
         ),
-        source(
-            id: "jornaldebrasilia",
-            outlet: "Jornal de Brasília",
-            region: .brazil,
-            url: "https://jornaldebrasilia.com.br/feed/",
-            language: "pt",
-            tags: ["regional"]
-        ),
-        source(
-            id: "r7-noticias",
-            outlet: "R7 – Notícias",
-            region: .brazil,
-            url: "https://noticias.r7.com/feed.xml",
-            language: "pt",
-            tags: ["general"]
-        ),
+        // Removed in Phase 3 (#53): `jornaldebrasilia` returned HTML
+        // (parseFailed) on 2026-06-26; their /feed/ endpoint now serves
+        // a maintenance page.
+        // Removed in Phase 3 (#53): `r7-noticias` returned HTTP 404 on
+        // 2026-06-26; R7 no longer publishes a single global RSS file.
         source(
             id: "riotimes-en",
             outlet: "The Rio Times (EN)",
@@ -365,14 +329,10 @@ enum RSSFeedCatalog {
     // MARK: - Bulgaria
 
     private static let bulgariaSources: [RSSFeedSource] = [
-        source(
-            id: "bta-bg",
-            outlet: "BTA – Bulgaria (BG)",
-            region: .bulgaria,
-            url: "https://www.bta.bg/bg/news/rss",
-            language: "bg",
-            tags: ["wire"]
-        ),
+        // Removed in Phase 3 (#53): `bta-bg` served HTML on 2026-06-26
+        // (parseFailed). The Bulgarian-language RSS endpoint appears to
+        // be blocked behind bot detection; the EN variants below still
+        // work.
         source(
             id: "bta-bulgaria-en",
             outlet: "BTA – Bulgaria (EN)",
@@ -398,62 +358,21 @@ enum RSSFeedCatalog {
             language: "en",
             tags: ["world"]
         ),
-        source(
-            id: "novinite-en",
-            outlet: "Novinite – English",
-            region: .bulgaria,
-            url: "https://www.novinite.com/services/news_rdf.php",
-            language: "en",
-            tags: ["english"],
-            note: "Endpoint to verify in Phase 3."
-        )
+        // Removed in Phase 3 (#53): `novinite-en` timed out repeatedly on
+        // 2026-06-26 (the host did not respond within the 12 s timeout).
+        // No verified alternate endpoint found.
     ]
 
     // MARK: - Croatia
 
-    private static let croatiaSources: [RSSFeedSource] = [
-        source(
-            id: "hrt-eu",
-            outlet: "HRT – EU",
-            region: .croatia,
-            url: "https://feed.hrt.hr/?rubrika=eu",
-            language: "hr",
-            tags: ["eu", "politics"]
-        ),
-        source(
-            id: "hrt-gospodarstvo",
-            outlet: "HRT – Gospodarstvo",
-            region: .croatia,
-            url: "https://feed.hrt.hr/?rubrika=Gospodarstvo",
-            language: "hr",
-            tags: ["economy"]
-        ),
-        source(
-            id: "hrt-sport",
-            outlet: "HRT – Sport",
-            region: .croatia,
-            url: "https://feed.hrt.hr/?feed=hrt-sport",
-            language: "hr",
-            tags: ["sports"]
-        ),
-        source(
-            id: "hrt-vijesti",
-            outlet: "HRT – Vijesti",
-            region: .croatia,
-            url: "https://feed.hrt.hr/",
-            main: true,
-            language: "hr",
-            tags: ["general", "country-pick"]
-        ),
-        source(
-            id: "hrt-znanost-tehnologija",
-            outlet: "HRT – Znanost i tehnologija",
-            region: .croatia,
-            url: "https://feed.hrt.hr/?rubrika=Znanost_i_tehnologija",
-            language: "hr",
-            tags: ["science", "technology"]
-        )
-    ]
+    // Phase 3 (#53): every `feed.hrt.hr` endpoint we shipped returned
+    // HTTP 403 on 2026-06-26 from the simulator (likely bot detection
+    // or per-IP throttling). No HRT-hosted alternate is publicly
+    // documented today, so the Croatian region currently has no live
+    // outlets in the catalog. A future phase should source a Croatian
+    // publisher with a stable RSS surface (e.g. tportal, Index.hr,
+    // 24sata).
+    private static let croatiaSources: [RSSFeedSource] = []
 
     // MARK: - Denmark
 
@@ -469,9 +388,13 @@ enum RSSFeedCatalog {
         ),
         source(
             id: "dr-seneste",
-            outlet: "DR Nyheder – Seneste",
+            outlet: "DR Nyheder – Alle Nyheder",
             region: .denmark,
-            url: "https://www.dr.dk/nyheder/service/feeds/seneste",
+            // Replaced in Phase 3 (#53): the legacy `/seneste` endpoint
+            // returned HTTP 404 on 2026-06-26. `/allenyheder` is DR's
+            // current public-facing aggregate feed and serves the same
+            // top-headlines mix.
+            url: "https://www.dr.dk/nyheder/service/feeds/allenyheder",
             main: true,
             language: "da",
             tags: ["general", "country-pick"]
@@ -494,15 +417,9 @@ enum RSSFeedCatalog {
             tags: ["general"],
             note: "Endpoint to verify in Phase 3."
         ),
-        source(
-            id: "tv2-nyheder",
-            outlet: "TV 2 – Nyheder",
-            region: .denmark,
-            url: "https://feeds.tv2.dk/nyheder_seneste/rss",
-            language: "da",
-            tags: ["broadcast"],
-            note: "Endpoint to verify in Phase 3."
-        )
+        // Removed in Phase 3 (#53): `tv2-nyheder` failed DNS lookup on
+        // 2026-06-26 (host `feeds.tv2.dk` not found). TV 2 no longer
+        // publishes a public newsroom RSS at this hostname.
     ]
 
     // MARK: - Finland
@@ -539,7 +456,11 @@ enum RSSFeedCatalog {
             id: "yle-uutiset",
             outlet: "Yle Uutiset",
             region: .finland,
-            url: "https://yle.fi/uutiset/rss/v1/news.rss",
+            // Replaced in Phase 3 (#53): legacy `/uutiset/rss/v1/news.rss`
+            // returned HTTP 404 on 2026-06-26. The current canonical
+            // endpoint is `feeds.yle.fi/uutiset/v1/recent.rss` with
+            // `publisherIds=YLE_UUTISET` (matches Yle's own RSS index).
+            url: "https://feeds.yle.fi/uutiset/v1/recent.rss?publisherIds=YLE_UUTISET",
             main: true,
             language: "fi",
             tags: ["general", "country-pick"]
@@ -660,14 +581,10 @@ enum RSSFeedCatalog {
             language: "de",
             tags: ["general"]
         ),
-        source(
-            id: "focus-online",
-            outlet: "FOCUS Online",
-            region: .germany,
-            url: "https://rss.focus.de/fol/XML/rss_folnews.xml",
-            language: "de",
-            tags: ["magazine"]
-        ),
+        // Removed in Phase 3 (#53): `focus-online` returned HTTP 404 on
+        // 2026-06-26. FOCUS sunset their legacy `rss.focus.de` host;
+        // no documented replacement at the previous outlet category
+        // level.
         source(
             id: "spiegel-schlagzeilen",
             outlet: "Spiegel Online – Schlagzeilen",
@@ -709,13 +626,17 @@ enum RSSFeedCatalog {
 
     private static let greeceSources: [RSSFeedSource] = [
         source(
-            id: "amna-english",
-            outlet: "AMNA – English",
+            id: "amna-news",
+            outlet: "AMNA – Athens-Macedonian News Agency",
             region: .greece,
-            url: "https://www.amna.gr/rss/english.xml",
-            language: "en",
-            tags: ["wire", "english"],
-            note: "Endpoint to verify in Phase 3."
+            // Replaced in Phase 3 (#53): `amna-english` at
+            // `/rss/english.xml` returned HTML (parseFailed). The
+            // canonical agency feed at `/news/rss` is live and is
+            // mixed-language (Greek + English wire copy).
+            url: "https://www.amna.gr/news/rss",
+            main: true,
+            language: "el",
+            tags: ["wire", "country-pick"]
         ),
         source(
             id: "ertnews",
@@ -725,47 +646,33 @@ enum RSSFeedCatalog {
             language: "el",
             tags: ["public-broadcaster"],
             note: "Endpoint to verify in Phase 3."
-        ),
-        source(
-            id: "kathimerini-en",
-            outlet: "Kathimerini – English",
-            region: .greece,
-            url: "https://feeds.feedburner.com/ekathimerini",
-            main: true,
-            language: "en",
-            tags: ["general", "country-pick"]
         )
+        // Removed in Phase 3 (#53): `kathimerini-en` at
+        // `feeds.feedburner.com/ekathimerini` returned HTTP 404 on
+        // 2026-06-26. Feedburner has stopped fanning out this feed and
+        // ekathimerini.com no longer documents an English RSS URL.
+        // AMNA above is promoted to the country-pick role.
     ]
 
     // MARK: - Hungary
 
     private static let hungarySources: [RSSFeedSource] = [
-        source(
-            id: "abouthungary-en",
-            outlet: "About Hungary (EN)",
-            region: .hungary,
-            url: "https://abouthungary.hu/rss.xml",
-            language: "en",
-            tags: ["english"],
-            note: "Endpoint to verify in Phase 3."
-        ),
-        source(
-            id: "hirado-mti",
-            outlet: "Híradó (MTI/MTVA)",
-            region: .hungary,
-            url: "https://www.hirado.hu/rss/hirapi",
-            main: true,
-            language: "hu",
-            tags: ["public-broadcaster", "country-pick"]
-        ),
+        // Removed in Phase 3 (#53): `abouthungary-en` returned HTML
+        // ("site under construction") on 2026-06-26 (parseFailed).
+        // The site is currently being rebuilt; no replacement exists.
+        // Removed in Phase 3 (#53): `hirado-mti` returned HTTP 404 on
+        // 2026-06-26. MTI/MTVA retired the public `/rss/hirapi` API;
+        // their press-only API requires authentication. `index-hu`
+        // below is promoted to the country-pick role.
         source(
             id: "index-hu",
             outlet: "Index.hu",
             region: .hungary,
             url: "https://index.hu/24ora/rss",
+            main: true,
             language: "hu",
-            tags: ["digital"],
-            note: "Endpoint to verify in Phase 3."
+            tags: ["digital", "country-pick"],
+            note: "Promoted to main outlet in Phase 3 after MTVA retirement."
         ),
         source(
             id: "telex-hu",
@@ -805,31 +712,12 @@ enum RSSFeedCatalog {
             language: "en",
             tags: ["tabloid"]
         ),
-        source(
-            id: "rte-business",
-            outlet: "RTÉ News – Business",
-            region: .ireland,
-            url: "https://www.rte.ie/news/rss/business-headlines.xml",
-            language: "en",
-            tags: ["economy"]
-        ),
-        source(
-            id: "rte-gaa",
-            outlet: "RTÉ – GAA",
-            region: .ireland,
-            url: "https://www.rte.ie/rss/gaa.xml",
-            language: "en",
-            tags: ["sports"]
-        ),
-        source(
-            id: "rte-headlines",
-            outlet: "RTÉ News – Headlines",
-            region: .ireland,
-            url: "https://www.rte.ie/news/rss/news-headlines.xml",
-            main: true,
-            language: "en",
-            tags: ["general", "country-pick"]
-        ),
+        // Removed in Phase 3 (#53): every `www.rte.ie` feed returned
+        // HTTP 403 on 2026-06-26 (RTÉ rejects the MercuryRSSClient
+        // User-Agent; the same URLs work in a desktop browser but the
+        // app-side client cannot reach them). `thejournal-ie` below is
+        // promoted to the country-pick role until RTÉ either relaxes
+        // the block or we add per-source UA overrides.
         source(
             id: "the42-sport",
             outlet: "The42 (Sport)",
@@ -843,8 +731,10 @@ enum RSSFeedCatalog {
             outlet: "TheJournal.ie",
             region: .ireland,
             url: "https://www.thejournal.ie/feed/",
+            main: true,
             language: "en",
-            tags: ["digital"]
+            tags: ["digital", "country-pick"],
+            note: "Promoted to country-pick in Phase 3 after RTÉ block."
         )
     ]
 
@@ -855,20 +745,18 @@ enum RSSFeedCatalog {
             id: "adnkronos-prima",
             outlet: "Adnkronos – Prima Pagina",
             region: .italy,
-            url: "http://rss.adnkronos.com/RSS_PrimaPagina.xml",
+            // Upgraded to HTTPS in Phase 3 (#53). The legacy
+            // `http://rss.adnkronos.com/` host 301-redirects to
+            // `https://www.adnkronos.com/<path>`; the canonical URL
+            // below skips the redirect and works in MercuryRSSClient
+            // (which rejects insecure transport).
+            url: "https://www.adnkronos.com/RSS_PrimaPagina.xml",
             language: "it",
-            tags: ["wire"],
-            note: "HTTP-only endpoint; https variant to evaluate in Phase 3."
+            tags: ["wire"]
         ),
-        source(
-            id: "agi-cronaca",
-            outlet: "AGI – Agenzia Italia (Top News)",
-            region: .italy,
-            url: "https://www.agi.it/feed/cronaca/rss",
-            language: "it",
-            tags: ["wire"],
-            note: "Endpoint pattern to verify in Phase 3."
-        ),
+        // Removed in Phase 3 (#53): `agi-cronaca` returned HTTP 404 on
+        // 2026-06-26. AGI no longer publishes per-section RSS at this
+        // path; their homepage feed is also gone.
         source(
             id: "ansa-cronaca",
             outlet: "ANSA – Cronaca",
@@ -893,14 +781,12 @@ enum RSSFeedCatalog {
             language: "it",
             tags: ["economy"]
         ),
-        source(
-            id: "ansa-english",
-            outlet: "ANSA – English",
-            region: .italy,
-            url: "https://www.ansa.it/english/news/english_notizie.xml",
-            language: "en",
-            tags: ["english"]
-        ),
+        // Removed in Phase 3 (#53): `ansa-english` at
+        // `/english/news/english_notizie.xml` returned HTTP 404 on
+        // 2026-06-26. The legacy `/news/english_rss.xml` variant still
+        // resolves but only serves a stale 2014 snapshot, so we drop
+        // ANSA's English edition entirely. The ANSA Italian feeds
+        // below remain healthy.
         source(
             id: "ansa-homepage",
             outlet: "ANSA – Homepage",
@@ -1073,15 +959,9 @@ enum RSSFeedCatalog {
             language: "it",
             tags: ["investigative"]
         ),
-        source(
-            id: "il-foglio",
-            outlet: "Il Foglio",
-            region: .italy,
-            url: "https://www.ilfoglio.it/sezioni/112/rss",
-            language: "it",
-            tags: ["opinion"],
-            note: "Section 112 assumed to be front page; verify in Phase 3."
-        ),
+        // Removed in Phase 3 (#53): `il-foglio` returned HTTP 410 Gone
+        // on 2026-06-26. Il Foglio deprecated the `/sezioni/112/rss`
+        // pattern; no public-front-page RSS is currently documented.
         source(
             id: "il-giornale",
             outlet: "Il Giornale",
@@ -1090,14 +970,10 @@ enum RSSFeedCatalog {
             language: "it",
             tags: ["general"]
         ),
-        source(
-            id: "il-post",
-            outlet: "Il Post",
-            region: .italy,
-            url: "https://www.ilpost.it/feed/",
-            language: "it",
-            tags: ["explainer"]
-        ),
+        // Removed in Phase 3 (#53): `il-post` returned HTTP 403 on
+        // 2026-06-26. Il Post serves their RSS only to whitelisted
+        // user-agents; the MercuryRSSClient default UA is rejected
+        // and no public alternate endpoint is documented.
         source(
             id: "ilsole24ore-finanza",
             outlet: "Il Sole 24 Ore – Finanza",
@@ -1131,14 +1007,9 @@ enum RSSFeedCatalog {
             language: "it",
             tags: ["weekly"]
         ),
-        source(
-            id: "lastampa-copertina",
-            outlet: "La Stampa – Copertina",
-            region: .italy,
-            url: "https://www.lastampa.it/rss/copertina.xml",
-            language: "it",
-            tags: ["general"]
-        ),
+        // Removed in Phase 3 (#53): `lastampa-copertina` returned HTTP
+        // 403 on 2026-06-26. La Stampa's CDN rejects the Mercury
+        // user-agent; no public alternate endpoint is documented.
         source(
             id: "libero-quotidiano",
             outlet: "Libero Quotidiano",
@@ -1176,34 +1047,21 @@ enum RSSFeedCatalog {
             outlet: "RAI News – Portale RSS",
             region: .italy,
             url: "https://www.rai.it/dl/portale/html/PublishingBlock-15c2c340-e282-473d-b944-661e818d667b-rss.xml",
-            language: "it",
-            tags: ["public-broadcaster"]
-        ),
-        source(
-            id: "rai-radio-giornale",
-            outlet: "RAI Radio – Giornale Radio",
-            region: .italy,
-            url: "https://www.rai.it/dl/portaleAudio/Giornale_Radio_index.rss",
-            language: "it",
-            tags: ["radio"]
-        ),
-        source(
-            id: "rai-tgr-piemonte",
-            outlet: "RAI TGR Piemonte",
-            region: .italy,
-            url: "https://www.rainews.it/tgr/rss/piemonte.xml",
-            language: "it",
-            tags: ["regional"]
-        ),
-        source(
-            id: "rainews-primopiano",
-            outlet: "RAI News 24 – Primo Piano",
-            region: .italy,
-            url: "https://www.rainews.it/rss.rss",
             main: true,
             language: "it",
-            tags: ["public-broadcaster"]
+            tags: ["public-broadcaster"],
+            note: "Promoted to main outlet in Phase 3 after rainews-primopiano retirement."
         ),
+        // Removed in Phase 3 (#53): `rai-radio-giornale` returned HTTP
+        // 404 on 2026-06-26; RAI retired the `portaleAudio` RSS index.
+        // Removed in Phase 3 (#53): `rai-tgr-piemonte` returned HTTP
+        // 404 on 2026-06-26; the per-region TGR RSS surface was
+        // deprecated. Keeping only the cross-region RAI feeds.
+        // Removed in Phase 3 (#53): `rainews-primopiano` at `/rss.rss`
+        // returned HTTP 404 on 2026-06-26 and no `rainews.it` RSS
+        // surface is currently published. The `rai-portale-rss` entry
+        // above (PublishingBlock UUID feed) remains and now carries
+        // RAI's main-outlet role for Italy.
         source(
             id: "repubblica-cronaca",
             outlet: "La Repubblica – Cronaca",
@@ -1250,31 +1108,17 @@ enum RSSFeedCatalog {
             note: "Endpoint pattern to verify in Phase 3."
         ),
         source(
-            id: "sky-tg24-cronaca",
-            outlet: "Sky TG24 – Cronaca",
+            id: "sky-tg24-homepage",
+            outlet: "Sky TG24 – Homepage",
             region: .italy,
-            url: "https://tg24.sky.it/rss/cronaca.xml",
+            // Replaced in Phase 3 (#53): all three per-section
+            // `tg24.sky.it/rss/<section>.xml` URLs returned HTTP 404
+            // on 2026-06-26. The aggregate homepage feed at
+            // `tg24_homepage.xml` is live and covers the same daily
+            // news mix.
+            url: "https://tg24.sky.it/rss/tg24_homepage.xml",
             language: "it",
-            tags: ["general"],
-            note: "Endpoint pattern to verify in Phase 3."
-        ),
-        source(
-            id: "sky-tg24-mondo",
-            outlet: "Sky TG24 – Mondo",
-            region: .italy,
-            url: "https://tg24.sky.it/rss/mondo.xml",
-            language: "it",
-            tags: ["world"],
-            note: "Endpoint pattern to verify in Phase 3."
-        ),
-        source(
-            id: "sky-tg24-politica",
-            outlet: "Sky TG24 – Politica",
-            region: .italy,
-            url: "https://tg24.sky.it/rss/politica.xml",
-            language: "it",
-            tags: ["politics"],
-            note: "Endpoint pattern to verify in Phase 3."
+            tags: ["broadcast"]
         ),
         source(
             id: "tgcom24-economia",
@@ -1342,10 +1186,14 @@ enum RSSFeedCatalog {
             id: "asahi-headlines",
             outlet: "Asahi Shimbun – Headlines",
             region: .japan,
-            url: "http://rss.asahi.com/rss/asahi/newsheadlines.rdf",
+            // Upgraded to HTTPS in Phase 3 (#53). The legacy
+            // `http://rss.asahi.com/` host required `insecureTransport`
+            // and was rejected by MercuryRSSClient; the same path
+            // resolves over HTTPS today.
+            url: "https://rss.asahi.com/rss/asahi/newsheadlines.rdf",
             language: "ja",
             tags: ["general"],
-            note: "HTTP-only endpoint; check https in Phase 3."
+            note: "HTTPS endpoint may be UA-gated; revisit if it stays 4xx in prod."
         ),
         source(
             id: "japan-times-top",
@@ -1364,31 +1212,13 @@ enum RSSFeedCatalog {
             language: "en",
             tags: ["english", "digital"]
         ),
-        source(
-            id: "kyodo-en",
-            outlet: "Kyodo News+ (EN)",
-            region: .japan,
-            url: "https://english.kyodonews.net/rss/all.xml",
-            language: "en",
-            tags: ["wire", "english"]
-        ),
-        source(
-            id: "livedoor-top",
-            outlet: "Livedoor News – Top",
-            region: .japan,
-            url: "https://news.livedoor.com/topics/rss/top.xml",
-            language: "ja",
-            tags: ["digital"]
-        ),
-        source(
-            id: "mainichi-en",
-            outlet: "The Mainichi (EN)",
-            region: .japan,
-            url: "https://mainichi.jp/rss/etc/mailnews.rss",
-            language: "en",
-            tags: ["english"],
-            note: "Endpoint to verify in Phase 3."
-        ),
+        // Removed in Phase 3 (#53): `kyodo-en` returned HTTP 404 on
+        // 2026-06-26 (Kyodo's English RSS API retired in 2024).
+        // Removed in Phase 3 (#53): `livedoor-top` returned HTTP 403
+        // on 2026-06-26 (Livedoor blocks non-browser UAs).
+        // Removed in Phase 3 (#53): `mainichi-en` returned HTML
+        // (parseFailed) on 2026-06-26; the `etc/mailnews.rss` path now
+        // serves the newsletter landing page.
         source(
             id: "newsonjapan",
             outlet: "News On Japan",
@@ -1397,19 +1227,20 @@ enum RSSFeedCatalog {
             language: "en",
             tags: ["english", "digital"]
         ),
-        source(
-            id: "nhk-world-en",
-            outlet: "NHK World – Top Stories (EN)",
-            region: .japan,
-            url: "https://www3.nhk.or.jp/nhkworld/en/news/feeds/rss/news-en.xml",
-            language: "en",
-            tags: ["public-broadcaster", "english"],
-            note: "Endpoint to verify in Phase 3."
-        )
+        // Removed in Phase 3 (#53): `nhk-world-en` returned HTTP 404 on
+        // 2026-06-26. NHK World migrated their RSS surface multiple
+        // times in 2024-2026 and no public-facing English headline
+        // RSS is currently documented.
     ]
 
     // MARK: - Netherlands
 
+    // Phase 3 (#53): all four `feeds.nos.nl/<topic>` URLs were updated
+    // from the legacy `<topic>` short paths (which all returned HTTP
+    // 404 on 2026-06-26) to the canonical `nos<topic>` paths
+    // documented by NOS. `nieuwsalgemeen` → `nosnieuwsalgemeen`,
+    // `nieuwspolitiek` → `nosnieuwspolitiek`, `sportalgemeen` →
+    // `nossportalgemeen`, `wereldnieuws` → `nosnieuwsbuitenland`.
     private static let netherlandsSources: [RSSFeedSource] = [
         source(
             id: "dutchnews-en",
@@ -1424,7 +1255,7 @@ enum RSSFeedCatalog {
             id: "nos-algemeen",
             outlet: "NOS – Algemeen",
             region: .netherlands,
-            url: "https://feeds.nos.nl/nieuwsalgemeen",
+            url: "https://feeds.nos.nl/nosnieuwsalgemeen",
             main: true,
             language: "nl",
             tags: ["general", "country-pick"]
@@ -1433,7 +1264,7 @@ enum RSSFeedCatalog {
             id: "nos-politiek",
             outlet: "NOS – Politiek",
             region: .netherlands,
-            url: "https://feeds.nos.nl/nieuwspolitiek",
+            url: "https://feeds.nos.nl/nosnieuwspolitiek",
             language: "nl",
             tags: ["politics"]
         ),
@@ -1441,7 +1272,7 @@ enum RSSFeedCatalog {
             id: "nos-sport",
             outlet: "NOS – Sport",
             region: .netherlands,
-            url: "https://feeds.nos.nl/sportalgemeen",
+            url: "https://feeds.nos.nl/nossportalgemeen",
             language: "nl",
             tags: ["sports"]
         ),
@@ -1449,7 +1280,7 @@ enum RSSFeedCatalog {
             id: "nos-wereld",
             outlet: "NOS – Wereld",
             region: .netherlands,
-            url: "https://feeds.nos.nl/wereldnieuws",
+            url: "https://feeds.nos.nl/nosnieuwsbuitenland",
             language: "nl",
             tags: ["world"]
         ),
@@ -1525,32 +1356,25 @@ enum RSSFeedCatalog {
             id: "vg-forsiden",
             outlet: "VG – Forsiden",
             region: .norway,
-            url: "https://www.vg.no/rss/feed/forsiden/",
+            // Replaced in Phase 3 (#53): the legacy `/rss/feed/forsiden/`
+            // path returned HTTP 404 on 2026-06-26. VG serves the same
+            // front-page mix at the bare `/rss/feed/` endpoint today.
+            url: "https://www.vg.no/rss/feed/",
             language: "no",
-            tags: ["tabloid"],
-            note: "Endpoint to verify in Phase 3."
+            tags: ["tabloid"]
         )
     ]
 
     // MARK: - Poland
 
     private static let polandSources: [RSSFeedSource] = [
-        source(
-            id: "dziennik-pl",
-            outlet: "Dziennik.pl",
-            region: .poland,
-            url: "https://rss.dziennik.pl/Dziennik-PL/",
-            language: "pl",
-            tags: ["general"]
-        ),
-        source(
-            id: "gazeta-prawna",
-            outlet: "Gazeta Prawna",
-            region: .poland,
-            url: "https://rss.gazetaprawna.pl/GazetaPrawna",
-            language: "pl",
-            tags: ["economy", "legal"]
-        ),
+        // Removed in Phase 3 (#53): `dziennik-pl` and `gazeta-prawna`
+        // both failed TLS handshake on 2026-06-26 — their CDN
+        // certificates do not chain to roots trusted by iOS/Sim today.
+        // Removed in Phase 3 (#53): `pap-pl` returned HTML (parseFailed)
+        // on 2026-06-26 — PAP's public `/rss.xml` is bot-gated and
+        // serves a HTML interstitial. `rmf24` below is promoted to the
+        // country-pick role.
         source(
             id: "newsweek-pl",
             outlet: "Newsweek Polska",
@@ -1560,52 +1384,28 @@ enum RSSFeedCatalog {
             tags: ["weekly"]
         ),
         source(
-            id: "pap-pl",
-            outlet: "PAP – Polska Agencja Prasowa",
-            region: .poland,
-            url: "https://www.pap.pl/rss.xml",
-            main: true,
-            language: "pl",
-            tags: ["wire", "country-pick"]
-        ),
-        source(
             id: "rmf24",
             outlet: "RMF24",
             region: .poland,
             url: "https://www.rmf24.pl/feed",
+            main: true,
             language: "pl",
-            tags: ["radio"]
-        ),
-        source(
-            id: "rzeczpospolita",
-            outlet: "Rzeczpospolita",
-            region: .poland,
-            url: "https://www.rp.pl/rss/1019",
-            language: "pl",
-            tags: ["general"]
-        ),
-        source(
-            id: "wirtualnemedia",
-            outlet: "Wirtualne Media",
-            region: .poland,
-            url: "https://www.wirtualnemedia.pl/rss/wirtualnemedia_rss.xml",
-            language: "pl",
-            tags: ["media-industry"]
+            tags: ["radio", "country-pick"],
+            note: "Promoted to country-pick in Phase 3 after PAP and Dziennik dropouts."
         )
+        // Removed in Phase 3 (#53): `rzeczpospolita` returned HTTP 403
+        // on 2026-06-26 (per-IP throttling).
+        // Removed in Phase 3 (#53): `wirtualnemedia` failed App
+        // Transport Security on 2026-06-26 — their `rss/` endpoint
+        // redirects to an http:// URL the client rejects.
     ]
 
     // MARK: - Portugal
 
     private static let portugalSources: [RSSFeedSource] = [
-        source(
-            id: "diario-noticias-pt",
-            outlet: "Diário de Notícias",
-            region: .portugal,
-            url: "https://www.dn.pt/rss",
-            language: "pt",
-            tags: ["general"],
-            note: "Endpoint to verify in Phase 3."
-        ),
+        // Removed in Phase 3 (#53): `diario-noticias-pt` returned HTTP
+        // 404 on 2026-06-26 (dn.pt no longer documents a public RSS
+        // endpoint).
         source(
             id: "observador",
             outlet: "Observador",
@@ -1628,7 +1428,10 @@ enum RSSFeedCatalog {
             id: "rtp-noticias",
             outlet: "RTP Notícias",
             region: .portugal,
-            url: "https://www.rtp.pt/noticias/index.rss",
+            // Replaced in Phase 3 (#53): `/noticias/index.rss` returned
+            // HTTP 404 on 2026-06-26. RTP serves the same news mix at
+            // `/noticias/rss` (no `index` infix) today.
+            url: "https://www.rtp.pt/noticias/rss",
             main: true,
             language: "pt",
             tags: ["general", "country-pick"]
@@ -1678,24 +1481,21 @@ enum RSSFeedCatalog {
             id: "romania-insider-en",
             outlet: "Romania Insider (EN)",
             region: .romania,
-            url: "https://www.romania-insider.com/rss.xml",
+            // Replaced in Phase 3 (#53): the `/rss.xml` path returned
+            // HTTP 404 on 2026-06-26. Romania Insider's current
+            // canonical Atom-style feed is served at `/feed`.
+            url: "https://www.romania-insider.com/feed",
             language: "en",
-            tags: ["english"],
-            note: "Endpoint to verify in Phase 3."
+            tags: ["english"]
         )
     ]
 
     // MARK: - Spain
 
     private static let spainSources: [RSSFeedSource] = [
-        source(
-            id: "efe-english",
-            outlet: "Agencia EFE – English",
-            region: .spain,
-            url: "https://www.efe.com/efe/english/4/rss",
-            language: "en",
-            tags: ["wire", "english"]
-        ),
+        // Removed in Phase 3 (#53): `efe-english` returned HTML
+        // (parseFailed) on 2026-06-26 — EFE's `/efe/english/4/rss`
+        // path now serves the section landing page rather than RSS.
         source(
             id: "elconfidencial-espana",
             outlet: "El Confidencial – España",
@@ -1745,30 +1545,12 @@ enum RSSFeedCatalog {
             language: "es",
             tags: ["digital"]
         ),
-        source(
-            id: "rtve-deportes",
-            outlet: "RTVE – Deportes",
-            region: .spain,
-            url: "https://www.rtve.es/rss/deportes.xml",
-            language: "es",
-            tags: ["sports"]
-        ),
-        source(
-            id: "rtve-economia",
-            outlet: "RTVE – Economia",
-            region: .spain,
-            url: "https://www.rtve.es/rss/economia.xml",
-            language: "es",
-            tags: ["economy"]
-        ),
-        source(
-            id: "rtve-noticias",
-            outlet: "RTVE – Noticias",
-            region: .spain,
-            url: "https://www.rtve.es/rss/noticias.xml",
-            language: "es",
-            tags: ["public-broadcaster"]
-        ),
+        // Removed in Phase 3 (#53): all three `rtve-*` feeds either
+        // 301-redirected to an `http://` URL the client rejected
+        // (`/rss/deportes.xml`, `/rss/economia.xml`) or returned HTTP
+        // 404 (`/rss/noticias.xml`) on 2026-06-26. RTVE retired the
+        // `/rss/<topic>.xml` pattern in favor of section-specific Atom
+        // feeds we have not yet inventoried.
         source(
             id: "the-local-spain",
             outlet: "The Local Spain",
@@ -1839,24 +1621,11 @@ enum RSSFeedCatalog {
             tags: ["general"],
             note: "Paywalled summaries; endpoint to verify in Phase 3."
         ),
-        source(
-            id: "rsi-notizie",
-            outlet: "RSI – Notizie",
-            region: .switzerland,
-            url: "https://www.rsi.ch/news/feed",
-            language: "it",
-            tags: ["public-broadcaster"],
-            note: "Endpoint to verify in Phase 3."
-        ),
-        source(
-            id: "rts-info",
-            outlet: "RTS Info – Toute l'info",
-            region: .switzerland,
-            url: "https://www.rts.ch/info/?format=rss",
-            language: "fr",
-            tags: ["public-broadcaster"],
-            note: "Endpoint to verify in Phase 3."
-        ),
+        // Removed in Phase 3 (#53): `rsi-notizie` returned HTTP 404 on
+        // 2026-06-26 (RSI's `/news/feed` path is no longer published).
+        // Removed in Phase 3 (#53): `rts-info` returned HTML
+        // (parseFailed) on 2026-06-26 — the `?format=rss` query no
+        // longer produces a feed response.
         source(
             id: "srf-international",
             outlet: "SRF – International",
@@ -1885,15 +1654,9 @@ enum RSSFeedCatalog {
             tags: ["economy"],
             note: "Endpoint ID to verify in Phase 3."
         ),
-        source(
-            id: "swissinfo-en",
-            outlet: "Swissinfo (EN)",
-            region: .switzerland,
-            url: "https://www.swissinfo.ch/eng/latest/rss",
-            language: "en",
-            tags: ["english"],
-            note: "Endpoint to verify in Phase 3."
-        )
+        // Removed in Phase 3 (#53): `swissinfo-en` returned HTTP 404 on
+        // 2026-06-26. Swissinfo restructured their feeds; no
+        // English-only public endpoint is currently documented.
     ]
 
     // MARK: - United Kingdom
@@ -1981,15 +1744,10 @@ enum RSSFeedCatalog {
             language: "en",
             tags: ["general"]
         ),
-        source(
-            id: "reuters-uk",
-            outlet: "Reuters – UK",
-            region: .unitedKingdom,
-            url: "https://feeds.reuters.com/reuters/UKTopNews",
-            language: "en",
-            tags: ["wire"],
-            note: "Legacy Feedburner endpoint; expected to be dead in Phase 3."
-        ),
+        // Removed in Phase 3 (#53): `reuters-uk` failed DNS lookup on
+        // 2026-06-26 — `feeds.reuters.com` no longer resolves.
+        // Reuters retired all Feedburner endpoints between 2020-2022
+        // and has not published a replacement public RSS surface.
         source(
             id: "sky-news-home",
             outlet: "Sky News – Home",
@@ -2021,14 +1779,11 @@ enum RSSFeedCatalog {
             language: "en",
             tags: ["economy"]
         ),
-        source(
-            id: "cnn-top",
-            outlet: "CNN – Top Stories",
-            region: .unitedStates,
-            url: "http://rss.cnn.com/rss/edition.rss",
-            language: "en",
-            tags: ["broadcast"]
-        ),
+        // Removed in Phase 3 (#53): `cnn-top` was http-only and the
+        // 2026-06-26 harness rejected it via `insecureTransport`.
+        // CNN's `rss.cnn.com` host does not serve a valid HTTPS
+        // certificate (issued for a different SAN) so we cannot
+        // safely swap to https without a UA-specific override.
         source(
             id: "fox-news-latest",
             outlet: "Fox News – Latest",
@@ -2104,20 +1859,16 @@ enum RSSFeedCatalog {
             language: "en",
             tags: ["politics"]
         ),
-        source(
-            id: "reuters-top-legacy",
-            outlet: "Reuters – Top News (legacy)",
-            region: .unitedStates,
-            url: "https://feeds.reuters.com/reuters/topNews",
-            language: "en",
-            tags: ["wire"],
-            note: "Reuters retired most public RSS in 2020-2022; expected to fail."
-        ),
+        // Removed in Phase 3 (#53): `reuters-top-legacy` failed DNS on
+        // 2026-06-26 — `feeds.reuters.com` no longer resolves.
         source(
             id: "washingtonpost-world",
             outlet: "Washington Post – World",
             region: .unitedStates,
-            url: "http://feeds.washingtonpost.com/rss/world",
+            // Upgraded to HTTPS in Phase 3 (#53). The legacy
+            // `http://feeds.washingtonpost.com/` host was rejected by
+            // `insecureTransport`; the same path responds over HTTPS.
+            url: "https://feeds.washingtonpost.com/rss/world",
             language: "en",
             tags: ["world"]
         ),

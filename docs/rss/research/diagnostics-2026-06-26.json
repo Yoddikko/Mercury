@@ -1,0 +1,4625 @@
+{
+  "outlets_report": {
+    "checked_at": "2026-06-26T17:40:52.967Z",
+    "group_mode": "allOutlets",
+    "outlets": [
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 6177,
+        "feed_url": "https://feeds.bbci.co.uk/news/world/rss.xml",
+        "id": "bbc-world",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "BBC News \u00e2\u0080\u0093 World",
+        "region": "europeWide",
+        "status": "success",
+        "tags": [
+          "world"
+        ]
+      },
+      {
+        "articles_count": 1,
+        "articles_with_body": 1,
+        "articles_with_image": 0,
+        "classification": "degraded",
+        "elapsed_ms": 4205,
+        "feed_url": "https://rss.dw.com/rdf/rss-en-all",
+        "id": "dw-all-en",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "Deutsche Welle \u00e2\u0080\u0093 All (EN)",
+        "region": "europeWide",
+        "status": "success",
+        "tags": [
+          "wire",
+          "world"
+        ]
+      },
+      {
+        "articles_count": 1,
+        "articles_with_body": 1,
+        "articles_with_image": 0,
+        "classification": "degraded",
+        "elapsed_ms": 4202,
+        "feed_url": "https://rss.dw.com/rdf/rss-en-eu",
+        "id": "dw-europe-en",
+        "is_main": true,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "Deutsche Welle \u00e2\u0080\u0093 Europe (EN)",
+        "region": "europeWide",
+        "status": "success",
+        "tags": [
+          "general",
+          "europe"
+        ]
+      },
+      {
+        "articles_count": 24,
+        "articles_with_body": 24,
+        "articles_with_image": 24,
+        "classification": "ok",
+        "elapsed_ms": 5345,
+        "feed_url": "https://www.euractiv.com/?feed=mcfeed",
+        "id": "euractiv-news",
+        "is_main": true,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "EURACTIV \u00e2\u0080\u0093 News",
+        "region": "europeWide",
+        "status": "success",
+        "tags": [
+          "eu",
+          "policy"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 785,
+        "feed_url": "https://www.euronews.com/rss?format=mrss&level=theme&name=news",
+        "id": "euronews-world",
+        "is_main": true,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "Euronews \u00e2\u0080\u0093 World",
+        "region": "europeWide",
+        "status": "success",
+        "tags": [
+          "general",
+          "world"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 6084,
+        "feed_url": "https://www.france24.com/en/europe/rss",
+        "id": "france24-europe-en",
+        "is_main": true,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "France 24 \u00e2\u0080\u0093 Europe (EN)",
+        "region": "europeWide",
+        "status": "success",
+        "tags": [
+          "general",
+          "europe"
+        ]
+      },
+      {
+        "articles_count": 24,
+        "articles_with_body": 23,
+        "articles_with_image": 23,
+        "classification": "ok",
+        "elapsed_ms": 6487,
+        "feed_url": "https://www.france24.com/en/rss",
+        "id": "france24-top-en",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "France 24 \u00e2\u0080\u0093 Top stories (EN)",
+        "region": "europeWide",
+        "status": "success",
+        "tags": [
+          "world"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 10,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 7341,
+        "feed_url": "https://rss.politico.com/playbook.xml",
+        "id": "politico-eu-playbook",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "Politico Europe \u00e2\u0080\u0093 Playbook",
+        "region": "europeWide",
+        "status": "success",
+        "tags": [
+          "eu",
+          "politics"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 6123,
+        "feed_url": "https://www.theguardian.com/world/rss",
+        "id": "guardian-world",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "The Guardian \u00e2\u0080\u0093 World",
+        "region": "europeWide",
+        "status": "success",
+        "tags": [
+          "world"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 3317,
+        "feed_url": "https://www.derstandard.at/rss/international",
+        "id": "derstandard-international",
+        "is_main": false,
+        "language": "de",
+        "message": "",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "Der Standard \u00e2\u0080\u0093 International",
+        "region": "austria",
+        "status": "success",
+        "tags": [
+          "world"
+        ]
+      },
+      {
+        "articles_count": 10,
+        "articles_with_body": 10,
+        "articles_with_image": 10,
+        "classification": "ok",
+        "elapsed_ms": 2810,
+        "feed_url": "https://www.diepresse.com/rss/Politik",
+        "id": "diepresse-politik",
+        "is_main": false,
+        "language": "de",
+        "message": "",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "Die Presse \u00e2\u0080\u0093 Politik",
+        "region": "austria",
+        "status": "success",
+        "tags": [
+          "politics"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 3401,
+        "feed_url": "https://www.kleinezeitung.at/rss/",
+        "id": "kleinezeitung",
+        "is_main": false,
+        "language": "de",
+        "message": "",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "Kleine Zeitung",
+        "region": "austria",
+        "status": "success",
+        "tags": [
+          "regional"
+        ]
+      },
+      {
+        "articles_count": 1,
+        "articles_with_body": 1,
+        "articles_with_image": 0,
+        "classification": "degraded",
+        "elapsed_ms": 2579,
+        "feed_url": "https://rss.orf.at/news.xml",
+        "id": "orf-news",
+        "is_main": true,
+        "language": "de",
+        "message": "",
+        "note": "",
+        "outlet": "ORF \u00e2\u0080\u0093 News",
+        "region": "austria",
+        "status": "success",
+        "tags": [
+          "general",
+          "country-pick"
+        ]
+      },
+      {
+        "articles_count": 1,
+        "articles_with_body": 1,
+        "articles_with_image": 0,
+        "classification": "degraded",
+        "elapsed_ms": 1359,
+        "feed_url": "https://rss.orf.at/news.xml?sports",
+        "id": "orf-sport",
+        "is_main": false,
+        "language": "de",
+        "message": "",
+        "note": "",
+        "outlet": "ORF \u00e2\u0080\u0093 Sport",
+        "region": "austria",
+        "status": "success",
+        "tags": [
+          "sports"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 29,
+        "classification": "ok",
+        "elapsed_ms": 19086,
+        "feed_url": "https://www.standaard.be/rss/section/1f2838d4-99ea-49f0-9102-138784c7ea7c",
+        "id": "destandaard-nieuws",
+        "is_main": false,
+        "language": "nl",
+        "message": "",
+        "note": "Section UUID to verify in Phase 3.",
+        "outlet": "De Standaard \u00e2\u0080\u0093 Nieuws",
+        "region": "belgium",
+        "status": "success",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 1612,
+        "feed_url": "https://www.tijd.be/rss.xml",
+        "id": "detijd-nieuws",
+        "is_main": false,
+        "language": "nl",
+        "message": "Feed request failed with HTTP status 404.",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "De Tijd \u00e2\u0080\u0093 Nieuws",
+        "region": "belgium",
+        "status": "requestFailed",
+        "tags": [
+          "economy"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 14421,
+        "feed_url": "https://www.hln.be/rss.xml",
+        "id": "hln",
+        "is_main": false,
+        "language": "nl",
+        "message": "",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "Het Laatste Nieuws",
+        "region": "belgium",
+        "status": "success",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 1850,
+        "feed_url": "https://www.lecho.be/rss.xml",
+        "id": "lecho",
+        "is_main": false,
+        "language": "fr",
+        "message": "Feed request failed with HTTP status 404.",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "L'Echo \u00e2\u0080\u0093 \u00c3\u0089conomie",
+        "region": "belgium",
+        "status": "requestFailed",
+        "tags": [
+          "economy"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "degraded",
+        "elapsed_ms": 1287,
+        "feed_url": "https://www.lesoir.be/rss/section/0.xml",
+        "id": "lesoir-une",
+        "is_main": false,
+        "language": "fr",
+        "message": "Feed parsed but no valid articles were normalized.",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "Le Soir \u00e2\u0080\u0093 Une",
+        "region": "belgium",
+        "status": "noArticles",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 20,
+        "articles_with_body": 20,
+        "articles_with_image": 20,
+        "classification": "ok",
+        "elapsed_ms": 10161,
+        "feed_url": "https://rss.rtbf.be/article/rss/highlight_rtbf_info-belgique.xml",
+        "id": "rtbf-belgique",
+        "is_main": true,
+        "language": "fr",
+        "message": "",
+        "note": "",
+        "outlet": "RTBF Info \u00e2\u0080\u0093 Belgique",
+        "region": "belgium",
+        "status": "success",
+        "tags": [
+          "general",
+          "country-pick"
+        ]
+      },
+      {
+        "articles_count": 20,
+        "articles_with_body": 20,
+        "articles_with_image": 20,
+        "classification": "ok",
+        "elapsed_ms": 12455,
+        "feed_url": "https://rss.rtbf.be/article/rss/highlight_rtbf_info.xml",
+        "id": "rtbf-top",
+        "is_main": false,
+        "language": "fr",
+        "message": "",
+        "note": "",
+        "outlet": "RTBF Info \u00e2\u0080\u0093 Top stories",
+        "region": "belgium",
+        "status": "success",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 4968,
+        "feed_url": "https://www.brusselstimes.com/feed",
+        "id": "brussels-times",
+        "is_main": false,
+        "language": "en",
+        "message": "Feed payload is not valid XML.",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "The Brussels Times",
+        "region": "belgium",
+        "status": "parseFailed",
+        "tags": [
+          "english",
+          "general"
+        ]
+      },
+      {
+        "articles_count": 10,
+        "articles_with_body": 10,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 2856,
+        "feed_url": "https://agenciabrasil.ebc.com.br/rss.xml",
+        "id": "agencia-brasil",
+        "is_main": false,
+        "language": "pt",
+        "message": "",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "Ag\u00c3\u00aancia Brasil",
+        "region": "brazil",
+        "status": "success",
+        "tags": [
+          "wire"
+        ]
+      },
+      {
+        "articles_count": 10,
+        "articles_with_body": 10,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 3502,
+        "feed_url": "https://www.brasilwire.com/feed/",
+        "id": "brasil-wire-en",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "Brasil Wire (EN)",
+        "region": "brazil",
+        "status": "success",
+        "tags": [
+          "english",
+          "analysis"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 5,
+        "classification": "degraded",
+        "elapsed_ms": 24697,
+        "feed_url": "https://feeds.folha.uol.com.br/emcimadahora/rss091.xml",
+        "id": "folha-emcima",
+        "is_main": true,
+        "language": "pt",
+        "message": "",
+        "note": "",
+        "outlet": "Folha de S.Paulo \u00e2\u0080\u0093 Em cima da hora",
+        "region": "brazil",
+        "status": "success",
+        "tags": [
+          "general",
+          "country-pick"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 6439,
+        "feed_url": "https://g1.globo.com/rss/g1/",
+        "id": "g1-globo",
+        "is_main": true,
+        "language": "pt",
+        "message": "",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "G1 \u00e2\u0080\u0093 Globo",
+        "region": "brazil",
+        "status": "success",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 1995,
+        "feed_url": "https://jornaldebrasilia.com.br/feed/",
+        "id": "jornaldebrasilia",
+        "is_main": false,
+        "language": "pt",
+        "message": "Feed payload is not valid XML.",
+        "note": "",
+        "outlet": "Jornal de Bras\u00c3\u00adlia",
+        "region": "brazil",
+        "status": "parseFailed",
+        "tags": [
+          "regional"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 1554,
+        "feed_url": "https://www.ebc.com.br/rss/feed.xml",
+        "id": "ebc-portal",
+        "is_main": false,
+        "language": "pt",
+        "message": "Feed request failed with HTTP status 404.",
+        "note": "",
+        "outlet": "Portal EBC",
+        "region": "brazil",
+        "status": "requestFailed",
+        "tags": [
+          "public-broadcaster"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 1481,
+        "feed_url": "https://noticias.r7.com/feed.xml",
+        "id": "r7-noticias",
+        "is_main": false,
+        "language": "pt",
+        "message": "Feed request failed with HTTP status 404.",
+        "note": "",
+        "outlet": "R7 \u00e2\u0080\u0093 Not\u00c3\u00adcias",
+        "region": "brazil",
+        "status": "requestFailed",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 10,
+        "articles_with_body": 10,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 5516,
+        "feed_url": "https://riotimesonline.com/feed/",
+        "id": "riotimes-en",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "The Rio Times (EN)",
+        "region": "brazil",
+        "status": "success",
+        "tags": [
+          "english"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 28,
+        "classification": "ok",
+        "elapsed_ms": 18795,
+        "feed_url": "https://rss.home.uol.com.br/index.xml",
+        "id": "uol-home",
+        "is_main": false,
+        "language": "pt",
+        "message": "",
+        "note": "",
+        "outlet": "UOL",
+        "region": "brazil",
+        "status": "success",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 1692,
+        "feed_url": "https://www.bta.bg/bg/news/rss",
+        "id": "bta-bg",
+        "is_main": false,
+        "language": "bg",
+        "message": "Feed payload is not valid XML.",
+        "note": "",
+        "outlet": "BTA \u00e2\u0080\u0093 Bulgaria (BG)",
+        "region": "bulgaria",
+        "status": "parseFailed",
+        "tags": [
+          "wire"
+        ]
+      },
+      {
+        "articles_count": 20,
+        "articles_with_body": 20,
+        "articles_with_image": 20,
+        "classification": "ok",
+        "elapsed_ms": 2157,
+        "feed_url": "https://www.bta.bg/en/news/bulgaria/rss",
+        "id": "bta-bulgaria-en",
+        "is_main": true,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "BTA \u00e2\u0080\u0093 Bulgaria (EN)",
+        "region": "bulgaria",
+        "status": "success",
+        "tags": [
+          "general",
+          "country-pick"
+        ]
+      },
+      {
+        "articles_count": 20,
+        "articles_with_body": 20,
+        "articles_with_image": 20,
+        "classification": "ok",
+        "elapsed_ms": 3059,
+        "feed_url": "https://www.bta.bg/en/news/economy/rss",
+        "id": "bta-economy-en",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "BTA \u00e2\u0080\u0093 Economy (EN)",
+        "region": "bulgaria",
+        "status": "success",
+        "tags": [
+          "economy"
+        ]
+      },
+      {
+        "articles_count": 20,
+        "articles_with_body": 20,
+        "articles_with_image": 20,
+        "classification": "ok",
+        "elapsed_ms": 3158,
+        "feed_url": "https://www.bta.bg/en/news/world/rss",
+        "id": "bta-world-en",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "BTA \u00e2\u0080\u0093 World (EN)",
+        "region": "bulgaria",
+        "status": "success",
+        "tags": [
+          "world"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 13359,
+        "feed_url": "https://www.novinite.com/services/news_rdf.php",
+        "id": "novinite-en",
+        "is_main": false,
+        "language": "en",
+        "message": "Tempo di richiesta scaduto.",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "Novinite \u00e2\u0080\u0093 English",
+        "region": "bulgaria",
+        "status": "requestFailed",
+        "tags": [
+          "english"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 973,
+        "feed_url": "https://feed.hrt.hr/?rubrika=eu",
+        "id": "hrt-eu",
+        "is_main": false,
+        "language": "hr",
+        "message": "Feed request failed with HTTP status 403.",
+        "note": "",
+        "outlet": "HRT \u00e2\u0080\u0093 EU",
+        "region": "croatia",
+        "status": "requestFailed",
+        "tags": [
+          "eu",
+          "politics"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 972,
+        "feed_url": "https://feed.hrt.hr/?rubrika=Gospodarstvo",
+        "id": "hrt-gospodarstvo",
+        "is_main": false,
+        "language": "hr",
+        "message": "Feed request failed with HTTP status 403.",
+        "note": "",
+        "outlet": "HRT \u00e2\u0080\u0093 Gospodarstvo",
+        "region": "croatia",
+        "status": "requestFailed",
+        "tags": [
+          "economy"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 963,
+        "feed_url": "https://feed.hrt.hr/?feed=hrt-sport",
+        "id": "hrt-sport",
+        "is_main": false,
+        "language": "hr",
+        "message": "Feed request failed with HTTP status 403.",
+        "note": "",
+        "outlet": "HRT \u00e2\u0080\u0093 Sport",
+        "region": "croatia",
+        "status": "requestFailed",
+        "tags": [
+          "sports"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 966,
+        "feed_url": "https://feed.hrt.hr/",
+        "id": "hrt-vijesti",
+        "is_main": true,
+        "language": "hr",
+        "message": "Feed request failed with HTTP status 403.",
+        "note": "",
+        "outlet": "HRT \u00e2\u0080\u0093 Vijesti",
+        "region": "croatia",
+        "status": "requestFailed",
+        "tags": [
+          "general",
+          "country-pick"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 92,
+        "feed_url": "https://feed.hrt.hr/?rubrika=Znanost_i_tehnologija",
+        "id": "hrt-znanost-tehnologija",
+        "is_main": false,
+        "language": "hr",
+        "message": "Feed request failed with HTTP status 403.",
+        "note": "",
+        "outlet": "HRT \u00e2\u0080\u0093 Znanost i tehnologija",
+        "region": "croatia",
+        "status": "requestFailed",
+        "tags": [
+          "science",
+          "technology"
+        ]
+      },
+      {
+        "articles_count": 20,
+        "articles_with_body": 14,
+        "articles_with_image": 12,
+        "classification": "ok",
+        "elapsed_ms": 2312,
+        "feed_url": "https://www.dr.dk/nyheder/service/feeds/indland",
+        "id": "dr-indland",
+        "is_main": false,
+        "language": "da",
+        "message": "",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "DR Nyheder \u00e2\u0080\u0093 Indland",
+        "region": "denmark",
+        "status": "success",
+        "tags": [
+          "national"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 406,
+        "feed_url": "https://www.dr.dk/nyheder/service/feeds/seneste",
+        "id": "dr-seneste",
+        "is_main": true,
+        "language": "da",
+        "message": "Feed request failed with HTTP status 404.",
+        "note": "",
+        "outlet": "DR Nyheder \u00e2\u0080\u0093 Seneste",
+        "region": "denmark",
+        "status": "requestFailed",
+        "tags": [
+          "general",
+          "country-pick"
+        ]
+      },
+      {
+        "articles_count": 20,
+        "articles_with_body": 14,
+        "articles_with_image": 14,
+        "classification": "ok",
+        "elapsed_ms": 3219,
+        "feed_url": "https://www.dr.dk/nyheder/service/feeds/udland",
+        "id": "dr-udland",
+        "is_main": false,
+        "language": "da",
+        "message": "",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "DR Nyheder \u00e2\u0080\u0093 Udland",
+        "region": "denmark",
+        "status": "success",
+        "tags": [
+          "world"
+        ]
+      },
+      {
+        "articles_count": 20,
+        "articles_with_body": 20,
+        "articles_with_image": 18,
+        "classification": "ok",
+        "elapsed_ms": 2763,
+        "feed_url": "https://politiken.dk/rss/senestenyt.rss",
+        "id": "politiken-forside",
+        "is_main": false,
+        "language": "da",
+        "message": "",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "Politiken \u00e2\u0080\u0093 Forside",
+        "region": "denmark",
+        "status": "success",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 58,
+        "feed_url": "https://feeds.tv2.dk/nyheder_seneste/rss",
+        "id": "tv2-nyheder",
+        "is_main": false,
+        "language": "da",
+        "message": "Impossibile trovare un server con il nome host specificato.",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "TV 2 \u00e2\u0080\u0093 Nyheder",
+        "region": "denmark",
+        "status": "requestFailed",
+        "tags": [
+          "broadcast"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 29,
+        "articles_with_image": 26,
+        "classification": "ok",
+        "elapsed_ms": 3334,
+        "feed_url": "https://www.hs.fi/rss/tuoreimmat.xml",
+        "id": "hs-etusivu",
+        "is_main": false,
+        "language": "fi",
+        "message": "",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "Helsingin Sanomat \u00e2\u0080\u0093 Etusivu",
+        "region": "finland",
+        "status": "success",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 16,
+        "articles_with_body": 16,
+        "articles_with_image": 16,
+        "classification": "ok",
+        "elapsed_ms": 4813,
+        "feed_url": "https://www.helsinkitimes.fi/?format=feed&type=rss",
+        "id": "helsinki-times-en",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "Helsinki Times (EN)",
+        "region": "finland",
+        "status": "success",
+        "tags": [
+          "english"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 3229,
+        "feed_url": "https://feeds.yle.fi/uutiset/v1/recent.rss?publisherIds=YLE_NEWS&concepts=18-34837",
+        "id": "yle-news-en",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "Yle News (EN)",
+        "region": "finland",
+        "status": "success",
+        "tags": [
+          "english"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 2342,
+        "feed_url": "https://yle.fi/uutiset/rss/v1/news.rss",
+        "id": "yle-uutiset",
+        "is_main": true,
+        "language": "fi",
+        "message": "Feed request failed with HTTP status 404.",
+        "note": "",
+        "outlet": "Yle Uutiset",
+        "region": "finland",
+        "status": "requestFailed",
+        "tags": [
+          "general",
+          "country-pick"
+        ]
+      },
+      {
+        "articles_count": 24,
+        "articles_with_body": 23,
+        "articles_with_image": 23,
+        "classification": "ok",
+        "elapsed_ms": 2533,
+        "feed_url": "https://www.france24.com/en/rss",
+        "id": "france24-top-fr",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "France 24 \u00e2\u0080\u0093 Top stories (EN)",
+        "region": "france",
+        "status": "success",
+        "tags": [
+          "international"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 3630,
+        "feed_url": "https://www.francetvinfo.fr/titres.rss",
+        "id": "franceinfo-titres",
+        "is_main": false,
+        "language": "fr",
+        "message": "",
+        "note": "",
+        "outlet": "France Info \u00e2\u0080\u0093 Titres",
+        "region": "france",
+        "status": "success",
+        "tags": [
+          "broadcast"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 17,
+        "classification": "ok",
+        "elapsed_ms": 3801,
+        "feed_url": "https://www.nouvelobs.com/a-la-une/rss.xml",
+        "id": "lobs-une",
+        "is_main": false,
+        "language": "fr",
+        "message": "",
+        "note": "",
+        "outlet": "L'Obs \u00e2\u0080\u0093 \u00c3\u0080 la une",
+        "region": "france",
+        "status": "success",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 3346,
+        "feed_url": "https://www.ladepeche.fr/rss.xml",
+        "id": "ladepeche",
+        "is_main": false,
+        "language": "fr",
+        "message": "",
+        "note": "",
+        "outlet": "La D\u00c3\u00a9p\u00c3\u00aache du Midi",
+        "region": "france",
+        "status": "success",
+        "tags": [
+          "regional"
+        ]
+      },
+      {
+        "articles_count": 20,
+        "articles_with_body": 20,
+        "articles_with_image": 20,
+        "classification": "ok",
+        "elapsed_ms": 2240,
+        "feed_url": "https://www.huffingtonpost.fr/feeds/index.xml",
+        "id": "huffpost-fr",
+        "is_main": false,
+        "language": "fr",
+        "message": "",
+        "note": "",
+        "outlet": "Le HuffPost France",
+        "region": "france",
+        "status": "success",
+        "tags": [
+          "digital"
+        ]
+      },
+      {
+        "articles_count": 17,
+        "articles_with_body": 17,
+        "articles_with_image": 17,
+        "classification": "ok",
+        "elapsed_ms": 960,
+        "feed_url": "https://www.lemonde.fr/rss/une.xml",
+        "id": "lemonde-une",
+        "is_main": true,
+        "language": "fr",
+        "message": "",
+        "note": "",
+        "outlet": "Le Monde \u00e2\u0080\u0093 \u00c3\u0080 la une",
+        "region": "france",
+        "status": "success",
+        "tags": [
+          "general",
+          "country-pick"
+        ]
+      },
+      {
+        "articles_count": 20,
+        "articles_with_body": 20,
+        "articles_with_image": 20,
+        "classification": "ok",
+        "elapsed_ms": 2702,
+        "feed_url": "https://www.lemonde.fr/en/europe/rss_full.xml",
+        "id": "lemonde-europe-en",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "Le Monde \u00e2\u0080\u0093 Europe (EN)",
+        "region": "france",
+        "status": "success",
+        "tags": [
+          "europe"
+        ]
+      },
+      {
+        "articles_count": 10,
+        "articles_with_body": 10,
+        "articles_with_image": 10,
+        "classification": "ok",
+        "elapsed_ms": 2462,
+        "feed_url": "https://www.mediapart.fr/articles/feed",
+        "id": "mediapart-articles",
+        "is_main": false,
+        "language": "fr",
+        "message": "",
+        "note": "Paywalled feed: summaries only.",
+        "outlet": "Mediapart \u00e2\u0080\u0093 Articles",
+        "region": "france",
+        "status": "success",
+        "tags": [
+          "investigative"
+        ]
+      },
+      {
+        "articles_count": 10,
+        "articles_with_body": 10,
+        "articles_with_image": 10,
+        "classification": "ok",
+        "elapsed_ms": 2190,
+        "feed_url": "https://www.ouest-france.fr/rss-en-continu.xml",
+        "id": "ouestfrance-encontinu",
+        "is_main": false,
+        "language": "fr",
+        "message": "",
+        "note": "",
+        "outlet": "Ouest-France \u00e2\u0080\u0093 En continu",
+        "region": "france",
+        "status": "success",
+        "tags": [
+          "regional"
+        ]
+      },
+      {
+        "articles_count": 20,
+        "articles_with_body": 20,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 1674,
+        "feed_url": "https://www.sudouest.fr/essentiel/rss.xml",
+        "id": "sudouest-essentiel",
+        "is_main": false,
+        "language": "fr",
+        "message": "",
+        "note": "",
+        "outlet": "Sud Ouest \u00e2\u0080\u0093 Essentiel",
+        "region": "france",
+        "status": "success",
+        "tags": [
+          "regional"
+        ]
+      },
+      {
+        "articles_count": 1,
+        "articles_with_body": 1,
+        "articles_with_image": 0,
+        "classification": "degraded",
+        "elapsed_ms": 444,
+        "feed_url": "https://rss.dw.com/rdf/rss-en-bus",
+        "id": "dw-business-en-de",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "Deutsche Welle \u00e2\u0080\u0093 Business (EN)",
+        "region": "germany",
+        "status": "success",
+        "tags": [
+          "economy"
+        ]
+      },
+      {
+        "articles_count": 1,
+        "articles_with_body": 1,
+        "articles_with_image": 0,
+        "classification": "degraded",
+        "elapsed_ms": 507,
+        "feed_url": "https://rss.dw.com/rdf/rss-de-deutschland",
+        "id": "dw-deutschland-de",
+        "is_main": false,
+        "language": "de",
+        "message": "",
+        "note": "",
+        "outlet": "Deutsche Welle \u00e2\u0080\u0093 Deutschland (DE)",
+        "region": "germany",
+        "status": "success",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 3328,
+        "feed_url": "https://www.faz.net/rss/aktuell/",
+        "id": "faz-aktuell",
+        "is_main": false,
+        "language": "de",
+        "message": "",
+        "note": "",
+        "outlet": "FAZ \u00e2\u0080\u0093 Aktuell",
+        "region": "germany",
+        "status": "success",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 742,
+        "feed_url": "https://rss.focus.de/fol/XML/rss_folnews.xml",
+        "id": "focus-online",
+        "is_main": false,
+        "language": "de",
+        "message": "Feed request failed with HTTP status 404.",
+        "note": "",
+        "outlet": "FOCUS Online",
+        "region": "germany",
+        "status": "requestFailed",
+        "tags": [
+          "magazine"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 4162,
+        "feed_url": "https://www.spiegel.de/schlagzeilen/index.rss",
+        "id": "spiegel-schlagzeilen",
+        "is_main": false,
+        "language": "de",
+        "message": "",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "Spiegel Online \u00e2\u0080\u0093 Schlagzeilen",
+        "region": "germany",
+        "status": "success",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 15,
+        "articles_with_body": 15,
+        "articles_with_image": 15,
+        "classification": "ok",
+        "elapsed_ms": 5096,
+        "feed_url": "https://rss.sueddeutsche.de/rss/Topthemen",
+        "id": "sueddeutsche-topthemen",
+        "is_main": false,
+        "language": "de",
+        "message": "",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "S\u00c3\u00bcddeutsche Zeitung \u00e2\u0080\u0093 Topthemen",
+        "region": "germany",
+        "status": "success",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 5023,
+        "feed_url": "https://www.tagesschau.de/xml/rss2/",
+        "id": "tagesschau",
+        "is_main": true,
+        "language": "de",
+        "message": "",
+        "note": "",
+        "outlet": "Tagesschau",
+        "region": "germany",
+        "status": "success",
+        "tags": [
+          "general",
+          "country-pick"
+        ]
+      },
+      {
+        "articles_count": 15,
+        "articles_with_body": 15,
+        "articles_with_image": 15,
+        "classification": "ok",
+        "elapsed_ms": 2065,
+        "feed_url": "https://newsfeed.zeit.de/index",
+        "id": "zeit-online-index",
+        "is_main": false,
+        "language": "de",
+        "message": "",
+        "note": "",
+        "outlet": "ZEIT ONLINE \u00e2\u0080\u0093 Index",
+        "region": "germany",
+        "status": "success",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 271,
+        "feed_url": "https://www.amna.gr/rss/english.xml",
+        "id": "amna-english",
+        "is_main": false,
+        "language": "en",
+        "message": "Feed payload is not valid XML.",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "AMNA \u00e2\u0080\u0093 English",
+        "region": "greece",
+        "status": "parseFailed",
+        "tags": [
+          "wire",
+          "english"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 1471,
+        "feed_url": "https://www.ertnews.gr/feed/",
+        "id": "ertnews",
+        "is_main": false,
+        "language": "el",
+        "message": "",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "ERT News",
+        "region": "greece",
+        "status": "success",
+        "tags": [
+          "public-broadcaster"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 513,
+        "feed_url": "https://feeds.feedburner.com/ekathimerini",
+        "id": "kathimerini-en",
+        "is_main": true,
+        "language": "en",
+        "message": "Feed request failed with HTTP status 404.",
+        "note": "",
+        "outlet": "Kathimerini \u00e2\u0080\u0093 English",
+        "region": "greece",
+        "status": "requestFailed",
+        "tags": [
+          "general",
+          "country-pick"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 341,
+        "feed_url": "https://abouthungary.hu/rss.xml",
+        "id": "abouthungary-en",
+        "is_main": false,
+        "language": "en",
+        "message": "Feed payload is not valid XML.",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "About Hungary (EN)",
+        "region": "hungary",
+        "status": "parseFailed",
+        "tags": [
+          "english"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 1903,
+        "feed_url": "https://www.hirado.hu/rss/hirapi",
+        "id": "hirado-mti",
+        "is_main": true,
+        "language": "hu",
+        "message": "Feed request failed with HTTP status 404.",
+        "note": "",
+        "outlet": "H\u00c3\u00adrad\u00c3\u00b3 (MTI/MTVA)",
+        "region": "hungary",
+        "status": "requestFailed",
+        "tags": [
+          "public-broadcaster",
+          "country-pick"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 26,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 4232,
+        "feed_url": "https://index.hu/24ora/rss",
+        "id": "index-hu",
+        "is_main": false,
+        "language": "hu",
+        "message": "",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "Index.hu",
+        "region": "hungary",
+        "status": "success",
+        "tags": [
+          "digital"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 2147,
+        "feed_url": "https://telex.hu/rss",
+        "id": "telex-hu",
+        "is_main": false,
+        "language": "hu",
+        "message": "",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "Telex.hu",
+        "region": "hungary",
+        "status": "success",
+        "tags": [
+          "digital"
+        ]
+      },
+      {
+        "articles_count": 5,
+        "articles_with_body": 5,
+        "articles_with_image": 5,
+        "classification": "ok",
+        "elapsed_ms": 1433,
+        "feed_url": "https://feeds.breakingnews.ie/bntopstories",
+        "id": "breakingnews-ie",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "BreakingNews.ie",
+        "region": "ireland",
+        "status": "success",
+        "tags": [
+          "digital"
+        ]
+      },
+      {
+        "articles_count": 9,
+        "articles_with_body": 9,
+        "articles_with_image": 9,
+        "classification": "ok",
+        "elapsed_ms": 1331,
+        "feed_url": "https://feeds.feedburner.com/ietopstories",
+        "id": "irish-examiner",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "Irish Examiner \u00e2\u0080\u0093 Top Stories",
+        "region": "ireland",
+        "status": "success",
+        "tags": [
+          "regional"
+        ]
+      },
+      {
+        "articles_count": 25,
+        "articles_with_body": 25,
+        "articles_with_image": 25,
+        "classification": "ok",
+        "elapsed_ms": 1383,
+        "feed_url": "https://www.irishmirror.ie/?service=rss",
+        "id": "irish-mirror",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "Irish Mirror",
+        "region": "ireland",
+        "status": "success",
+        "tags": [
+          "tabloid"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 219,
+        "feed_url": "https://www.rte.ie/rss/gaa.xml",
+        "id": "rte-gaa",
+        "is_main": false,
+        "language": "en",
+        "message": "Feed request failed with HTTP status 403.",
+        "note": "",
+        "outlet": "RT\u00c3\u0089 \u00e2\u0080\u0093 GAA",
+        "region": "ireland",
+        "status": "requestFailed",
+        "tags": [
+          "sports"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 53,
+        "feed_url": "https://www.rte.ie/news/rss/business-headlines.xml",
+        "id": "rte-business",
+        "is_main": false,
+        "language": "en",
+        "message": "Feed request failed with HTTP status 403.",
+        "note": "",
+        "outlet": "RT\u00c3\u0089 News \u00e2\u0080\u0093 Business",
+        "region": "ireland",
+        "status": "requestFailed",
+        "tags": [
+          "economy"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 72,
+        "feed_url": "https://www.rte.ie/news/rss/news-headlines.xml",
+        "id": "rte-headlines",
+        "is_main": true,
+        "language": "en",
+        "message": "Feed request failed with HTTP status 403.",
+        "note": "",
+        "outlet": "RT\u00c3\u0089 News \u00e2\u0080\u0093 Headlines",
+        "region": "ireland",
+        "status": "requestFailed",
+        "tags": [
+          "general",
+          "country-pick"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 1339,
+        "feed_url": "https://www.the42.ie/feed/",
+        "id": "the42-sport",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "The42 (Sport)",
+        "region": "ireland",
+        "status": "success",
+        "tags": [
+          "sports"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 1237,
+        "feed_url": "https://www.thejournal.ie/feed/",
+        "id": "thejournal-ie",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "TheJournal.ie",
+        "region": "ireland",
+        "status": "success",
+        "tags": [
+          "digital"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 0,
+        "feed_url": "http://rss.adnkronos.com/RSS_PrimaPagina.xml",
+        "id": "adnkronos-prima",
+        "is_main": false,
+        "language": "it",
+        "message": "Feed URL must use HTTPS transport.",
+        "note": "HTTP-only endpoint; https variant to evaluate in Phase 3.",
+        "outlet": "Adnkronos \u00e2\u0080\u0093 Prima Pagina",
+        "region": "italy",
+        "status": "requestFailed",
+        "tags": [
+          "wire"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 1160,
+        "feed_url": "https://www.agi.it/feed/cronaca/rss",
+        "id": "agi-cronaca",
+        "is_main": false,
+        "language": "it",
+        "message": "Feed request failed with HTTP status 404.",
+        "note": "Endpoint pattern to verify in Phase 3.",
+        "outlet": "AGI \u00e2\u0080\u0093 Agenzia Italia (Top News)",
+        "region": "italy",
+        "status": "requestFailed",
+        "tags": [
+          "wire"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 29,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 1730,
+        "feed_url": "https://www.ansa.it/sito/notizie/cronaca/cronaca_rss.xml",
+        "id": "ansa-cronaca",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "ANSA \u00e2\u0080\u0093 Cronaca",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 1894,
+        "feed_url": "https://www.ansa.it/sito/notizie/cultura/cultura_rss.xml",
+        "id": "ansa-cultura",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "ANSA \u00e2\u0080\u0093 Cultura",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "culture"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 2016,
+        "feed_url": "https://www.ansa.it/sito/notizie/economia/economia_rss.xml",
+        "id": "ansa-economia",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "ANSA \u00e2\u0080\u0093 Economia",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "economy"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 400,
+        "feed_url": "https://www.ansa.it/english/news/english_notizie.xml",
+        "id": "ansa-english",
+        "is_main": false,
+        "language": "en",
+        "message": "Feed request failed with HTTP status 404.",
+        "note": "",
+        "outlet": "ANSA \u00e2\u0080\u0093 English",
+        "region": "italy",
+        "status": "requestFailed",
+        "tags": [
+          "english"
+        ]
+      },
+      {
+        "articles_count": 29,
+        "articles_with_body": 27,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 2523,
+        "feed_url": "https://www.ansa.it/sito/ansait_rss.xml",
+        "id": "ansa-homepage",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "ANSA \u00e2\u0080\u0093 Homepage",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 12,
+        "articles_with_body": 12,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 2370,
+        "feed_url": "https://www.ansa.it/canale_lifestyle/notizie/lifestyle_rss.xml",
+        "id": "ansa-lifestyle",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "ANSA \u00e2\u0080\u0093 Lifestyle",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "lifestyle"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 28,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 2465,
+        "feed_url": "https://www.ansa.it/sito/notizie/mondo/mondo_rss.xml",
+        "id": "ansa-mondo",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "ANSA \u00e2\u0080\u0093 Mondo",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "world"
+        ]
+      },
+      {
+        "articles_count": 11,
+        "articles_with_body": 11,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 2064,
+        "feed_url": "https://www.ansa.it/sito/notizie/politica/politica_rss.xml",
+        "id": "ansa-politica",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "ANSA \u00e2\u0080\u0093 Politica",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "politics"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 2544,
+        "feed_url": "https://www.ansa.it/canale_saluteebenessere/notizie/saluteebenessere_rss.xml",
+        "id": "ansa-salute-benessere",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "ANSA \u00e2\u0080\u0093 Salute & Benessere",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "health"
+        ]
+      },
+      {
+        "articles_count": 26,
+        "articles_with_body": 26,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 2260,
+        "feed_url": "https://www.ansa.it/canale_scienza_tecnica/notizie/scienzaetecnica_rss.xml",
+        "id": "ansa-scienza",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "ANSA \u00e2\u0080\u0093 Scienza",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "science"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 1682,
+        "feed_url": "https://www.ansa.it/sicilia/notizie/sicilia_rss.xml",
+        "id": "ansa-sicilia",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "Updated to canonical /sicilia/notizie/sicilia_rss.xml pattern.",
+        "outlet": "ANSA \u00e2\u0080\u0093 Sicilia (regionale)",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "regional"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 2388,
+        "feed_url": "https://www.ansa.it/sito/notizie/sport/sport_rss.xml",
+        "id": "ansa-sport-generale",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "ANSA \u00e2\u0080\u0093 Sport (Generale)",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "sports"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 1357,
+        "feed_url": "https://www.ansa.it/sito/notizie/sport/calcio/calcio_rss.xml",
+        "id": "ansa-sport-calcio",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "ANSA \u00e2\u0080\u0093 Sport Calcio",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "sports"
+        ]
+      },
+      {
+        "articles_count": 21,
+        "articles_with_body": 21,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 1199,
+        "feed_url": "https://www.ansa.it/canale_tecnologia/notizie/tecnologia_rss.xml",
+        "id": "ansa-tecnologia",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "ANSA \u00e2\u0080\u0093 Tecnologia",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "technology"
+        ]
+      },
+      {
+        "articles_count": 10,
+        "articles_with_body": 10,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 1022,
+        "feed_url": "https://www.ansa.it/sito/notizie/topnews/topnews_rss.xml",
+        "id": "ansa-topnews",
+        "is_main": true,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "ANSA \u00e2\u0080\u0093 Top News",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "general",
+          "country-pick"
+        ]
+      },
+      {
+        "articles_count": 18,
+        "articles_with_body": 18,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 2743,
+        "feed_url": "https://www.corriere.it/rss/cronaca.xml",
+        "id": "corriere-cronaca",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "Corriere della Sera \u00e2\u0080\u0093 Cronaca",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 23,
+        "articles_with_body": 22,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 2882,
+        "feed_url": "https://www.corriere.it/rss/economia.xml",
+        "id": "corriere-economia",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "Corriere della Sera \u00e2\u0080\u0093 Economia",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "economy"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 3313,
+        "feed_url": "https://www.corriere.it/rss/esteri.xml",
+        "id": "corriere-esteri",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "Corriere della Sera \u00e2\u0080\u0093 Esteri",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "world"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 2630,
+        "feed_url": "https://www.corriere.it/rss/homepage.xml",
+        "id": "corriere-homepage",
+        "is_main": true,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "Corriere della Sera \u00e2\u0080\u0093 Homepage",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 3313,
+        "feed_url": "https://www.corriere.it/rss/politica.xml",
+        "id": "corriere-politica",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "Corriere della Sera \u00e2\u0080\u0093 Politica",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "politics"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 2753,
+        "feed_url": "https://www.corriere.it/rss/sport.xml",
+        "id": "corriere-sport",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "Corriere della Sera \u00e2\u0080\u0093 Sport",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "sports"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 2639,
+        "feed_url": "https://www.fanpage.it/feed/",
+        "id": "fanpage",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "Fanpage",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "digital"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 3878,
+        "feed_url": "https://www.gazzetta.it/rss/homepage.xml",
+        "id": "gazzetta-dello-sport",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "Endpoint pattern to verify in Phase 3.",
+        "outlet": "Gazzetta dello Sport",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "sports"
+        ]
+      },
+      {
+        "articles_count": 25,
+        "articles_with_body": 25,
+        "articles_with_image": 4,
+        "classification": "degraded",
+        "elapsed_ms": 1312,
+        "feed_url": "https://www.ilfattoquotidiano.it/feed/",
+        "id": "il-fatto-quotidiano",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "Il Fatto Quotidiano",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "investigative"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 839,
+        "feed_url": "https://www.ilfoglio.it/sezioni/112/rss",
+        "id": "il-foglio",
+        "is_main": false,
+        "language": "it",
+        "message": "Feed request failed with HTTP status 410.",
+        "note": "Section 112 assumed to be front page; verify in Phase 3.",
+        "outlet": "Il Foglio",
+        "region": "italy",
+        "status": "requestFailed",
+        "tags": [
+          "opinion"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 1534,
+        "feed_url": "https://www.ilgiornale.it/feed.xml",
+        "id": "il-giornale",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "Il Giornale",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 221,
+        "feed_url": "https://www.ilpost.it/feed/",
+        "id": "il-post",
+        "is_main": false,
+        "language": "it",
+        "message": "Feed request failed with HTTP status 403.",
+        "note": "",
+        "outlet": "Il Post",
+        "region": "italy",
+        "status": "requestFailed",
+        "tags": [
+          "explainer"
+        ]
+      },
+      {
+        "articles_count": 4,
+        "articles_with_body": 4,
+        "articles_with_image": 4,
+        "classification": "ok",
+        "elapsed_ms": 945,
+        "feed_url": "https://www.ilsole24ore.com/rss/finanza.xml",
+        "id": "ilsole24ore-finanza",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "Il Sole 24 Ore \u00e2\u0080\u0093 Finanza",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "finance"
+        ]
+      },
+      {
+        "articles_count": 12,
+        "articles_with_body": 12,
+        "articles_with_image": 12,
+        "classification": "ok",
+        "elapsed_ms": 850,
+        "feed_url": "https://www.ilsole24ore.com/rss/italia.xml",
+        "id": "ilsole24ore-italia",
+        "is_main": true,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "Il Sole 24 Ore \u00e2\u0080\u0093 Italia",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "economy",
+          "country-pick"
+        ]
+      },
+      {
+        "articles_count": 12,
+        "articles_with_body": 9,
+        "articles_with_image": 12,
+        "classification": "ok",
+        "elapsed_ms": 857,
+        "feed_url": "https://www.ilsole24ore.com/rss/mondo.xml",
+        "id": "ilsole24ore-mondo",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "Il Sole 24 Ore \u00e2\u0080\u0093 Mondo",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "world"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 1156,
+        "feed_url": "https://www.internazionale.it/sitemaps/rss.xml",
+        "id": "internazionale",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "Internazionale",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "weekly"
+        ]
+      },
+      {
+        "articles_count": 25,
+        "articles_with_body": 25,
+        "articles_with_image": 25,
+        "classification": "ok",
+        "elapsed_ms": 982,
+        "feed_url": "https://www.repubblica.it/rss/cronaca/rss2.0.xml",
+        "id": "repubblica-cronaca",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "Endpoint pattern to verify in Phase 3.",
+        "outlet": "La Repubblica \u00e2\u0080\u0093 Cronaca",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 25,
+        "articles_with_body": 25,
+        "articles_with_image": 24,
+        "classification": "ok",
+        "elapsed_ms": 2062,
+        "feed_url": "https://www.repubblica.it/rss/economia/rss2.0.xml",
+        "id": "repubblica-economia",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "Endpoint pattern to verify in Phase 3.",
+        "outlet": "La Repubblica \u00e2\u0080\u0093 Economia",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "economy"
+        ]
+      },
+      {
+        "articles_count": 25,
+        "articles_with_body": 25,
+        "articles_with_image": 25,
+        "classification": "ok",
+        "elapsed_ms": 976,
+        "feed_url": "https://www.repubblica.it/rss/esteri/rss2.0.xml",
+        "id": "repubblica-esteri",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "Endpoint pattern to verify in Phase 3.",
+        "outlet": "La Repubblica \u00e2\u0080\u0093 Esteri",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "world"
+        ]
+      },
+      {
+        "articles_count": 28,
+        "articles_with_body": 27,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 1724,
+        "feed_url": "https://www.repubblica.it/rss/homepage/rss2.0.xml",
+        "id": "repubblica-homepage",
+        "is_main": true,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "La Repubblica \u00e2\u0080\u0093 Homepage",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "general",
+          "country-pick"
+        ]
+      },
+      {
+        "articles_count": 25,
+        "articles_with_body": 25,
+        "articles_with_image": 25,
+        "classification": "ok",
+        "elapsed_ms": 989,
+        "feed_url": "https://www.repubblica.it/rss/politica/rss2.0.xml",
+        "id": "repubblica-politica",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "Endpoint pattern to verify in Phase 3.",
+        "outlet": "La Repubblica \u00e2\u0080\u0093 Politica",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "politics"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 152,
+        "feed_url": "https://www.lastampa.it/rss/copertina.xml",
+        "id": "lastampa-copertina",
+        "is_main": false,
+        "language": "it",
+        "message": "Feed request failed with HTTP status 403.",
+        "note": "",
+        "outlet": "La Stampa \u00e2\u0080\u0093 Copertina",
+        "region": "italy",
+        "status": "requestFailed",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 8,
+        "articles_with_image": 30,
+        "classification": "degraded",
+        "elapsed_ms": 2311,
+        "feed_url": "https://www.liberoquotidiano.it/rss.xml",
+        "id": "libero-quotidiano",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "Libero Quotidiano",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 12,
+        "articles_with_body": 12,
+        "articles_with_image": 12,
+        "classification": "ok",
+        "elapsed_ms": 1567,
+        "feed_url": "https://www.linkiesta.it/it/feed/",
+        "id": "linkiesta",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "Linkiesta",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "opinion"
+        ]
+      },
+      {
+        "articles_count": 20,
+        "articles_with_body": 20,
+        "articles_with_image": 20,
+        "classification": "ok",
+        "elapsed_ms": 1494,
+        "feed_url": "https://www.milannews.it/rss/",
+        "id": "milan-news",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "Milan News",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "sports"
+        ]
+      },
+      {
+        "articles_count": 10,
+        "articles_with_body": 10,
+        "articles_with_image": 10,
+        "classification": "ok",
+        "elapsed_ms": 691,
+        "feed_url": "https://www.panorama.it/feeds/feed.rss",
+        "id": "panorama",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "Panorama",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "magazine"
+        ]
+      },
+      {
+        "articles_count": 7,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "degraded",
+        "elapsed_ms": 296,
+        "feed_url": "https://www.rai.it/dl/portale/html/PublishingBlock-15c2c340-e282-473d-b944-661e818d667b-rss.xml",
+        "id": "rai-portale-rss",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "RAI News \u00e2\u0080\u0093 Portale RSS",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "public-broadcaster"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 533,
+        "feed_url": "https://www.rainews.it/rss.rss",
+        "id": "rainews-primopiano",
+        "is_main": true,
+        "language": "it",
+        "message": "Feed request failed with HTTP status 404.",
+        "note": "",
+        "outlet": "RAI News 24 \u00e2\u0080\u0093 Primo Piano",
+        "region": "italy",
+        "status": "requestFailed",
+        "tags": [
+          "public-broadcaster"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 136,
+        "feed_url": "https://www.rai.it/dl/portaleAudio/Giornale_Radio_index.rss",
+        "id": "rai-radio-giornale",
+        "is_main": false,
+        "language": "it",
+        "message": "Feed request failed with HTTP status 404.",
+        "note": "",
+        "outlet": "RAI Radio \u00e2\u0080\u0093 Giornale Radio",
+        "region": "italy",
+        "status": "requestFailed",
+        "tags": [
+          "radio"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 363,
+        "feed_url": "https://www.rainews.it/tgr/rss/piemonte.xml",
+        "id": "rai-tgr-piemonte",
+        "is_main": false,
+        "language": "it",
+        "message": "Feed request failed with HTTP status 404.",
+        "note": "",
+        "outlet": "RAI TGR Piemonte",
+        "region": "italy",
+        "status": "requestFailed",
+        "tags": [
+          "regional"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 468,
+        "feed_url": "https://tg24.sky.it/rss/cronaca.xml",
+        "id": "sky-tg24-cronaca",
+        "is_main": false,
+        "language": "it",
+        "message": "Feed request failed with HTTP status 404.",
+        "note": "Endpoint pattern to verify in Phase 3.",
+        "outlet": "Sky TG24 \u00e2\u0080\u0093 Cronaca",
+        "region": "italy",
+        "status": "requestFailed",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 234,
+        "feed_url": "https://tg24.sky.it/rss/mondo.xml",
+        "id": "sky-tg24-mondo",
+        "is_main": false,
+        "language": "it",
+        "message": "Feed request failed with HTTP status 404.",
+        "note": "Endpoint pattern to verify in Phase 3.",
+        "outlet": "Sky TG24 \u00e2\u0080\u0093 Mondo",
+        "region": "italy",
+        "status": "requestFailed",
+        "tags": [
+          "world"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 227,
+        "feed_url": "https://tg24.sky.it/rss/politica.xml",
+        "id": "sky-tg24-politica",
+        "is_main": false,
+        "language": "it",
+        "message": "Feed request failed with HTTP status 404.",
+        "note": "Endpoint pattern to verify in Phase 3.",
+        "outlet": "Sky TG24 \u00e2\u0080\u0093 Politica",
+        "region": "italy",
+        "status": "requestFailed",
+        "tags": [
+          "politics"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 29,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 662,
+        "feed_url": "https://www.tgcom24.mediaset.it/rss/economia.xml",
+        "id": "tgcom24-economia",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "TGCOM24 \u00e2\u0080\u0093 Economia",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "economy"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 23,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 523,
+        "feed_url": "https://www.tgcom24.mediaset.it/rss/homepage.xml",
+        "id": "tgcom24-homepage",
+        "is_main": true,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "TGCOM24 \u00e2\u0080\u0093 Homepage",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "general",
+          "country-pick"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 24,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 532,
+        "feed_url": "https://www.tgcom24.mediaset.it/rss/politica.xml",
+        "id": "tgcom24-politica",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "TGCOM24 \u00e2\u0080\u0093 Politica",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "politics"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 27,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 579,
+        "feed_url": "https://www.tgcom24.mediaset.it/rss/spettacolo.xml",
+        "id": "tgcom24-spettacolo",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "TGCOM24 \u00e2\u0080\u0093 Spettacolo",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "entertainment"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 25,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 383,
+        "feed_url": "https://www.tgcom24.mediaset.it/rss/sport.xml",
+        "id": "tgcom24-sport",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "TGCOM24 \u00e2\u0080\u0093 Sport",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "sports"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 24,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 559,
+        "feed_url": "https://www.tgcom24.mediaset.it/rss/tgtech.xml",
+        "id": "tgcom24-tgtech",
+        "is_main": false,
+        "language": "it",
+        "message": "",
+        "note": "",
+        "outlet": "TGCOM24 \u00e2\u0080\u0093 TGTech",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "technology"
+        ]
+      },
+      {
+        "articles_count": 20,
+        "articles_with_body": 20,
+        "articles_with_image": 20,
+        "classification": "ok",
+        "elapsed_ms": 1328,
+        "feed_url": "https://www.theguardian.com/world/italy/rss",
+        "id": "guardian-italy",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "The Guardian \u00e2\u0080\u0093 Italy",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "english"
+        ]
+      },
+      {
+        "articles_count": 20,
+        "articles_with_body": 20,
+        "articles_with_image": 20,
+        "classification": "ok",
+        "elapsed_ms": 4810,
+        "feed_url": "https://feeds.thelocal.com/rss/it",
+        "id": "the-local-italy",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "The Local Italy",
+        "region": "italy",
+        "status": "success",
+        "tags": [
+          "english"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 5,
+        "feed_url": "http://rss.asahi.com/rss/asahi/newsheadlines.rdf",
+        "id": "asahi-headlines",
+        "is_main": false,
+        "language": "ja",
+        "message": "Feed URL must use HTTPS transport.",
+        "note": "HTTP-only endpoint; check https in Phase 3.",
+        "outlet": "Asahi Shimbun \u00e2\u0080\u0093 Headlines",
+        "region": "japan",
+        "status": "requestFailed",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 5,
+        "articles_with_body": 5,
+        "articles_with_image": 5,
+        "classification": "ok",
+        "elapsed_ms": 12335,
+        "feed_url": "https://www.japantimes.co.jp/feed/topstories/",
+        "id": "japan-times-top",
+        "is_main": true,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "Japan Times \u00e2\u0080\u0093 Top Stories",
+        "region": "japan",
+        "status": "success",
+        "tags": [
+          "english",
+          "country-pick"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 16444,
+        "feed_url": "https://japantoday.com/feed",
+        "id": "japan-today",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "Japan Today",
+        "region": "japan",
+        "status": "success",
+        "tags": [
+          "english",
+          "digital"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 12074,
+        "feed_url": "https://english.kyodonews.net/rss/all.xml",
+        "id": "kyodo-en",
+        "is_main": false,
+        "language": "en",
+        "message": "Feed request failed with HTTP status 404.",
+        "note": "",
+        "outlet": "Kyodo News+ (EN)",
+        "region": "japan",
+        "status": "requestFailed",
+        "tags": [
+          "wire",
+          "english"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 9683,
+        "feed_url": "https://news.livedoor.com/topics/rss/top.xml",
+        "id": "livedoor-top",
+        "is_main": false,
+        "language": "ja",
+        "message": "Feed request failed with HTTP status 403.",
+        "note": "",
+        "outlet": "Livedoor News \u00e2\u0080\u0093 Top",
+        "region": "japan",
+        "status": "requestFailed",
+        "tags": [
+          "digital"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 4645,
+        "feed_url": "https://www.newsonjapan.com/rss/top.xml",
+        "id": "newsonjapan",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "News On Japan",
+        "region": "japan",
+        "status": "success",
+        "tags": [
+          "english",
+          "digital"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 721,
+        "feed_url": "https://www3.nhk.or.jp/nhkworld/en/news/feeds/rss/news-en.xml",
+        "id": "nhk-world-en",
+        "is_main": false,
+        "language": "en",
+        "message": "Feed request failed with HTTP status 404.",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "NHK World \u00e2\u0080\u0093 Top Stories (EN)",
+        "region": "japan",
+        "status": "requestFailed",
+        "tags": [
+          "public-broadcaster",
+          "english"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 1665,
+        "feed_url": "https://mainichi.jp/rss/etc/mailnews.rss",
+        "id": "mainichi-en",
+        "is_main": false,
+        "language": "en",
+        "message": "Feed payload is not valid XML.",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "The Mainichi (EN)",
+        "region": "japan",
+        "status": "parseFailed",
+        "tags": [
+          "english"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 2,
+        "articles_with_image": 30,
+        "classification": "degraded",
+        "elapsed_ms": 9885,
+        "feed_url": "https://www.volkskrant.nl/voorpagina/rss.xml",
+        "id": "volkskrant",
+        "is_main": false,
+        "language": "nl",
+        "message": "",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "De Volkskrant",
+        "region": "netherlands",
+        "status": "success",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 10,
+        "articles_with_body": 10,
+        "articles_with_image": 10,
+        "classification": "ok",
+        "elapsed_ms": 7292,
+        "feed_url": "https://www.dutchnews.nl/feed/",
+        "id": "dutchnews-en",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "DutchNews.nl (EN)",
+        "region": "netherlands",
+        "status": "success",
+        "tags": [
+          "english"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 220,
+        "feed_url": "https://feeds.nos.nl/nieuwsalgemeen",
+        "id": "nos-algemeen",
+        "is_main": true,
+        "language": "nl",
+        "message": "Feed request failed with HTTP status 404.",
+        "note": "",
+        "outlet": "NOS \u00e2\u0080\u0093 Algemeen",
+        "region": "netherlands",
+        "status": "requestFailed",
+        "tags": [
+          "general",
+          "country-pick"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 338,
+        "feed_url": "https://feeds.nos.nl/nieuwspolitiek",
+        "id": "nos-politiek",
+        "is_main": false,
+        "language": "nl",
+        "message": "Feed request failed with HTTP status 404.",
+        "note": "",
+        "outlet": "NOS \u00e2\u0080\u0093 Politiek",
+        "region": "netherlands",
+        "status": "requestFailed",
+        "tags": [
+          "politics"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 60,
+        "feed_url": "https://feeds.nos.nl/sportalgemeen",
+        "id": "nos-sport",
+        "is_main": false,
+        "language": "nl",
+        "message": "Feed request failed with HTTP status 404.",
+        "note": "",
+        "outlet": "NOS \u00e2\u0080\u0093 Sport",
+        "region": "netherlands",
+        "status": "requestFailed",
+        "tags": [
+          "sports"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 55,
+        "feed_url": "https://feeds.nos.nl/wereldnieuws",
+        "id": "nos-wereld",
+        "is_main": false,
+        "language": "nl",
+        "message": "Feed request failed with HTTP status 404.",
+        "note": "",
+        "outlet": "NOS \u00e2\u0080\u0093 Wereld",
+        "region": "netherlands",
+        "status": "requestFailed",
+        "tags": [
+          "world"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 6407,
+        "feed_url": "https://www.nrc.nl/rss/",
+        "id": "nrc-voorpagina",
+        "is_main": false,
+        "language": "nl",
+        "message": "",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "NRC \u00e2\u0080\u0093 Voorpagina",
+        "region": "netherlands",
+        "status": "success",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 25,
+        "articles_with_body": 24,
+        "articles_with_image": 21,
+        "classification": "ok",
+        "elapsed_ms": 986,
+        "feed_url": "https://www.aftenposten.no/rss",
+        "id": "aftenposten-forsiden",
+        "is_main": false,
+        "language": "no",
+        "message": "",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "Aftenposten \u00e2\u0080\u0093 Forsiden",
+        "region": "norway",
+        "status": "success",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 20,
+        "articles_with_image": 28,
+        "classification": "ok",
+        "elapsed_ms": 3600,
+        "feed_url": "https://www.dagbladet.no/rss/",
+        "id": "dagbladet",
+        "is_main": false,
+        "language": "no",
+        "message": "",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "Dagbladet",
+        "region": "norway",
+        "status": "success",
+        "tags": [
+          "tabloid"
+        ]
+      },
+      {
+        "articles_count": 20,
+        "articles_with_body": 19,
+        "articles_with_image": 20,
+        "classification": "ok",
+        "elapsed_ms": 1600,
+        "feed_url": "https://www.nrk.no/norge/toppsaker.rss",
+        "id": "nrk-norge",
+        "is_main": false,
+        "language": "no",
+        "message": "",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "NRK \u00e2\u0080\u0093 Norge",
+        "region": "norway",
+        "status": "success",
+        "tags": [
+          "national"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 26,
+        "classification": "ok",
+        "elapsed_ms": 2992,
+        "feed_url": "https://www.nrk.no/toppsaker.rss",
+        "id": "nrk-toppsaker",
+        "is_main": true,
+        "language": "no",
+        "message": "",
+        "note": "",
+        "outlet": "NRK \u00e2\u0080\u0093 Toppsaker",
+        "region": "norway",
+        "status": "success",
+        "tags": [
+          "general",
+          "country-pick"
+        ]
+      },
+      {
+        "articles_count": 20,
+        "articles_with_body": 19,
+        "articles_with_image": 20,
+        "classification": "ok",
+        "elapsed_ms": 2052,
+        "feed_url": "https://www.nrk.no/urix/toppsaker.rss",
+        "id": "nrk-urix",
+        "is_main": false,
+        "language": "no",
+        "message": "",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "NRK \u00e2\u0080\u0093 Urix (utenriks)",
+        "region": "norway",
+        "status": "success",
+        "tags": [
+          "world"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 269,
+        "feed_url": "https://www.vg.no/rss/feed/forsiden/",
+        "id": "vg-forsiden",
+        "is_main": false,
+        "language": "no",
+        "message": "Feed request failed with HTTP status 404.",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "VG \u00e2\u0080\u0093 Forsiden",
+        "region": "norway",
+        "status": "requestFailed",
+        "tags": [
+          "tabloid"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 1441,
+        "feed_url": "https://rss.dziennik.pl/Dziennik-PL/",
+        "id": "dziennik-pl",
+        "is_main": false,
+        "language": "pl",
+        "message": "Connessione sicura non riuscita a causa di un errore TLS.",
+        "note": "",
+        "outlet": "Dziennik.pl",
+        "region": "poland",
+        "status": "requestFailed",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 1451,
+        "feed_url": "https://rss.gazetaprawna.pl/GazetaPrawna",
+        "id": "gazeta-prawna",
+        "is_main": false,
+        "language": "pl",
+        "message": "Connessione sicura non riuscita a causa di un errore TLS.",
+        "note": "",
+        "outlet": "Gazeta Prawna",
+        "region": "poland",
+        "status": "requestFailed",
+        "tags": [
+          "economy",
+          "legal"
+        ]
+      },
+      {
+        "articles_count": 10,
+        "articles_with_body": 10,
+        "articles_with_image": 10,
+        "classification": "ok",
+        "elapsed_ms": 4059,
+        "feed_url": "https://www.newsweek.pl/rss.xml",
+        "id": "newsweek-pl",
+        "is_main": false,
+        "language": "pl",
+        "message": "",
+        "note": "",
+        "outlet": "Newsweek Polska",
+        "region": "poland",
+        "status": "success",
+        "tags": [
+          "weekly"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 1494,
+        "feed_url": "https://www.pap.pl/rss.xml",
+        "id": "pap-pl",
+        "is_main": true,
+        "language": "pl",
+        "message": "Feed payload is not valid XML.",
+        "note": "",
+        "outlet": "PAP \u00e2\u0080\u0093 Polska Agencja Prasowa",
+        "region": "poland",
+        "status": "parseFailed",
+        "tags": [
+          "wire",
+          "country-pick"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 29,
+        "classification": "ok",
+        "elapsed_ms": 3086,
+        "feed_url": "https://www.rmf24.pl/feed",
+        "id": "rmf24",
+        "is_main": false,
+        "language": "pl",
+        "message": "",
+        "note": "",
+        "outlet": "RMF24",
+        "region": "poland",
+        "status": "success",
+        "tags": [
+          "radio"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 149,
+        "feed_url": "https://www.rp.pl/rss/1019",
+        "id": "rzeczpospolita",
+        "is_main": false,
+        "language": "pl",
+        "message": "Feed request failed with HTTP status 403.",
+        "note": "",
+        "outlet": "Rzeczpospolita",
+        "region": "poland",
+        "status": "requestFailed",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 1065,
+        "feed_url": "https://www.wirtualnemedia.pl/rss/wirtualnemedia_rss.xml",
+        "id": "wirtualnemedia",
+        "is_main": false,
+        "language": "pl",
+        "message": "The resource could not be loaded because the App Transport Security policy requires the use of a secure connection.",
+        "note": "",
+        "outlet": "Wirtualne Media",
+        "region": "poland",
+        "status": "requestFailed",
+        "tags": [
+          "media-industry"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 634,
+        "feed_url": "https://www.dn.pt/rss",
+        "id": "diario-noticias-pt",
+        "is_main": false,
+        "language": "pt",
+        "message": "Feed request failed with HTTP status 404.",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "Di\u00c3\u00a1rio de Not\u00c3\u00adcias",
+        "region": "portugal",
+        "status": "requestFailed",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 3318,
+        "feed_url": "https://observador.pt/feed/",
+        "id": "observador",
+        "is_main": false,
+        "language": "pt",
+        "message": "",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "Observador",
+        "region": "portugal",
+        "status": "success",
+        "tags": [
+          "digital"
+        ]
+      },
+      {
+        "articles_count": 10,
+        "articles_with_body": 10,
+        "articles_with_image": 10,
+        "classification": "ok",
+        "elapsed_ms": 439,
+        "feed_url": "https://feeds.feedburner.com/PublicoUltimaHora",
+        "id": "publico-ultimas",
+        "is_main": false,
+        "language": "pt",
+        "message": "",
+        "note": "Feedburner endpoint to verify in Phase 3.",
+        "outlet": "P\u00c3\u00bablico \u00e2\u0080\u0093 \u00c3\u009altimas",
+        "region": "portugal",
+        "status": "success",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 604,
+        "feed_url": "https://www.rtp.pt/noticias/index.rss",
+        "id": "rtp-noticias",
+        "is_main": true,
+        "language": "pt",
+        "message": "Feed request failed with HTTP status 404.",
+        "note": "",
+        "outlet": "RTP Not\u00c3\u00adcias",
+        "region": "portugal",
+        "status": "requestFailed",
+        "tags": [
+          "general",
+          "country-pick"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 2569,
+        "feed_url": "https://www.theportugalnews.com/rss",
+        "id": "the-portugal-news-en",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "The Portugal News (EN)",
+        "region": "portugal",
+        "status": "success",
+        "tags": [
+          "english"
+        ]
+      },
+      {
+        "articles_count": 21,
+        "articles_with_body": 3,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 7033,
+        "feed_url": "https://www.agerpres.ro/rss/",
+        "id": "agerpres",
+        "is_main": true,
+        "language": "ro",
+        "message": "",
+        "note": "",
+        "outlet": "Agerpres",
+        "region": "romania",
+        "status": "success",
+        "tags": [
+          "wire",
+          "country-pick"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 2406,
+        "feed_url": "https://www.digi24.ro/rss",
+        "id": "digi24",
+        "is_main": false,
+        "language": "ro",
+        "message": "",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "Digi24",
+        "region": "romania",
+        "status": "success",
+        "tags": [
+          "broadcast"
+        ]
+      },
+      {
+        "articles_count": 20,
+        "articles_with_body": 20,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 802,
+        "feed_url": "https://www.hotnews.ro/rss",
+        "id": "hotnews-ro",
+        "is_main": false,
+        "language": "ro",
+        "message": "",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "HotNews.ro",
+        "region": "romania",
+        "status": "success",
+        "tags": [
+          "digital"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 303,
+        "feed_url": "https://www.romania-insider.com/rss.xml",
+        "id": "romania-insider-en",
+        "is_main": false,
+        "language": "en",
+        "message": "Feed request failed with HTTP status 404.",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "Romania Insider (EN)",
+        "region": "romania",
+        "status": "requestFailed",
+        "tags": [
+          "english"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 997,
+        "feed_url": "https://www.efe.com/efe/english/4/rss",
+        "id": "efe-english",
+        "is_main": false,
+        "language": "en",
+        "message": "Feed payload is not valid XML.",
+        "note": "",
+        "outlet": "Agencia EFE \u00e2\u0080\u0093 English",
+        "region": "spain",
+        "status": "parseFailed",
+        "tags": [
+          "wire",
+          "english"
+        ]
+      },
+      {
+        "articles_count": 15,
+        "articles_with_body": 15,
+        "articles_with_image": 15,
+        "classification": "ok",
+        "elapsed_ms": 430,
+        "feed_url": "https://rss.elconfidencial.com/espana/",
+        "id": "elconfidencial-espana",
+        "is_main": false,
+        "language": "es",
+        "message": "",
+        "note": "",
+        "outlet": "El Confidencial \u00e2\u0080\u0093 Espa\u00c3\u00b1a",
+        "region": "spain",
+        "status": "success",
+        "tags": [
+          "investigative"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 4749,
+        "feed_url": "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada",
+        "id": "elpais-portada",
+        "is_main": true,
+        "language": "es",
+        "message": "",
+        "note": "",
+        "outlet": "EL PA\u00c3\u008dS \u00e2\u0080\u0093 Portada",
+        "region": "spain",
+        "status": "success",
+        "tags": [
+          "general",
+          "country-pick"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "degraded",
+        "elapsed_ms": 363,
+        "feed_url": "https://www.elperiodico.com/es/rss/rss_portada.xml",
+        "id": "elperiodico-portada",
+        "is_main": false,
+        "language": "es",
+        "message": "Feed parsed but no valid articles were normalized.",
+        "note": "",
+        "outlet": "El Peri\u00c3\u00b3dico \u00e2\u0080\u0093 Portada",
+        "region": "spain",
+        "status": "noArticles",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 5090,
+        "feed_url": "https://www.eldiario.es/rss/",
+        "id": "eldiario-es",
+        "is_main": false,
+        "language": "es",
+        "message": "",
+        "note": "",
+        "outlet": "elDiario.es",
+        "region": "spain",
+        "status": "success",
+        "tags": [
+          "digital"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 4038,
+        "feed_url": "https://e00-expansion.uecdn.es/rss/portada.xml",
+        "id": "expansion-portada",
+        "is_main": false,
+        "language": "es",
+        "message": "",
+        "note": "",
+        "outlet": "Expansi\u00c3\u00b3n \u00e2\u0080\u0093 Portada",
+        "region": "spain",
+        "status": "success",
+        "tags": [
+          "economy"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 28,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 4667,
+        "feed_url": "https://www.huffingtonpost.es/feeds/index.xml",
+        "id": "huffpost-es",
+        "is_main": false,
+        "language": "es",
+        "message": "",
+        "note": "",
+        "outlet": "HuffPost Espa\u00c3\u00b1a",
+        "region": "spain",
+        "status": "success",
+        "tags": [
+          "digital"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 563,
+        "feed_url": "https://www.rtve.es/rss/deportes.xml",
+        "id": "rtve-deportes",
+        "is_main": false,
+        "language": "es",
+        "message": "The resource could not be loaded because the App Transport Security policy requires the use of a secure connection.",
+        "note": "",
+        "outlet": "RTVE \u00e2\u0080\u0093 Deportes",
+        "region": "spain",
+        "status": "requestFailed",
+        "tags": [
+          "sports"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 563,
+        "feed_url": "https://www.rtve.es/rss/economia.xml",
+        "id": "rtve-economia",
+        "is_main": false,
+        "language": "es",
+        "message": "The resource could not be loaded because the App Transport Security policy requires the use of a secure connection.",
+        "note": "",
+        "outlet": "RTVE \u00e2\u0080\u0093 Economia",
+        "region": "spain",
+        "status": "requestFailed",
+        "tags": [
+          "economy"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 395,
+        "feed_url": "https://www.rtve.es/rss/noticias.xml",
+        "id": "rtve-noticias",
+        "is_main": false,
+        "language": "es",
+        "message": "Feed request failed with HTTP status 404.",
+        "note": "",
+        "outlet": "RTVE \u00e2\u0080\u0093 Noticias",
+        "region": "spain",
+        "status": "requestFailed",
+        "tags": [
+          "public-broadcaster"
+        ]
+      },
+      {
+        "articles_count": 20,
+        "articles_with_body": 20,
+        "articles_with_image": 20,
+        "classification": "ok",
+        "elapsed_ms": 6673,
+        "feed_url": "https://feeds.thelocal.com/rss/es",
+        "id": "the-local-spain",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "The Local Spain",
+        "region": "spain",
+        "status": "success",
+        "tags": [
+          "english"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 1717,
+        "feed_url": "https://www.dn.se/rss/",
+        "id": "dn-senaste",
+        "is_main": false,
+        "language": "sv",
+        "message": "",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "Dagens Nyheter \u00e2\u0080\u0093 Senaste",
+        "region": "sweden",
+        "status": "success",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 20,
+        "articles_with_body": 2,
+        "articles_with_image": 0,
+        "classification": "degraded",
+        "elapsed_ms": 1527,
+        "feed_url": "https://api.sr.se/api/rss/program/4540",
+        "id": "sr-ekot",
+        "is_main": false,
+        "language": "sv",
+        "message": "",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "Sveriges Radio \u00e2\u0080\u0093 Ekot",
+        "region": "sweden",
+        "status": "success",
+        "tags": [
+          "radio"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 1320,
+        "feed_url": "https://www.svt.se/nyheter/rss.xml",
+        "id": "svt-all",
+        "is_main": true,
+        "language": "sv",
+        "message": "",
+        "note": "",
+        "outlet": "SVT Nyheter \u00e2\u0080\u0093 All",
+        "region": "sweden",
+        "status": "success",
+        "tags": [
+          "general",
+          "country-pick"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 24,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 1522,
+        "feed_url": "https://www.svt.se/nyheter/sverige/rss.xml",
+        "id": "svt-sverige",
+        "is_main": false,
+        "language": "sv",
+        "message": "",
+        "note": "",
+        "outlet": "SVT Nyheter \u00e2\u0080\u0093 Sverige",
+        "region": "sweden",
+        "status": "success",
+        "tags": [
+          "national"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 29,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 2254,
+        "feed_url": "https://www.svt.se/nyheter/varlden/rss.xml",
+        "id": "svt-varlden",
+        "is_main": false,
+        "language": "sv",
+        "message": "",
+        "note": "",
+        "outlet": "SVT Nyheter \u00e2\u0080\u0093 V\u00c3\u00a4rlden",
+        "region": "sweden",
+        "status": "success",
+        "tags": [
+          "world"
+        ]
+      },
+      {
+        "articles_count": 21,
+        "articles_with_body": 21,
+        "articles_with_image": 21,
+        "classification": "ok",
+        "elapsed_ms": 2522,
+        "feed_url": "https://www.letemps.ch/articles.rss",
+        "id": "letemps",
+        "is_main": false,
+        "language": "fr",
+        "message": "",
+        "note": "Paywalled summaries; endpoint to verify in Phase 3.",
+        "outlet": "Le Temps",
+        "region": "switzerland",
+        "status": "success",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 1290,
+        "feed_url": "https://www.rsi.ch/news/feed",
+        "id": "rsi-notizie",
+        "is_main": false,
+        "language": "it",
+        "message": "Feed request failed with HTTP status 404.",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "RSI \u00e2\u0080\u0093 Notizie",
+        "region": "switzerland",
+        "status": "requestFailed",
+        "tags": [
+          "public-broadcaster"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 616,
+        "feed_url": "https://www.rts.ch/info/?format=rss",
+        "id": "rts-info",
+        "is_main": false,
+        "language": "fr",
+        "message": "Feed payload is not valid XML.",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "RTS Info \u00e2\u0080\u0093 Toute l'info",
+        "region": "switzerland",
+        "status": "parseFailed",
+        "tags": [
+          "public-broadcaster"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 1133,
+        "feed_url": "https://www.srf.ch/news/bnf/rss/1922",
+        "id": "srf-international",
+        "is_main": false,
+        "language": "de",
+        "message": "",
+        "note": "Endpoint ID to verify in Phase 3.",
+        "outlet": "SRF \u00e2\u0080\u0093 International",
+        "region": "switzerland",
+        "status": "success",
+        "tags": [
+          "world"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 1121,
+        "feed_url": "https://www.srf.ch/news/bnf/rss/1646",
+        "id": "srf-schweiz",
+        "is_main": true,
+        "language": "de",
+        "message": "",
+        "note": "Endpoint ID to verify in Phase 3.",
+        "outlet": "SRF \u00e2\u0080\u0093 Schweiz",
+        "region": "switzerland",
+        "status": "success",
+        "tags": [
+          "general",
+          "country-pick"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 1180,
+        "feed_url": "https://www.srf.ch/news/bnf/rss/1926",
+        "id": "srf-wirtschaft",
+        "is_main": false,
+        "language": "de",
+        "message": "",
+        "note": "Endpoint ID to verify in Phase 3.",
+        "outlet": "SRF \u00e2\u0080\u0093 Wirtschaft",
+        "region": "switzerland",
+        "status": "success",
+        "tags": [
+          "economy"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 1836,
+        "feed_url": "https://www.swissinfo.ch/eng/latest/rss",
+        "id": "swissinfo-en",
+        "is_main": false,
+        "language": "en",
+        "message": "Feed request failed with HTTP status 404.",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "Swissinfo (EN)",
+        "region": "switzerland",
+        "status": "requestFailed",
+        "tags": [
+          "english"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 2139,
+        "feed_url": "https://feeds.bbci.co.uk/news/business/rss.xml",
+        "id": "bbc-business",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "BBC News \u00e2\u0080\u0093 Business",
+        "region": "unitedKingdom",
+        "status": "success",
+        "tags": [
+          "economy"
+        ]
+      },
+      {
+        "articles_count": 21,
+        "articles_with_body": 21,
+        "articles_with_image": 21,
+        "classification": "ok",
+        "elapsed_ms": 1952,
+        "feed_url": "https://feeds.bbci.co.uk/news/technology/rss.xml",
+        "id": "bbc-technology",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "BBC News \u00e2\u0080\u0093 Technology",
+        "region": "unitedKingdom",
+        "status": "success",
+        "tags": [
+          "technology"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 1829,
+        "feed_url": "https://feeds.bbci.co.uk/news/rss.xml",
+        "id": "bbc-uk-frontpage",
+        "is_main": true,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "BBC News \u00e2\u0080\u0093 UK Front Page",
+        "region": "unitedKingdom",
+        "status": "success",
+        "tags": [
+          "general",
+          "country-pick"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 2125,
+        "feed_url": "https://feeds.bbci.co.uk/news/politics/rss.xml",
+        "id": "bbc-uk-politics",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "BBC News \u00e2\u0080\u0093 UK Politics",
+        "region": "unitedKingdom",
+        "status": "success",
+        "tags": [
+          "politics"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 3123,
+        "feed_url": "https://www.dailymail.co.uk/home/index.rss",
+        "id": "dailymail-home",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "Daily Mail \u00e2\u0080\u0093 Home",
+        "region": "unitedKingdom",
+        "status": "success",
+        "tags": [
+          "tabloid"
+        ]
+      },
+      {
+        "articles_count": 9,
+        "articles_with_body": 9,
+        "articles_with_image": 9,
+        "classification": "ok",
+        "elapsed_ms": 2926,
+        "feed_url": "https://www.ft.com/?format=rss",
+        "id": "ft-home",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "Paywalled feed: summaries only.",
+        "outlet": "Financial Times \u00e2\u0080\u0093 Home",
+        "region": "unitedKingdom",
+        "status": "success",
+        "tags": [
+          "economy"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 55,
+        "feed_url": "https://feeds.reuters.com/reuters/UKTopNews",
+        "id": "reuters-uk",
+        "is_main": false,
+        "language": "en",
+        "message": "Impossibile trovare un server con il nome host specificato.",
+        "note": "Legacy Feedburner endpoint; expected to be dead in Phase 3.",
+        "outlet": "Reuters \u00e2\u0080\u0093 UK",
+        "region": "unitedKingdom",
+        "status": "requestFailed",
+        "tags": [
+          "wire"
+        ]
+      },
+      {
+        "articles_count": 10,
+        "articles_with_body": 10,
+        "articles_with_image": 10,
+        "classification": "ok",
+        "elapsed_ms": 1059,
+        "feed_url": "https://feeds.skynews.com/feeds/rss/home.xml",
+        "id": "sky-news-home",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "Endpoint to verify in Phase 3.",
+        "outlet": "Sky News \u00e2\u0080\u0093 Home",
+        "region": "unitedKingdom",
+        "status": "success",
+        "tags": [
+          "broadcast"
+        ]
+      },
+      {
+        "articles_count": 21,
+        "articles_with_body": 21,
+        "articles_with_image": 21,
+        "classification": "ok",
+        "elapsed_ms": 1002,
+        "feed_url": "https://www.theguardian.com/politics/rss",
+        "id": "guardian-politics-uk",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "The Guardian \u00e2\u0080\u0093 Politics",
+        "region": "unitedKingdom",
+        "status": "success",
+        "tags": [
+          "politics"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 1225,
+        "feed_url": "https://www.theguardian.com/uk/rss",
+        "id": "guardian-uk",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "The Guardian \u00e2\u0080\u0093 UK",
+        "region": "unitedKingdom",
+        "status": "success",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 30,
+        "classification": "ok",
+        "elapsed_ms": 1374,
+        "feed_url": "https://www.theguardian.com/world/rss",
+        "id": "guardian-world-uk",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "The Guardian \u00e2\u0080\u0093 World",
+        "region": "unitedKingdom",
+        "status": "success",
+        "tags": [
+          "world"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 29,
+        "classification": "ok",
+        "elapsed_ms": 896,
+        "feed_url": "https://www.independent.co.uk/news/uk/rss",
+        "id": "independent",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "The Independent",
+        "region": "unitedKingdom",
+        "status": "success",
+        "tags": [
+          "general"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 3099,
+        "feed_url": "https://news.google.com/rss/search?q=site%3Aapnews.com+when%3A1d&hl=en-US&gl=US&ceid=US:en",
+        "id": "ap-google-proxy",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "AP no longer publishes official RSS; Google News proxy until Phase 3.",
+        "outlet": "AP News \u00e2\u0080\u0093 Top Headlines",
+        "region": "unitedStates",
+        "status": "success",
+        "tags": [
+          "wire"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 2738,
+        "feed_url": "https://www.cnbc.com/id/100003114/device/rss/rss.html",
+        "id": "cnbc-top",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "CNBC \u00e2\u0080\u0093 US Top News",
+        "region": "unitedStates",
+        "status": "success",
+        "tags": [
+          "economy"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 0,
+        "feed_url": "http://rss.cnn.com/rss/edition.rss",
+        "id": "cnn-top",
+        "is_main": false,
+        "language": "en",
+        "message": "Feed URL must use HTTPS transport.",
+        "note": "",
+        "outlet": "CNN \u00e2\u0080\u0093 Top Stories",
+        "region": "unitedStates",
+        "status": "requestFailed",
+        "tags": [
+          "broadcast"
+        ]
+      },
+      {
+        "articles_count": 25,
+        "articles_with_body": 25,
+        "articles_with_image": 25,
+        "classification": "ok",
+        "elapsed_ms": 492,
+        "feed_url": "https://moxie.foxnews.com/google-publisher/latest.xml",
+        "id": "fox-news-latest",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "Endpoint redirected from feeds.foxnews.com/foxnews/latest in 2024+.",
+        "outlet": "Fox News \u00e2\u0080\u0093 Latest",
+        "region": "unitedStates",
+        "status": "success",
+        "tags": [
+          "broadcast"
+        ]
+      },
+      {
+        "articles_count": 10,
+        "articles_with_body": 10,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 2704,
+        "feed_url": "https://www.huffpost.com/section/world-news/feed",
+        "id": "huffpost-world",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "HuffPost \u00e2\u0080\u0093 World News",
+        "region": "unitedStates",
+        "status": "success",
+        "tags": [
+          "digital",
+          "world"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 30,
+        "articles_with_image": 9,
+        "classification": "degraded",
+        "elapsed_ms": 2590,
+        "feed_url": "https://www.latimes.com/world-nation/rss2.0.xml",
+        "id": "latimes-world-nation",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "LA Times \u00e2\u0080\u0093 World & Nation",
+        "region": "unitedStates",
+        "status": "success",
+        "tags": [
+          "regional"
+        ]
+      },
+      {
+        "articles_count": 10,
+        "articles_with_body": 10,
+        "articles_with_image": 10,
+        "classification": "ok",
+        "elapsed_ms": 1619,
+        "feed_url": "https://feeds.npr.org/1006/rss.xml",
+        "id": "npr-business",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "NPR \u00e2\u0080\u0093 Business",
+        "region": "unitedStates",
+        "status": "success",
+        "tags": [
+          "economy"
+        ]
+      },
+      {
+        "articles_count": 10,
+        "articles_with_body": 10,
+        "articles_with_image": 10,
+        "classification": "ok",
+        "elapsed_ms": 1527,
+        "feed_url": "https://feeds.npr.org/1001/rss.xml",
+        "id": "npr-top",
+        "is_main": true,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "NPR \u00e2\u0080\u0093 Top Stories",
+        "region": "unitedStates",
+        "status": "success",
+        "tags": [
+          "public-radio",
+          "country-pick"
+        ]
+      },
+      {
+        "articles_count": 10,
+        "articles_with_body": 10,
+        "articles_with_image": 10,
+        "classification": "ok",
+        "elapsed_ms": 1472,
+        "feed_url": "https://feeds.npr.org/1004/rss.xml",
+        "id": "npr-world",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "NPR \u00e2\u0080\u0093 World",
+        "region": "unitedStates",
+        "status": "success",
+        "tags": [
+          "world"
+        ]
+      },
+      {
+        "articles_count": 26,
+        "articles_with_body": 26,
+        "articles_with_image": 23,
+        "classification": "ok",
+        "elapsed_ms": 2045,
+        "feed_url": "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml",
+        "id": "nyt-top",
+        "is_main": true,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "NYT \u00e2\u0080\u0093 Top Stories",
+        "region": "unitedStates",
+        "status": "success",
+        "tags": [
+          "general",
+          "country-pick"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 29,
+        "articles_with_image": 27,
+        "classification": "ok",
+        "elapsed_ms": 3175,
+        "feed_url": "https://rss.nytimes.com/services/xml/rss/nyt/World.xml",
+        "id": "nyt-world",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "NYT \u00e2\u0080\u0093 World",
+        "region": "unitedStates",
+        "status": "success",
+        "tags": [
+          "world"
+        ]
+      },
+      {
+        "articles_count": 30,
+        "articles_with_body": 10,
+        "articles_with_image": 3,
+        "classification": "degraded",
+        "elapsed_ms": 2514,
+        "feed_url": "https://rss.politico.com/playbook.xml",
+        "id": "politico-playbook",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "Politico \u00e2\u0080\u0093 Playbook",
+        "region": "unitedStates",
+        "status": "success",
+        "tags": [
+          "politics"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 7,
+        "feed_url": "https://feeds.reuters.com/reuters/topNews",
+        "id": "reuters-top-legacy",
+        "is_main": false,
+        "language": "en",
+        "message": "Impossibile trovare un server con il nome host specificato.",
+        "note": "Reuters retired most public RSS in 2020-2022; expected to fail.",
+        "outlet": "Reuters \u00e2\u0080\u0093 Top News (legacy)",
+        "region": "unitedStates",
+        "status": "requestFailed",
+        "tags": [
+          "wire"
+        ]
+      },
+      {
+        "articles_count": 0,
+        "articles_with_body": 0,
+        "articles_with_image": 0,
+        "classification": "dead",
+        "elapsed_ms": 0,
+        "feed_url": "http://feeds.washingtonpost.com/rss/world",
+        "id": "washingtonpost-world",
+        "is_main": false,
+        "language": "en",
+        "message": "Feed URL must use HTTPS transport.",
+        "note": "",
+        "outlet": "Washington Post \u00e2\u0080\u0093 World",
+        "region": "unitedStates",
+        "status": "requestFailed",
+        "tags": [
+          "world"
+        ]
+      },
+      {
+        "articles_count": 20,
+        "articles_with_body": 20,
+        "articles_with_image": 0,
+        "classification": "degraded",
+        "elapsed_ms": 1978,
+        "feed_url": "https://feeds.a.dj.com/rss/RSSWorldNews.xml",
+        "id": "wsj-world",
+        "is_main": false,
+        "language": "en",
+        "message": "",
+        "note": "",
+        "outlet": "WSJ \u00e2\u0080\u0093 World News",
+        "region": "unitedStates",
+        "status": "success",
+        "tags": [
+          "economy",
+          "world"
+        ]
+      }
+    ],
+    "selected_region": "",
+    "summary": {
+      "deduplicated_articles": 3600,
+      "failed": 65,
+      "no_articles": 2,
+      "no_feed_or_invalid": 0,
+      "outlets_checked": 228,
+      "successful": 161
+    }
+  },
+  "regions_report": {
+    "regions": [
+      {
+        "checked": 9,
+        "elapsed_ms": 14008,
+        "failed": 0,
+        "invalid": 0,
+        "no_articles": 0,
+        "ok": 9,
+        "region": "europeWide"
+      },
+      {
+        "checked": 5,
+        "elapsed_ms": 4121,
+        "failed": 0,
+        "invalid": 0,
+        "no_articles": 0,
+        "ok": 5,
+        "region": "austria"
+      },
+      {
+        "checked": 8,
+        "elapsed_ms": 19299,
+        "failed": 3,
+        "invalid": 0,
+        "no_articles": 1,
+        "ok": 4,
+        "region": "belgium"
+      },
+      {
+        "checked": 9,
+        "elapsed_ms": 32138,
+        "failed": 3,
+        "invalid": 0,
+        "no_articles": 0,
+        "ok": 6,
+        "region": "brazil"
+      },
+      {
+        "checked": 5,
+        "elapsed_ms": 15515,
+        "failed": 2,
+        "invalid": 0,
+        "no_articles": 0,
+        "ok": 3,
+        "region": "bulgaria"
+      },
+      {
+        "checked": 5,
+        "elapsed_ms": 1073,
+        "failed": 5,
+        "invalid": 0,
+        "no_articles": 0,
+        "ok": 0,
+        "region": "croatia"
+      },
+      {
+        "checked": 5,
+        "elapsed_ms": 3277,
+        "failed": 2,
+        "invalid": 0,
+        "no_articles": 0,
+        "ok": 3,
+        "region": "denmark"
+      },
+      {
+        "checked": 4,
+        "elapsed_ms": 4823,
+        "failed": 1,
+        "invalid": 0,
+        "no_articles": 0,
+        "ok": 3,
+        "region": "finland"
+      },
+      {
+        "checked": 10,
+        "elapsed_ms": 7298,
+        "failed": 0,
+        "invalid": 0,
+        "no_articles": 0,
+        "ok": 10,
+        "region": "france"
+      },
+      {
+        "checked": 8,
+        "elapsed_ms": 6696,
+        "failed": 1,
+        "invalid": 0,
+        "no_articles": 0,
+        "ok": 7,
+        "region": "germany"
+      },
+      {
+        "checked": 3,
+        "elapsed_ms": 1476,
+        "failed": 2,
+        "invalid": 0,
+        "no_articles": 0,
+        "ok": 1,
+        "region": "greece"
+      },
+      {
+        "checked": 4,
+        "elapsed_ms": 4243,
+        "failed": 2,
+        "invalid": 0,
+        "no_articles": 0,
+        "ok": 2,
+        "region": "hungary"
+      },
+      {
+        "checked": 8,
+        "elapsed_ms": 2681,
+        "failed": 3,
+        "invalid": 0,
+        "no_articles": 0,
+        "ok": 5,
+        "region": "ireland"
+      },
+      {
+        "checked": 58,
+        "elapsed_ms": 27076,
+        "failed": 12,
+        "invalid": 0,
+        "no_articles": 0,
+        "ok": 46,
+        "region": "italy"
+      },
+      {
+        "checked": 8,
+        "elapsed_ms": 16478,
+        "failed": 5,
+        "invalid": 0,
+        "no_articles": 0,
+        "ok": 3,
+        "region": "japan"
+      },
+      {
+        "checked": 7,
+        "elapsed_ms": 10058,
+        "failed": 4,
+        "invalid": 0,
+        "no_articles": 0,
+        "ok": 3,
+        "region": "netherlands"
+      },
+      {
+        "checked": 6,
+        "elapsed_ms": 3625,
+        "failed": 1,
+        "invalid": 0,
+        "no_articles": 0,
+        "ok": 5,
+        "region": "norway"
+      },
+      {
+        "checked": 7,
+        "elapsed_ms": 4536,
+        "failed": 5,
+        "invalid": 0,
+        "no_articles": 0,
+        "ok": 2,
+        "region": "poland"
+      },
+      {
+        "checked": 5,
+        "elapsed_ms": 3330,
+        "failed": 2,
+        "invalid": 0,
+        "no_articles": 0,
+        "ok": 3,
+        "region": "portugal"
+      },
+      {
+        "checked": 4,
+        "elapsed_ms": 7173,
+        "failed": 1,
+        "invalid": 0,
+        "no_articles": 0,
+        "ok": 3,
+        "region": "romania"
+      },
+      {
+        "checked": 11,
+        "elapsed_ms": 12426,
+        "failed": 4,
+        "invalid": 0,
+        "no_articles": 1,
+        "ok": 6,
+        "region": "spain"
+      },
+      {
+        "checked": 5,
+        "elapsed_ms": 3794,
+        "failed": 0,
+        "invalid": 0,
+        "no_articles": 0,
+        "ok": 5,
+        "region": "sweden"
+      },
+      {
+        "checked": 7,
+        "elapsed_ms": 3131,
+        "failed": 3,
+        "invalid": 0,
+        "no_articles": 0,
+        "ok": 4,
+        "region": "switzerland"
+      },
+      {
+        "checked": 12,
+        "elapsed_ms": 5390,
+        "failed": 1,
+        "invalid": 0,
+        "no_articles": 0,
+        "ok": 11,
+        "region": "unitedKingdom"
+      },
+      {
+        "checked": 15,
+        "elapsed_ms": 7819,
+        "failed": 3,
+        "invalid": 0,
+        "no_articles": 0,
+        "ok": 12,
+        "region": "unitedStates"
+      }
+    ]
+  }
+}

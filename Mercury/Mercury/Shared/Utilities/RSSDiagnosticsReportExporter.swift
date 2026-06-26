@@ -61,6 +61,92 @@ enum RSSDiagnosticsReportExporter {
         return fileURL
     }
 
+    /// Builds a machine-readable JSON document describing the diagnostics
+    /// batch. Used by the Phase 3 validation harness to produce a stable
+    /// artifact that downstream tooling and humans can parse without
+    /// scraping the text log.
+    static func buildJSONReport(from result: RSSFeedBatchResult) -> String {
+        let successCount = result.checks.filter { $0.status == .success }.count
+        let noArticlesCount = result.checks.filter { $0.status == .noArticles }.count
+        let noFeedOrInvalidCount = result.checks
+            .filter { $0.status == .noFeedURL || $0.status == .invalidFeedURL }
+            .count
+        let failedCount = result.checks
+            .filter { $0.status == .requestFailed || $0.status == .parseFailed }
+            .count
+
+        let outlets: [[String: Any]] = result.checks.map { check in
+            let degraded = isDegraded(check)
+            return [
+                "id": check.source.id,
+                "outlet": check.source.outletName,
+                "region": check.source.region.rawValue,
+                "is_main": check.source.isMainOutlet,
+                "feed_url": check.source.feedURLString ?? "",
+                "status": check.status.rawValue,
+                "classification": classification(for: check, degraded: degraded),
+                "articles_count": check.articles.count,
+                "articles_with_image": check.articles.filter { $0.heroImageURL != nil }.count,
+                "articles_with_body": check.articles.filter { ($0.rawContent?.isEmpty == false) || ($0.cleanedContent?.isEmpty == false) }.count,
+                "elapsed_ms": check.elapsedMs,
+                "language": check.source.languageCode ?? "",
+                "tags": check.source.tags,
+                "note": check.source.note ?? "",
+                "message": check.message ?? ""
+            ]
+        }
+
+        let payload: [String: Any] = [
+            "checked_at": iso8601Formatter.string(from: result.checkedAt),
+            "group_mode": result.groupMode.rawValue,
+            "selected_region": result.selectedRegion?.rawValue ?? "",
+            "summary": [
+                "outlets_checked": result.checks.count,
+                "successful": successCount,
+                "no_articles": noArticlesCount,
+                "no_feed_or_invalid": noFeedOrInvalidCount,
+                "failed": failedCount,
+                "deduplicated_articles": result.deduplicatedArticles.count
+            ],
+            "outlets": outlets
+        ]
+
+        guard
+            let data = try? JSONSerialization.data(
+                withJSONObject: payload,
+                options: [.prettyPrinted, .sortedKeys]
+            ),
+            let json = String(data: data, encoding: .utf8)
+        else {
+            return "{}"
+        }
+        return json
+    }
+
+    private static func isDegraded(_ check: RSSFeedCheckResult) -> Bool {
+        guard check.status == .success, check.articles.isEmpty == false else { return false }
+        let withBody = check.articles.filter {
+            ($0.rawContent?.isEmpty == false) || ($0.cleanedContent?.isEmpty == false)
+        }.count
+        let withImage = check.articles.filter { $0.heroImageURL != nil }.count
+        // Flag as degraded when more than half of the items are missing
+        // either a body or a hero image: usable as a headline source but
+        // weak as an enrichment source.
+        let half = max(1, check.articles.count / 2)
+        return withBody < half || withImage < half
+    }
+
+    private static func classification(for check: RSSFeedCheckResult, degraded: Bool) -> String {
+        switch check.status {
+        case .success:
+            return degraded ? "degraded" : "ok"
+        case .noArticles:
+            return "degraded"
+        case .noFeedURL, .invalidFeedURL, .requestFailed, .parseFailed:
+            return "dead"
+        }
+    }
+
     private static func escaped(_ value: String) -> String {
         value
             .replacingOccurrences(of: "\\", with: "\\\\")
