@@ -65,16 +65,49 @@ extension FetchHomeFeedUseCase {
 struct LiveFetchHomeFeedUseCase: FetchHomeFeedUseCase {
     private static let serviceName = "FetchHomeFeedUseCase"
 
-    private let feedRefreshService: FeedRefreshService
+    /// Closure that fetches the next deduplicated `RSSFeedBatchResult`.
+    /// Production wiring wraps `FeedRefreshService.refreshFeed(...)`;
+    /// tests inject a stub so the orchestration can be exercised without
+    /// the live RSS stack.
+    typealias RefreshAction = @Sendable (
+        _ groupMode: RSSFeedGroupMode,
+        _ selectedRegion: RSSFeedRegion?,
+        _ requestID: String
+    ) async -> RSSFeedBatchResult
+
+    private let refreshAction: RefreshAction
     private let articleRepository: ArticleRepository
     private let logger: AppLogger
 
+    /// Production initializer that wraps the live
+    /// `FeedRefreshService.refreshFeed(...)` surface.
     init(
         feedRefreshService: FeedRefreshService,
         articleRepository: ArticleRepository,
         logger: AppLogger = .shared
     ) {
-        self.feedRefreshService = feedRefreshService
+        self.init(
+            refreshAction: { groupMode, region, requestID in
+                await feedRefreshService.refreshFeed(
+                    groupMode: groupMode,
+                    selectedRegion: region,
+                    requestID: requestID
+                )
+            },
+            articleRepository: articleRepository,
+            logger: logger
+        )
+    }
+
+    /// Designated initializer accepting a closure-based refresh seam so
+    /// tests can drive every branch of the orchestration without spinning
+    /// up the live RSS stack.
+    init(
+        refreshAction: @escaping RefreshAction,
+        articleRepository: ArticleRepository,
+        logger: AppLogger = .shared
+    ) {
+        self.refreshAction = refreshAction
         self.articleRepository = articleRepository
         self.logger = logger
     }
@@ -97,11 +130,7 @@ struct LiveFetchHomeFeedUseCase: FetchHomeFeedUseCase {
             ]
         )
 
-        let result = await feedRefreshService.refreshFeed(
-            groupMode: groupMode,
-            selectedRegion: selectedRegion,
-            requestID: flowRequestID
-        )
+        let result = await refreshAction(groupMode, selectedRegion, flowRequestID)
 
         await persistArticles(result.deduplicatedArticles, requestID: flowRequestID)
 

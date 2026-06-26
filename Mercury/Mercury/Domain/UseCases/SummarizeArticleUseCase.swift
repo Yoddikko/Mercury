@@ -45,14 +45,41 @@ extension SummarizeArticleUseCase {
 struct LiveSummarizeArticleUseCase: SummarizeArticleUseCase {
     private static let serviceName = "SummarizeArticleUseCase"
 
-    private let summarizationService: ArticleSummarizationService
+    /// Closure that performs the actual summarization for an article.
+    /// Production wiring wraps
+    /// `ArticleSummarizationService.summarizeIfNeeded(...)`; tests inject
+    /// a stub so the orchestration can be exercised without contacting
+    /// any AI provider.
+    typealias SummarizeAction = @Sendable (_ article: Article, _ requestID: String) async throws -> AISummaryResult
+
+    private let summarizeAction: SummarizeAction
     private let logger: AppLogger
 
+    /// Production initializer that wraps the live
+    /// `ArticleSummarizationService.summarizeIfNeeded(...)` surface.
     init(
         summarizationService: ArticleSummarizationService,
         logger: AppLogger = .shared
     ) {
-        self.summarizationService = summarizationService
+        self.init(
+            summarizeAction: { article, requestID in
+                try await summarizationService.summarizeIfNeeded(
+                    article,
+                    requestID: requestID
+                )
+            },
+            logger: logger
+        )
+    }
+
+    /// Designated initializer accepting a closure-based summarize seam
+    /// so tests can drive every branch of the orchestration without
+    /// contacting any AI provider.
+    init(
+        summarizeAction: @escaping SummarizeAction,
+        logger: AppLogger = .shared
+    ) {
+        self.summarizeAction = summarizeAction
         self.logger = logger
     }
 
@@ -68,10 +95,7 @@ struct LiveSummarizeArticleUseCase: SummarizeArticleUseCase {
         )
 
         do {
-            let summary = try await summarizationService.summarizeIfNeeded(
-                article,
-                requestID: flowRequestID
-            )
+            let summary = try await summarizeAction(article, flowRequestID)
             logger.info(
                 "SummarizeArticleUseCase completed",
                 category: .business,

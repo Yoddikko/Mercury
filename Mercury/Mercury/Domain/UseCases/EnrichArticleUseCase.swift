@@ -52,16 +52,46 @@ extension EnrichArticleUseCase {
 struct LiveEnrichArticleUseCase: EnrichArticleUseCase {
     private static let serviceName = "EnrichArticleUseCase"
 
-    private let enrichmentService: ArticleContentEnrichmentService
+    /// Closure that performs the actual enrichment for a single article.
+    /// Production wiring wraps
+    /// `ArticleContentEnrichmentService.enrichArticlesIfNeeded(...)`;
+    /// tests inject a stub so the orchestration can be exercised without
+    /// the live page-fetch stack.
+    typealias EnrichAction = @Sendable (_ article: Article, _ requestID: String) async -> Article
+
+    private let enrichAction: EnrichAction
     private let articleRepository: ArticleRepository
     private let logger: AppLogger
 
+    /// Production initializer that wraps the live
+    /// `ArticleContentEnrichmentService.enrichArticlesIfNeeded(...)` surface.
     init(
         enrichmentService: ArticleContentEnrichmentService,
         articleRepository: ArticleRepository,
         logger: AppLogger = .shared
     ) {
-        self.enrichmentService = enrichmentService
+        self.init(
+            enrichAction: { article, requestID in
+                let enriched = await enrichmentService.enrichArticlesIfNeeded(
+                    [article],
+                    requestID: requestID
+                )
+                return enriched.first ?? article
+            },
+            articleRepository: articleRepository,
+            logger: logger
+        )
+    }
+
+    /// Designated initializer accepting a closure-based enrich seam so
+    /// tests can drive every branch of the orchestration without
+    /// spinning up the live page-fetch stack.
+    init(
+        enrichAction: @escaping EnrichAction,
+        articleRepository: ArticleRepository,
+        logger: AppLogger = .shared
+    ) {
+        self.enrichAction = enrichAction
         self.articleRepository = articleRepository
         self.logger = logger
     }
@@ -81,21 +111,7 @@ struct LiveEnrichArticleUseCase: EnrichArticleUseCase {
             ]
         )
 
-        let enrichedArticles = await enrichmentService.enrichArticlesIfNeeded(
-            [article],
-            requestID: flowRequestID
-        )
-
-        guard let candidate = enrichedArticles.first else {
-            logger.warn(
-                "EnrichArticleUseCase produced no candidate",
-                category: .business,
-                service: Self.serviceName,
-                requestID: flowRequestID,
-                metadata: ["article_id": article.id]
-            )
-            return nil
-        }
+        let candidate = await enrichAction(article, flowRequestID)
 
         guard candidate.contentWordCount > article.contentWordCount ||
                 candidate.contentSource != article.contentSource else {
