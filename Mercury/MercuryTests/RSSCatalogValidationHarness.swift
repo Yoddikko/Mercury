@@ -17,10 +17,13 @@
 //  produce a snapshot to commit under
 //  `docs/rss/research/diagnostics-<date>.json`.
 //
-//  This test is gated behind the `MERCURY_RUN_RSS_HARNESS=1`
-//  environment variable so it stays opt-in. Without that flag the test
-//  exits immediately and the regular unit-test suite is not slowed
-//  down by 200+ live HTTP fetches.
+//  This test is gated behind Swift Testing's `.disabled(...)` trait so
+//  the regular unit-test suite is not slowed down by 200+ live HTTP
+//  fetches. To re-run the harness, remove the trait and invoke
+//  `xcodebuild test -only-testing:MercuryTests/RSSCatalogValidationHarness`
+//  (see the trait's message for the full command). Output is captured
+//  via `print()` inside the test, which xcresulttool then emits as
+//  part of the test's `emittedOutput`.
 //
 //  DO NOT add `#expect` assertions here. Live feed availability is not
 //  something we can pin to a unit test — the harness exists to PRODUCE
@@ -37,13 +40,21 @@ struct RSSCatalogValidationHarness {
     /// `groupMode: .byRegion` so we exercise EVERY outlet (not just the
     /// 25 region picks that `.mainOutlets` would surface), and writes
     /// a combined JSON report to `$TMPDIR`.
-    @Test
+    @Test(
+        .disabled(
+            "Live-network Phase 3 harness. Captured artifact lives at " +
+            "docs/rss/research/diagnostics-2026-06-26.json. To re-run, " +
+            "remove this `.disabled(...)` trait and invoke: " +
+            "xcodebuild test -project Mercury/Mercury.xcodeproj " +
+            "-scheme Mercury-UnitTests " +
+            "-only-testing:MercuryTests/RSSCatalogValidationHarness " +
+            "-destination 'platform=iOS Simulator,name=iPhone 17 Pro' " +
+            "CODE_SIGNING_ALLOWED=NO. The harness fans out ~228 outlets at " +
+            "4-way concurrency with a 12 s URLSession timeout, so a full " +
+            "run takes ~5-10 minutes."
+        )
+    )
     func runValidationHarness() async throws {
-        let environment = ProcessInfo.processInfo.environment
-        guard environment["MERCURY_RUN_RSS_HARNESS"] == "1" else {
-            print("[rss-harness] Skipped (set MERCURY_RUN_RSS_HARNESS=1 to enable).")
-            return
-        }
 
         let service = FeedRefreshService()
         let regions = RSSFeedCatalog.availableRegions
