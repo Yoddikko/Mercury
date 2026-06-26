@@ -105,12 +105,26 @@ actor ArticleLocalStore {
             predicate: Self.predicate(for: query),
             sortBy: Self.sortDescriptors(for: query.sort)
         )
-        if let limit = query.limit {
+        // When the query carries a free-text search, the limit is applied
+        // *after* the in-memory substring filter below to keep the
+        // result count meaningful. Without search, push the limit down
+        // to SwiftData so the fetch is cheap.
+        if let limit = query.limit, query.searchText == nil {
             descriptor.fetchLimit = limit
         }
 
         do {
-            return try modelContext.fetch(descriptor)
+            let fetched = try modelContext.fetch(descriptor)
+            guard let searchText = query.searchText else { return fetched }
+
+            let filtered = fetched.filter { article in
+                article.title.localizedStandardContains(searchText) ||
+                (article.cleanedContent ?? "").localizedStandardContains(searchText)
+            }
+            if let limit = query.limit {
+                return Array(filtered.prefix(limit))
+            }
+            return filtered
         } catch {
             AppLogger.shared.error(
                 "Article fetch failed",
@@ -405,34 +419,23 @@ actor ArticleLocalStore {
         let onlyBookmarked = query.onlyBookmarked
         let onlyUnread = query.onlyUnread
 
-        // SwiftData's `#Predicate` macro does not allow conditional composition
-        // outside its closure, so all filters are evaluated inside. The
-        // search-text branch lives in a dedicated predicate (combined below
-        // with `evaluate(...)`) because mixing the substring check into this
-        // expression overwhelms the type-checker on the SwiftData macro path.
-        let base = #Predicate<ArticleEntity> { article in
+        // SwiftData's `#Predicate` macro does not allow conditional
+        // composition outside its closure, so every persistent filter is
+        // expressed in a single predicate. The optional free-text
+        // search (`query.searchText`) is intentionally *not* part of
+        // this predicate: lowering `localizedStandardContains` into the
+        // SwiftData macro alongside the other clauses either overruns
+        // the type-checker or crashes at fetch time via the predicate
+        // translator. `fetchArticles(_:requestID:)` applies the
+        // search-text filter in-memory after the persistent fetch and
+        // enforces `query.limit` after that filter to keep result
+        // counts meaningful for the search UI.
+        return #Predicate<ArticleEntity> { article in
             (publishedAfter == nil || article.publishedAt >= publishedAfter!) &&
             (publishedBefore == nil || article.publishedAt <= publishedBefore!) &&
             (sourceNames == nil || sourceNames!.contains(article.sourceName)) &&
             (onlyBookmarked == false || article.isBookmarked == true) &&
             (onlyUnread == false || article.isRead == false)
-        }
-
-        guard let searchText = query.searchText else {
-            return base
-        }
-
-        // Free-text predicate: case-insensitive substring match on `title`
-        // OR `cleanedContent`. `cleanedContent` may be `nil` for legacy or
-        // partially-fetched rows; the `?? ""` keeps the predicate safe in
-        // that case.
-        let search = #Predicate<ArticleEntity> { article in
-            article.title.localizedStandardContains(searchText) ||
-            (article.cleanedContent ?? "").localizedStandardContains(searchText)
-        }
-
-        return #Predicate<ArticleEntity> { article in
-            base.evaluate(article) && search.evaluate(article)
         }
     }
 
