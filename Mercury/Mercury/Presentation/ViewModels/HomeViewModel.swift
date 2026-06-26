@@ -13,13 +13,16 @@ import SwiftData
 /// Presentation-layer view model that powers the Home screen.
 ///
 /// The view model exposes a simple state machine (`idle` → `loading` →
-/// `loaded` | `empty` | `failed`) backed by the existing RSS ingestion
-/// pipeline and persists fetched articles into the SwiftData stack so the
-/// app stays usable offline once content has been retrieved.
+/// `loaded` | `empty` | `failed`) backed by the `FetchHomeFeedUseCase`
+/// orchestration entry-point (issue #30) and persists fetched articles
+/// into the SwiftData stack so the app stays usable offline once content
+/// has been retrieved.
 ///
-/// The repository layer and dedicated use cases are tracked by separate
-/// issues, so this view model wires the existing services directly
-/// without introducing new abstractions.
+/// In production the view model is wired to `LiveFetchHomeFeedUseCase`,
+/// which combines the live RSS pipeline with the article repository
+/// cache. Tests can still inject a closure-based refresh action via the
+/// designated initializer so every state-machine branch is reachable
+/// without spinning up the live stack.
 @MainActor
 final class HomeViewModel: ObservableObject {
     enum FeedState: Equatable {
@@ -46,16 +49,19 @@ final class HomeViewModel: ObservableObject {
     private var activeRequestID: String?
     private var hasLoadedOnce: Bool = false
 
-    /// Production initializer that wires the default `FeedRefreshService`
-    /// configured for the documented default feed (chronological,
-    /// main-outlets). Uses the production `refreshFeed` surface so the
-    /// Home pipeline is no longer entangled with developer-only
-    /// diagnostics instrumentation.
-    convenience init(isDeveloperModeEnabled: Bool = DeveloperMode.isEnabled) {
-        let service = FeedRefreshService()
+    /// Production initializer that wires the supplied
+    /// `FetchHomeFeedUseCase` into the refresh pipeline. The use case is
+    /// the new orchestration seam (issue #30): it combines
+    /// `FeedRefreshService` with the SwiftData-backed
+    /// `ArticleRepository`, leaving this view model with only the
+    /// presentation state-machine concerns.
+    convenience init(
+        fetchHomeFeedUseCase: FetchHomeFeedUseCase,
+        isDeveloperModeEnabled: Bool = DeveloperMode.isEnabled
+    ) {
         self.init(
             feedRefreshAction: {
-                await service.refreshFeed(
+                await fetchHomeFeedUseCase.execute(
                     groupMode: .mainOutlets,
                     selectedRegion: nil
                 )

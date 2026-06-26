@@ -26,14 +26,6 @@ struct MercuryApp: App {
         WindowGroup {
             AppRouter(dependencyContainer: dependencyContainer)
         }
-        .modelContainer(
-            for: [
-                StoredArticle.self,
-                ArticleEntity.self,
-                ClusterEntity.self,
-                UserPreferenceEntity.self,
-                InteractionEntity.self
-            ]
-        )
+        .modelContainer(dependencyContainer.modelContainer)
     }
 }
