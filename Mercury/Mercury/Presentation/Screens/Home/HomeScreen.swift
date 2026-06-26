@@ -11,11 +11,36 @@ import SwiftUI
 
 struct HomeScreen: View {
     @ObservedObject var viewModel: HomeViewModel
+    @StateObject private var searchViewModel: SearchViewModel
 #if DEBUG
     let developerPlaygroundViewModel: DeveloperPlaygroundViewModel
 #endif
 
     @Environment(\.modelContext) private var modelContext
+
+#if DEBUG
+    init(
+        viewModel: HomeViewModel,
+        developerPlaygroundViewModel: DeveloperPlaygroundViewModel,
+        searchViewModel: SearchViewModel? = nil
+    ) {
+        self.viewModel = viewModel
+        self.developerPlaygroundViewModel = developerPlaygroundViewModel
+        _searchViewModel = StateObject(
+            wrappedValue: searchViewModel ?? SearchViewModel()
+        )
+    }
+#else
+    init(
+        viewModel: HomeViewModel,
+        searchViewModel: SearchViewModel? = nil
+    ) {
+        self.viewModel = viewModel
+        _searchViewModel = StateObject(
+            wrappedValue: searchViewModel ?? SearchViewModel()
+        )
+    }
+#endif
 
     var body: some View {
         NavigationStack {
@@ -26,7 +51,17 @@ struct HomeScreen: View {
                 }
                 .task {
                     viewModel.attach(modelContext: modelContext)
+                    searchViewModel.attach(
+                        repository: SwiftDataArticleRepository(modelContainer: modelContext.container)
+                    )
                     await viewModel.loadInitialFeedIfNeeded()
+                }
+                .searchable(
+                    text: $searchViewModel.query,
+                    prompt: Text(searchViewModel.searchPrompt)
+                )
+                .task(id: searchViewModel.query) {
+                    await searchViewModel.runSearch()
                 }
 #if DEBUG
                 .toolbar {
@@ -47,6 +82,15 @@ struct HomeScreen: View {
 
     @ViewBuilder
     private var content: some View {
+        if searchViewModel.isQueryActive {
+            searchContent
+        } else {
+            feedContent
+        }
+    }
+
+    @ViewBuilder
+    private var feedContent: some View {
         switch viewModel.state {
         case .idle, .loading:
             loadingView
@@ -56,6 +100,25 @@ struct HomeScreen: View {
             errorView(message: message)
         case let .loaded(articles):
             loadedList(articles: articles)
+        }
+    }
+
+    @ViewBuilder
+    private var searchContent: some View {
+        switch searchViewModel.state {
+        case .idle, .searching:
+            loadingView
+        case .empty:
+            ContentUnavailableView {
+                Label(searchViewModel.noResultsTitle, systemImage: "magnifyingglass")
+            } description: {
+                Text(searchViewModel.noResultsSubtitle(for: searchViewModel.query))
+            }
+            .accessibilityIdentifier("home.search.empty")
+        case let .results(articles):
+            loadedList(articles: articles)
+                .accessibilityLabel(searchViewModel.resultsAccessibilityLabel)
+                .accessibilityIdentifier("home.search.results")
         }
     }
 
