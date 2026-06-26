@@ -207,7 +207,13 @@
 "article.detail.actions.share" = "Share article";
 "article.detail.actions.open_in_safari" = "Open in Safari";
 "article.detail.section.summary" = "Summary";
+"article.detail.section.ai_summary" = "AI Summary";
 "article.detail.section.body" = "Article";
+"article.detail.ai_summary.loading" = "Generating AI summary…";
+"article.detail.ai_summary.unavailable" = "AI summary is not available. Configure an AI provider in Developer Tools to enable it.";
+"article.detail.ai_summary.failed" = "We couldn't generate an AI summary right now. You can still read the article body below.";
+"article.detail.ai_summary.regenerate" = "Try again";
+"article.detail.ai_summary.bullets.accessibility" = "Key points";
 "article.detail.hero.accessibility" = "Article hero image";
 "article.detail.bookmarked.accessibility" = "Bookmarked";
 "article.detail.not_bookmarked.accessibility" = "Not bookmarked";

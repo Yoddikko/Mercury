@@ -143,6 +143,38 @@ actor ArticleLocalStore {
         )
     }
 
+    // MARK: - AI enrichment
+
+    /// Persist the AI-generated summary on the article identified by
+    /// `articleID`, refreshing `updatedAt` accordingly.
+    ///
+    /// This is the persistence seam used by
+    /// `ArticleSummarizationService` so the cached `summaryShort`/
+    /// `summaryBullets` survive subsequent app launches and avoid extra
+    /// provider calls (see `docs/features/SUMMARIZATION.md`).
+    func applySummary(
+        articleID: String,
+        summary: AISummaryResult,
+        requestID: String? = nil
+    ) throws {
+        let article = try requireArticle(id: articleID, requestID: requestID, op: "applySummary")
+        article.summaryShort = summary.shortSummary
+        article.summaryBullets = summary.bullets
+        article.updatedAt = .now
+        try save(requestID: requestID, op: "applySummary", articleID: articleID)
+
+        AppLogger.shared.info(
+            "Persisted AI summary on article",
+            category: .business,
+            service: Self.serviceName,
+            requestID: requestID,
+            metadata: [
+                "article_id": articleID,
+                "bullets": "\(summary.bullets.count)"
+            ]
+        )
+    }
+
     // MARK: - User actions
 
     /// Toggle `isBookmarked` on the article with `id`. Returns the new value.

@@ -80,8 +80,10 @@ struct ArticleDetailScreen: View {
             VStack(alignment: .leading, spacing: 16) {
                 heroImage(for: article)
                 titleBlock(for: article)
-                if let summary = article.summaryShort?.trimmingCharacters(in: .whitespacesAndNewlines),
-                   summary.isEmpty == false {
+                if viewModel.shouldShowAISummarySection {
+                    aiSummarySection
+                } else if let summary = article.summaryShort?.trimmingCharacters(in: .whitespacesAndNewlines),
+                          summary.isEmpty == false {
                     summarySection(text: summary)
                 }
                 bodySection(for: article)
@@ -165,6 +167,90 @@ struct ArticleDetailScreen: View {
                 .accessibilityIdentifier("article.detail.summary")
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    @ViewBuilder
+    private var aiSummarySection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text(viewModel.aiSummarySectionTitle)
+                .font(.headline)
+                .accessibilityAddTraits(.isHeader)
+
+            switch viewModel.summaryState {
+            case .summarizing:
+                HStack(spacing: 8) {
+                    ProgressView()
+                    Text(viewModel.aiSummaryLoadingLabel)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
+                .accessibilityIdentifier("article.detail.ai_summary.loading")
+
+            case let .ready(summary):
+                aiSummaryContent(summary)
+
+            case .failed:
+                Text(viewModel.aiSummaryFailedLabel)
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+                    .accessibilityIdentifier("article.detail.ai_summary.failed")
+                if viewModel.canRegenerateAISummary {
+                    Button {
+                        Task { await viewModel.regenerateSummary() }
+                    } label: {
+                        Text(viewModel.aiSummaryRegenerateLabel)
+                    }
+                    .buttonStyle(.bordered)
+                    .accessibilityIdentifier("article.detail.ai_summary.regenerate")
+                }
+
+            case .idle:
+                if viewModel.shouldShowAISummaryUnavailable {
+                    Text(viewModel.aiSummaryUnavailableLabel)
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                        .accessibilityIdentifier("article.detail.ai_summary.unavailable")
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.vertical, 8)
+        .padding(.horizontal, 12)
+        .background(Color.secondary.opacity(0.08), in: RoundedRectangle(cornerRadius: 12))
+        .accessibilityIdentifier("article.detail.ai_summary")
+    }
+
+    @ViewBuilder
+    private func aiSummaryContent(_ summary: AISummaryResult) -> some View {
+        let trimmedShort = summary.shortSummary.trimmingCharacters(in: .whitespacesAndNewlines)
+        if trimmedShort.isEmpty == false {
+            Text(trimmedShort)
+                .font(.body)
+                .fixedSize(horizontal: false, vertical: true)
+                .accessibilityIdentifier("article.detail.ai_summary.short")
+        }
+
+        let bullets = summary.bullets
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { $0.isEmpty == false }
+
+        if bullets.isEmpty == false {
+            VStack(alignment: .leading, spacing: 4) {
+                ForEach(Array(bullets.enumerated()), id: \.offset) { _, bullet in
+                    HStack(alignment: .firstTextBaseline, spacing: 8) {
+                        Text("•")
+                            .font(.body.weight(.semibold))
+                            .accessibilityHidden(true)
+                        Text(bullet)
+                            .font(.callout)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                }
+            }
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel(viewModel.aiSummaryBulletsAccessibilityLabel)
+            .accessibilityIdentifier("article.detail.ai_summary.bullets")
+        }
     }
 
     private func bodySection(for _: Article) -> some View {
