@@ -218,6 +218,34 @@ final class ArticleDetailViewModel: ObservableObject {
         )
     }
 
+    var aiSummaryGenerateLabel: String {
+        String(
+            localized: "article.detail.ai_summary.generate",
+            defaultValue: "Generate AI summary"
+        )
+    }
+
+    var aiSummaryGenerateAccessibilityHint: String {
+        String(
+            localized: "article.detail.ai_summary.generate.accessibility_hint",
+            defaultValue: "Generates an AI summary of the article on demand."
+        )
+    }
+
+    var aiSummaryRegenerateAffordanceLabel: String {
+        String(
+            localized: "article.detail.ai_summary.regenerate_affordance",
+            defaultValue: "Regenerate"
+        )
+    }
+
+    var aiSummaryRegenerateAffordanceAccessibilityHint: String {
+        String(
+            localized: "article.detail.ai_summary.regenerate_affordance.accessibility_hint",
+            defaultValue: "Discards the cached AI summary and generates a new one."
+        )
+    }
+
     var aiSummaryBulletsAccessibilityLabel: String {
         String(
             localized: "article.detail.ai_summary.bullets.accessibility",
@@ -314,13 +342,23 @@ final class ArticleDetailViewModel: ObservableObject {
         return true
     }
 
+    /// Whether the on-demand "Generate AI summary" button should be exposed
+    /// in the idle, no-cached-summary state.
+    var shouldShowAISummaryGenerateButton: Bool {
+        guard summarize != nil else { return false }
+        if case .idle = summaryState { return true }
+        return false
+    }
+
     /// Whether a manual regenerate affordance should be exposed.
+    /// Surfaced both after a failure (as a retry) and alongside a cached
+    /// summary (as the "Regenerate" button).
     var canRegenerateAISummary: Bool {
         guard summarize != nil else { return false }
         switch summaryState {
-        case .failed:
+        case .failed, .ready:
             return true
-        case .ready, .idle, .summarizing:
+        case .idle, .summarizing:
             return false
         }
     }
@@ -329,19 +367,54 @@ final class ArticleDetailViewModel: ObservableObject {
 
     /// Invoked when the screen appears: marks the article as opened in the
     /// local history (idempotent) and, if needed, fires off background
-    /// tasks to enrich the body and to generate the AI summary.
+    /// enrichment of the body. AI summarization is NOT triggered here — it
+    /// only runs when the user taps the "Generate AI summary" button (see
+    /// `requestSummary()`), per `docs/features/SUMMARIZATION.md`.
     func onAppear() async {
         await recordOpenIfNeeded()
         if shouldAttemptEnrichment {
             startEnrichmentIfNeeded()
         }
-        startSummaryIfNeeded()
+    }
+
+    /// User-initiated request to generate an AI summary. Reuses the cached
+    /// summary if available; otherwise calls the configured `summarize`
+    /// closure. Triggered exclusively by the "Generate AI summary" button on
+    /// the article detail screen — never automatically.
+    func requestSummary() async {
+        guard summarize != nil else { return }
+        if case .summarizing = summaryState { return }
+        let requestID = "article-detail-summary-tap-\(UUID().uuidString.lowercased())"
+        logger.info(
+            "Article AI summary requested by user tap",
+            category: .ui,
+            service: "ArticleDetailViewModel",
+            requestID: requestID,
+            metadata: [
+                "article_id": currentArticle?.id ?? "<unknown>",
+                "has_cached_summary": "\(currentArticle.flatMap(ArticleSummarizationService.cachedSummary(for:)) != nil)"
+            ]
+        )
+        summaryTask?.cancel()
+        await runSummarization(force: false)
     }
 
     /// Force a fresh AI summary generation, bypassing any cached result.
-    /// Used by the "Try again" affordance after a failure.
+    /// Used by the "Regenerate" affordance when a cached summary already
+    /// exists and by the retry button after a failure.
     func regenerateSummary() async {
         guard summarize != nil else { return }
+        if case .summarizing = summaryState { return }
+        let requestID = "article-detail-summary-regenerate-\(UUID().uuidString.lowercased())"
+        logger.info(
+            "Article AI summary regenerate requested by user tap",
+            category: .ui,
+            service: "ArticleDetailViewModel",
+            requestID: requestID,
+            metadata: [
+                "article_id": currentArticle?.id ?? "<unknown>"
+            ]
+        )
         summaryTask?.cancel()
         await runSummarization(force: true)
     }
@@ -558,22 +631,6 @@ final class ArticleDetailViewModel: ObservableObject {
         }
         if let cached = ArticleSummarizationService.cachedSummary(for: newArticle) {
             summaryState = .ready(summary: cached)
-        }
-    }
-
-    private func startSummaryIfNeeded() {
-        guard summarize != nil else {
-            // Without a configured provider, nothing to attempt. The view
-            // keeps showing the cached summary (if any) or the
-            // "unavailable" fallback.
-            return
-        }
-        if case .ready = summaryState { return }
-        if case .summarizing = summaryState { return }
-        guard summaryTask == nil else { return }
-
-        summaryTask = Task { [weak self] in
-            await self?.runSummarization(force: false)
         }
     }
 
