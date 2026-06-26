@@ -22,6 +22,12 @@
 "home.feed_mode.clustered.title" = "Clustered Feed";
 "home.feed_mode.clustered.detail" = "Optional event grouping so multiple articles can be reduced to one representative story.";
 
+"home.search.prompt" = "Search articles";
+"home.search.no_results.title" = "No matching articles";
+"home.search.no_results.subtitle" = "No articles match \"%@\". Try a different keyword.";
+"home.search.field.accessibility_hint" = "Filters the article list by title and body content.";
+"home.search.results.accessibility_label" = "Search results";
+
 "developer.playground.title" = "Developer Playground";
 "developer.playground.subtitle" = "Debug-only sandbox to test app services and development flows.";
 "developer.playground.section.swiftdata_sandbox" = "SwiftData Sandbox";

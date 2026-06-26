@@ -96,6 +96,7 @@ actor ArticleLocalStore {
             metadata: [
                 "only_bookmarked": "\(query.onlyBookmarked)",
                 "only_unread": "\(query.onlyUnread)",
+                "has_search_text": "\(query.searchText != nil)",
                 "limit": query.limit.map(String.init) ?? "nil"
             ]
         )
@@ -405,13 +406,33 @@ actor ArticleLocalStore {
         let onlyUnread = query.onlyUnread
 
         // SwiftData's `#Predicate` macro does not allow conditional composition
-        // outside its closure, so all filters are evaluated inside.
-        return #Predicate<ArticleEntity> { article in
+        // outside its closure, so all filters are evaluated inside. The
+        // search-text branch lives in a dedicated predicate (combined below
+        // with `evaluate(...)`) because mixing the substring check into this
+        // expression overwhelms the type-checker on the SwiftData macro path.
+        let base = #Predicate<ArticleEntity> { article in
             (publishedAfter == nil || article.publishedAt >= publishedAfter!) &&
             (publishedBefore == nil || article.publishedAt <= publishedBefore!) &&
             (sourceNames == nil || sourceNames!.contains(article.sourceName)) &&
             (onlyBookmarked == false || article.isBookmarked == true) &&
             (onlyUnread == false || article.isRead == false)
+        }
+
+        guard let searchText = query.searchText else {
+            return base
+        }
+
+        // Free-text predicate: case-insensitive substring match on `title`
+        // OR `cleanedContent`. `cleanedContent` may be `nil` for legacy or
+        // partially-fetched rows; the `?? ""` keeps the predicate safe in
+        // that case.
+        let search = #Predicate<ArticleEntity> { article in
+            article.title.localizedStandardContains(searchText) ||
+            (article.cleanedContent ?? "").localizedStandardContains(searchText)
+        }
+
+        return #Predicate<ArticleEntity> { article in
+            base.evaluate(article) && search.evaluate(article)
         }
     }
 

@@ -22,6 +22,12 @@
 "home.feed_mode.clustered.title" = "Feed a cluster";
 "home.feed_mode.clustered.detail" = "Raggruppamento opzionale per eventi, per ridurre articoli multipli a una sola storia rappresentativa.";
 
+"home.search.prompt" = "Cerca articoli";
+"home.search.no_results.title" = "Nessun articolo corrispondente";
+"home.search.no_results.subtitle" = "Nessun articolo corrisponde a \"%@\". Prova una parola chiave diversa.";
+"home.search.field.accessibility_hint" = "Filtra la lista di articoli per titolo e contenuto.";
+"home.search.results.accessibility_label" = "Risultati della ricerca";
+
 "developer.playground.title" = "Developer Playground";
 "developer.playground.subtitle" = "Sandbox solo debug per testare servizi applicativi e flussi di sviluppo.";
 "developer.playground.section.swiftdata_sandbox" = "Sandbox SwiftData";
