@@ -23,6 +23,11 @@ struct ArticleQuery: Equatable, Sendable {
     var onlyBookmarked: Bool = false
     /// When `true`, only unread articles are returned.
     var onlyUnread: Bool = false
+    /// Optional free-text search applied to the article title and the
+    /// cleaned body content (`cleanedContent`), case-insensitive substring
+    /// match. Whitespace-only or empty values are treated as `nil` so callers
+    /// can forward raw search-bar input without pre-trimming.
+    var searchText: String?
     /// Ordering applied to the result set.
     var sort: ArticleSortOrder = .publishedAtDescending
     /// Maximum number of articles to return. `nil` means no limit.
@@ -34,6 +39,7 @@ struct ArticleQuery: Equatable, Sendable {
         sourceNames: [String]? = nil,
         onlyBookmarked: Bool = false,
         onlyUnread: Bool = false,
+        searchText: String? = nil,
         sort: ArticleSortOrder = .publishedAtDescending,
         limit: Int? = nil
     ) {
@@ -42,8 +48,18 @@ struct ArticleQuery: Equatable, Sendable {
         self.sourceNames = sourceNames
         self.onlyBookmarked = onlyBookmarked
         self.onlyUnread = onlyUnread
+        self.searchText = Self.normalize(searchText)
         self.sort = sort
         self.limit = limit
+    }
+
+    /// Normalize a raw search-text input. Returns `nil` when the input is
+    /// missing or contains only whitespace, so the predicate stays free of
+    /// no-op filters.
+    private static func normalize(_ value: String?) -> String? {
+        guard let value else { return nil }
+        let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed.isEmpty ? nil : trimmed
     }
 }
 
