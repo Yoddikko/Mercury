@@ -188,6 +188,19 @@ struct ArticleDetailScreen: View {
 
             case let .ready(summary):
                 aiSummaryContent(summary)
+                if viewModel.canRegenerateAISummary {
+                    Button {
+                        Task { await viewModel.regenerateSummary() }
+                    } label: {
+                        Label(
+                            viewModel.aiSummaryRegenerateAffordanceLabel,
+                            systemImage: "arrow.clockwise"
+                        )
+                    }
+                    .buttonStyle(.bordered)
+                    .accessibilityHint(viewModel.aiSummaryRegenerateAffordanceAccessibilityHint)
+                    .accessibilityIdentifier("article.detail.ai_summary.regenerate_affordance")
+                }
 
             case .failed:
                 Text(viewModel.aiSummaryFailedLabel)
@@ -205,7 +218,19 @@ struct ArticleDetailScreen: View {
                 }
 
             case .idle:
-                if viewModel.shouldShowAISummaryUnavailable {
+                if viewModel.shouldShowAISummaryGenerateButton {
+                    Button {
+                        Task { await viewModel.requestSummary() }
+                    } label: {
+                        Label(
+                            viewModel.aiSummaryGenerateLabel,
+                            systemImage: "sparkles"
+                        )
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .accessibilityHint(viewModel.aiSummaryGenerateAccessibilityHint)
+                    .accessibilityIdentifier("article.detail.ai_summary.generate")
+                } else if viewModel.shouldShowAISummaryUnavailable {
                     Text(viewModel.aiSummaryUnavailableLabel)
                         .font(.callout)
                         .foregroundStyle(.secondary)

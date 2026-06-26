@@ -214,6 +214,78 @@ struct ArticleDetailViewModelTests {
         #expect(viewModel.shouldAttemptEnrichment == false)
     }
 
+    // MARK: - Summary (on-demand only)
+
+    @Test
+    func onAppearDoesNotTriggerSummaryAutomatically() async {
+        // Per docs/features/SUMMARIZATION.md, AI summarization is exclusively
+        // user-initiated via the "Generate AI summary" button. The appearance
+        // hook must never invoke the summarize closure.
+        let article = Self.sampleArticle(summaryShort: nil, summaryBullets: [])
+        let summarizeCalls = Recorder<String>()
+        let viewModel = Self.makeViewModel(
+            article: article,
+            summarize: { article in
+                await summarizeCalls.append(article.id)
+                return AISummaryResult(shortSummary: "auto", bullets: [])
+            }
+        )
+
+        await viewModel.onAppear()
+
+        let captured = await summarizeCalls.values
+        #expect(captured.isEmpty)
+        #expect(viewModel.summaryState == .idle)
+        #expect(viewModel.shouldShowAISummaryGenerateButton == true)
+    }
+
+    @Test
+    func requestSummaryInvokesSummarizeClosureAndTransitionsToReady() async {
+        let article = Self.sampleArticle(summaryShort: nil, summaryBullets: [])
+        let summarizeCalls = Recorder<String>()
+        let summary = AISummaryResult(
+            shortSummary: "Short summary",
+            bullets: ["First bullet", "Second bullet"]
+        )
+        let viewModel = Self.makeViewModel(
+            article: article,
+            summarize: { article in
+                await summarizeCalls.append(article.id)
+                return summary
+            }
+        )
+
+        await viewModel.requestSummary()
+
+        let captured = await summarizeCalls.values
+        #expect(captured == [article.id])
+        guard case let .ready(produced) = viewModel.summaryState else {
+            Issue.record("Expected ready summary state, got \(viewModel.summaryState)")
+            return
+        }
+        #expect(produced.shortSummary == "Short summary")
+        #expect(produced.bullets == ["First bullet", "Second bullet"])
+        // The cached summary should now be reflected on the article so the
+        // detail screen can render it from the model on a future reload.
+        #expect(viewModel.currentArticle?.summaryShort == "Short summary")
+        // "Generate" button should disappear; "Regenerate" affordance is now
+        // the active action.
+        #expect(viewModel.shouldShowAISummaryGenerateButton == false)
+        #expect(viewModel.canRegenerateAISummary == true)
+    }
+
+    @Test
+    func requestSummaryDoesNothingWhenNoSummarizeClosureWired() async {
+        let article = Self.sampleArticle(summaryShort: nil, summaryBullets: [])
+        let viewModel = Self.makeViewModel(article: article, summarize: nil)
+
+        await viewModel.requestSummary()
+
+        #expect(viewModel.summaryState == .idle)
+        #expect(viewModel.shouldShowAISummaryGenerateButton == false)
+        #expect(viewModel.shouldShowAISummaryUnavailable == true)
+    }
+
     // MARK: - Deinit
 
     @Test
@@ -254,13 +326,15 @@ struct ArticleDetailViewModelTests {
         article: Article? = nil,
         bookmarkToggle: @escaping ArticleDetailViewModel.BookmarkToggle = { _ in false },
         recordOpen: @escaping ArticleDetailViewModel.RecordOpen = { _ in },
-        enrichContent: ArticleDetailViewModel.EnrichContent? = nil
+        enrichContent: ArticleDetailViewModel.EnrichContent? = nil,
+        summarize: ArticleDetailViewModel.Summarize? = nil
     ) -> ArticleDetailViewModel {
         ArticleDetailViewModel(
             article: article ?? sampleArticle(),
             bookmarkToggle: bookmarkToggle,
             recordOpen: recordOpen,
-            enrichContent: enrichContent
+            enrichContent: enrichContent,
+            summarize: summarize
         )
     }
 
@@ -270,7 +344,9 @@ struct ArticleDetailViewModelTests {
         isRead: Bool = false,
         cleanedContent: String? = "Base body",
         contentWordCount: Int = 2,
-        isContentLikelyComplete: Bool = false
+        isContentLikelyComplete: Bool = false,
+        summaryShort: String? = "Summary",
+        summaryBullets: [String] = []
     ) -> Article {
         Article(
             id: id,
@@ -287,8 +363,8 @@ struct ArticleDetailViewModelTests {
             contentSource: "feed_content",
             contentWordCount: contentWordCount,
             isContentLikelyComplete: isContentLikelyComplete,
-            summaryShort: "Summary",
-            summaryBullets: [],
+            summaryShort: summaryShort,
+            summaryBullets: summaryBullets,
             category: "Technology",
             tags: ["test"],
             language: "en",

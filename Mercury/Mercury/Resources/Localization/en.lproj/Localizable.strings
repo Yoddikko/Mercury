@@ -219,6 +219,10 @@
 "article.detail.ai_summary.unavailable" = "AI summary is not available. Configure an AI provider in Developer Tools to enable it.";
 "article.detail.ai_summary.failed" = "We couldn't generate an AI summary right now. You can still read the article body below.";
 "article.detail.ai_summary.regenerate" = "Try again";
+"article.detail.ai_summary.generate" = "Generate AI summary";
+"article.detail.ai_summary.generate.accessibility_hint" = "Generates an AI summary of the article on demand.";
+"article.detail.ai_summary.regenerate_affordance" = "Regenerate";
+"article.detail.ai_summary.regenerate_affordance.accessibility_hint" = "Discards the cached AI summary and generates a new one.";
 "article.detail.ai_summary.bullets.accessibility" = "Key points";
 "article.detail.hero.accessibility" = "Article hero image";
 "article.detail.bookmarked.accessibility" = "Bookmarked";

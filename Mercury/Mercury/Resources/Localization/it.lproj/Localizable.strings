@@ -219,6 +219,10 @@
 "article.detail.ai_summary.unavailable" = "La sintesi AI non è disponibile. Configura un provider AI dagli Strumenti sviluppatore per attivarla.";
 "article.detail.ai_summary.failed" = "Non è stato possibile generare la sintesi AI in questo momento. Puoi comunque leggere il corpo dell'articolo qui sotto.";
 "article.detail.ai_summary.regenerate" = "Riprova";
+"article.detail.ai_summary.generate" = "Genera sintesi AI";
+"article.detail.ai_summary.generate.accessibility_hint" = "Genera su richiesta una sintesi AI dell'articolo.";
+"article.detail.ai_summary.regenerate_affordance" = "Rigenera";
+"article.detail.ai_summary.regenerate_affordance.accessibility_hint" = "Scarta la sintesi AI in cache e ne genera una nuova.";
 "article.detail.ai_summary.bullets.accessibility" = "Punti chiave";
 "article.detail.hero.accessibility" = "Immagine principale articolo";
 "article.detail.bookmarked.accessibility" = "Aggiunto ai salvati";
