@@ -527,6 +527,24 @@ Suggested fields:
 
 ---
 
+## 8.5 Repository Abstraction
+
+SwiftData access is exposed to the rest of the app through two domain-level
+protocols, `ArticleRepository` (`Domain/Repositories/ArticleRepository.swift`)
+and `PreferenceRepository` (`Domain/Repositories/PreferenceRepository.swift`),
+implemented respectively by `SwiftDataArticleRepository` and
+`SwiftDataPreferenceRepository` under `Data/Repositories/`. Both concrete
+implementations wrap the existing persistence types via delegation —
+`ArticleLocalStore` (`@ModelActor`) and `UserPreferencesService` (`@MainActor`)
+— so the predicate, sort, sanitization, and AppLogger logic stays in a single
+canonical place while consumers (view models, services, use cases) depend
+only on the protocol. View-model migration to the protocols and the eventual
+retirement of the underlying services is intentionally deferred to a follow-up
+refactor (see issue #30); a future Firebase sync layer (issue #12) can adopt
+the same protocols without touching call sites.
+
+---
+
 ## 9. Firebase Usage
 
 ## Recommended Firebase services
