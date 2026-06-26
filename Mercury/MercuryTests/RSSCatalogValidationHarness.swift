@@ -40,20 +40,13 @@ struct RSSCatalogValidationHarness {
     /// `groupMode: .byRegion` so we exercise EVERY outlet (not just the
     /// 25 region picks that `.mainOutlets` would surface), and writes
     /// a combined JSON report to `$TMPDIR`.
-    @Test(
-        .disabled(
-            "Live-network Phase 3 harness. Captured artifact lives at " +
-            "docs/rss/research/diagnostics-2026-06-26.json. To re-run, " +
-            "remove this `.disabled(...)` trait and invoke: " +
-            "xcodebuild test -project Mercury/Mercury.xcodeproj " +
-            "-scheme Mercury-UnitTests " +
-            "-only-testing:MercuryTests/RSSCatalogValidationHarness " +
-            "-destination 'platform=iOS Simulator,name=iPhone 17 Pro' " +
-            "CODE_SIGNING_ALLOWED=NO. The harness fans out ~228 outlets at " +
-            "4-way concurrency with a 12 s URLSession timeout, so a full " +
-            "run takes ~5-10 minutes."
-        )
-    )
+    ///
+    /// Disabled by default. Phase 3 (#53) artifact lives at
+    /// `docs/rss/research/diagnostics-2026-06-26.json`. To re-run,
+    /// remove the `.disabled(...)` trait and invoke
+    /// `xcodebuild test -only-testing:MercuryTests/RSSCatalogValidationHarness`
+    /// against `Mercury-UnitTests`. A full run takes ~5-10 minutes.
+    @Test(.disabled("Phase 3 live-network harness; see file header to re-run."))
     func runValidationHarness() async throws {
 
         let service = FeedRefreshService()
