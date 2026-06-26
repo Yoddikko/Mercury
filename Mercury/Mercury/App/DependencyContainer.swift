@@ -5,9 +5,47 @@
 //  Created by Codex on 31/03/26.
 //
 
+import Foundation
+import SwiftData
+
+/// Lightweight composition root that builds the screen-level view models
+/// and the shared infrastructure they depend on.
+///
+/// Today the container owns the application-wide `ModelContainer` so the
+/// SwiftUI `.modelContainer` modifier and the SwiftData-backed
+/// `ArticleRepository` consumed by `FetchHomeFeedUseCase` share the same
+/// underlying store. Full DI orchestration (proper module boundaries,
+/// scoped lifetimes) is intentionally out of scope until the feature set
+/// justifies it.
 struct DependencyContainer {
+    let modelContainer: ModelContainer
+    private let logger: AppLogger
+
+    init(
+        modelContainer: ModelContainer = DependencyContainer.makeDefaultModelContainer(),
+        logger: AppLogger = .shared
+    ) {
+        self.modelContainer = modelContainer
+        self.logger = logger
+        logger.debug(
+            "DependencyContainer initialized",
+            category: .system,
+            service: "DependencyContainer"
+        )
+    }
+
     func makeHomeViewModel() -> HomeViewModel {
-        HomeViewModel()
+        logger.debug(
+            "Building HomeViewModel with FetchHomeFeedUseCase",
+            category: .system,
+            service: "DependencyContainer"
+        )
+        let repository = SwiftDataArticleRepository(modelContainer: modelContainer)
+        let useCase = LiveFetchHomeFeedUseCase(
+            feedRefreshService: FeedRefreshService(),
+            articleRepository: repository
+        )
+        return HomeViewModel(fetchHomeFeedUseCase: useCase)
     }
 
 #if DEBUG
@@ -15,4 +53,26 @@ struct DependencyContainer {
         DeveloperPlaygroundViewModel()
     }
 #endif
+
+    /// Builds the default production `ModelContainer` that backs both the
+    /// SwiftUI environment and the repository layer.
+    static func makeDefaultModelContainer() -> ModelContainer {
+        do {
+            return try ModelContainer(
+                for: StoredArticle.self,
+                ArticleEntity.self,
+                ClusterEntity.self,
+                UserPreferenceEntity.self,
+                InteractionEntity.self
+            )
+        } catch {
+            AppLogger.shared.error(
+                "Failed to build default ModelContainer",
+                category: .system,
+                service: "DependencyContainer",
+                metadata: ["error": String(describing: error)]
+            )
+            fatalError("Unable to construct the application ModelContainer: \(error)")
+        }
+    }
 }
