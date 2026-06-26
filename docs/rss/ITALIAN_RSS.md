@@ -1,3 +1,39 @@
+# Italian News RSS Feeds (ITALIAN_RSS.md)
+
+## 2026-06-26 update — Phase B catalog port
+
+Phase 1 research is captured in
+[`docs/rss/research/candidates-2026-06-26.json`](research/candidates-2026-06-26.json)
+and ported into `Mercury/Mercury/Data/Remote/RSS/RSSFeedCatalog.swift`
+under the `// MARK: - Italy` section (Phase B, issue #50).
+
+The Italian region now ships with **58 outlets** spanning the full editorial
+mix:
+
+- **News wires:** ANSA (homepage, topnews, cronaca, politica, mondo, economia,
+  cultura, scienza, tecnologia, salute, lifestyle, sport, calcio, sicilia,
+  english), Adnkronos, AGI.
+- **Public broadcaster:** RAI News 24 – Primo Piano, RAI News – Portale RSS,
+  RAI Radio Giornale, RAI TGR Piemonte.
+- **Mainstream dailies:** Corriere della Sera (homepage, cronaca, politica,
+  esteri, economia, sport), La Repubblica (homepage, cronaca, politica,
+  esteri, economia), La Stampa – Copertina, Il Sole 24 Ore (italia, mondo,
+  finanza), Il Giornale, Il Fatto Quotidiano, Il Foglio, Libero Quotidiano.
+- **Broadcast news:** TGCOM24 (homepage, politica, economia, sport, spettacolo,
+  TGTech), Sky TG24 (cronaca, politica, mondo).
+- **Magazines / explainer:** Il Post, Internazionale, Panorama, Linkiesta,
+  Fanpage.
+- **Sport:** Gazzetta dello Sport, Milan News.
+- **English-language:** ANSA English, The Local Italy, The Guardian – Italy.
+
+Endpoints flagged with `note` in the catalog are URL patterns inherited
+from public directories; Phase 3 validation (tracked separately) will mark
+each ok/degraded/dead and replace as needed.
+
+The pre-2026-06 research notes below are retained for context.
+
+---
+
 # Italian News RSS Feeds (ITALIAN_RSS.md) – 2026-03-31
 
 ## Executive Summary  
