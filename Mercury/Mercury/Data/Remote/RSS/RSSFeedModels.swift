@@ -11,6 +11,7 @@ enum RSSFeedRegion: String, CaseIterable, Identifiable, Sendable {
     case europeWide
     case austria
     case belgium
+    case brazil
     case bulgaria
     case croatia
     case denmark
@@ -21,6 +22,7 @@ enum RSSFeedRegion: String, CaseIterable, Identifiable, Sendable {
     case hungary
     case ireland
     case italy
+    case japan
     case netherlands
     case norway
     case poland
@@ -30,6 +32,7 @@ enum RSSFeedRegion: String, CaseIterable, Identifiable, Sendable {
     case sweden
     case switzerland
     case unitedKingdom
+    case unitedStates
 
     var id: String { rawValue }
 
@@ -41,6 +44,8 @@ enum RSSFeedRegion: String, CaseIterable, Identifiable, Sendable {
             return "Austria"
         case .belgium:
             return "Belgium"
+        case .brazil:
+            return String(localized: "rss.region.brazil", defaultValue: "Brazil")
         case .bulgaria:
             return "Bulgaria"
         case .croatia:
@@ -61,6 +66,8 @@ enum RSSFeedRegion: String, CaseIterable, Identifiable, Sendable {
             return "Ireland"
         case .italy:
             return "Italy"
+        case .japan:
+            return String(localized: "rss.region.japan", defaultValue: "Japan")
         case .netherlands:
             return "Netherlands"
         case .norway:
@@ -79,6 +86,8 @@ enum RSSFeedRegion: String, CaseIterable, Identifiable, Sendable {
             return "Switzerland"
         case .unitedKingdom:
             return "United Kingdom"
+        case .unitedStates:
+            return String(localized: "rss.region.united_states", defaultValue: "United States")
         }
     }
 }

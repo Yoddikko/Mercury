@@ -227,3 +227,7 @@
 "article.detail.hero.accessibility" = "Article hero image";
 "article.detail.bookmarked.accessibility" = "Bookmarked";
 "article.detail.not_bookmarked.accessibility" = "Not bookmarked";
+
+"rss.region.united_states" = "United States";
+"rss.region.japan" = "Japan";
+"rss.region.brazil" = "Brazil";

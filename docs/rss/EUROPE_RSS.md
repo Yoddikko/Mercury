@@ -1,5 +1,49 @@
 # European News RSS Feeds
 
+## 2026-06-26 update — Phase B catalog port
+
+Phase 1 research is captured in
+[`docs/rss/research/candidates-2026-06-26.json`](research/candidates-2026-06-26.json)
+and ported into `Mercury/Mercury/Data/Remote/RSS/RSSFeedCatalog.swift`
+(Phase B, issue #50). Each European region now carries diversified entries.
+
+| Region | Outlets in catalog |
+| --- | --- |
+| Europe-wide | 9 |
+| Austria | 5 |
+| Belgium | 8 |
+| Bulgaria | 5 |
+| Croatia | 5 |
+| Denmark | 5 |
+| Finland | 4 |
+| France | 10 |
+| Germany | 8 |
+| Greece | 3 |
+| Hungary | 4 |
+| Ireland | 8 |
+| Italy | 58 (see [`ITALIAN_RSS.md`](ITALIAN_RSS.md)) |
+| Netherlands | 7 |
+| Norway | 6 |
+| Poland | 7 |
+| Portugal | 5 |
+| Romania | 4 |
+| Spain | 11 |
+| Sweden | 5 |
+| Switzerland | 7 |
+| United Kingdom | 12 |
+
+Endpoints flagged with `note` in the catalog are inherited from public
+directories and need Phase 3 validation. Three additional regions were
+introduced in the same overhaul and are documented separately:
+
+- [`AMERICAS_RSS.md`](AMERICAS_RSS.md) — United States, Brazil.
+- [`ASIA_RSS.md`](ASIA_RSS.md) — Japan.
+
+The pre-2026-06 European research is retained below for context.
+
+---
+
+
 ## Executive Summary  
 This document lists authoritative RSS feeds covering European news, including pan-European outlets and country-specific sources. **Top Europe-wide feeds** (Table 1) include major international and EU-focused services (English-language unless noted) chosen for reliability and breadth of coverage. Each entry shows name, coverage area, language, and primary focus.
 
