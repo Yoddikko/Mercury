@@ -218,6 +218,9 @@ final class UserPreferencesService {
         } else if let language = patch.preferredLanguage {
             metadata["language"] = language
         }
+        if let renderer = patch.articleRenderer {
+            metadata["article_renderer"] = renderer.rawValue
+        }
         return metadata
     }
 
