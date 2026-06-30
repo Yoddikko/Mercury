@@ -16,6 +16,9 @@ final class UserPreferenceEntity {
     var hiddenSources: [String]
     var favoriteSources: [String]
     var preferredLanguage: String?
+    /// Raw value of `ArticleRendererMode`. Optional so SwiftData migration
+    /// stays additive — missing or unrecognized values default to `.web`.
+    var articleRendererRawValue: String?
     var updatedAt: Date
 
     init(
@@ -25,6 +28,7 @@ final class UserPreferenceEntity {
         hiddenSources: [String] = [],
         favoriteSources: [String] = [],
         preferredLanguage: String? = nil,
+        articleRendererRawValue: String? = nil,
         updatedAt: Date = .now
     ) {
         self.id = id
@@ -33,6 +37,7 @@ final class UserPreferenceEntity {
         self.hiddenSources = hiddenSources
         self.favoriteSources = favoriteSources
         self.preferredLanguage = preferredLanguage
+        self.articleRendererRawValue = articleRendererRawValue
         self.updatedAt = updatedAt
     }
 }
