@@ -401,6 +401,23 @@ the centralized `AppLogger` used across Presentation, Domain, and Data layers.
 
 ---
 
+## 6.5 Settings Module
+
+### Responsibilities
+
+* expose app-behavior toggles distinct from content-personalization signals
+* persist toggles via the shared `UserPreferencesService`
+* surface the article body rendering mode (web vs native) to the user
+
+### Main components
+
+* `SettingsScreen` / `SettingsViewModel`
+* `ArticleRendererMode` (enum, persisted on `UserPreferenceEntity`)
+
+See `docs/features/SETTINGS.md` for the full spec.
+
+---
+
 ## 7. MVVM Structure
 
 ## 7.1 View
