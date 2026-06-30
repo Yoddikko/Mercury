@@ -19,6 +19,11 @@ struct Article: Identifiable, Equatable, Sendable {
     let heroImageURL: URL?
     let rawContent: String?
     let cleanedContent: String?
+    /// Cleaned article body produced by the content distillation pipeline
+    /// (issue #66 / spec PR #65). Renderers prefer this over `rawContent`.
+    let distilledBodyHTML: String?
+    /// Distiller algorithm version that produced `distilledBodyHTML`.
+    let distillerVersion: Int?
     let contentSource: String
     let contentWordCount: Int
     let isContentLikelyComplete: Bool
@@ -32,6 +37,62 @@ struct Article: Identifiable, Equatable, Sendable {
     let clusterID: String?
     let createdAt: Date
     let updatedAt: Date
+
+    init(
+        id: String,
+        externalID: String?,
+        title: String,
+        sourceName: String,
+        sourceURL: URL,
+        articleURL: URL,
+        publishedAt: Date,
+        authorName: String?,
+        heroImageURL: URL?,
+        rawContent: String?,
+        cleanedContent: String?,
+        distilledBodyHTML: String? = nil,
+        distillerVersion: Int? = nil,
+        contentSource: String,
+        contentWordCount: Int,
+        isContentLikelyComplete: Bool,
+        summaryShort: String?,
+        summaryBullets: [String],
+        category: String?,
+        tags: [String],
+        language: String?,
+        isBookmarked: Bool,
+        isRead: Bool,
+        clusterID: String?,
+        createdAt: Date,
+        updatedAt: Date
+    ) {
+        self.id = id
+        self.externalID = externalID
+        self.title = title
+        self.sourceName = sourceName
+        self.sourceURL = sourceURL
+        self.articleURL = articleURL
+        self.publishedAt = publishedAt
+        self.authorName = authorName
+        self.heroImageURL = heroImageURL
+        self.rawContent = rawContent
+        self.cleanedContent = cleanedContent
+        self.distilledBodyHTML = distilledBodyHTML
+        self.distillerVersion = distillerVersion
+        self.contentSource = contentSource
+        self.contentWordCount = contentWordCount
+        self.isContentLikelyComplete = isContentLikelyComplete
+        self.summaryShort = summaryShort
+        self.summaryBullets = summaryBullets
+        self.category = category
+        self.tags = tags
+        self.language = language
+        self.isBookmarked = isBookmarked
+        self.isRead = isRead
+        self.clusterID = clusterID
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
+    }
 }
 
 extension Article {

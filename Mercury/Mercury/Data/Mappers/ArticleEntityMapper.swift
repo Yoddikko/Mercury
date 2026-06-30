@@ -32,6 +32,8 @@ enum ArticleEntityMapper {
             heroImageURL: article.heroImageURL?.absoluteString,
             rawContent: article.rawContent,
             cleanedContent: article.cleanedContent,
+            distilledBodyHTML: article.distilledBodyHTML,
+            distillerVersion: article.distillerVersion,
             contentSource: article.contentSource,
             contentWordCount: article.contentWordCount,
             isContentLikelyComplete: article.isContentLikelyComplete,
@@ -62,6 +64,8 @@ enum ArticleEntityMapper {
         entity.heroImageURL = article.heroImageURL?.absoluteString
         entity.rawContent = article.rawContent
         entity.cleanedContent = article.cleanedContent
+        entity.distilledBodyHTML = article.distilledBodyHTML
+        entity.distillerVersion = article.distillerVersion
         entity.contentSource = article.contentSource
         entity.contentWordCount = article.contentWordCount
         entity.isContentLikelyComplete = article.isContentLikelyComplete
@@ -98,6 +102,8 @@ enum ArticleEntityMapper {
             heroImageURL: heroImageURL,
             rawContent: entity.rawContent,
             cleanedContent: entity.cleanedContent,
+            distilledBodyHTML: entity.distilledBodyHTML,
+            distillerVersion: entity.distillerVersion,
             contentSource: entity.contentSource ?? "",
             contentWordCount: entity.contentWordCount,
             isContentLikelyComplete: entity.isContentLikelyComplete,
