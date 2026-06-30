@@ -35,7 +35,10 @@ struct ArticleLocaleBoilerplateStripper: Sendable {
             let document = try SwiftSoup.parseBodyFragment(html)
             guard let body = document.body() else { return html }
 
-            let candidates = try body.select("p, li, div, span, aside")
+            // Apply only to paragraph-level elements so that a banned
+            // phrase appearing as a link label inside a container does
+            // not wipe out the surrounding article body.
+            let candidates = try body.select("p, li")
             for element in candidates {
                 guard let text = try? element.text() else { continue }
                 let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -77,8 +80,8 @@ struct ArticleLocaleBoilerplateStripper: Sendable {
     /// accidentally dropping legitimate article sentences.
     static let patterns: [String: [NSRegularExpression]] = [
         "it": Self.compile([
-            "^\\s*riproduzione\\s+riservata\\b",
-            "^\\s*tutti\\s+i\\s+diritti\\s+riservati\\b",
+            "\\briproduzione\\s+riservata\\b",
+            "\\btutti\\s+i\\s+diritti\\s+riservati\\b",
             "^\\s*©\\s*copyright\\b",
             "\\bleggi\\s+anche\\b",
             "\\barticoli\\s+correlati\\b",
@@ -88,7 +91,13 @@ struct ArticleLocaleBoilerplateStripper: Sendable {
             "\\bresta\\s+aggiornato\\b",
             "\\bcondividi\\s+su\\b",
             "\\baccetta\\s+(?:tutti\\s+i\\s+)?cookie\\b",
-            "\\bcookie\\s+policy\\b"
+            "\\bcookie\\s+policy\\b",
+            // Common cookie / consent banner phrasings on Italian outlets.
+            "\\bcookie\\s+di\\s+profilazione\\b",
+            "\\bse\\s+hai\\s+scelto\\s+di\\s+non\\s+accettare\\b",
+            "\\babbonamento\\s+[\"']?consentless\\b",
+            "\\btrattamento\\s+dei\\s+dati\\s+personali\\b",
+            "\\bcontinua\\s+senza\\s+accettare\\b"
         ]),
         "en": Self.compile([
             "^\\s*all\\s+rights\\s+reserved\\b",

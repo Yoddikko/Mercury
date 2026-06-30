@@ -104,7 +104,9 @@ extension Article {
         isContentLikelyComplete: Bool,
         heroImageURL: URL?,
         summaryShort: String?,
-        updatedAt: Date
+        updatedAt: Date,
+        distilledBodyHTML: String? = nil,
+        distillerVersion: Int? = nil
     ) -> Article {
         Article(
             id: id,
@@ -118,6 +120,8 @@ extension Article {
             heroImageURL: heroImageURL,
             rawContent: rawContent,
             cleanedContent: cleanedContent,
+            distilledBodyHTML: distilledBodyHTML ?? self.distilledBodyHTML,
+            distillerVersion: distillerVersion ?? self.distillerVersion,
             contentSource: contentSource,
             contentWordCount: contentWordCount,
             isContentLikelyComplete: isContentLikelyComplete,
