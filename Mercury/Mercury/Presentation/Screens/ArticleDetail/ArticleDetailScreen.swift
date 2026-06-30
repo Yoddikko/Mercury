@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 /// Screen rendering a single article's body and metadata.
 ///
@@ -17,6 +18,11 @@ struct ArticleDetailScreen: View {
     @StateObject private var viewModel: ArticleDetailViewModel
     @State private var isPresentingShareSheet: Bool = false
     @State private var bodyWebViewHeight: CGFloat = 0
+    @Query private var rendererPreferences: [UserPreferenceEntity]
+
+    private var rendererMode: ArticleRendererMode {
+        ArticleRendererMode(rawValueOrDefault: rendererPreferences.first?.articleRendererRawValue)
+    }
 
     init(viewModel: @autoclosure @escaping () -> ArticleDetailViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel())
@@ -302,9 +308,13 @@ struct ArticleDetailScreen: View {
             }
 
             if let html = viewModel.displayHTML {
+                // ponytail: both .web and .native route through the WebView
+                // today; the native SwiftUI renderer lands in #59 and takes
+                // over the .native branch then.
                 ArticleBodyWebView(html: html, contentHeight: $bodyWebViewHeight)
                     .frame(height: max(bodyWebViewHeight, 1))
                     .accessibilityIdentifier("article.detail.body.webview")
+                    .accessibilityValue(rendererMode.rawValue)
             } else if let body = viewModel.displayBody {
                 Text(body)
                     .font(.body)

@@ -63,8 +63,22 @@ struct HomeScreen: View {
                 .task(id: searchViewModel.query) {
                     await searchViewModel.runSearch()
                 }
-#if DEBUG
                 .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        NavigationLink {
+                            SettingsScreen()
+                        } label: {
+                            Label(
+                                String(
+                                    localized: "home.settings.label",
+                                    defaultValue: "Settings"
+                                ),
+                                systemImage: "gearshape"
+                            )
+                        }
+                        .accessibilityIdentifier("home.settings")
+                    }
+#if DEBUG
                     if viewModel.isDeveloperModeEnabled {
                         ToolbarItem(placement: .topBarTrailing) {
                             NavigationLink {
@@ -75,8 +89,8 @@ struct HomeScreen: View {
                             .accessibilityIdentifier("home.developerTools")
                         }
                     }
-                }
 #endif
+                }
         }
     }
 

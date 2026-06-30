@@ -231,3 +231,15 @@
 "rss.region.united_states" = "United States";
 "rss.region.japan" = "Japan";
 "rss.region.brazil" = "Brazil";
+
+"home.settings.label" = "Settings";
+"settings.title" = "Settings";
+"settings.section.renderer.title" = "Article rendering";
+"settings.section.renderer.footer" = "Choose how article bodies are displayed on the detail screen.";
+"settings.section.renderer.picker" = "Renderer";
+"settings.renderer.web.title" = "Web";
+"settings.renderer.web.description" = "Render the article in a web view with the original layout.";
+"settings.renderer.native.title" = "Native";
+"settings.renderer.native.description" = "Render the article using native SwiftUI blocks (still being rolled out).";
+"settings.error.load" = "We couldn't read your settings.";
+"settings.error.save" = "We couldn't save that change. Try again.";

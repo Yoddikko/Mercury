@@ -20,6 +20,7 @@ struct UserPreferencePatch: Equatable, Sendable {
     var favoriteSources: [String]?
     var preferredLanguage: String?
     var clearsPreferredLanguage: Bool
+    var articleRenderer: ArticleRendererMode?
 
     init(
         preferredCategories: [String]? = nil,
@@ -27,7 +28,8 @@ struct UserPreferencePatch: Equatable, Sendable {
         hiddenSources: [String]? = nil,
         favoriteSources: [String]? = nil,
         preferredLanguage: String? = nil,
-        clearsPreferredLanguage: Bool = false
+        clearsPreferredLanguage: Bool = false,
+        articleRenderer: ArticleRendererMode? = nil
     ) {
         self.preferredCategories = preferredCategories
         self.preferredTopics = preferredTopics
@@ -35,6 +37,7 @@ struct UserPreferencePatch: Equatable, Sendable {
         self.favoriteSources = favoriteSources
         self.preferredLanguage = preferredLanguage
         self.clearsPreferredLanguage = clearsPreferredLanguage
+        self.articleRenderer = articleRenderer
     }
 
     /// Returns true when the patch carries no actionable change.
@@ -45,5 +48,6 @@ struct UserPreferencePatch: Equatable, Sendable {
             && favoriteSources == nil
             && preferredLanguage == nil
             && clearsPreferredLanguage == false
+            && articleRenderer == nil
     }
 }
