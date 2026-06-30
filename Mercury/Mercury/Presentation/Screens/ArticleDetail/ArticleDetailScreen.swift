@@ -16,6 +16,7 @@ import SwiftUI
 struct ArticleDetailScreen: View {
     @StateObject private var viewModel: ArticleDetailViewModel
     @State private var isPresentingShareSheet: Bool = false
+    @State private var bodyWebViewHeight: CGFloat = 0
 
     init(viewModel: @autoclosure @escaping () -> ArticleDetailViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel())
@@ -300,7 +301,11 @@ struct ArticleDetailScreen: View {
                     .accessibilityIdentifier("article.detail.body.enrichment_failed")
             }
 
-            if let body = viewModel.displayBody {
+            if let html = viewModel.displayHTML {
+                ArticleBodyWebView(html: html, contentHeight: $bodyWebViewHeight)
+                    .frame(height: max(bodyWebViewHeight, 1))
+                    .accessibilityIdentifier("article.detail.body.webview")
+            } else if let body = viewModel.displayBody {
                 Text(body)
                     .font(.body)
                     .fixedSize(horizontal: false, vertical: true)

@@ -311,6 +311,18 @@ final class ArticleDetailViewModel: ObservableObject {
         return nil
     }
 
+    /// Sanitized HTML for the WebView renderer (issue #57). Returns
+    /// `nil` when no rich HTML body is available; the detail screen
+    /// then falls back to `displayBody` plain text.
+    var displayHTML: String? {
+        guard let raw = currentArticle?.rawContent?
+            .trimmingCharacters(in: .whitespacesAndNewlines),
+              raw.isEmpty == false else { return nil }
+        return Self.htmlSanitizer.sanitize(raw)
+    }
+
+    private static let htmlSanitizer = ArticleHTMLSanitizer()
+
     var shouldShowBodyPlaceholder: Bool {
         guard currentArticle != nil else { return false }
         return displayBody == nil && enrichmentState != .enriching
