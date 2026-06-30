@@ -35,15 +35,31 @@ struct ArticleLocaleBoilerplateStripper: Sendable {
             let document = try SwiftSoup.parseBodyFragment(html)
             guard let body = document.body() else { return html }
 
-            // Apply only to paragraph-level elements so that a banned
-            // phrase appearing as a link label inside a container does
-            // not wipe out the surrounding article body.
-            let candidates = try body.select("p, li")
-            for element in candidates {
+            // Paragraph-level elements (`p, li`): drop whenever the
+            // text matches a boilerplate pattern, regardless of length.
+            // Container / heading elements (`div, span, h1..h6, header`):
+            // only drop when the matching text is short (≤ 80 chars),
+            // so a div that legitimately contains an article body which
+            // happens to mention a banned phrase is preserved while a
+            // standalone "Leggi anche" label divider gets removed.
+            let paragraphCandidates = try body.select("p, li")
+            for element in paragraphCandidates {
                 guard let text = try? element.text() else { continue }
                 let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
                 guard trimmed.isEmpty == false else { continue }
+                if Self.matches(text: trimmed, patterns: patterns) {
+                    try element.remove()
+                }
+            }
 
+            let containerCandidates = try body.select("div, span, h1, h2, h3, h4, h5, h6, header, aside")
+            for element in containerCandidates {
+                guard let text = try? element.text() else { continue }
+                let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+                guard trimmed.isEmpty == false else { continue }
+                // Bail when the text is long — that's a real container,
+                // not a boilerplate label.
+                guard trimmed.count <= 80 else { continue }
                 if Self.matches(text: trimmed, patterns: patterns) {
                     try element.remove()
                 }

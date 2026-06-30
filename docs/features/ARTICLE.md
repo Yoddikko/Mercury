@@ -195,7 +195,21 @@ The hero image is selected from RSS `media:content` / `<enclosure>` / `og:image`
 
 ### Locale-aware boilerplate
 
-Italian (and other localized) outlets embed boilerplate as ordinary `<p>` text that Readability's class/id heuristics do not catch (e.g., "Riproduzione riservata", "Iscriviti alla newsletter"). A localized regex pass runs after Readability, gated by `Article.language`. Patterns live in a per-locale table; the table starts with `it` and `en` only, and extends as new outlets reveal new boilerplate.
+Italian (and other localized) outlets embed boilerplate as ordinary `<p>` text that Readability's class/id heuristics do not catch (e.g., "Riproduzione riservata", "Iscriviti alla newsletter"). A localized regex pass runs after Readability, gated by `Article.language`. The pass:
+
+* Always drops matching `<p>` and `<li>` elements (paragraph-level — these are nearly always boilerplate when text matches).
+* Conditionally drops matching `<div>`, `<span>`, `<h1..h6>`, `<header>`, `<aside>` elements *only* when their text length is ≤ 80 characters. This catches standalone "Leggi anche" / "Articoli correlati" / "Più letti" widget headers (typically short labels) without wiping out long containers that legitimately mention a phrase in passing.
+
+Patterns live in a per-locale table; the table starts with `it` and `en` only, and extends as new outlets reveal new boilerplate. Tuning is driven by the fixture corpus (see Acceptance below).
+
+### Tuning: link density
+
+The link-density filter (Readability heuristic #2) drops `<div|section|aside|nav|ul|ol>` whose text is more than 50% link characters. Two guards keep the filter from punishing legitimate article body wrappers:
+
+* **At least 3 links** must be present before the filter runs (a paragraph with one inline `<a>` never triggers).
+* **Non-link text ≥ 400 chars** exempts the element (substantial body content overrides density).
+
+Both thresholds are tunable via `ArticleBoilerplateRemover.Options`.
 
 ### Trigger of AI features — UNCHANGED
 
@@ -206,7 +220,8 @@ Distillation improves the **input** to AI summarization (`Article.cleanedContent
 * The user-cited ANSA URL renders the article body only — no cookie banner, no "Leggi anche" sidebar, no share strip, no newsletter CTA, no duplicate hero image — in both Web and Native modes.
 * `distillerVersion` is stamped on every distilled article so re-rolls are possible.
 * Fallback fires (and is logged) on outlets where Readability collapses, never showing a blank or shorter article than the legacy extractor.
-* Fixture corpus covers ≥ 10 outlets (ANSA, la Repubblica, Corriere, BBC, Guardian, NYT, Reuters, Le Monde, Spiegel, El País) with HTML snapshots committed under `docs/rss/research/distiller-fixtures/`.
+* **Italian fixture corpus** committed under `docs/rss/research/distiller-fixtures/` (12 outlets at time of writing): ANSA, la Repubblica, Corriere della Sera, Il Sole 24 Ore, Il Messaggero, Il Fatto Quotidiano, Il Post, Il Foglio, Open, Sky TG24, TG La7, Wired Italia. Each fixture has a parameterized integration test in `MercuryTests/ItalianDistillationFixturesTests.swift` that pins (a) at least one keyword from the article title that MUST survive, (b) seven generic chrome substrings that MUST be absent. Adding a new fixture is a 3-step ritual: drop the HTML under `distiller-fixtures/<name>.html`, append a `FixtureSpec` to `Self.fixtures`, run the suite; if it fails, tune the heuristics until it passes.
+* International corpus to follow (BBC, NYT, Reuters, Le Monde, Spiegel, El País).
 
 ### Out of scope
 
