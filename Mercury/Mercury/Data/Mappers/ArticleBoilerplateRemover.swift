@@ -105,13 +105,21 @@ struct ArticleBoilerplateRemover: Sendable {
             guard text.isEmpty == false else { continue }
 
             let links = try element.select("a")
-            guard links.size() >= 1 else { continue }
+            // Require ≥3 links to even consider — a single inline
+            // `<a>` in a paragraph must never trigger the filter.
+            guard links.size() >= 3 else { continue }
 
             let linkText = links.array().reduce(0) { partial, link in
                 partial + (((try? link.text()) ?? "").count)
             }
             let totalChars = text.count
             guard totalChars > 0 else { continue }
+
+            // Skip content-bearing nodes: if non-link text is
+            // substantial, the element is an article body container
+            // with incidental inline links, not a navigation widget.
+            let nonLinkChars = totalChars - linkText
+            if nonLinkChars >= 400 { continue }
 
             let density = Double(linkText) / Double(totalChars)
             if density > options.linkDensityCeiling {
