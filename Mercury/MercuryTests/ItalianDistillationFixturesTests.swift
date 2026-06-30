@@ -137,6 +137,18 @@ struct ItalianDistillationFixturesTests {
             language: "it",
             mustContainAny: ["leonardo", "ospedale"],
             bannedSubstrings: Self.commonChrome
+        ),
+        FixtureSpec(
+            name: "ilmanifesto",
+            language: "it",
+            mustContainAny: ["melonellum", "vannacci"],
+            bannedSubstrings: Self.commonChrome
+        ),
+        FixtureSpec(
+            name: "lettera43",
+            language: "it",
+            mustContainAny: ["papa", "smerilli"],
+            bannedSubstrings: Self.commonChrome
         )
     ]
 
