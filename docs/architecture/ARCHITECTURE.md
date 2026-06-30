@@ -337,12 +337,16 @@ the centralized `AppLogger` used across Presentation, Domain, and Data layers.
 * expose article queries
 * manage bookmarks/history
 * provide article detail data to the UI
+* distill the article body so renderers and AI features consume the article only, not the surrounding page chrome
 
 ### Main components
 
 * `ArticleRepository`
 * `ArticleModel`
 * `ArticleDetailViewModel`
+* `ArticleReadabilityDistiller` — Mozilla Readability-style content extraction layered on `SwiftSoup`, run at ingest time via `ArticleContentEnrichmentService`. Outputs `Article.distilledBodyHTML`; consumed by both renderers (`ArticleBodyWebView`, `ArticleBlockListView`) and re-derives `cleanedContent` for AI features. See `docs/features/ARTICLE.md` § Content Distillation.
+* `ArticleImageDeduplicator` — drops body `<img>` whose normalized basename matches the hero image URL.
+* `ArticleLocaleBoilerplateStripper` — language-gated regex pass that removes Italian/English boilerplate paragraphs Readability leaves behind (`Riproduzione riservata`, `Leggi anche`, `Iscriviti alla newsletter`, …).
 
 ---
 
