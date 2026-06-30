@@ -44,6 +44,7 @@ final class HomeViewModel: ObservableObject {
     private let feedRefreshAction: FeedRefreshAction
     private let logger: AppLogger
     private let maxDisplayedArticles: Int
+    private let ranker = FeedRankingService()
     private var modelContext: ModelContext?
     private var activeTask: Task<RSSFeedBatchResult, Never>?
     private var activeRequestID: String?
@@ -303,7 +304,8 @@ final class HomeViewModel: ObservableObject {
             return
         }
 
-        let trimmed = Array(result.deduplicatedArticles.prefix(maxDisplayedArticles))
+        let ranked = ranker.rank(result.deduplicatedArticles, preferences: currentPreferences())
+        let trimmed = Array(ranked.prefix(maxDisplayedArticles))
         let elapsedMs = Int((DispatchTime.now().uptimeNanoseconds - startedAt) / 1_000_000)
         let failedChecks = result.checks.filter { $0.status == .requestFailed || $0.status == .parseFailed }
         let successChecks = result.checks.filter { $0.status == .success }
@@ -376,6 +378,11 @@ final class HomeViewModel: ObservableObject {
         )
     }
 
+    private func currentPreferences() -> UserPreference? {
+        guard let modelContext else { return nil }
+        return try? UserPreferencesService(modelContext: modelContext).loadPreferences()
+    }
+
     private func loadCachedArticles() -> [Article] {
         guard let modelContext else {
             logger.debug(
@@ -389,21 +396,26 @@ final class HomeViewModel: ObservableObject {
         var descriptor = FetchDescriptor<ArticleEntity>(
             sortBy: [SortDescriptor(\.publishedAt, order: .reverse)]
         )
-        descriptor.fetchLimit = maxDisplayedArticles
+        // ponytail: fetch 3× the display cap so the ranker has room to reorder;
+        // upgrade to a SwiftData-side ranking query when the table grows past
+        // a few thousand rows.
+        descriptor.fetchLimit = maxDisplayedArticles * 3
 
         do {
             let entities = try modelContext.fetch(descriptor)
             let articles = entities.compactMap { ArticleEntityMapper.makeArticle(from: $0) }
+            let ranked = ranker.rank(articles, preferences: currentPreferences())
+            let trimmed = Array(ranked.prefix(maxDisplayedArticles))
             logger.debug(
                 "Loaded cached articles from SwiftData",
                 category: .database,
                 service: "HomeViewModel",
                 metadata: [
                     "entities_in": "\(entities.count)",
-                    "articles_out": "\(articles.count)"
+                    "articles_out": "\(trimmed.count)"
                 ]
             )
-            return articles
+            return trimmed
         } catch {
             logger.error(
                 "Failed to fetch cached articles",

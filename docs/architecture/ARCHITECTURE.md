@@ -395,7 +395,12 @@ the centralized `AppLogger` used across Presentation, Domain, and Data layers.
 ### Main components
 
 * `UserPreferencesRepository`
-* `FeedRankingService`
+* `FeedRankingService` — base pre-personalization scorer (issue #13). Pure
+  function over `(Article, UserPreference)`: hidden sources are filtered;
+  remaining articles are scored by category match (+3), tag/topic match
+  (+2 per matched tag), favorite source (+4), language match (+1); ties
+  broken by `publishedAt` descending. Called by `HomeViewModel` after the
+  refresh use case and on cached reads.
 * `InteractionTracker`
 * `PreferenceSyncService`
 
