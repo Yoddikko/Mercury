@@ -307,24 +307,39 @@ struct ArticleDetailScreen: View {
                     .accessibilityIdentifier("article.detail.body.enrichment_failed")
             }
 
-            if let html = viewModel.displayHTML {
-                // ponytail: both .web and .native route through the WebView
-                // today; the native SwiftUI renderer lands in #59 and takes
-                // over the .native branch then.
-                ArticleBodyWebView(html: html, contentHeight: $bodyWebViewHeight)
-                    .frame(height: max(bodyWebViewHeight, 1))
-                    .accessibilityIdentifier("article.detail.body.webview")
-                    .accessibilityValue(rendererMode.rawValue)
-            } else if let body = viewModel.displayBody {
-                Text(body)
-                    .font(.body)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .accessibilityIdentifier("article.detail.body")
-            } else if viewModel.shouldShowBodyPlaceholder {
-                Text(viewModel.bodyPlaceholderLabel)
-                    .font(.callout)
-                    .foregroundStyle(.secondary)
-                    .accessibilityIdentifier("article.detail.body.placeholder")
+            switch rendererMode {
+            case .native:
+                let blocks = viewModel.displayBlocks
+                if blocks.isEmpty == false {
+                    ArticleBlockListView(blocks: blocks)
+                } else if let body = viewModel.displayBody {
+                    Text(body)
+                        .font(.body)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .accessibilityIdentifier("article.detail.body")
+                } else if viewModel.shouldShowBodyPlaceholder {
+                    Text(viewModel.bodyPlaceholderLabel)
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                        .accessibilityIdentifier("article.detail.body.placeholder")
+                }
+            case .web:
+                if let html = viewModel.displayHTML {
+                    ArticleBodyWebView(html: html, contentHeight: $bodyWebViewHeight)
+                        .frame(height: max(bodyWebViewHeight, 1))
+                        .accessibilityIdentifier("article.detail.body.webview")
+                        .accessibilityValue(rendererMode.rawValue)
+                } else if let body = viewModel.displayBody {
+                    Text(body)
+                        .font(.body)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .accessibilityIdentifier("article.detail.body")
+                } else if viewModel.shouldShowBodyPlaceholder {
+                    Text(viewModel.bodyPlaceholderLabel)
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                        .accessibilityIdentifier("article.detail.body.placeholder")
+                }
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

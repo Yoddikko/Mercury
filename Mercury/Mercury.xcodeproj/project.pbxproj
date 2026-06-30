@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		71A596252FF3A8340093E146 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 71A596242FF3A8340093E146 /* SwiftSoup */; };
+		71A596272FF3A8340093E146 /* SwiftSoupProfile in Frameworks */ = {isa = PBXBuildFile; productRef = 71A596262FF3A8340093E146 /* SwiftSoupProfile */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		7141D5662F7C67E600BFC063 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +57,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				71A596252FF3A8340093E146 /* SwiftSoup in Frameworks */,
+				71A596272FF3A8340093E146 /* SwiftSoupProfile in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +119,8 @@
 			);
 			name = Mercury;
 			packageProductDependencies = (
+				71A596242FF3A8340093E146 /* SwiftSoup */,
+				71A596262FF3A8340093E146 /* SwiftSoupProfile */,
 			);
 			productName = Mercury;
 			productReference = 7141D5562F7C67E300BFC063 /* Mercury.app */;
@@ -196,6 +205,9 @@
 			);
 			mainGroup = 7141D54D2F7C67E300BFC063;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				71A596232FF3A8340093E146 /* XCRemoteSwiftPackageReference "SwiftSoup" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 7141D5572F7C67E300BFC063 /* Products */;
 			projectDirPath = "";
@@ -579,6 +591,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		71A596232FF3A8340093E146 /* XCRemoteSwiftPackageReference "SwiftSoup" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/scinfu/SwiftSoup";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.13.5;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		71A596242FF3A8340093E146 /* SwiftSoup */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 71A596232FF3A8340093E146 /* XCRemoteSwiftPackageReference "SwiftSoup" */;
+			productName = SwiftSoup;
+		};
+		71A596262FF3A8340093E146 /* SwiftSoupProfile */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 71A596232FF3A8340093E146 /* XCRemoteSwiftPackageReference "SwiftSoup" */;
+			productName = SwiftSoupProfile;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 7141D54E2F7C67E300BFC063 /* Project object */;
 }
