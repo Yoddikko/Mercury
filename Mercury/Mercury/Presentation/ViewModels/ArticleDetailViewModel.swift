@@ -311,14 +311,20 @@ final class ArticleDetailViewModel: ObservableObject {
         return nil
     }
 
-    /// Sanitized HTML for the WebView renderer (issue #57). Returns
-    /// `nil` when no rich HTML body is available; the detail screen
-    /// then falls back to `displayBody` plain text.
+    /// Sanitized HTML for the WebView renderer (issue #57). Prefers the
+    /// distilled body produced by the content distillation pipeline
+    /// (issue #66) and falls back to the raw RSS / page-fetched HTML
+    /// when distillation hasn't run yet. Returns `nil` when no rich
+    /// HTML body is available; the detail screen then falls back to
+    /// `displayBody` plain text.
     var displayHTML: String? {
-        guard let raw = currentArticle?.rawContent?
-            .trimmingCharacters(in: .whitespacesAndNewlines),
-              raw.isEmpty == false else { return nil }
-        return Self.htmlSanitizer.sanitize(raw)
+        guard let article = currentArticle else { return nil }
+        let candidate = article.distilledBodyHTML?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            ?? article.rawContent?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        guard let candidate, candidate.isEmpty == false else { return nil }
+        return Self.htmlSanitizer.sanitize(candidate)
     }
 
     /// Parsed `[ArticleBlock]` for the native renderer (issue #59).

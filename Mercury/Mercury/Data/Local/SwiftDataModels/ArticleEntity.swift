@@ -21,6 +21,15 @@ final class ArticleEntity {
     var heroImageURL: String?
     var rawContent: String?
     var cleanedContent: String?
+    /// Cleaned article body produced by the content distillation pipeline
+    /// (issue #66 / spec PR #65). When non-nil, both renderers read this
+    /// field instead of `rawContent`. `nil` for legacy records — they
+    /// re-distill on next enrichment pass.
+    var distilledBodyHTML: String?
+    /// Distiller algorithm version used to produce `distilledBodyHTML`.
+    /// Bump in code when the algorithm changes; older values trigger
+    /// re-distillation on the next ingest pass.
+    var distillerVersion: Int?
     var contentSource: String?
     var contentWordCount: Int
     var isContentLikelyComplete: Bool
@@ -47,6 +56,8 @@ final class ArticleEntity {
         heroImageURL: String? = nil,
         rawContent: String? = nil,
         cleanedContent: String? = nil,
+        distilledBodyHTML: String? = nil,
+        distillerVersion: Int? = nil,
         contentSource: String? = nil,
         contentWordCount: Int = 0,
         isContentLikelyComplete: Bool = false,
@@ -72,6 +83,8 @@ final class ArticleEntity {
         self.heroImageURL = heroImageURL
         self.rawContent = rawContent
         self.cleanedContent = cleanedContent
+        self.distilledBodyHTML = distilledBodyHTML
+        self.distillerVersion = distillerVersion
         self.contentSource = contentSource
         self.contentWordCount = contentWordCount
         self.isContentLikelyComplete = isContentLikelyComplete
