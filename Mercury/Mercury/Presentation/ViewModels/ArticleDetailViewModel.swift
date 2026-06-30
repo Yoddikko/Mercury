@@ -90,9 +90,10 @@ final class ArticleDetailViewModel: ObservableObject {
         self.summarize = summarize
         self.logger = logger
         self.state = .loaded(article: article)
-        if let cached = ArticleSummarizationService.cachedSummary(for: article) {
-            self.summaryState = .ready(summary: cached)
-        }
+        // Note: even when a cached summary exists, we DO NOT auto-display
+        // it. The user must tap the summary button (label switches to
+        // "Mostra sintesi AI" when a cache is present, "Genera" when not).
+        // See `docs/features/SUMMARIZATION.md` § Trigger.
         logger.debug(
             "Initialized Article detail view model",
             category: .ui,
@@ -223,6 +224,30 @@ final class ArticleDetailViewModel: ObservableObject {
             localized: "article.detail.ai_summary.generate",
             defaultValue: "Generate AI summary"
         )
+    }
+
+    var aiSummaryShowLabel: String {
+        String(
+            localized: "article.detail.ai_summary.show",
+            defaultValue: "Show AI summary"
+        )
+    }
+
+    /// True when a previously computed AI summary is on disk for the
+    /// currently loaded article. Used by the screen to switch the
+    /// summary button's label between "Show" (cached) and "Generate"
+    /// (no cache), and to keep the user informed that tapping will be
+    /// instant rather than a provider call.
+    var hasCachedSummary: Bool {
+        guard let article = currentArticle else { return false }
+        return ArticleSummarizationService.cachedSummary(for: article) != nil
+    }
+
+    /// Adaptive button label that the detail screen renders. Returns
+    /// `aiSummaryShowLabel` when the cache will short-circuit the tap;
+    /// otherwise `aiSummaryGenerateLabel`.
+    var aiSummaryPrimaryButtonLabel: String {
+        hasCachedSummary ? aiSummaryShowLabel : aiSummaryGenerateLabel
     }
 
     var aiSummaryGenerateAccessibilityHint: String {
@@ -646,14 +671,11 @@ final class ArticleDetailViewModel: ObservableObject {
 
     private func replaceArticle(with newArticle: Article) {
         state = .loaded(article: newArticle)
-        // If the freshly loaded article carries a cached summary, surface it
-        // immediately so the UI can render without waiting for another pass.
-        if case .ready = summaryState {
-            return
-        }
-        if let cached = ArticleSummarizationService.cachedSummary(for: newArticle) {
-            summaryState = .ready(summary: cached)
-        }
+        // Cached summaries are NEVER auto-surfaced — the user must tap
+        // the summary button. See `docs/features/SUMMARIZATION.md`. We
+        // do preserve an in-session `.ready` (the user already tapped
+        // for this article) so an enrichment refresh does not clobber
+        // a visible summary.
     }
 
     private func runSummarization(force: Bool) async {

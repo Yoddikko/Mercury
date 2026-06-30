@@ -220,6 +220,7 @@
 "article.detail.ai_summary.failed" = "We couldn't generate an AI summary right now. You can still read the article body below.";
 "article.detail.ai_summary.regenerate" = "Try again";
 "article.detail.ai_summary.generate" = "Generate AI summary";
+"article.detail.ai_summary.show" = "Show AI summary";
 "article.detail.ai_summary.generate.accessibility_hint" = "Generates an AI summary of the article on demand.";
 "article.detail.ai_summary.regenerate_affordance" = "Regenerate";
 "article.detail.ai_summary.regenerate_affordance.accessibility_hint" = "Discards the cached AI summary and generates a new one.";
