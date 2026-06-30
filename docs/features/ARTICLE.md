@@ -158,11 +158,19 @@ Article.cleanedContent               (re-derived from the distilled HTML)
 Article.distillerVersion             (Int? — bump to force re-distillation on next access)
 ```
 
-### Library
+### Library strategy
 
-* **Primary**: [`lake-of-fire/swift-readability`](https://github.com/lake-of-fire/swift-readability) (BSD-3, native Swift port of Mozilla `Readability.js` on top of SwiftSoup — same dependency we already ship).
-* **Fallback (deferred)**: [`Ryu0118/swift-readability`](https://github.com/Ryu0118/swift-readability) (MIT, runs the canonical Mozilla JS inside a hidden `WKWebView`). Adopted only if the fixture corpus shows the native port misbehaving on representative outlets.
-* The choice is documented because the user-facing impact is large and the library risk is real (small star count on the primary port). We pin the version in `Package.resolved` and may vendor the source under `Mercury/Mercury/Vendor/Readability/` if upstream cadence becomes an issue.
+Tiered, escalation-ready:
+
+* **Tier 0 (shipped, no new dep)** — Mercury reproduces the three load-bearing Readability heuristics on top of the SwiftSoup we already ship:
+  * negative class/id token strip (cookies, consent, share, related, outbrain, newsletter, sponsor, ad-, footer, sidebar, trending, modal, popup, plus common library names: iubenda, onetrust, didomi, quantcast, prompt-to-accept)
+  * link-density filter (drops `div|section|aside|nav|ul|ol` whose text is >50% link)
+  * text-length floor (drops `<p>` / `<li>` shorter than 25 chars with no terminal punctuation)
+  Combined with the locale-aware boilerplate stripper and image deduplicator, this covers the user-cited fixture and the bulk of expected outlets without any new SPM dependency.
+* **Tier 1 (escalation, not yet shipped)** — [`Ryu0118/swift-readability`](https://github.com/Ryu0118/swift-readability) (MIT, tagged releases, runs canonical Mozilla `Readability.js` inside a hidden `WKWebView`). Added if the Tier 0 heuristics fail on > 2/10 fixture outlets. Heavier (per-article WKWebView, async on main actor) but bug-compat with Firefox Reader.
+* **Tier 2 (last resort)** — vendor [`lake-of-fire/swift-readability`](https://github.com/lake-of-fire/swift-readability) under `Mercury/Mercury/Vendor/Readability/`. It is a clean native Swift port of Mozilla Readability, but its `Package.swift` uses a local-path dependency on SwiftSoup so it is not installable as a remote SPM dependency without vendoring.
+
+The original spec singled out lake-of-fire as the primary choice; investigation surfaced the local-path-dependency blocker, and the user-cited ANSA fixture is fully cleaned by Tier 0 already, so Tier 0 ships first.
 
 ### Trigger and timing
 
