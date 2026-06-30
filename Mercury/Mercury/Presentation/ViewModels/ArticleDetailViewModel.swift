@@ -321,7 +321,17 @@ final class ArticleDetailViewModel: ObservableObject {
         return Self.htmlSanitizer.sanitize(raw)
     }
 
+    /// Parsed `[ArticleBlock]` for the native renderer (issue #59).
+    /// Built on demand from `displayHTML` so the parse only runs when
+    /// the user actually has the native mode selected. Empty array
+    /// means "no rich content, fall back to plain text".
+    var displayBlocks: [ArticleBlock] {
+        guard let html = displayHTML else { return [] }
+        return Self.blockParser.parse(html)
+    }
+
     private static let htmlSanitizer = ArticleHTMLSanitizer()
+    private static let blockParser = HTMLArticleBlockParser()
 
     var shouldShowBodyPlaceholder: Bool {
         guard currentArticle != nil else { return false }
