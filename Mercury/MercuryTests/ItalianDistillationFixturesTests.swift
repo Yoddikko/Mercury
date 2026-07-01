@@ -155,6 +155,12 @@ struct ItalianDistillationFixturesTests {
             language: "it",
             mustContainAny: ["ouedraogo", "schalke"],
             bannedSubstrings: Self.commonChrome
+        ),
+        FixtureSpec(
+            name: "ilrestodelcarlino",
+            language: "it",
+            mustContainAny: ["stazione", "trenino"],
+            bannedSubstrings: Self.commonChrome
         )
     ]
 
