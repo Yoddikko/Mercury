@@ -89,11 +89,23 @@ struct ArticleBoilerplateRemover: Sendable {
     /// element with a content-positive class.
     private func removeStructuralChrome(in body: Element) throws {
         // Blanket strip of interactive / non-content elements.
-        // `<aside>`, `<header>`, `<footer>` are handled by the
-        // class-based negative pass so that outlets which use them for
-        // content (article header/byline; article-footer notes; Next.js
-        // streaming layouts that wrap the body in an aside) survive.
-        for selector in ["nav", "footer", "button", "noscript", "form"] {
+        // `<aside>`, `<header>`, `<footer>` are intentionally NOT in
+        // this list — the class-based negative pass handles them,
+        // preserving outlets that use those elements for content
+        // (article header/byline; article-footer notes; Next.js
+        // streaming layouts that wrap the body in an aside).
+        //
+        // `<title>`, `<meta>`, `<link>`, `<style>`, `<script>`,
+        // `<template>` are metadata / resource declarations that
+        // sometimes leak into the parsed body when the input is a
+        // full HTML document rather than a snippet — strip them
+        // defensively so the "SITE — Article title" `<title>` text
+        // and JSON-LD blocks never surface in the distilled output.
+        let selectors = [
+            "nav", "footer", "button", "noscript", "form",
+            "title", "meta", "link", "style", "script", "template"
+        ]
+        for selector in selectors {
             let matches = try body.select(selector).array()
             for element in matches {
                 try element.remove()

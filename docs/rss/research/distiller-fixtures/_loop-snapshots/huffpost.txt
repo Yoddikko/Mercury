@@ -1,7 +1,7 @@
 outlet: huffpost
-words: 169
-blocks: 11
-block-counts: heading=5 image=1 paragraph=5
+words: 156
+blocks: 10
+block-counts: heading=5 image=1 paragraph=4
 survivors: []
-head: americani first. lo ius soli resta, ma trump non molla - huffpost italia inserti ancora su huffpost guest tutte le sezioni americani first. lo ius soli resta, ma trump non molla di giulia belardelli la corte suprema ferma il presidente usa e la sua crociata. su un principio cardi
+head: inserti ancora su huffpost guest tutte le sezioni americani first. lo ius soli resta, ma trump non molla di giulia belardelli la corte suprema ferma il presidente usa e la sua crociata. su un principio cardine del paese: è americano chi ci nasce. resta così intatto il dettato cos
 tail: rema ha stabilito che il suo tentativo di limitare la cittadinanza per diritto di nascita – uno dei pilastri della democrazia americana – è incostituzionale. huffpost crede nel valore del confronto tra diverse opinioni. partecipa al dibattito con gli altri membri della community.
