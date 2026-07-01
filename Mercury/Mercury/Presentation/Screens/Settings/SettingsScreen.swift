@@ -10,28 +10,20 @@ import SwiftData
 
 /// Surface for app-behavior toggles (see `docs/features/SETTINGS.md`).
 ///
-/// The screen owns its `SettingsViewModel` and reads the live
-/// `ModelContext` from the environment to bind directly to
-/// `UserPreferencesService`. Today there is a single section — Article
-/// rendering — but the layout is structured so further toggles can be
-/// added without restructuring the screen.
+/// The screen owns its view models and reads the live `ModelContext`
+/// from the environment to bind directly to `UserPreferencesService`.
+/// Today the only surfaced section is Feed sources; the legacy article
+/// renderer picker was removed in issue #83 when the reader went
+/// native-only.
 struct SettingsScreen: View {
     @Environment(\.modelContext) private var modelContext
-    @StateObject private var viewModel: SettingsViewModel
     @StateObject private var feedSourcesViewModel: FeedSourcesViewModel
     private let usesInjectedViewModel: Bool
 
     init() {
-        // The "real" view models are built in `onAppear` because the
+        // The "real" view model is built in `onAppear` because the
         // environment is not available during `init`. The placeholder
         // here is replaced before the user can interact with anything.
-        _viewModel = StateObject(
-            wrappedValue: SettingsViewModel(
-                service: UserPreferencesService(
-                    modelContext: ModelContext(SettingsScreen.placeholderContainer)
-                )
-            )
-        )
         _feedSourcesViewModel = StateObject(
             wrappedValue: FeedSourcesViewModel(
                 service: UserPreferencesService(
@@ -42,25 +34,16 @@ struct SettingsScreen: View {
         self.usesInjectedViewModel = false
     }
 
-    /// Preview / test seam — accepts fully-built view models so the
+    /// Preview / test seam — accepts a fully-built view model so the
     /// screen can be exercised without a SwiftData stack.
-    init(viewModel: SettingsViewModel, feedSourcesViewModel: FeedSourcesViewModel) {
-        _viewModel = StateObject(wrappedValue: viewModel)
+    init(feedSourcesViewModel: FeedSourcesViewModel) {
         _feedSourcesViewModel = StateObject(wrappedValue: feedSourcesViewModel)
         self.usesInjectedViewModel = true
     }
 
     var body: some View {
         Form {
-            articleRendererSection
             feedSourcesSection
-            if let message = viewModel.lastErrorMessage {
-                Section {
-                    Label(message, systemImage: "exclamationmark.triangle")
-                        .foregroundStyle(.orange)
-                        .accessibilityIdentifier("settings.error")
-                }
-            }
         }
         .navigationTitle(Self.title)
         .navigationBarTitleDisplayMode(.inline)
@@ -68,7 +51,6 @@ struct SettingsScreen: View {
             if usesInjectedViewModel == false {
                 rebindToLiveContext()
             }
-            viewModel.load()
             feedSourcesViewModel.load()
         }
         .accessibilityIdentifier("settings.screen")
@@ -93,38 +75,11 @@ struct SettingsScreen: View {
         }
     }
 
-    private var articleRendererSection: some View {
-        Section {
-            Picker(
-                Self.rendererPickerLabel,
-                selection: Binding(
-                    get: { viewModel.articleRenderer },
-                    set: { viewModel.updateArticleRenderer($0) }
-                )
-            ) {
-                ForEach(ArticleRendererMode.allCases, id: \.self) { mode in
-                    Text(mode.localizedTitle).tag(mode)
-                }
-            }
-            .pickerStyle(.inline)
-            .accessibilityIdentifier("settings.renderer.picker")
-
-            Text(viewModel.articleRenderer.localizedDescription)
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-        } header: {
-            Text(Self.rendererSectionTitle)
-        } footer: {
-            Text(Self.rendererSectionFooter)
-        }
-    }
-
     private func rebindToLiveContext() {
         // Swap the placeholder context for the one provided by the
-        // environment. The view models are classes so reassigning their
+        // environment. The view model is a class so reassigning its
         // service is safe.
         let liveService = UserPreferencesService(modelContext: modelContext)
-        viewModel.replaceService(liveService)
         feedSourcesViewModel.replaceService(liveService)
     }
 
@@ -132,21 +87,6 @@ struct SettingsScreen: View {
 
     private static var title: String {
         String(localized: "settings.title", defaultValue: "Settings")
-    }
-
-    private static var rendererSectionTitle: String {
-        String(localized: "settings.section.renderer.title", defaultValue: "Article rendering")
-    }
-
-    private static var rendererSectionFooter: String {
-        String(
-            localized: "settings.section.renderer.footer",
-            defaultValue: "Choose how article bodies are displayed on the detail screen."
-        )
-    }
-
-    private static var rendererPickerLabel: String {
-        String(localized: "settings.section.renderer.picker", defaultValue: "Renderer")
     }
 
     private static var feedSourcesTitle: String {

@@ -10,7 +10,6 @@ The Settings screen exposes app-level toggles the user can change at any time. I
 
 In scope (this iteration):
 
-* article body rendering mode (web view vs native blocks)
 * feed sources — region selection + per-outlet on/off (shared with the
   onboarding flow described in `docs/product/ONBOARDING.md`)
 
@@ -20,6 +19,12 @@ Reserved for future iterations (out of scope here, listed so the screen can grow
 * refresh cadence
 * AI provider selection (already lives under Developer Tools today)
 * iCloud sync toggle
+
+Removed (issue #83): the article renderer picker. The reader is now
+native SwiftUI (`ArticleBlockListView`) with no user-facing switch.
+The `articleRendererRawValue` column on `UserPreferenceEntity` is
+kept as a nullable field so SwiftData lightweight migration on
+pre-#83 installs stays additive; no code reads it.
 
 ---
 
@@ -37,28 +42,9 @@ Reserved for future iterations (out of scope here, listed so the screen can grow
 
 ## Fields
 
-### `articleRenderer: ArticleRendererMode`
-
-```swift
-enum ArticleRendererMode: String, Codable, CaseIterable, Sendable {
-    case web        // default — WKWebView, full HTML fidelity
-    case native     // opt-in — parsed [ArticleBlock] rendered with SwiftUI
-}
-```
-
-* **Default**: `.web` on first launch.
-* **Persistence**: stored as a String on `UserPreferenceEntity` so SwiftData migration is additive and reversible.
-* **Patch**: exposed via `UserPreferencePatch.articleRenderer` (optional; `nil` means "leave untouched", explicit value means "set to this").
-
----
-
-## Flow
-
-1. User opens the Settings screen (root or via app menu).
-2. Screen reads the current `UserPreference` via `UserPreferencesService`.
-3. User toggles the article rendering mode.
-4. View model builds a `UserPreferencePatch(articleRenderer: …)` and calls `UserPreferencesService.updatePreferences(_:)`.
-5. Persistence write commits; next article detail open observes the new mode.
+The current Settings surface exposes only the Feed sources picker.
+The article renderer choice was removed with #83; the reader is
+native-only.
 
 ---
 
@@ -66,14 +52,6 @@ enum ArticleRendererMode: String, Codable, CaseIterable, Sendable {
 
 * The Settings screen is **stateless across launches** — every read goes through `UserPreferencesService`. No `@AppStorage`-only fields.
 * Changes take effect on the next render (no app restart required).
-* The renderer toggle defaults to `.web` for users who never visit Settings.
-
----
-
-## Edge Cases
-
-* Persisted value is missing or unrecognized → fall back to `.web`.
-* Persistence write fails → surface a non-blocking error toast; previous selection remains visible.
 
 ---
 

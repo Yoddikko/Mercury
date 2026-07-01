@@ -237,13 +237,6 @@
 
 "home.settings.label" = "Impostazioni";
 "settings.title" = "Impostazioni";
-"settings.section.renderer.title" = "Visualizzazione articoli";
-"settings.section.renderer.footer" = "Scegli come visualizzare il corpo degli articoli nella schermata di dettaglio.";
-"settings.section.renderer.picker" = "Modalità";
-"settings.renderer.web.title" = "Web";
-"settings.renderer.web.description" = "Mostra l'articolo in una vista web mantenendo l'impaginazione originale.";
-"settings.renderer.native.title" = "Nativa";
-"settings.renderer.native.description" = "Mostra l'articolo con blocchi SwiftUI nativi (in fase di rilascio).";
 "settings.error.load" = "Non siamo riusciti a leggere le impostazioni.";
 "settings.error.save" = "Non siamo riusciti a salvare la modifica. Riprova.";
 "settings.section.feed_sources.title" = "Fonti del feed";

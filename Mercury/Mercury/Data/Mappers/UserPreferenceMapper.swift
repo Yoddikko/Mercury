@@ -23,7 +23,6 @@ struct UserPreferenceMapper {
             hiddenSources: entity.hiddenSources,
             favoriteSources: entity.favoriteSources,
             preferredLanguage: entity.preferredLanguage,
-            articleRenderer: ArticleRendererMode(rawValueOrDefault: entity.articleRendererRawValue),
             enabledRegionRawValues: entity.enabledRegionRawValues ?? [],
             hasCompletedOnboarding: entity.hasCompletedOnboarding ?? false,
             updatedAt: entity.updatedAt
@@ -48,9 +47,6 @@ struct UserPreferenceMapper {
         } else if let language = patch.preferredLanguage {
             let trimmed = language.trimmingCharacters(in: .whitespacesAndNewlines)
             entity.preferredLanguage = trimmed.isEmpty ? nil : trimmed
-        }
-        if let renderer = patch.articleRenderer {
-            entity.articleRendererRawValue = renderer.rawValue
         }
         if let regions = patch.enabledRegionRawValues {
             entity.enabledRegionRawValues = Self.sanitize(regions)

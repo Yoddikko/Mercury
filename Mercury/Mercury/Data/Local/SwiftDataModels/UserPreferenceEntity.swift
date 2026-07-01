@@ -16,8 +16,15 @@ final class UserPreferenceEntity {
     var hiddenSources: [String]
     var favoriteSources: [String]
     var preferredLanguage: String?
-    /// Raw value of `ArticleRendererMode`. Optional so SwiftData migration
-    /// stays additive — missing or unrecognized values default to `.web`.
+    /// Legacy raw value of the removed `ArticleRendererMode` (deprecated
+    /// with issue #83). Kept as a nullable field so SwiftData
+    /// lightweight migration on installs that pre-date the removal
+    /// doesn't need a schema bump. New writes leave it untouched; no
+    /// reader consults it.
+    ///
+    /// ponytail: this column exists purely to keep migrations
+    /// zero-cost; delete on the next MAJOR bump that already touches
+    /// the preferences schema.
     var articleRendererRawValue: String?
     /// Raw values of `RSSFeedRegion` the user has opted in to. Empty means
     /// "all regions" (backwards compatible with pre-onboarding preferences).

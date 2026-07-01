@@ -14,15 +14,12 @@ import SwiftData
 /// `ArticleDetailViewModel`. It owns only layout, navigation chrome, the
 /// system share sheet, and the lifecycle hook that fires `onAppear` on the
 /// view model.
+///
+/// The body is rendered natively via `ArticleBlockListView` — the
+/// legacy `WKWebView` renderer was removed in issue #83.
 struct ArticleDetailScreen: View {
     @StateObject private var viewModel: ArticleDetailViewModel
     @State private var isPresentingShareSheet: Bool = false
-    @State private var bodyWebViewHeight: CGFloat = 0
-    @Query private var rendererPreferences: [UserPreferenceEntity]
-
-    private var rendererMode: ArticleRendererMode {
-        ArticleRendererMode(rawValueOrDefault: rendererPreferences.first?.articleRendererRawValue)
-    }
 
     init(viewModel: @autoclosure @escaping () -> ArticleDetailViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel())
@@ -311,43 +308,19 @@ struct ArticleDetailScreen: View {
                     .accessibilityIdentifier("article.detail.body.enrichment_failed")
             }
 
-            switch rendererMode {
-            case .native:
-                let blocks = viewModel.displayBlocks
-                if blocks.isEmpty == false {
-                    ArticleBlockListView(blocks: blocks)
-                } else if let body = viewModel.displayBody {
-                    Text(body)
-                        .font(.body)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .accessibilityIdentifier("article.detail.body")
-                } else if viewModel.shouldShowBodyPlaceholder {
-                    Text(viewModel.bodyPlaceholderLabel)
-                        .font(.callout)
-                        .foregroundStyle(.secondary)
-                        .accessibilityIdentifier("article.detail.body.placeholder")
-                }
-            case .web:
-                if let html = viewModel.displayHTML {
-                    ArticleBodyWebView(
-                        html: html,
-                        baseURL: viewModel.currentArticle?.articleURL,
-                        contentHeight: $bodyWebViewHeight
-                    )
-                        .frame(height: max(bodyWebViewHeight, 1))
-                        .accessibilityIdentifier("article.detail.body.webview")
-                        .accessibilityValue(rendererMode.rawValue)
-                } else if let body = viewModel.displayBody {
-                    Text(body)
-                        .font(.body)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .accessibilityIdentifier("article.detail.body")
-                } else if viewModel.shouldShowBodyPlaceholder {
-                    Text(viewModel.bodyPlaceholderLabel)
-                        .font(.callout)
-                        .foregroundStyle(.secondary)
-                        .accessibilityIdentifier("article.detail.body.placeholder")
-                }
+            let blocks = viewModel.displayBlocks
+            if blocks.isEmpty == false {
+                ArticleBlockListView(blocks: blocks)
+            } else if let body = viewModel.displayBody {
+                Text(body)
+                    .font(.body)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityIdentifier("article.detail.body")
+            } else if viewModel.shouldShowBodyPlaceholder {
+                Text(viewModel.bodyPlaceholderLabel)
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+                    .accessibilityIdentifier("article.detail.body.placeholder")
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

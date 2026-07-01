@@ -20,7 +20,6 @@ struct UserPreferencePatch: Equatable, Sendable {
     var favoriteSources: [String]?
     var preferredLanguage: String?
     var clearsPreferredLanguage: Bool
-    var articleRenderer: ArticleRendererMode?
     var enabledRegionRawValues: [String]?
     var hasCompletedOnboarding: Bool?
 
@@ -31,7 +30,6 @@ struct UserPreferencePatch: Equatable, Sendable {
         favoriteSources: [String]? = nil,
         preferredLanguage: String? = nil,
         clearsPreferredLanguage: Bool = false,
-        articleRenderer: ArticleRendererMode? = nil,
         enabledRegionRawValues: [String]? = nil,
         hasCompletedOnboarding: Bool? = nil
     ) {
@@ -41,7 +39,6 @@ struct UserPreferencePatch: Equatable, Sendable {
         self.favoriteSources = favoriteSources
         self.preferredLanguage = preferredLanguage
         self.clearsPreferredLanguage = clearsPreferredLanguage
-        self.articleRenderer = articleRenderer
         self.enabledRegionRawValues = enabledRegionRawValues
         self.hasCompletedOnboarding = hasCompletedOnboarding
     }
@@ -54,7 +51,6 @@ struct UserPreferencePatch: Equatable, Sendable {
             && favoriteSources == nil
             && preferredLanguage == nil
             && clearsPreferredLanguage == false
-            && articleRenderer == nil
             && enabledRegionRawValues == nil
             && hasCompletedOnboarding == nil
     }
