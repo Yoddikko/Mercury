@@ -85,18 +85,33 @@ choices captured during onboarding.
 ### Fields
 
 * `enabledRegionRawValues: [String]` — raw values of `RSSFeedRegion` the
-  user opted in to. Empty means "all regions".
+  user opted in to. **Opt-in semantics**: the persisted list holds
+  exactly the regions the user picked. Empty is only the pre-onboarding
+  state and triggers the `RSSSourceFilter` fallback to
+  `RSSFeedCatalog.mainOutlets`.
 * `hiddenSources: [String]` — outlet IDs the user has toggled off. Reused
   from the existing preferences field so per-outlet opt-outs stay in one
   place.
 
 ### Rules
 
+* The picker is **opt-in**. A fresh install shows every region toggled
+  OFF; the persisted `enabledRegionRawValues` is exactly the set the
+  user opted in to (not "everyone minus the ones they turned off").
 * Toggling a region on/off updates `enabledRegionRawValues` via
-  `UserPreferencePatch`.
-* Toggling an outlet on/off updates `hiddenSources` via the same patch.
-* Empty `enabledRegionRawValues` + empty `hiddenSources` falls back to
-  the pre-onboarding default (`RSSFeedCatalog.mainOutlets`).
+  `UserPreferencePatch`. Toggles are optimistic — the row flips
+  immediately and only rolls back on persistence failure — so rapid
+  taps stay snappy.
+* Toggling an outlet on/off updates `hiddenSources` via the same patch,
+  mirrored into a published `Set<String>` so the disclosure rows
+  re-render without a full picker rebuild.
+* The region → outlets projection is memoized in the view model
+  (`outletsByRegion`) at first load. Toggles never rescan
+  `RSSFeedCatalog`.
+* `RSSSourceFilter` still treats an empty `enabledRegionRawValues` as
+  "fall back to `RSSFeedCatalog.mainOutlets`" so pre-onboarding installs
+  keep working. Post-onboarding writes always materialize the explicit
+  list.
 * `RSSSourceFilter` is the single service that resolves preferences into
   the final `[RSSFeedSource]` list consumed by `HomeViewModel`.
 
