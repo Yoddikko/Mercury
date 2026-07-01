@@ -127,7 +127,23 @@ struct ArticleLocaleBoilerplateStripper: Sendable {
             "\\bloading\\.{2,}",
             // Il Messaggero real-estate ad copy.
             "\\bcerca\\s+il\\s+tuo\\s+immobile\\b",
-            "\\bimmobile\\s+all[\"' ]asta\\b"
+            "\\bimmobile\\s+all[\"' ]asta\\b",
+            // Standalone "Abbonati" button label (short-text guard
+            // in the container pass keeps this from over-matching).
+            "^\\s*abbonati\\s*$",
+            // Il Giornale skip-links + Explorer browser warning.
+            "\\bvai\\s+al\\s+(?:contenuto|footer|menu|piede)\\b",
+            "\\bstai\\s+utilizzando\\s+internet\\b",
+            // ANSA "Mostra meno / Mostra di più" expand-collapse label.
+            "^\\s*mostra\\s+(?:meno|di\\s+più|di\\s+piu|tutto)\\s*$",
+            // Comment-section title that surfaces as body text
+            // when the comment widget is stripped.
+            "\\bi\\s+commenti\\s+dei\\s+lettori\\b",
+            "^\\s*commenti\\s*$",
+            // HuffPost tagline that appears at the top of every article.
+            "\\bscegli\\s+di\\s+capire\\b",
+            // Weekly-magazine cross-sell that some outlets embed.
+            "\\bleggi\\s+il\\s+settimanale\\b"
         ]),
         "en": Self.compile([
             "^\\s*all\\s+rights\\s+reserved\\b",

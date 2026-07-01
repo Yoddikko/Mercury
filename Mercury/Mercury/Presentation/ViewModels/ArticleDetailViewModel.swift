@@ -257,6 +257,39 @@ final class ArticleDetailViewModel: ObservableObject {
         String(localized: "article.detail.section.body", defaultValue: "Article")
     }
 
+    var openOriginalLabel: String {
+        String(
+            localized: "article.detail.actions.open_original",
+            defaultValue: "Open original article"
+        )
+    }
+
+    /// Estimated reading time formatted for the reader header. Returns
+    /// `nil` when the article has no meaningful body (word count below
+    /// the minimum-worth-showing threshold) so we don't clutter the UI
+    /// with "< 1 min" for empty articles.
+    var readingTimeLabel: String? {
+        guard let article = currentArticle else { return nil }
+        let wordCount = article.contentWordCount > 0
+            ? article.contentWordCount
+            : Self.wordCount(in: article.cleanedContent)
+        guard wordCount >= 40 else { return nil }
+        // 220 wpm is the standard "adult silent-reading" rate used by
+        // Medium / Pocket / Instapaper. Round up so short articles
+        // never display "0 min".
+        let minutes = max(1, Int((Double(wordCount) / 220.0).rounded(.up)))
+        let format = String(
+            localized: "article.detail.reading_time.format",
+            defaultValue: "%lld min read"
+        )
+        return String(format: format, locale: .current, minutes)
+    }
+
+    private static func wordCount(in text: String?) -> Int {
+        guard let text else { return 0 }
+        return text.split { $0.isWhitespace || $0.isNewline }.count
+    }
+
     var heroImageAccessibilityLabel: String {
         String(localized: "article.detail.hero.accessibility", defaultValue: "Article hero image")
     }
