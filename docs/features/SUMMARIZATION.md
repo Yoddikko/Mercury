@@ -37,21 +37,26 @@ Generates concise summaries of articles using AI.
 
 ## Trigger
 
-* **On-demand only.** The summary is generated when the user taps a "Genera sintesi AI" button on the article detail screen.
+* **On-demand only.** The summary is generated when the user taps the summary button on the article detail screen.
 * No automatic summarization on detail open, on feed refresh, or in the background.
-* Once generated, the summary is cached on the article and the button becomes a "Rigenera" affordance.
+* **Cached summaries are never auto-displayed.** Even when a cached value exists from a previous tap, the section starts with the button visible. The label adapts:
+  * "Mostra sintesi AI" when a cached summary is on disk → tap renders it **instantly**, no provider call.
+  * "Genera sintesi AI" when no cache exists → tap calls the provider, then renders.
+* Once shown, the section gains a "Rigenera" affordance that bypasses the cache and calls the provider.
 
 ---
 
 ## Flow
 
-1. User taps the "Genera sintesi AI" button on the article detail screen
-2. Article content is available
-3. AI provider is selected
-4. Summarization request is sent
-5. Response is parsed
-6. Article is updated in SwiftData
-7. UI re-renders the cached summary; button switches to "Rigenera"
+1. User taps the summary button on the article detail screen.
+2. If a cached summary exists for this article → render it immediately, no provider call. Stop.
+3. Otherwise:
+    a. Article content is available
+    b. AI provider is selected
+    c. Summarization request is sent
+    d. Response is parsed
+    e. Article is updated in SwiftData
+    f. UI renders the new summary; section gains a "Rigenera" affordance for force-refresh
 
 ---
 
@@ -75,6 +80,7 @@ Generates concise summaries of articles using AI.
 
 ## Notes
 
-* Summarization runs asynchronously when the user requests it
-* Cached results should be reused on subsequent opens (no re-call until user taps "Rigenera")
-* Do not regenerate unless explicitly requested
+* Summarization runs asynchronously when the user requests it.
+* Cached results stay on disk; they are NEVER auto-rendered on detail open. The user must tap the button to display them. Tapping with cache present is free (no provider call).
+* "Rigenera" is the only path that bypasses the cache and calls the provider for a fresh result.
+* Do not regenerate unless explicitly requested.

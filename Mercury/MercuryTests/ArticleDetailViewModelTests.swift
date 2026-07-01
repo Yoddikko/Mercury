@@ -286,6 +286,72 @@ struct ArticleDetailViewModelTests {
         #expect(viewModel.shouldShowAISummaryUnavailable == true)
     }
 
+    @Test
+    func initDoesNotAutoSurfaceCachedSummary() {
+        // Article already carries a cached summary — VM init must NOT
+        // transition to `.ready`; user must tap to display.
+        let article = Self.sampleArticle(
+            summaryShort: "Cached short summary",
+            summaryBullets: ["Cached bullet"]
+        )
+        let viewModel = Self.makeViewModel(
+            article: article,
+            summarize: { _ in
+                AISummaryResult(shortSummary: "fresh", bullets: [])
+            }
+        )
+
+        #expect(viewModel.summaryState == .idle)
+        #expect(viewModel.hasCachedSummary == true)
+        #expect(viewModel.aiSummaryPrimaryButtonLabel == viewModel.aiSummaryShowLabel)
+        #expect(viewModel.shouldShowAISummaryGenerateButton == true)
+    }
+
+    @Test
+    func requestSummaryWithCacheShowsInstantlyWithoutCallingSummarize() async {
+        let article = Self.sampleArticle(
+            summaryShort: "Cached short summary",
+            summaryBullets: ["Cached bullet one", "Cached bullet two"]
+        )
+        let summarizeCalls = Recorder<String>()
+        let viewModel = Self.makeViewModel(
+            article: article,
+            summarize: { article in
+                await summarizeCalls.append(article.id)
+                return AISummaryResult(shortSummary: "should-not-be-used", bullets: [])
+            }
+        )
+
+        await viewModel.requestSummary()
+
+        let captured = await summarizeCalls.values
+        #expect(captured.isEmpty, "Provider must not be called when a cache exists")
+        guard case let .ready(produced) = viewModel.summaryState else {
+            Issue.record("Expected .ready, got \(viewModel.summaryState)")
+            return
+        }
+        #expect(produced.shortSummary == "Cached short summary")
+        #expect(produced.bullets == ["Cached bullet one", "Cached bullet two"])
+    }
+
+    @Test
+    func primaryButtonLabelSwitchesByCachePresence() {
+        let cached = Self.sampleArticle(
+            summaryShort: "Cached",
+            summaryBullets: ["A"]
+        )
+        let cachedVM = Self.makeViewModel(article: cached, summarize: { _ in
+            AISummaryResult(shortSummary: "x", bullets: [])
+        })
+        #expect(cachedVM.aiSummaryPrimaryButtonLabel == cachedVM.aiSummaryShowLabel)
+
+        let empty = Self.sampleArticle(summaryShort: nil, summaryBullets: [])
+        let emptyVM = Self.makeViewModel(article: empty, summarize: { _ in
+            AISummaryResult(shortSummary: "x", bullets: [])
+        })
+        #expect(emptyVM.aiSummaryPrimaryButtonLabel == emptyVM.aiSummaryGenerateLabel)
+    }
+
     // MARK: - Deinit
 
     @Test

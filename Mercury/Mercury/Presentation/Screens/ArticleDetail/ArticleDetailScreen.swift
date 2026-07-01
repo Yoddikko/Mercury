@@ -250,7 +250,7 @@ struct ArticleDetailScreen: View {
                         Task { await viewModel.requestSummary() }
                     } label: {
                         Label(
-                            viewModel.aiSummaryGenerateLabel,
+                            viewModel.aiSummaryPrimaryButtonLabel,
                             systemImage: "sparkles"
                         )
                     }
