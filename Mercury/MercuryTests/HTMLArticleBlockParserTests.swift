@@ -175,6 +175,29 @@ struct HTMLArticleBlockParserTests {
         }
     }
 
+    @Test
+    func pictureElementSurfacesFallbackImage() {
+        // Modern outlets wrap responsive imagery in `<picture>` with
+        // `<source>` variants plus a fallback `<img>`. The parser
+        // must surface the fallback `<img>` as an image block rather
+        // than dropping the whole picture element (which was the
+        // silent bug before this test).
+        let html = """
+        <picture>
+          <source srcset="hero.webp" type="image/webp">
+          <img src="https://cdn.example.com/hero.jpg" alt="fallback">
+        </picture>
+        """
+        let blocks = parser.parse(html)
+        #expect(blocks.count == 1)
+        if case let .image(url, alt) = blocks[0] {
+            #expect(url.absoluteString == "https://cdn.example.com/hero.jpg")
+            #expect(alt == "fallback")
+        } else {
+            Issue.record("Expected image from <picture>, got \(blocks[0])")
+        }
+    }
+
     // MARK: - Helpers
 
     private static func kind(_ block: ArticleBlock) -> String {

@@ -1,7 +1,7 @@
 outlet: ilpost
-words: 2115
-blocks: 33
-block-counts: image=2 paragraph=31
+words: 2153
+blocks: 36
+block-counts: heading=3 image=2 paragraph=31
 survivors: []
-head: roberto vannacci a una presentazione del libro il mondo al contrario, 14 settembre 2023 (mauro scrobogna /lapresse) caricamento player quando pubblicò su amazon il suo primo libro, il mondo al contrario, il 10 agosto del 2023, roberto vannacci era un generale dell’esercito con un
+head: l’inizio della carriera politica di vannacci è ancora un po’ un mistero abbiamo scoperto che il suo progetto politico cominciò ben prima del libro “il mondo al contrario”, che resta un successo editoriale quasi inspiegabile di valerio valentini roberto vannacci a una presentazion
 tail: ite effettuate nelle prime ore di pubblicazione per posizionare il libro nei posti più alti delle classifiche di amazon. con poche centinaia di copie vendute, dunque, si può ottenere dall’algoritmo grande visibilità sulla piattaforma. tag: il mondo al contrario - roberto vannacci
