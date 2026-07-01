@@ -1,7 +1,7 @@
 outlet: ansa-papa-conflitti
 words: 538
-blocks: 11
-block-counts: heading=1 image=1 paragraph=9
+blocks: 10
+block-counts: heading=1 paragraph=9
 survivors: []
 head: il papa: 'siamo esseri umani non bestie, basta conflitti' /ricerca/ansait/search.shtml?tag= il papa: 'siamo esseri umani non bestie, basta conflitti' la pace al centro del concistoro. leone ai cardinali: 'siate leali, sostenetemi' città del vaticano, 26 giugno 2026, 19:53 i confl
 tail: e perplessa su modalità di lavoro e contenuti. "so bene che, per molti di noi, non è il modo abituale di svolgere un concistoro", ha detto con franchezza leone. e prevenendo malumori ha assicurato: "ciascuno potrà farmi pervenire liberamente osservazioni o riflessioni riservate".

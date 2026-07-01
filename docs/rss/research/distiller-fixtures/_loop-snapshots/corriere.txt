@@ -1,7 +1,7 @@
 outlet: corriere
 words: 1506
-blocks: 40
-block-counts: heading=9 image=6 paragraph=25
+blocks: 34
+block-counts: heading=9 paragraph=25
 survivors: []
 head: desktop includes2013/ssi/notification/global.json /includes2013/ssi/utility/ajax_ssi_loader.shtml dataroom 13 maggio 2024 - 06:03 codice della strada, ecco cosa cambia e perché non ridurrà il numero delle vittime di milena gabanelli e alessio ribaudo a- a+ l’automobile è diventat
 tail: elle strade in cui è impossibile realizzare piste «protette», non potranno essere realizzate «contromano» come in molti paesi europei. e molti degli interventi ad oggi realizzati, anche con i fondi pnrr, dovranno essere eliminati. dataroom@corriere.it altre notizie su corriere.it

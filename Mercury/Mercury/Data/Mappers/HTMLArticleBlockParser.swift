@@ -20,19 +20,23 @@ import SwiftSoup
 /// Unknown or unsupported structural tags fall back to paragraphs so
 /// the user never sees a tag swallow content.
 struct HTMLArticleBlockParser: Sendable {
-    func parse(_ html: String) -> [ArticleBlock] {
+    /// Parses distilled HTML into a block sequence.
+    ///
+    /// `baseURL` is threaded into SwiftSoup's parser so `<img src>`
+    /// and `<a href>` references with relative paths
+    /// (`/wp-content/uploads/...`, `../foo.jpg`, `?ref=x`) are
+    /// resolved to absolute URLs — outlets like ANSA, Avvenire and
+    /// Il Manifesto ship images this way and would otherwise fail
+    /// to load in the native reader's `AsyncImage`. Callers pass
+    /// `Article.articleURL`; tests can omit for pure-HTML fixtures.
+    func parse(_ html: String, baseURL: URL? = nil) -> [ArticleBlock] {
         let trimmed = html.trimmingCharacters(in: .whitespacesAndNewlines)
         guard trimmed.isEmpty == false else { return [] }
 
         let document: Document
         do {
-            // `parseBodyFragment` is the right entry point for snippets
-            // that aren't a full document — SwiftSoup wraps them in a
-            // synthetic `<html><body>…</body></html>` for us.
-            document = try SwiftSoup.parseBodyFragment(trimmed)
+            document = try SwiftSoup.parseBodyFragment(trimmed, baseURL?.absoluteString ?? "")
         } catch {
-            // Fall back to a single paragraph carrying the raw text so
-            // the user still sees the article content.
             return [.paragraph(AttributedString(strippingTags(trimmed)))]
         }
 
@@ -58,7 +62,9 @@ struct HTMLArticleBlockParser: Sendable {
                     blocks.append(.heading(level: level, text))
                 }
             case "img":
-                if let src = try? child.attr("src"), let url = URL(string: src) {
+                if let src = try? child.absUrl("src"),
+                   src.isEmpty == false,
+                   let url = URL(string: src) {
                     let alt = (try? child.attr("alt")).flatMap { $0.isEmpty ? nil : $0 }
                     blocks.append(.image(url, alt: alt))
                 }
@@ -99,8 +105,8 @@ struct HTMLArticleBlockParser: Sendable {
             collectBlocks(from: figure, into: &blocks)
             return
         }
-        let src = (try? img.attr("src")) ?? ""
-        guard let url = URL(string: src) else {
+        let src = ((try? img.absUrl("src")) ?? "")
+        guard src.isEmpty == false, let url = URL(string: src) else {
             collectBlocks(from: figure, into: &blocks)
             return
         }
@@ -169,7 +175,8 @@ struct HTMLArticleBlockParser: Sendable {
             let raw = (try? element.text()) ?? ""
             guard raw.isEmpty == false else { return nil }
             var fragment = AttributedString(raw)
-            if let href = try? element.attr("href"),
+            if let href = try? element.absUrl("href"),
+               href.isEmpty == false,
                let url = URL(string: href) {
                 fragment.link = url
             }

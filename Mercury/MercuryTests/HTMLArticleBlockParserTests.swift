@@ -136,6 +136,45 @@ struct HTMLArticleBlockParserTests {
         #expect(blocks.isEmpty == false)
     }
 
+    @Test
+    func relativeImageSrcIsResolvedAgainstBaseURL() {
+        let html = "<img src=\"/wp-content/uploads/hero.jpg\" alt=\"h\">"
+        let base = URL(string: "https://www.example.com/articles/story-123/")!
+        let blocks = parser.parse(html, baseURL: base)
+        #expect(blocks.count == 1)
+        if case let .image(url, _) = blocks[0] {
+            #expect(url.absoluteString == "https://www.example.com/wp-content/uploads/hero.jpg")
+        } else {
+            Issue.record("Expected image, got \(blocks[0])")
+        }
+    }
+
+    @Test
+    func relativeAnchorHrefIsResolvedAgainstBaseURL() {
+        let html = "<p>See <a href=\"/altro/pagina\">altro</a>.</p>"
+        let base = URL(string: "https://www.example.com/story/")!
+        let blocks = parser.parse(html, baseURL: base)
+        guard case let .paragraph(text) = blocks[0] else {
+            Issue.record("Expected paragraph, got \(blocks[0])")
+            return
+        }
+        let hasAbsoluteLink = text.runs.contains { run in
+            run.link?.absoluteString == "https://www.example.com/altro/pagina"
+        }
+        #expect(hasAbsoluteLink)
+    }
+
+    @Test
+    func absoluteImageSrcIsPreserved() {
+        let html = "<img src=\"https://cdn.example.com/pic.jpg\" alt=\"p\">"
+        let blocks = parser.parse(html, baseURL: URL(string: "https://other.com/")!)
+        if case let .image(url, _) = blocks[0] {
+            #expect(url.absoluteString == "https://cdn.example.com/pic.jpg")
+        } else {
+            Issue.record("Expected image, got \(blocks[0])")
+        }
+    }
+
     // MARK: - Helpers
 
     private static func kind(_ block: ArticleBlock) -> String {
