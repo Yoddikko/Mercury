@@ -9,7 +9,7 @@ import Combine
 import Foundation
 import SwiftData
 
-/// View model backing the region + per-source feed picker (issue #75).
+/// View model backing the region + per-source feed picker (issues #75, #78).
 ///
 /// Consumed by both the first-launch onboarding flow and the Settings
 /// screen so users can revisit the same choices without duplicated code.
@@ -17,6 +17,19 @@ import SwiftData
 /// * Regions come from `RSSFeedCatalog.availableRegions`.
 /// * Outlets for a region come from `RSSFeedCatalog.sources(for:.byRegion, region:)`.
 /// * Persistence goes through the shared `UserPreferencesService`.
+///
+/// UX semantics (issue #78): the picker is **opt-in**. A fresh install
+/// shows every region toggled OFF; the persisted `enabledRegionRawValues`
+/// is the exact set of regions the user opted in to. The Continue button
+/// stays disabled until at least one region is enabled. `RSSSourceFilter`
+/// still keeps the "empty = fallback to mainOutlets" contract so
+/// pre-onboarding installs remain browsable — but the picker itself never
+/// surfaces that fallback as "all selected".
+///
+/// Perf (issue #78): the region -> [source] projection is built once
+/// eagerly (`outletsByRegion`) and reused for both `outletCount` reads
+/// and per-region outlet listings. Toggles mutate the single affected
+/// row instead of remapping the entire regions array.
 @MainActor
 final class FeedSourcesViewModel: ObservableObject {
     /// Region choice mirrored to the UI. `isEnabled` reflects the current
@@ -38,11 +51,23 @@ final class FeedSourcesViewModel: ObservableObject {
     }
 
     @Published private(set) var regions: [RegionSelection] = []
+    /// Published mirror of `UserPreference.hiddenSources` so SwiftUI
+    /// re-renders the disclosure rows when the user toggles an outlet.
+    /// Without this, the `Toggle`'s `Binding.get` closure keeps returning
+    /// the stale `preference` snapshot until the whole parent view
+    /// rebuilds for another reason.
+    @Published private(set) var hiddenSources: Set<String> = []
     @Published private(set) var lastErrorMessage: String?
 
     private var service: UserPreferencesService
     private let logger: AppLogger
     private var preference: UserPreference?
+    /// Precomputed region -> outlets memo (issue #78). Built once from
+    /// `RSSFeedCatalog` at first `load()` so toggles avoid the O(N x R)
+    /// re-scan that used to fire on every keystroke.
+    private var outletsByRegion: [RSSFeedRegion: [RSSFeedSource]] = [:]
+    /// Cached available regions (in the order `RSSFeedCatalog` publishes).
+    private var availableRegions: [RSSFeedRegion] = []
 
     init(service: UserPreferencesService, logger: AppLogger = .shared) {
         self.service = service
@@ -56,16 +81,26 @@ final class FeedSourcesViewModel: ObservableObject {
     /// Hydrate the picker from the persisted preferences. Safe to call
     /// multiple times (idempotent).
     func load() {
+        if availableRegions.isEmpty {
+            let regions = RSSFeedCatalog.availableRegions
+            self.availableRegions = regions
+            var memo: [RSSFeedRegion: [RSSFeedSource]] = [:]
+            memo.reserveCapacity(regions.count)
+            for region in regions {
+                memo[region] = RSSFeedCatalog.sources(for: .byRegion, region: region)
+            }
+            self.outletsByRegion = memo
+        }
         do {
             let preference = try service.loadPreferences()
             self.preference = preference
+            self.hiddenSources = Set(preference.hiddenSources)
             let enabledRegionSet = Set(preference.enabledRegionRawValues)
-            let treatAllAsEnabled = enabledRegionSet.isEmpty
-            regions = RSSFeedCatalog.availableRegions.map { region in
+            regions = availableRegions.map { region in
                 RegionSelection(
                     region: region,
-                    isEnabled: treatAllAsEnabled || enabledRegionSet.contains(region.rawValue),
-                    outletCount: RSSFeedCatalog.sources(for: .byRegion, region: region).count
+                    isEnabled: enabledRegionSet.contains(region.rawValue),
+                    outletCount: outletsByRegion[region]?.count ?? 0
                 )
             }
             lastErrorMessage = nil
@@ -83,41 +118,57 @@ final class FeedSourcesViewModel: ObservableObject {
         }
     }
 
-    /// Outlet selections for the specified region — always sourced fresh
-    /// so a toggle change in one region does not stale-cache the other.
+    /// Outlet selections for the specified region, backed by the memo
+    /// and the published `hiddenSources` mirror.
     func outlets(for region: RSSFeedRegion) -> [SourceSelection] {
-        let hidden = Set(preference?.hiddenSources ?? [])
-        return RSSFeedCatalog.sources(for: .byRegion, region: region).map { source in
-            SourceSelection(source: source, isEnabled: hidden.contains(source.id) == false)
+        let sources = outletsByRegion[region] ?? []
+        return sources.map { source in
+            SourceSelection(
+                source: source,
+                isEnabled: hiddenSources.contains(source.id) == false
+            )
         }
     }
 
-    /// Flip a region on/off. When flipping OFF and the current stored
-    /// state was "all regions" (empty list), we expand it into an
-    /// explicit list first so the toggle is stable across writes.
+    /// Flip a region on/off. The picker is opt-in, so writes always
+    /// materialize the explicit list — no more "empty = all" magic behind
+    /// the toggle.
     func toggleRegion(_ region: RSSFeedRegion) {
         guard let preference else { return }
-        let currentEnabled = Set(effectiveEnabledRegions(from: preference))
-        var next = currentEnabled
-        if currentEnabled.contains(region.rawValue) {
+        var next = Set(preference.enabledRegionRawValues)
+        let isTurningOn: Bool
+        if next.contains(region.rawValue) {
             next.remove(region.rawValue)
+            isTurningOn = false
         } else {
             next.insert(region.rawValue)
+            isTurningOn = true
         }
-        applyPatch(.init(enabledRegionRawValues: Array(next)))
+        applyPatch(
+            .init(enabledRegionRawValues: Array(next)),
+            optimistic: .region(region.rawValue, isEnabled: isTurningOn)
+        )
     }
 
     /// Flip a source on/off. When flipping OFF, add to `hiddenSources`;
-    /// when flipping ON, remove from `hiddenSources`.
+    /// when flipping ON, remove from `hiddenSources`. We also mirror the
+    /// change into the published `hiddenSources` set so the row's Toggle
+    /// re-renders immediately.
     func toggleSource(_ source: RSSFeedSource) {
-        guard let preference else { return }
-        var hidden = Set(preference.hiddenSources)
-        if hidden.contains(source.id) {
-            hidden.remove(source.id)
+        guard preference != nil else { return }
+        var next = hiddenSources
+        let wasHidden = next.contains(source.id)
+        if wasHidden {
+            next.remove(source.id)
         } else {
-            hidden.insert(source.id)
+            next.insert(source.id)
         }
-        applyPatch(.init(hiddenSources: Array(hidden)))
+        let previous = hiddenSources
+        hiddenSources = next
+        applyPatch(
+            .init(hiddenSources: Array(next)),
+            optimistic: .source(previousHidden: previous)
+        )
     }
 
     /// Whether the user has expressed at least one region choice — used
@@ -128,28 +179,39 @@ final class FeedSourcesViewModel: ObservableObject {
 
     // MARK: - Private
 
-    private func effectiveEnabledRegions(from preference: UserPreference) -> [String] {
-        if preference.enabledRegionRawValues.isEmpty {
-            return RSSFeedCatalog.availableRegions.map(\.rawValue)
-        }
-        return preference.enabledRegionRawValues
+    private enum OptimisticUpdate {
+        case region(String, isEnabled: Bool)
+        case source(previousHidden: Set<String>)
     }
 
-    private func applyPatch(_ patch: UserPreferencePatch) {
+    private func applyPatch(_ patch: UserPreferencePatch, optimistic: OptimisticUpdate?) {
+        // Flip the visible row immediately for a snappy tap; roll back on
+        // persistence failure. Prior implementation rebuilt the entire
+        // regions array on every toggle, which was the primary source of
+        // the perceived "fetching" lag.
+        var previousRegion: RegionSelection?
+        if case let .region(rawValue, isEnabled) = optimistic,
+           let idx = regions.firstIndex(where: { $0.region.rawValue == rawValue }) {
+            previousRegion = regions[idx]
+            regions[idx].isEnabled = isEnabled
+        }
+
         do {
             let updated = try service.updatePreferences(patch)
             preference = updated
-            let enabledRegionSet = Set(updated.enabledRegionRawValues)
-            let treatAllAsEnabled = enabledRegionSet.isEmpty
-            regions = RSSFeedCatalog.availableRegions.map { region in
-                RegionSelection(
-                    region: region,
-                    isEnabled: treatAllAsEnabled || enabledRegionSet.contains(region.rawValue),
-                    outletCount: RSSFeedCatalog.sources(for: .byRegion, region: region).count
-                )
-            }
             lastErrorMessage = nil
         } catch {
+            switch optimistic {
+            case let .region(rawValue, _):
+                if let idx = regions.firstIndex(where: { $0.region.rawValue == rawValue }),
+                   let previous = previousRegion {
+                    regions[idx] = previous
+                }
+            case let .source(previousHidden):
+                hiddenSources = previousHidden
+            case .none:
+                break
+            }
             logger.error(
                 "Failed to persist feed source preferences",
                 category: .ui,
