@@ -87,6 +87,12 @@ struct ArticleDetailScreen: View {
             VStack(alignment: .leading, spacing: 16) {
                 heroImage(for: article)
                 titleBlock(for: article)
+                if let label = viewModel.readingTimeLabel {
+                    Text(label)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .accessibilityIdentifier("article.detail.reading_time")
+                }
                 if viewModel.shouldShowAISummarySection {
                     aiSummarySection
                 } else if let summary = article.summaryShort?.trimmingCharacters(in: .whitespacesAndNewlines),
@@ -94,6 +100,7 @@ struct ArticleDetailScreen: View {
                     summarySection(text: summary)
                 }
                 bodySection(for: article)
+                openOriginalButton(for: article)
                 Spacer(minLength: 24)
             }
             .padding(.horizontal)
@@ -174,6 +181,19 @@ struct ArticleDetailScreen: View {
                 .accessibilityIdentifier("article.detail.summary")
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private func openOriginalButton(for article: Article) -> some View {
+        Link(destination: article.articleURL) {
+            HStack(spacing: 6) {
+                Image(systemName: "arrow.up.right.square")
+                Text(viewModel.openOriginalLabel)
+            }
+            .font(.footnote.weight(.semibold))
+        }
+        .buttonStyle(.bordered)
+        .accessibilityIdentifier("article.detail.actions.open_original")
+        .padding(.top, 8)
     }
 
     @ViewBuilder

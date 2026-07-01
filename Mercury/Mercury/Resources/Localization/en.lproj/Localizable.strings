@@ -232,6 +232,9 @@
 "rss.region.japan" = "Japan";
 "rss.region.brazil" = "Brazil";
 
+"article.detail.reading_time.format" = "%lld min read";
+"article.detail.actions.open_original" = "Open original article";
+
 "home.settings.label" = "Settings";
 "settings.title" = "Settings";
 "settings.section.renderer.title" = "Article rendering";

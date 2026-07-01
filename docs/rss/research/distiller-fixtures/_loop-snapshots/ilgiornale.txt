@@ -1,7 +1,7 @@
 outlet: ilgiornale
-words: 1014
-blocks: 16
-block-counts: heading=1 image=1 list=1 paragraph=13
+words: 981
+blocks: 11
+block-counts: heading=1 image=1 list=1 paragraph=8
 survivors: []
-head: la remigrazione degli zulu, la verità sul pizzaiolo ucciso e bastoni: quindi, oggi… - il giornale vai al contenuto principale vai al footer leggi il settimanale stai utilizzando internet eplorer: è un browser molto vecchio, non sicuro, e non più supportato neanche da microsoft st
-tail:  solo, tra cristianesimo e islam, siamo destinati a soccombere. commenti pubblica un commento non sono consentiti commenti che contengano termini violenti, discriminatori o che contravvengano alle elementari regole di netiquette. qui le norme di comportamento per esteso. ricarica
+head: la remigrazione degli zulu, la verità sul pizzaiolo ucciso e bastoni: quindi, oggi… - il giornale per favore utilizza un browser moderno come edge, firefox, chrome o uno qualunque degli altri a disposizione gratuitamente. quindi oggi la remigrazione degli zulu, la verità sul pizz
+tail: ico e non solo, tra cristianesimo e islam, siamo destinati a soccombere. pubblica un commento non sono consentiti commenti che contengano termini violenti, discriminatori o che contravvengano alle elementari regole di netiquette. qui le norme di comportamento per esteso. ricarica
