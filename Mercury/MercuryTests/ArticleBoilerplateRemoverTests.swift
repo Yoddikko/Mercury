@@ -135,6 +135,71 @@ struct ArticleBoilerplateRemoverTests {
     }
 
     @Test
+    func stripsANSAConsentlessSubscriptionBlock() {
+        // Live ANSA article body (issue #81) — the iubenda "Consentless"
+        // subscription CTA leaks into the extracted body because
+        // Readability keeps the article container that transitively
+        // wraps it. Ensure the negative-class list drops it.
+        let html = """
+        <div class="bt-Subscribe"><a class="bt-abbonati" href="/sito/static/abbonamenti">ABBONAMENTO CONSENTLESS</a></div>
+        <p>Il numero uno del tennis mondiale ha battuto il portoghese in tre set.</p>
+        <div class="bt-Subscribe"><a href="#">ACCETTA I COOKIE E CONTINUA</a></div>
+        """
+        let output = remover.cleaning(html)
+        #expect(output.contains("ABBONAMENTO CONSENTLESS") == false)
+        #expect(output.contains("ACCETTA I COOKIE") == false)
+        #expect(output.contains("Il numero uno del tennis"))
+    }
+
+    @Test
+    func stripsPaywallAndAbbonamentoClasses() {
+        let html = """
+        <div class="paywall-container"><p>Contenuto riservato</p></div>
+        <p>Il testo di un articolo che deve sopravvivere alla ripulitura.</p>
+        <div class="abbonamento-promo"><p>Scopri i piani</p></div>
+        """
+        let output = remover.cleaning(html)
+        #expect(output.contains("paywall-container") == false)
+        #expect(output.contains("Contenuto riservato") == false)
+        #expect(output.contains("Scopri i piani") == false)
+        #expect(output.contains("Il testo di un articolo"))
+    }
+
+    @Test
+    func stripsRunOfThreeConsecutiveSingleLinkParagraphs() {
+        let html = """
+        <p>Corpo principale dell'articolo, con contenuto vero e proprio scritto per esteso.</p>
+        <p><a href="/a">Leggi anche primo articolo correlato</a></p>
+        <p><a href="/b">Leggi anche secondo articolo correlato</a></p>
+        <p><a href="/c">Leggi anche terzo articolo correlato</a></p>
+        <p>Ultima riga che deve rimanere perché è vero testo di chiusura.</p>
+        """
+        let output = remover.cleaning(html)
+        #expect(output.contains("Corpo principale"))
+        #expect(output.contains("Ultima riga"))
+        #expect(output.contains("primo articolo") == false)
+        #expect(output.contains("secondo articolo") == false)
+        #expect(output.contains("terzo articolo") == false)
+    }
+
+    @Test
+    func keepsShorterRunOfLinkParagraphs() {
+        // Two consecutive one-link paragraphs is not obviously a
+        // related-articles grid — could be legitimate inline references.
+        // The run filter only fires at three or more. Link text is kept
+        // long enough to clear the ≥25-char short-paragraph floor.
+        let html = """
+        <p>Frase con abbastanza contenuto per essere considerata reale.</p>
+        <p><a href="/a">Il primo link di riferimento con testo abbastanza lungo per sopravvivere alla soglia minima</a></p>
+        <p><a href="/b">Un altro link di riferimento con testo abbastanza lungo da superare la soglia minima</a></p>
+        <p>Chiusura dell'articolo con abbastanza contenuto per sopravvivere.</p>
+        """
+        let output = remover.cleaning(html)
+        #expect(output.contains("primo link di riferimento"))
+        #expect(output.contains("Un altro link di riferimento"))
+    }
+
+    @Test
     func brokenHTMLDoesNotCrash() {
         // The remover must recover gracefully on malformed input. The
         // specific surviving content is not pinned — only that the call
