@@ -6,6 +6,19 @@ The onboarding flow introduces the user to Mercury and collects the minimum info
 
 The onboarding should be short, modular, and skippable only where appropriate.
 
+## Current shipping scope (2026-07-01)
+
+Steps 2 and 3 (source geography selection + source selection) land as one
+combined screen shown on first launch. `AppRouter` gates the whole app
+behind `UserPreference.hasCompletedOnboarding`; once the user taps
+"Continue" the flag flips and the flow does not fire again unless
+preferences are reset. The rest of the steps (welcome copy, preferred
+language, translation preferences, topics, confirmation) are still
+pending — see the numbered sections below for the full target design.
+The same region/source picker is also mounted inside the Settings screen
+under a "Feed sources" section so users can revisit their choices any
+time (see `docs/features/SETTINGS.md`).
+
 ---
 
 ## Goals

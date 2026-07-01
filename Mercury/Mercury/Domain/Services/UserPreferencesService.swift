@@ -137,6 +137,8 @@ final class UserPreferencesService {
         entity.hiddenSources = []
         entity.favoriteSources = []
         entity.preferredLanguage = nil
+        entity.enabledRegionRawValues = []
+        entity.hasCompletedOnboarding = false
         entity.updatedAt = now()
         try persist(requestID: traceID, action: "reset")
 
@@ -220,6 +222,12 @@ final class UserPreferencesService {
         }
         if let renderer = patch.articleRenderer {
             metadata["article_renderer"] = renderer.rawValue
+        }
+        if let regions = patch.enabledRegionRawValues {
+            metadata["enabled_regions_in"] = "\(regions.count)"
+        }
+        if let completed = patch.hasCompletedOnboarding {
+            metadata["has_completed_onboarding"] = "\(completed)"
         }
         return metadata
     }

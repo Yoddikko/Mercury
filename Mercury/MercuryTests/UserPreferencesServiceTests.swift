@@ -161,6 +161,62 @@ struct UserPreferencesServiceTests {
         #expect(reset.preferredLanguage == nil)
     }
 
+    // MARK: - Onboarding + region fields
+
+    @Test
+    func defaultPreferencesReportOnboardingNotCompleted() throws {
+        let (service, _) = try makeService()
+
+        let preferences = try service.loadPreferences()
+
+        #expect(preferences.hasCompletedOnboarding == false)
+        #expect(preferences.enabledRegionRawValues.isEmpty)
+    }
+
+    @Test
+    func updateEnabledRegionsAndOnboardingRoundTrips() throws {
+        let (service, _) = try makeService()
+
+        let updated = try service.updatePreferences(
+            .init(
+                enabledRegionRawValues: [
+                    RSSFeedRegion.italy.rawValue,
+                    RSSFeedRegion.france.rawValue
+                ],
+                hasCompletedOnboarding: true
+            )
+        )
+
+        #expect(Set(updated.enabledRegionRawValues) == [
+            RSSFeedRegion.italy.rawValue,
+            RSSFeedRegion.france.rawValue
+        ])
+        #expect(updated.hasCompletedOnboarding == true)
+
+        let reloaded = try service.loadPreferences()
+        #expect(Set(reloaded.enabledRegionRawValues) == [
+            RSSFeedRegion.italy.rawValue,
+            RSSFeedRegion.france.rawValue
+        ])
+        #expect(reloaded.hasCompletedOnboarding == true)
+    }
+
+    @Test
+    func resetPreferencesClearsOnboardingAndRegions() throws {
+        let (service, _) = try makeService()
+
+        _ = try service.updatePreferences(
+            .init(
+                enabledRegionRawValues: [RSSFeedRegion.italy.rawValue],
+                hasCompletedOnboarding: true
+            )
+        )
+        let reset = try service.resetPreferences()
+
+        #expect(reset.enabledRegionRawValues.isEmpty)
+        #expect(reset.hasCompletedOnboarding == false)
+    }
+
     // MARK: - Helpers
 
     private func makeService(

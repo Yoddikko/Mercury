@@ -247,3 +247,15 @@
 "settings.renderer.native.description" = "Render the article using native SwiftUI blocks (still being rolled out).";
 "settings.error.load" = "We couldn't read your settings.";
 "settings.error.save" = "We couldn't save that change. Try again.";
+"settings.section.feed_sources.title" = "Feed sources";
+"settings.section.feed_sources.header" = "Feed sources";
+"settings.section.feed_sources.footer" = "Choose the regions and outlets that feed the Home stream.";
+"feed_sources.region.outlets_count" = "%lld outlets";
+"feed_sources.region.outlets_section" = "Outlets in this region";
+"feed_sources.error.load" = "We couldn't read your feed source preferences.";
+"feed_sources.error.save" = "We couldn't save that change. Try again.";
+"onboarding.navigation.title" = "Welcome";
+"onboarding.title" = "Choose your feed";
+"onboarding.subtitle" = "Pick the regions and outlets you want in your Home feed. You can change this later in Settings.";
+"onboarding.continue" = "Continue";
+"onboarding.footer" = "You can revisit these choices from Settings → Feed sources.";

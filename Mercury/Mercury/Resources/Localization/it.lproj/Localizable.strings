@@ -247,3 +247,15 @@
 "settings.renderer.native.description" = "Mostra l'articolo con blocchi SwiftUI nativi (in fase di rilascio).";
 "settings.error.load" = "Non siamo riusciti a leggere le impostazioni.";
 "settings.error.save" = "Non siamo riusciti a salvare la modifica. Riprova.";
+"settings.section.feed_sources.title" = "Fonti del feed";
+"settings.section.feed_sources.header" = "Fonti del feed";
+"settings.section.feed_sources.footer" = "Scegli le regioni e le testate che alimentano il feed Home.";
+"feed_sources.region.outlets_count" = "%lld testate";
+"feed_sources.region.outlets_section" = "Testate in questa regione";
+"feed_sources.error.load" = "Non siamo riusciti a leggere le tue fonti del feed.";
+"feed_sources.error.save" = "Non siamo riusciti a salvare la modifica. Riprova.";
+"onboarding.navigation.title" = "Benvenuto";
+"onboarding.title" = "Scegli il tuo feed";
+"onboarding.subtitle" = "Seleziona le regioni e le testate che vuoi nel feed Home. Potrai modificare in seguito dalle Impostazioni.";
+"onboarding.continue" = "Continua";
+"onboarding.footer" = "Puoi rivedere queste scelte da Impostazioni → Fonti del feed.";

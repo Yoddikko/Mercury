@@ -24,6 +24,8 @@ struct UserPreferenceMapper {
             favoriteSources: entity.favoriteSources,
             preferredLanguage: entity.preferredLanguage,
             articleRenderer: ArticleRendererMode(rawValueOrDefault: entity.articleRendererRawValue),
+            enabledRegionRawValues: entity.enabledRegionRawValues ?? [],
+            hasCompletedOnboarding: entity.hasCompletedOnboarding ?? false,
             updatedAt: entity.updatedAt
         )
     }
@@ -49,6 +51,12 @@ struct UserPreferenceMapper {
         }
         if let renderer = patch.articleRenderer {
             entity.articleRendererRawValue = renderer.rawValue
+        }
+        if let regions = patch.enabledRegionRawValues {
+            entity.enabledRegionRawValues = Self.sanitize(regions)
+        }
+        if let completed = patch.hasCompletedOnboarding {
+            entity.hasCompletedOnboarding = completed
         }
         entity.updatedAt = now
     }

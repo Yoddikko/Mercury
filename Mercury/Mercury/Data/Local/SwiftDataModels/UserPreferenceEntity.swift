@@ -19,6 +19,14 @@ final class UserPreferenceEntity {
     /// Raw value of `ArticleRendererMode`. Optional so SwiftData migration
     /// stays additive — missing or unrecognized values default to `.web`.
     var articleRendererRawValue: String?
+    /// Raw values of `RSSFeedRegion` the user has opted in to. Empty means
+    /// "all regions" (backwards compatible with pre-onboarding preferences).
+    /// Optional so SwiftData migration stays additive.
+    var enabledRegionRawValues: [String]?
+    /// Whether the user has completed the first-launch onboarding flow.
+    /// Optional so SwiftData migration stays additive — nil is treated as
+    /// `false` (onboarding not yet completed) by the mapper.
+    var hasCompletedOnboarding: Bool?
     var updatedAt: Date
 
     init(
@@ -29,6 +37,8 @@ final class UserPreferenceEntity {
         favoriteSources: [String] = [],
         preferredLanguage: String? = nil,
         articleRendererRawValue: String? = nil,
+        enabledRegionRawValues: [String]? = nil,
+        hasCompletedOnboarding: Bool? = nil,
         updatedAt: Date = .now
     ) {
         self.id = id
@@ -38,6 +48,8 @@ final class UserPreferenceEntity {
         self.favoriteSources = favoriteSources
         self.preferredLanguage = preferredLanguage
         self.articleRendererRawValue = articleRendererRawValue
+        self.enabledRegionRawValues = enabledRegionRawValues
+        self.hasCompletedOnboarding = hasCompletedOnboarding
         self.updatedAt = updatedAt
     }
 }

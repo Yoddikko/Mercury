@@ -33,7 +33,11 @@ final class HomeViewModel: ObservableObject {
         case failed(message: String)
     }
 
-    typealias FeedRefreshAction = @Sendable () async -> RSSFeedBatchResult
+    /// Feed refresh seam. Callers pass the pre-resolved source list they
+    /// want the pipeline to hit. Production wraps `FetchHomeFeedUseCase`;
+    /// tests inject a stub. `nil` means "use the built-in catalog default"
+    /// (main outlets), so pre-onboarding behavior stays intact.
+    typealias FeedRefreshAction = @Sendable (_ sources: [RSSFeedSource]?) async -> RSSFeedBatchResult
 
     @Published private(set) var state: FeedState = .idle
     @Published private(set) var isRefreshing: Bool = false
@@ -42,6 +46,7 @@ final class HomeViewModel: ObservableObject {
     let isDeveloperModeEnabled: Bool
 
     private let feedRefreshAction: FeedRefreshAction
+    private let sourceFilter: RSSSourceFilter
     private let logger: AppLogger
     private let maxDisplayedArticles: Int
     private let ranker = FeedRankingService()
@@ -58,15 +63,19 @@ final class HomeViewModel: ObservableObject {
     /// presentation state-machine concerns.
     convenience init(
         fetchHomeFeedUseCase: FetchHomeFeedUseCase,
+        sourceFilter: RSSSourceFilter = RSSSourceFilter(),
         isDeveloperModeEnabled: Bool = DeveloperMode.isEnabled
     ) {
         self.init(
-            feedRefreshAction: {
+            feedRefreshAction: { sources in
                 await fetchHomeFeedUseCase.execute(
+                    sources: sources,
                     groupMode: .mainOutlets,
-                    selectedRegion: nil
+                    selectedRegion: nil,
+                    requestID: nil
                 )
             },
+            sourceFilter: sourceFilter,
             isDeveloperModeEnabled: isDeveloperModeEnabled
         )
     }
@@ -76,11 +85,13 @@ final class HomeViewModel: ObservableObject {
     /// spinning up the live RSS stack.
     init(
         feedRefreshAction: @escaping FeedRefreshAction,
+        sourceFilter: RSSSourceFilter = RSSSourceFilter(),
         isDeveloperModeEnabled: Bool = DeveloperMode.isEnabled,
         logger: AppLogger = .shared,
         maxDisplayedArticles: Int = 50
     ) {
         self.feedRefreshAction = feedRefreshAction
+        self.sourceFilter = sourceFilter
         self.isDeveloperModeEnabled = isDeveloperModeEnabled
         self.logger = logger
         self.maxDisplayedArticles = max(1, maxDisplayedArticles)
@@ -245,13 +256,26 @@ final class HomeViewModel: ObservableObject {
         )
 
         let startedAt = DispatchTime.now().uptimeNanoseconds
+        // Resolve the effective source list from the user's onboarding /
+        // Settings choices. When the user has opted in to specific regions
+        // or hidden specific outlets we pass the filtered list explicitly;
+        // otherwise `nil` keeps the pre-onboarding default (main outlets).
+        let sources = resolveExplicitSources()
         let task = Task { [feedRefreshAction] in
-            await feedRefreshAction()
+            await feedRefreshAction(sources)
         }
         activeTask = task
 
         let result = await task.value
         await handle(result: result, requestID: requestID, startedAt: startedAt)
+    }
+
+    private func resolveExplicitSources() -> [RSSFeedSource]? {
+        guard let preferences = currentPreferences() else { return nil }
+        let hasRegionFilter = preferences.enabledRegionRawValues.isEmpty == false
+        let hasHiddenSources = preferences.hiddenSources.isEmpty == false
+        guard hasRegionFilter || hasHiddenSources else { return nil }
+        return sourceFilter.resolveSources(for: preferences)
     }
 
     // MARK: - State helpers

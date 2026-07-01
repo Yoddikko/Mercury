@@ -11,6 +11,8 @@ The Settings screen exposes app-level toggles the user can change at any time. I
 In scope (this iteration):
 
 * article body rendering mode (web view vs native blocks)
+* feed sources — region selection + per-outlet on/off (shared with the
+  onboarding flow described in `docs/product/ONBOARDING.md`)
 
 Reserved for future iterations (out of scope here, listed so the screen can grow without re-litigating):
 
@@ -74,6 +76,40 @@ enum ArticleRendererMode: String, Codable, CaseIterable, Sendable {
 * Persistence write fails → surface a non-blocking error toast; previous selection remains visible.
 
 ---
+
+## Feed sources
+
+A new `Feed sources` section in `SettingsScreen` lets the user revisit the
+choices captured during onboarding.
+
+### Fields
+
+* `enabledRegionRawValues: [String]` — raw values of `RSSFeedRegion` the
+  user opted in to. Empty means "all regions".
+* `hiddenSources: [String]` — outlet IDs the user has toggled off. Reused
+  from the existing preferences field so per-outlet opt-outs stay in one
+  place.
+
+### Rules
+
+* Toggling a region on/off updates `enabledRegionRawValues` via
+  `UserPreferencePatch`.
+* Toggling an outlet on/off updates `hiddenSources` via the same patch.
+* Empty `enabledRegionRawValues` + empty `hiddenSources` falls back to
+  the pre-onboarding default (`RSSFeedCatalog.mainOutlets`).
+* `RSSSourceFilter` is the single service that resolves preferences into
+  the final `[RSSFeedSource]` list consumed by `HomeViewModel`.
+
+### Flow
+
+1. User opens Settings → Feed sources.
+2. Screen reads `UserPreference` and renders regions grouped from
+   `RSSFeedCatalog.availableRegions`, each row showing an on/off toggle
+   plus an expandable list of outlets.
+3. Toggles build a `UserPreferencePatch` and call
+   `UserPreferencesService.updatePreferences(_:)`.
+4. The next Home refresh reads the updated preferences and only fetches
+   the enabled subset.
 
 ## Notes
 

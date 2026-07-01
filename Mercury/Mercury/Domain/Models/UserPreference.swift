@@ -15,6 +15,12 @@ struct UserPreference: Identifiable, Equatable, Sendable {
     let favoriteSources: [String]
     let preferredLanguage: String?
     let articleRenderer: ArticleRendererMode
+    /// Region raw values (`RSSFeedRegion.rawValue`) the user opted in to during
+    /// onboarding or via Settings. An empty array means "all regions" — this is
+    /// the default and mirrors the pre-onboarding behavior.
+    let enabledRegionRawValues: [String]
+    /// Whether the user has completed the first-launch onboarding flow.
+    let hasCompletedOnboarding: Bool
     let updatedAt: Date
 
     init(
@@ -25,6 +31,8 @@ struct UserPreference: Identifiable, Equatable, Sendable {
         favoriteSources: [String],
         preferredLanguage: String?,
         articleRenderer: ArticleRendererMode = .default,
+        enabledRegionRawValues: [String] = [],
+        hasCompletedOnboarding: Bool = false,
         updatedAt: Date
     ) {
         self.id = id
@@ -34,6 +42,8 @@ struct UserPreference: Identifiable, Equatable, Sendable {
         self.favoriteSources = favoriteSources
         self.preferredLanguage = preferredLanguage
         self.articleRenderer = articleRenderer
+        self.enabledRegionRawValues = enabledRegionRawValues
+        self.hasCompletedOnboarding = hasCompletedOnboarding
         self.updatedAt = updatedAt
     }
 }

@@ -26,7 +26,7 @@ struct FetchHomeFeedUseCaseTests {
         let repository = RecordingArticleRepository()
         let expectedRequestID = "test-request-feed"
         let useCase = LiveFetchHomeFeedUseCase(
-            refreshAction: { groupMode, region, requestID in
+            refreshAction: { _, groupMode, region, requestID in
                 #expect(groupMode == .mainOutlets)
                 #expect(region == nil)
                 #expect(requestID == expectedRequestID)
@@ -59,7 +59,7 @@ struct FetchHomeFeedUseCaseTests {
     func executeSkipsPersistenceWhenBatchIsEmpty() async {
         let repository = RecordingArticleRepository()
         let useCase = LiveFetchHomeFeedUseCase(
-            refreshAction: { groupMode, region, requestID in
+            refreshAction: { _, groupMode, region, requestID in
                 RSSFeedBatchResult(
                     checkedAt: .now,
                     groupMode: groupMode,
@@ -87,7 +87,7 @@ struct FetchHomeFeedUseCaseTests {
         let articles = Self.sampleArticles(count: 1, prefix: "uc-persist-fail")
         let repository = RecordingArticleRepository(upsertError: SampleRepositoryError.boom)
         let useCase = LiveFetchHomeFeedUseCase(
-            refreshAction: { groupMode, region, _ in
+            refreshAction: { _, groupMode, region, _ in
                 RSSFeedBatchResult(
                     checkedAt: .now,
                     groupMode: groupMode,
