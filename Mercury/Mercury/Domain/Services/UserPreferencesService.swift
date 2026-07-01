@@ -220,9 +220,6 @@ final class UserPreferencesService {
         } else if let language = patch.preferredLanguage {
             metadata["language"] = language
         }
-        if let renderer = patch.articleRenderer {
-            metadata["article_renderer"] = renderer.rawValue
-        }
         if let regions = patch.enabledRegionRawValues {
             metadata["enabled_regions_in"] = "\(regions.count)"
         }

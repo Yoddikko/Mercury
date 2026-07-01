@@ -96,26 +96,20 @@ type Article = {
 
 ## Body Rendering
 
-Article content arrives as HTML (RSS body or page-extracted). The detail screen renders it through **one of two modes** chosen by the user (see `docs/features/SETTINGS.md`):
+Article content arrives as HTML (RSS body or page-extracted). The detail screen renders it through a single native SwiftUI reader (`ArticleBlockListView`). The legacy `WKWebView` renderer was removed with issue #83.
 
-### Mode A — Web (default)
+### Native reader
 
-* Renders the sanitized HTML in an embedded `WKWebView` wrapped as a SwiftUI `UIViewRepresentable`.
-* Inline `<style>` provides system-font typography, link color, dark-mode support via `@media (prefers-color-scheme: dark)`.
-* Dynamic height: the view reports its content height via a JS bridge so the outer SwiftUI `ScrollView` owns the scroll axis.
-* Full fidelity: inline images, lists, blockquotes, links render as authored.
-
-### Mode B — Native (opt-in)
-
-* Parses the sanitized HTML into a typed `[ArticleBlock]` (paragraph, heading, image, list, quote, code).
-* Renders each block with the matching SwiftUI view (`Text(AttributedString)`, `AsyncImage`, native bulleted layout, …).
+* Parses the sanitized + distilled HTML into a typed `[ArticleBlock]` (paragraph, heading, image, list, quote, code) via `HTMLArticleBlockParser`.
+* Renders each block with the matching SwiftUI view (`Text(AttributedString)`, `AsyncImage`, native bulleted layout, quote rail, monospaced scrollable code).
 * SwiftSoup is the parser (`https://github.com/scinfu/SwiftSoup`, Apache-2.0). Chosen over `libxml2`-backed alternatives (Kanna, Fuzi) because it is pure Swift, robust against malformed RSS HTML, and exposes CSS-selector extraction.
+* Falls back to `Text(displayBody)` when the parser yields no blocks (very short RSS-only articles), and to a placeholder when neither is available.
 
-### Sanitization (both modes)
+### Sanitization
 
 * `<script>`, `<style>`, `<iframe>`, `<noscript>`, inline event handlers (`onclick=`, `onerror=`, …) and `javascript:` URLs are stripped at parse time.
 * Tracking pixels (`<img width="1" height="1">` patterns) are removed.
-* Sanitization runs **before** the mode-specific renderer so both modes share the same trusted input.
+* Sanitization runs **before** the block parser so the reader sees a trusted, script-free tree.
 
 ### Persistence
 

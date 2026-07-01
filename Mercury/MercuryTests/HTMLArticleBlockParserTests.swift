@@ -198,6 +198,45 @@ struct HTMLArticleBlockParserTests {
         }
     }
 
+    @Test
+    func imageWithOnlySrcsetFallsBackToFirstCandidate() {
+        // Modern responsive templates ship <img srcset="…"> with no
+        // `src` — the native reader previously dropped these entirely.
+        // Take the first URL from the srcset list.
+        let html = """
+        <p>Article body.</p>
+        <img srcset="https://cdn.ex/photo-800w.jpg 800w, https://cdn.ex/photo-1600w.jpg 1600w" alt="lead">
+        """
+        let blocks = HTMLArticleBlockParser().parse(html)
+        let images = blocks.compactMap { block -> URL? in
+            if case let .image(url, _) = block { return url }
+            return nil
+        }
+        #expect(images.count == 1)
+        #expect(images.first?.absoluteString == "https://cdn.ex/photo-800w.jpg")
+    }
+
+    @Test
+    func figureWithSourceSrcsetOnlyEmitsImage() {
+        // Il Post-style responsive <picture> with no fallback <img>.
+        let html = """
+        <figure>
+          <picture>
+            <source srcset="https://cdn.ex/hero-1600w.webp 1600w" type="image/webp">
+            <source srcset="https://cdn.ex/hero-800w.jpg 800w" type="image/jpeg">
+          </picture>
+          <figcaption>La didascalia dell'immagine.</figcaption>
+        </figure>
+        """
+        let blocks = HTMLArticleBlockParser().parse(html)
+        let firstImage = blocks.compactMap { block -> (URL, String?)? in
+            if case let .image(url, alt) = block { return (url, alt) }
+            return nil
+        }.first
+        #expect(firstImage?.0.absoluteString == "https://cdn.ex/hero-1600w.webp")
+        #expect(firstImage?.1 == "La didascalia dell'immagine.")
+    }
+
     // MARK: - Helpers
 
     private static func kind(_ block: ArticleBlock) -> String {

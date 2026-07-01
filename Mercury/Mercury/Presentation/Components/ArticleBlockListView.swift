@@ -7,9 +7,12 @@
 
 import SwiftUI
 
-/// Renders a `[ArticleBlock]` sequence with native SwiftUI views (issue
-/// #59). Counterpart to `ArticleBodyWebView` for the `.native` rendering
-/// mode.
+/// Renders a `[ArticleBlock]` sequence with native SwiftUI views.
+///
+/// Introduced in issue #59 as the opt-in native counterpart to a
+/// legacy `WKWebView` renderer; the WebView path was removed in
+/// issue #83 and this view is now the sole reader for article
+/// bodies.
 ///
 /// The view leaves spacing decisions to the surrounding `VStack`; each
 /// block returns its own root view sized to its intrinsic content.
