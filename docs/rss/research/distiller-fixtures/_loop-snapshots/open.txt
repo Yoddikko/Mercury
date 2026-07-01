@@ -1,7 +1,7 @@
 outlet: open
-words: 229
-blocks: 7
-block-counts: heading=3 paragraph=4
+words: 201
+blocks: 6
+block-counts: heading=3 paragraph=3
 survivors: []
-head: sblocca nusa, chiude haaland: la norvegia batte la costa d'avorio. la festa a fine partita: agli ottavi dei mondiali ora c'è il brasile - il video - open ricerca sblocca nusa, chiude haaland: la norvegia batte la costa d’avorio. la festa a fine partita: agli ottavi dei mondiali o
+head: ricerca sblocca nusa, chiude haaland: la norvegia batte la costa d’avorio. la festa a fine partita: agli ottavi dei mondiali ora c’è il brasile – il video 30 giugno 2026 - 21:16 giulia norvegno per la norvegia si tratta di un passaggio del turno che apre le porte a una sfida di p
 tail: ella ripresa la costa d’avorio riesce a riequilibrare i conti con il neoentrato diallo, autore di un gol nato da un’azione personale di buona fattura. a spegnere ogni velleità ivoriana ci pensa però haaland, che firma la rete del definitivo 2-1 trasformando un assist di odegaard.

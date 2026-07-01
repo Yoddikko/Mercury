@@ -1,7 +1,7 @@
 outlet: avvenire
-words: 873
-blocks: 15
-block-counts: heading=1 image=1 paragraph=13
+words: 859
+blocks: 14
+block-counts: heading=1 image=1 paragraph=12
 survivors: []
-head: ius soli, trump bocciato dalla corte suprema: «la cittadinanza resta una promessa da mantenere» june 30, 2026 ius soli, trump bocciato dalla corte suprema: «la cittadinanza resta una promessa da mantenere» di elena molinari , new york clamoroso “no” dei giudici all’ordine esecuti
+head: june 30, 2026 ius soli, trump bocciato dalla corte suprema: «la cittadinanza resta una promessa da mantenere» di elena molinari , new york clamoroso “no” dei giudici all’ordine esecutivo della casa bianca: restano cittadini i figli di immigrati nati sul suolo americano, anche se 
 tail: vicepresidente j.d. vance, il vaticano ha fatto sapere che quest'anno leone non visiterà gli stati uniti. nel giorno del 250° anniversario della nazione, il papa andrà invece a lampedusa, porta d'accesso in europa per migliaia di migranti e rifugiati. temi stati uniti primo piano
