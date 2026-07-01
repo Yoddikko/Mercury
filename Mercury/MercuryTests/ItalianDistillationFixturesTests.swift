@@ -161,12 +161,18 @@ struct ItalianDistillationFixturesTests {
     /// Chrome phrases every Italian fixture must be free of.
     static let commonChrome: [String] = [
         "iscriviti alla newsletter",
+        "newsletter iscriviti",
         "leggi anche",
         "articoli correlati",
         "tutti i diritti riservati",
         "cookie policy",
         "accetta tutti i cookie",
-        "trattamento dei dati personali"
+        "trattamento dei dati personali",
+        "seguici su google discover",
+        "seguici anche su",
+        "google discover",
+        "brand connect",
+        "cerca il tuo immobile"
     ]
 
     @Test(arguments: fixtures)
