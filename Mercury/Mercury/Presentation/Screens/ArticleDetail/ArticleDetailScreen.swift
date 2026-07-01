@@ -345,7 +345,11 @@ struct ArticleDetailScreen: View {
                 }
             case .web:
                 if let html = viewModel.displayHTML {
-                    ArticleBodyWebView(html: html, contentHeight: $bodyWebViewHeight)
+                    ArticleBodyWebView(
+                        html: html,
+                        baseURL: viewModel.currentArticle?.articleURL,
+                        contentHeight: $bodyWebViewHeight
+                    )
                         .frame(height: max(bodyWebViewHeight, 1))
                         .accessibilityIdentifier("article.detail.body.webview")
                         .accessibilityValue(rendererMode.rawValue)

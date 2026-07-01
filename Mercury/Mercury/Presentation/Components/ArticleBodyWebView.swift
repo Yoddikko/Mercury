@@ -28,6 +28,11 @@ import SwiftUI
 /// safe to render.
 struct ArticleBodyWebView: UIViewRepresentable {
     let html: String
+    /// Base URL used by `WKWebView` to resolve relative `<img src>` /
+    /// `<a href>` references in the distilled HTML. Outlets like ANSA,
+    /// Avvenire, Il Manifesto ship images with paths like
+    /// `/wp-content/uploads/...` that require a base URL to load.
+    var baseURL: URL? = nil
     @Binding var contentHeight: CGFloat
 
     func makeCoordinator() -> Coordinator {
@@ -57,14 +62,14 @@ struct ArticleBodyWebView: UIViewRepresentable {
         webView.backgroundColor = .clear
         webView.scrollView.backgroundColor = .clear
 
-        webView.loadHTMLString(Self.wrap(html), baseURL: nil)
+        webView.loadHTMLString(Self.wrap(html), baseURL: baseURL)
         return webView
     }
 
     func updateUIView(_ webView: WKWebView, context: Context) {
         if context.coordinator.lastRenderedHTML != html {
             context.coordinator.lastRenderedHTML = html
-            webView.loadHTMLString(Self.wrap(html), baseURL: nil)
+            webView.loadHTMLString(Self.wrap(html), baseURL: baseURL)
         }
     }
 

@@ -366,7 +366,7 @@ final class ArticleDetailViewModel: ObservableObject {
     /// means "no rich content, fall back to plain text".
     var displayBlocks: [ArticleBlock] {
         guard let html = displayHTML else { return [] }
-        return Self.blockParser.parse(html)
+        return Self.blockParser.parse(html, baseURL: currentArticle?.articleURL)
     }
 
     private static let htmlSanitizer = ArticleHTMLSanitizer()
