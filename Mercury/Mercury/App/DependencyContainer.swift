@@ -34,6 +34,7 @@ struct DependencyContainer {
         )
     }
 
+    @MainActor
     func makeHomeViewModel() -> HomeViewModel {
         logger.debug(
             "Building HomeViewModel with FetchHomeFeedUseCase",
@@ -49,6 +50,7 @@ struct DependencyContainer {
     }
 
 #if DEBUG
+    @MainActor
     func makeDeveloperPlaygroundViewModel() -> DeveloperPlaygroundViewModel {
         DeveloperPlaygroundViewModel()
     }
