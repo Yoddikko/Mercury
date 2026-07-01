@@ -212,7 +212,6 @@
 "article.detail.actions.bookmark.remove" = "Rimuovi dai salvati";
 "article.detail.actions.share" = "Condividi articolo";
 "article.detail.actions.open_in_safari" = "Apri in Safari";
-"article.detail.section.summary" = "Riassunto";
 "article.detail.section.ai_summary" = "Sintesi AI";
 "article.detail.section.body" = "Articolo";
 "article.detail.ai_summary.loading" = "Generazione sintesi AI in corso…";

@@ -212,7 +212,6 @@
 "article.detail.actions.bookmark.remove" = "Remove from saved";
 "article.detail.actions.share" = "Share article";
 "article.detail.actions.open_in_safari" = "Open in Safari";
-"article.detail.section.summary" = "Summary";
 "article.detail.section.ai_summary" = "AI Summary";
 "article.detail.section.body" = "Article";
 "article.detail.ai_summary.loading" = "Generating AI summary…";
