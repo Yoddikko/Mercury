@@ -137,21 +137,31 @@ Both `rawContent` (RSS-supplied) and the output of `ArticlePageContentExtractor`
 RSS body OR page-fetched HTML
         │
         ▼
-[ArticleHTMLSanitizer]               (existing, render-time safety strip)
+[ArticleHTMLSanitizer]               (render-time safety strip)
         │
         ▼
-[ArticleReadabilityDistiller]        (NEW, ingest-time content extraction)
-        │   • DOM scoring on top of SwiftSoup (Mozilla Readability algorithm)
-        │   • returns main content root + title + byline + excerpt
+[Terminator truncation]              (issue #81 — script/style-aware)
+        │   • cuts the HTML at the first visible occurrence of the
+        │     per-language article terminator ("Riproduzione riservata"
+        │     for it), skipping matches inside <script> / <style> blocks
+        │     (ANSA embeds the marker in JS image-slider captions)
         ▼
-[ArticleImageDeduplicator]           (NEW, tiny SwiftSoup pass)
-        │   • drop body <img> whose normalized basename equals the heroImageURL basename
-        │   • normalization: lowercase host, strip query string, strip srcset, resolve relative
+[ArticleBoilerplateRemover]          (Readability heuristics)
+        │   • negative-class strip (now includes paywall / bt-Subscribe /
+        │     bt-abbonati / consentless / metered / premium-lock)
+        │   • link-density filter (> 50% link chars, ≥ 3 links)
+        │   • run-of-3+ consecutive single-link <p> strip (issue #81)
+        │   • short-paragraph floor (< 25 chars without punctuation)
         ▼
-[ArticleLocaleBoilerplateStripper]   (NEW, language-aware regex pass — optional)
-        │   • drops paragraphs matching localized patterns
-        │     (it: "Leggi anche", "Articoli correlati", "Iscriviti alla newsletter",
-        │      "Riproduzione riservata", "Tutti i diritti riservati"; en: equivalents)
+[ArticleImageDeduplicator]           (SwiftSoup pass, #81 extended)
+        │   • drop body <img> / <picture> whose normalized key equals the
+        │     heroImageURL key (extension-stripped, size-suffix-stripped
+        │     so `-1024x768` / `@2x` / `-mobile` all collapse to one key)
+        │   • also match against `srcset` and nested `<source srcset>`
+        ▼
+[ArticleLocaleBoilerplateStripper]   (language-aware text-pattern pass)
+        │   • drops paragraphs matching localized patterns (it +
+        │     ANSA Consentless / paywall CTAs; en: equivalents)
         ▼
 Article.distilledBodyHTML            (persisted on the entity)
 Article.cleanedContent               (re-derived from the distilled HTML)
@@ -189,9 +199,24 @@ Distillation **must never** produce worse content than the existing pipeline:
 
 ### Image deduplication
 
-The hero image is selected from RSS `media:content` / `<enclosure>` / `og:image` and rendered separately above the title. Outlets commonly include the same image again as the first `<img>` of the article body. The dedup pass drops that body image when its normalized basename matches the hero. Normalization:
+The hero image is selected from RSS `media:content` / `<enclosure>` / `og:image` and rendered separately above the title. Outlets commonly include the same image again as the first `<img>` / `<picture>` of the article body. The dedup pass drops that body image when its normalized key matches the hero. Normalization (issue #81):
 
-* lowercase host, strip `?query` and `srcset`, resolve relative paths against the article URL, compare the final URL path's basename.
+* Strip query string and fragment.
+* Strip file extension so `hero.jpg` and `hero.webp` share a key.
+* Strip trailing CDN size suffixes (`-1024x768`, `_800w`, `@2x`, `@3x`, `-large`, `-medium`, `-small`, `-mobile`, `-desktop`, `-tablet`, `-thumb`, `-thumbnail`, `-hero`, `-main`).
+* Lowercase basename.
+
+The dedup also walks `<picture><source srcset>` and image `srcset` attributes — outlets often declare the hero across multiple resolutions inside a `<picture>`; without srcset-aware matching the wrapper would survive.
+
+### Article terminator truncation (issue #81)
+
+Most Italian outlets end the article body with `Riproduzione riservata` / `© RIPRODUZIONE RISERVATA`. Everything after is chrome (newsletter CTAs, related-article grids, subscribe prompts, share strips). Truncating at the first visible occurrence of that marker (before the Readability pass runs) is by far the highest-ROI Italian cleanup — one match kills a long chain of downstream widgets.
+
+The truncation is `<script>` / `<style>` / `<!-- -->`-aware: ANSA embeds the same marker inside a JS image-slider caption near the top of the page, and a naïve search would cut everything after. The pass walks the HTML once, tracks whether the current position is inside a script/style/comment block, and only records offsets in the visible content stream. If no visible terminator is present, the input passes through unchanged.
+
+### Realistic HTTP fetching (issue #82)
+
+`ArticlePageClient` presents a Safari-on-iPhone `User-Agent` and prioritizes `it-IT` in `Accept-Language`. Prior fetches used `MercuryArticleClient/1.0`, which several Italian outlets fingerprinted into a lightweight / paywall-gated variant of the page. The realistic UA does not defeat cookie-consent chrome (still handled by the boilerplate remover) but it stops the outlet from serving a stripped body.
 
 ### Locale-aware boilerplate
 

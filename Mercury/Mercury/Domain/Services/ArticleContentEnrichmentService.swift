@@ -287,7 +287,16 @@ struct ArticleContentEnrichmentService: Sendable {
         requestID: String?
     ) -> DistillationOutput {
         let sanitized = sanitizer.sanitize(rawHTML)
-        let withoutBoilerplate = boilerplateRemover.cleaning(sanitized)
+        // Truncate at the Italian article terminator (#81). Most IT
+        // outlets end the body with "Riproduzione riservata" and follow
+        // it with newsletter CTAs, related-article grids, subscribe
+        // prompts, and share strips. Cutting there is the single
+        // highest-ROI cleanup step we can take.
+        let truncated = ArticleContentEnrichmentService.truncatedAtTerminator(
+            html: sanitized,
+            language: language
+        )
+        let withoutBoilerplate = boilerplateRemover.cleaning(truncated)
         let withoutHeroDuplicate = imageDeduplicator.dedupingHero(
             in: withoutBoilerplate,
             heroImageURLString: heroURLString
@@ -338,4 +347,104 @@ struct ArticleContentEnrichmentService: Sendable {
             wordCount: wordCount
         )
     }
+
+    /// Trim `html` at the first occurrence of a per-language article
+    /// terminator (Italian: "Riproduzione riservata" / "©
+    /// RIPRODUZIONE RISERVATA"). Case-insensitive.
+    ///
+    /// Search deliberately skips `<script>` and `<style>` blocks:
+    /// ANSA in particular embeds the terminator string inside JS
+    /// image-slider captions near the top of the page, which would
+    /// otherwise cause the truncation to eat the whole article.
+    ///
+    /// If the terminator is not present in the visible content, the
+    /// input is returned unchanged. `nil` / unknown language also
+    /// passes through.
+    static func truncatedAtTerminator(html: String, language: String?) -> String {
+        guard let normalized = ArticleLocaleBoilerplateStripper.normalizedLanguage(language),
+              let terminators = terminatorMarkers[normalized] else {
+            return html
+        }
+
+        // Walk the HTML once, tracking whether we're inside a script /
+        // style block, and only search for terminators in the
+        // "visible" text. When a match is found, translate the
+        // position back to the original HTML index so we cut at the
+        // right byte.
+        let scriptOpen = "<script"
+        let scriptClose = "</script>"
+        let styleOpen = "<style"
+        let styleClose = "</style>"
+        let commentOpen = "<!--"
+        let commentClose = "-->"
+
+        var searchStart = html.startIndex
+        var visibleAccumulator = ""
+        var visibleToHTMLOffsets: [Int] = []
+        visibleAccumulator.reserveCapacity(html.count)
+
+        while searchStart < html.endIndex {
+            let range = html[searchStart..<html.endIndex]
+            let nextTag = [scriptOpen, styleOpen, commentOpen]
+                .compactMap { open -> (open: String, close: String, range: Range<String.Index>)? in
+                    guard let r = range.range(of: open, options: [.caseInsensitive]) else { return nil }
+                    let close: String
+                    switch open {
+                    case scriptOpen: close = scriptClose
+                    case styleOpen: close = styleClose
+                    default: close = commentClose
+                    }
+                    return (open, close, r)
+                }
+                .min(by: { $0.range.lowerBound < $1.range.lowerBound })
+
+            let sliceEnd = nextTag?.range.lowerBound ?? html.endIndex
+            let visibleSlice = html[searchStart..<sliceEnd]
+            let visibleStartOffset = html.distance(from: html.startIndex, to: searchStart)
+            for i in 0..<visibleSlice.count {
+                visibleToHTMLOffsets.append(visibleStartOffset + i)
+            }
+            visibleAccumulator.append(contentsOf: visibleSlice)
+
+            guard let tag = nextTag else { break }
+            let scanFrom = html.index(tag.range.upperBound, offsetBy: 0)
+            let scanRange = html[scanFrom..<html.endIndex]
+            if let closeRange = scanRange.range(of: tag.close, options: [.caseInsensitive]) {
+                searchStart = closeRange.upperBound
+            } else {
+                searchStart = html.endIndex
+            }
+        }
+
+        let lowered = visibleAccumulator.lowercased()
+        var earliestVisibleOffset: Int?
+        for marker in terminators {
+            if let range = lowered.range(of: marker) {
+                let offset = lowered.distance(from: lowered.startIndex, to: range.lowerBound)
+                if let current = earliestVisibleOffset {
+                    if offset < current { earliestVisibleOffset = offset }
+                } else {
+                    earliestVisibleOffset = offset
+                }
+            }
+        }
+        guard let visibleOffset = earliestVisibleOffset,
+              visibleOffset < visibleToHTMLOffsets.count else {
+            return html
+        }
+        let htmlOffset = visibleToHTMLOffsets[visibleOffset]
+        let cutIndex = html.index(html.startIndex, offsetBy: htmlOffset)
+        return String(html[html.startIndex..<cutIndex])
+    }
+
+    /// Per-locale article terminators. Kept minimal so we don't cut
+    /// legitimate paragraphs; add new markers only when we've seen
+    /// them survive the boilerplate remover on the fixture corpus.
+    private static let terminatorMarkers: [String: [String]] = [
+        "it": [
+            "riproduzione riservata",
+            "© riproduzione riservata",
+            "©riproduzione riservata"
+        ]
+    ]
 }

@@ -143,7 +143,24 @@ struct ArticleLocaleBoilerplateStripper: Sendable {
             // HuffPost tagline that appears at the top of every article.
             "\\bscegli\\s+di\\s+capire\\b",
             // Weekly-magazine cross-sell that some outlets embed.
-            "\\bleggi\\s+il\\s+settimanale\\b"
+            "\\bleggi\\s+il\\s+settimanale\\b",
+            // ANSA Consentless CTA leaks (#81) — these appear as
+            // paragraph text right above the article body when the
+            // reader hasn't accepted iubenda cookies.
+            "\\baccetta\\s+i\\s+cookie\\s+e\\s+continua\\b",
+            "\\baltri\\s+abbonamenti\\b",
+            "\\biscrizione\\s+alle\\s+newsletter\\s+tematiche\\b",
+            // Metered paywall CTAs on Corriere / Repubblica / Il Sole.
+            "\\bcontenuto\\s+riservato\\s+agli\\s+abbonati\\b",
+            "\\bcontinua\\s+a\\s+leggere\\s+(?:l['’]articolo|questo\\s+articolo|per\\s+i\\s+soli\\s+abbonati)\\b",
+            "\\bgestisci\\s+le\\s+preferenze\\b",
+            // "Approfondimento ANSA sull'accordo …" cross-link chrome
+            // that survives the link-density filter on ANSA.
+            "\\bapprofondimento\\s+ansa\\s+sull\\b",
+            // Corriere "è anche su Whatsapp" chrome.
+            "\\b(?:corriere|repubblica|il\\s+post)\\s+è\\s+anche\\s+su\\b",
+            // Il Sole 24 Ore metered promo footer.
+            "\\bscopri\\s+i\\s+piani\\s+di\\s+abbonamento\\b"
         ]),
         "en": Self.compile([
             "^\\s*all\\s+rights\\s+reserved\\b",

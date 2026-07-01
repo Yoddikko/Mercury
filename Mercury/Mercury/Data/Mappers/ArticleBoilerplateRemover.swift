@@ -55,6 +55,7 @@ struct ArticleBoilerplateRemover: Sendable {
             try removeStructuralChrome(in: body)
             try removeNegativeContainers(in: body)
             try removeHighLinkDensityContainers(in: body)
+            try removeConsecutiveSingleLinkParagraphs(in: body)
             try removeShortParagraphs(in: body)
 
             return try body.html()
@@ -173,6 +174,50 @@ struct ArticleBoilerplateRemover: Sendable {
         }
     }
 
+    /// Drop runs of three-or-more consecutive `<p>` elements where each
+    /// paragraph contains a single link and (almost) no other text.
+    /// This is the "Leggi anche" residue pattern that the link-density
+    /// filter misses because each individual `<p>` looks small enough
+    /// on its own but the visual effect is a chunky related-articles
+    /// grid glued to the bottom of the article.
+    private func removeConsecutiveSingleLinkParagraphs(in body: Element) throws {
+        let paragraphs = try body.select("p").array()
+        guard paragraphs.isEmpty == false else { return }
+
+        var run: [Element] = []
+        func flush() {
+            if run.count >= 3 {
+                for element in run {
+                    try? element.remove()
+                }
+            }
+            run.removeAll(keepingCapacity: true)
+        }
+
+        for element in paragraphs {
+            if isSingleLinkParagraph(element) {
+                run.append(element)
+            } else {
+                flush()
+            }
+        }
+        flush()
+    }
+
+    private func isSingleLinkParagraph(_ element: Element) -> Bool {
+        guard let links = try? element.select("a").array(), links.count == 1 else { return false }
+        let paragraphText = ((try? element.text()) ?? "")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        let linkText = ((try? links[0].text()) ?? "")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        // The paragraph must be ~entirely the link. Allow a small
+        // amount of decorative text ("→", "»", " Leggi") without
+        // breaking the pattern.
+        guard paragraphText.count > 0 else { return false }
+        guard linkText.count > 0 else { return false }
+        return Double(linkText.count) / Double(paragraphText.count) >= 0.85
+    }
+
     private func removeShortParagraphs(in body: Element) throws {
         let paragraphs = try body.select("p, li")
         for element in paragraphs.array() {
@@ -205,6 +250,10 @@ struct ArticleBoilerplateRemover: Sendable {
             "you-?may-?also-?like",
             // Newsletter / signup
             "newsletter", "signup", "subscribe", "iscriviti",
+            // Paywall / subscription CTAs (ANSA Consentless block +
+            // metered paywalls on Corriere / Repubblica / Il Sole).
+            "paywall", "abbona", "bt-subscribe", "bt-abbonati",
+            "consentless", "metered", "premium-lock",
             // Sponsored / ads
             "sponsor", "sponsored", "advert", "promo",
             "\\bad[-_]", "\\bads?\\b",

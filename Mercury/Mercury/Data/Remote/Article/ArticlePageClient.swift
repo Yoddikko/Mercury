@@ -8,20 +8,48 @@
 import Foundation
 
 struct ArticlePageClient: Sendable {
-    private let userAgent = "MercuryArticleClient/1.0"
+    /// Realistic Safari-iOS User-Agent (issue #82). The previous
+    /// `MercuryArticleClient/1.0` was fingerprinted by several Italian
+    /// outlets (ANSA, Il Sole 24 Ore, Corriere) which then served a
+    /// paywall / consent-gated variant instead of the article body.
+    /// Presenting as a mainstream Safari-on-iPhone stops that.
+    ///
+    /// Kept as an instance property so tests can swap it via the
+    /// designated initializer if needed later.
+    private let userAgent: String
+    /// Realistic language header — Italian first, since our primary
+    /// catalog is Italian, then English as a broad fallback. Prior
+    /// `en-US,en;q=0.9` sometimes flipped Italian outlets into their
+    /// English edition (Repubblica in particular).
+    private let acceptLanguage: String
     private let maxHTMLBytes = 2_000_000
     private let logger: AppLogger
     private let performRequest: @Sendable (URLRequest) async throws -> (Data, URLResponse)
 
     nonisolated init(
+        userAgent: String = ArticlePageClient.defaultUserAgent,
+        acceptLanguage: String = ArticlePageClient.defaultAcceptLanguage,
         logger: AppLogger = .shared,
         performRequest: @escaping @Sendable (URLRequest) async throws -> (Data, URLResponse) = { request in
             try await URLSession.shared.data(for: request)
         }
     ) {
+        self.userAgent = userAgent
+        self.acceptLanguage = acceptLanguage
         self.logger = logger
         self.performRequest = performRequest
     }
+
+    /// Safari on iOS 17 UA string. Version pinned so outlets that gate
+    /// on version don't see a moving target; bump when Apple ships a
+    /// major Safari cadence change and the current string starts
+    /// getting flagged as outdated.
+    static let defaultUserAgent =
+        "Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) "
+        + "AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 "
+        + "Mobile/15E148 Safari/604.1"
+
+    static let defaultAcceptLanguage = "it-IT,it;q=0.9,en-US;q=0.8,en;q=0.7"
 
     func fetchPageHTML(from url: URL, requestID: String? = nil) async throws -> String {
         logger.trace(
@@ -48,7 +76,7 @@ struct ArticlePageClient: Sendable {
         request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
         request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
         request.setValue("text/html,application/xhtml+xml", forHTTPHeaderField: "Accept")
-        request.setValue("en-US,en;q=0.9", forHTTPHeaderField: "Accept-Language")
+        request.setValue(acceptLanguage, forHTTPHeaderField: "Accept-Language")
 
         let (data, response) = try await performRequest(request)
 

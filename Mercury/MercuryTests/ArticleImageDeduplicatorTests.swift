@@ -60,15 +60,55 @@ struct ArticleImageDeduplicatorTests {
     }
 
     @Test
-    func basenameNormalizationIsCaseInsensitive() {
-        let basename = ArticleImageDeduplicator.normalizedBasename(of: "HTTPS://CDN.EX/Path/Hero.JPG?Q=1")
-        #expect(basename == "hero.jpg")
+    func normalizedKeyIsCaseInsensitiveAndDropsExtension() {
+        // The normalized key is used to compare "same asset across
+        // formats" — hero.jpg and hero.webp are the same asset — so
+        // the extension is intentionally stripped (issue #81).
+        let key = ArticleImageDeduplicator.normalizedKey(of: "HTTPS://CDN.EX/Path/Hero.JPG?Q=1")
+        #expect(key == "hero")
     }
 
     @Test
-    func invalidURLReturnsNilBasename() {
-        #expect(ArticleImageDeduplicator.normalizedBasename(of: "") == nil)
-        // A bare string with no path/last segment can't yield a basename.
-        #expect(ArticleImageDeduplicator.normalizedBasename(of: "https://example.com/") == nil)
+    func normalizedKeyStripsCommonCDNSizeSuffixes() {
+        // CDN-resized variants of the same asset all collapse to the
+        // same key so the dedup pass catches them.
+        let base = ArticleImageDeduplicator.normalizedKey(of: "https://cdn.ex/hero.jpg")
+        #expect(ArticleImageDeduplicator.normalizedKey(of: "https://cdn.ex/hero-1024x768.jpg") == base)
+        #expect(ArticleImageDeduplicator.normalizedKey(of: "https://cdn.ex/hero-800w.jpg") == base)
+        #expect(ArticleImageDeduplicator.normalizedKey(of: "https://cdn.ex/hero@2x.jpg") == base)
+        #expect(ArticleImageDeduplicator.normalizedKey(of: "https://cdn.ex/hero-mobile.jpg") == base)
+    }
+
+    @Test
+    func normalizedKeyIsNilForEmptyOrTrailingSlash() {
+        #expect(ArticleImageDeduplicator.normalizedKey(of: "") == nil)
+    }
+
+    @Test
+    func dedupCatchesPictureSourceSrcsetVariantsOfTheHero() {
+        // <picture> declares the hero as multiple <source srcset>
+        // entries — the dedup must nuke the whole <picture> even when
+        // none of the <source>s exactly match the hero URL.
+        let html = """
+        <picture>
+          <source srcset="https://cdn.ex/hero-800w.jpg 800w, https://cdn.ex/hero-1600w.jpg 1600w">
+          <source srcset="https://cdn.ex/hero@2x.jpg 2x">
+          <img src="https://cdn.ex/hero.jpg">
+        </picture>
+        <p>body content</p>
+        """
+        let output = dedup.dedupingHero(
+            in: html,
+            heroImageURLString: "https://other.cdn.ex/promo/hero-1024x768.jpg?crop=1"
+        )
+        #expect(output.contains("hero-") == false)
+        #expect(output.contains("body content"))
+    }
+
+    @Test
+    func dedupCatchesImgWithSrcsetOnly() {
+        let html = "<img srcset=\"https://cdn.ex/hero-800w.jpg 800w, https://cdn.ex/hero-1600w.jpg 1600w\">"
+        let output = dedup.dedupingHero(in: html, heroImageURLString: "https://cdn.ex/hero.jpg")
+        #expect(output.contains("hero-") == false)
     }
 }
