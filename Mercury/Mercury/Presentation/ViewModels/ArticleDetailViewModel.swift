@@ -183,10 +183,6 @@ final class ArticleDetailViewModel: ObservableObject {
         String(localized: "article.detail.actions.open_in_safari", defaultValue: "Open in Safari")
     }
 
-    var summarySectionTitle: String {
-        String(localized: "article.detail.section.summary", defaultValue: "Summary")
-    }
-
     var aiSummarySectionTitle: String {
         String(localized: "article.detail.section.ai_summary", defaultValue: "AI Summary")
     }
@@ -411,15 +407,13 @@ final class ArticleDetailViewModel: ObservableObject {
         return true
     }
 
-    /// Whether a summary section should be rendered at all.
-    /// True when either a summary is cached, a provider closure is wired,
-    /// or a previous attempt left the state in `summarizing`/`failed`.
-    var shouldShowAISummarySection: Bool {
-        if case .ready = summaryState { return true }
-        if case .summarizing = summaryState { return true }
-        if case .failed = summaryState { return true }
-        return summarize != nil
-    }
+    /// The AI summary section is always rendered on the detail screen: the
+    /// section either shows the generate/show button, the loading spinner,
+    /// the ready summary, a retry after failure, or the "AI provider not
+    /// configured" fallback. Nothing on the article body is auto-surfaced
+    /// as a summary — the user must tap to see one. See
+    /// `docs/features/SUMMARIZATION.md` § Trigger.
+    var shouldShowAISummarySection: Bool { true }
 
     /// Whether the "AI provider not configured" fallback should be shown.
     var shouldShowAISummaryUnavailable: Bool {

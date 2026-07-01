@@ -10,8 +10,11 @@ import SwiftData
 import SwiftUI
 
 struct HomeScreen: View {
+    typealias ArticleSummarize = @Sendable (Article) async throws -> AISummaryResult
+
     @ObservedObject var viewModel: HomeViewModel
     @StateObject private var searchViewModel: SearchViewModel
+    private let articleSummarize: ArticleSummarize?
 #if DEBUG
     let developerPlaygroundViewModel: DeveloperPlaygroundViewModel
 #endif
@@ -22,10 +25,12 @@ struct HomeScreen: View {
     init(
         viewModel: HomeViewModel,
         developerPlaygroundViewModel: DeveloperPlaygroundViewModel,
-        searchViewModel: SearchViewModel? = nil
+        searchViewModel: SearchViewModel? = nil,
+        articleSummarize: ArticleSummarize? = nil
     ) {
         self.viewModel = viewModel
         self.developerPlaygroundViewModel = developerPlaygroundViewModel
+        self.articleSummarize = articleSummarize
         _searchViewModel = StateObject(
             wrappedValue: searchViewModel ?? SearchViewModel()
         )
@@ -33,9 +38,11 @@ struct HomeScreen: View {
 #else
     init(
         viewModel: HomeViewModel,
-        searchViewModel: SearchViewModel? = nil
+        searchViewModel: SearchViewModel? = nil,
+        articleSummarize: ArticleSummarize? = nil
     ) {
         self.viewModel = viewModel
+        self.articleSummarize = articleSummarize
         _searchViewModel = StateObject(
             wrappedValue: searchViewModel ?? SearchViewModel()
         )
@@ -189,7 +196,8 @@ struct HomeScreen: View {
                                 recordOpen: { [modelContext] id in
                                     let store = ArticleLocalStore(modelContainer: modelContext.container)
                                     try await store.recordOpen(articleID: id, markAsRead: true)
-                                }
+                                },
+                                summarize: articleSummarize
                             )
                         )
                     } label: {

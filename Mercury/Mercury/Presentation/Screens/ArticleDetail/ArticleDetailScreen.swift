@@ -93,12 +93,7 @@ struct ArticleDetailScreen: View {
                         .foregroundStyle(.secondary)
                         .accessibilityIdentifier("article.detail.reading_time")
                 }
-                if viewModel.shouldShowAISummarySection {
-                    aiSummarySection
-                } else if let summary = article.summaryShort?.trimmingCharacters(in: .whitespacesAndNewlines),
-                          summary.isEmpty == false {
-                    summarySection(text: summary)
-                }
+                aiSummarySection
                 bodySection(for: article)
                 openOriginalButton(for: article)
                 Spacer(minLength: 24)
@@ -170,17 +165,6 @@ struct ArticleDetailScreen: View {
                     .accessibilityIdentifier("article.detail.category")
             }
         }
-    }
-
-    private func summarySection(text: String) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(viewModel.summarySectionTitle)
-                .font(.headline)
-            Text(text)
-                .font(.body)
-                .accessibilityIdentifier("article.detail.summary")
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private func openOriginalButton(for article: Article) -> some View {

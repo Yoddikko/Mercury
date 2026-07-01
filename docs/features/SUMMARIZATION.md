@@ -43,6 +43,7 @@ Generates concise summaries of articles using AI.
   * "Mostra sintesi AI" when a cached summary is on disk → tap renders it **instantly**, no provider call.
   * "Genera sintesi AI" when no cache exists → tap calls the provider, then renders.
 * Once shown, the section gains a "Rigenera" affordance that bypasses the cache and calls the provider.
+* The AI Summary section is **always** rendered on the detail screen. When no provider is configured it shows a small "AI summary unavailable — configure a provider in Developer Tools" fallback instead of the button. **No other summary-shaped block ever renders on the detail screen** — the RSS `<summary>`/description that populates `Article.summaryShort` is used only in the feed preview card, never on the detail page.
 
 ---
 

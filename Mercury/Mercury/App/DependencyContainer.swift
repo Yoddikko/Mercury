@@ -34,6 +34,7 @@ struct DependencyContainer {
         )
     }
 
+    @MainActor
     func makeHomeViewModel() -> HomeViewModel {
         logger.debug(
             "Building HomeViewModel with FetchHomeFeedUseCase",
@@ -48,7 +49,37 @@ struct DependencyContainer {
         return HomeViewModel(fetchHomeFeedUseCase: useCase)
     }
 
+    /// Build the summarize closure consumed by `ArticleDetailViewModel`.
+    ///
+    /// Wires `AIService` (active provider + credentials) to
+    /// `ArticleSummarizationService` and returns a `Sendable` closure the
+    /// detail screen can invoke when the user taps the summary button. All
+    /// side effects (provider call + SwiftData persistence) are internal so
+    /// the presentation layer stays UI-only.
+    @MainActor
+    func makeArticleSummarize() -> @Sendable (Article) async throws -> AISummaryResult {
+        let aiService = AIService()
+        let container = modelContainer
+        let service = ArticleSummarizationService(
+            summarize: { content, requestID in
+                try await aiService.summarizeArticle(content, requestID: requestID)
+            },
+            persist: { articleID, summary, requestID in
+                let store = ArticleLocalStore(modelContainer: container)
+                try await store.applySummary(
+                    articleID: articleID,
+                    summary: summary,
+                    requestID: requestID
+                )
+            }
+        )
+        return { article in
+            try await service.summarizeIfNeeded(article)
+        }
+    }
+
 #if DEBUG
+    @MainActor
     func makeDeveloperPlaygroundViewModel() -> DeveloperPlaygroundViewModel {
         DeveloperPlaygroundViewModel()
     }

@@ -335,6 +335,27 @@ struct ArticleDetailViewModelTests {
     }
 
     @Test
+    func aiSummarySectionIsAlwaysRendered() {
+        // The AI Summary section is always shown on the detail screen: the
+        // section either exposes the generate/show button, the ready summary,
+        // or the "AI unavailable" fallback. Nothing on the article body ever
+        // renders automatically as a summary. See docs/features/SUMMARIZATION.md.
+        let noProvider = Self.makeViewModel(
+            article: Self.sampleArticle(summaryShort: "should-not-auto-show", summaryBullets: []),
+            summarize: nil
+        )
+        #expect(noProvider.shouldShowAISummarySection == true)
+        #expect(noProvider.shouldShowAISummaryUnavailable == true)
+
+        let withProvider = Self.makeViewModel(
+            article: Self.sampleArticle(summaryShort: nil, summaryBullets: []),
+            summarize: { _ in AISummaryResult(shortSummary: "x", bullets: []) }
+        )
+        #expect(withProvider.shouldShowAISummarySection == true)
+        #expect(withProvider.shouldShowAISummaryGenerateButton == true)
+    }
+
+    @Test
     func primaryButtonLabelSwitchesByCachePresence() {
         let cached = Self.sampleArticle(
             summaryShort: "Cached",
