@@ -34,6 +34,7 @@ struct DependencyContainer {
         )
     }
 
+    @MainActor
     func makeHomeViewModel() -> HomeViewModel {
         logger.debug(
             "Building HomeViewModel with FetchHomeFeedUseCase",
@@ -55,6 +56,7 @@ struct DependencyContainer {
     /// detail screen can invoke when the user taps the summary button. All
     /// side effects (provider call + SwiftData persistence) are internal so
     /// the presentation layer stays UI-only.
+    @MainActor
     func makeArticleSummarize() -> @Sendable (Article) async throws -> AISummaryResult {
         let aiService = AIService()
         let container = modelContainer
@@ -77,6 +79,7 @@ struct DependencyContainer {
     }
 
 #if DEBUG
+    @MainActor
     func makeDeveloperPlaygroundViewModel() -> DeveloperPlaygroundViewModel {
         DeveloperPlaygroundViewModel()
     }
