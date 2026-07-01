@@ -251,3 +251,5 @@
 "onboarding.subtitle" = "Pick the regions and outlets you want in your Home feed. You can change this later in Settings.";
 "onboarding.continue" = "Continue";
 "onboarding.footer" = "You can revisit these choices from Settings → Feed sources.";
+
+"router.loading" = "Loading";

@@ -39,13 +39,23 @@ struct AppRouter: View {
             }
     }
 
+    /// Tri-state gate (issue #87): while the persisted flag is still
+    /// loading (`nil`) we render a lightweight placeholder instead of
+    /// falling through to `HomeScreen`. Mounting `HomeScreen` for even a
+    /// single frame fires its `.task`, which spawns the full multi-source
+    /// RSS refresh before the user has picked anything in onboarding.
     @ViewBuilder
     private var content: some View {
-        if hasCompletedOnboarding == false {
+        switch hasCompletedOnboarding {
+        case .none:
+            ProgressView()
+                .accessibilityLabel(Self.loadingLabel)
+                .accessibilityIdentifier("router.loading")
+        case .some(false):
             OnboardingScreen(onCompleted: {
                 hasCompletedOnboarding = true
             })
-        } else {
+        case .some(true):
 #if DEBUG
             HomeScreen(
                 viewModel: homeViewModel,
@@ -59,6 +69,10 @@ struct AppRouter: View {
             )
 #endif
         }
+    }
+
+    private static var loadingLabel: String {
+        String(localized: "router.loading", defaultValue: "Loading")
     }
 
     private func loadOnboardingState() -> Bool {
