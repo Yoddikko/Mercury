@@ -1,0 +1,7 @@
+outlet: ilfatto
+words: 1980
+blocks: 20
+block-counts: heading=2 image=2 list=1 paragraph=15
+survivors: []
+head: juventus multata dall'uefa per il fair play finanziario: 6 milioni subito calcio ultimo aggiornamento: 21:16 la juventus multata dalla uefa per non aver rispettato il fair play finanziario: sarà in regime di “settlement agreement” per 3 anni di redazione sport venti milioni total
+tail: i e approvati, ad eccezione di quelli pubblicati dagli utenti in white list (vedere il punto 3 della nostra policy). infine non è consentito accedere al servizio tramite account multipli. vi preghiamo di segnalare eventuali problemi tecnici al nostro supporto tecnico la redazione

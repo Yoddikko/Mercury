@@ -1,0 +1,7 @@
+outlet: ilpost
+words: 2127
+blocks: 34
+block-counts: image=2 paragraph=32
+survivors: []
+head: l’inizio della carriera politica di vannacci è ancora un po’ un mistero roberto vannacci a una presentazione del libro il mondo al contrario, 14 settembre 2023 (mauro scrobogna /lapresse) caricamento player quando pubblicò su amazon il suo primo libro, il mondo al contrario, il 1
+tail: ite effettuate nelle prime ore di pubblicazione per posizionare il libro nei posti più alti delle classifiche di amazon. con poche centinaia di copie vendute, dunque, si può ottenere dall’algoritmo grande visibilità sulla piattaforma. tag: il mondo al contrario - roberto vannacci
