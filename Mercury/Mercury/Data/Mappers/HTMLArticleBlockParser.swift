@@ -68,6 +68,12 @@ struct HTMLArticleBlockParser: Sendable {
                     let alt = (try? child.attr("alt")).flatMap { $0.isEmpty ? nil : $0 }
                     blocks.append(.image(url, alt: alt))
                 }
+            case "picture":
+                // `<picture>` wraps a fallback `<img>` plus one or more
+                // `<source>` elements with `srcset` — the semantics of
+                // an image block are the same, we just need to reach
+                // the fallback `<img>` inside.
+                appendFigure(child, into: &blocks)
             case "figure":
                 appendFigure(child, into: &blocks)
             case "ul", "ol":

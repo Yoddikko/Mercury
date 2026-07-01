@@ -212,7 +212,12 @@ struct ArticleBoilerplateRemover: Sendable {
             "breadcrumb", "pagination", "pager", "sidebar",
             "slim-header", "slim_header", "left-nav", "right-nav",
             "main-nav", "site-nav", "top-nav", "nav-bar", "nav-menu",
-            "nav-item", "nav-list", "header__", "footer__",
+            "nav-item", "nav-list",
+            // Intentionally NOT matching bare `header__` / `footer__` —
+            // those BEM prefixes false-hit legitimate content wrappers
+            // like `story__header__content` (which wraps the article
+            // title on repubblica.it) or `article__footer__meta`.
+            "site-header__", "page-header__", "site-footer__", "page-footer__",
             "open-app", "download-app", "scarica-app",
             // Footer / boilerplate
             "footer", "subfooter", "wall-footer", "copyright", "disclaimer",
