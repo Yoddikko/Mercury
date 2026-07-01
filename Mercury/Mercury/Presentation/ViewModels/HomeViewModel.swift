@@ -217,8 +217,25 @@ final class HomeViewModel: ObservableObject {
     /// Run an initial load: replay cached articles from SwiftData first
     /// (so the UI is not empty offline) and then kick off a network
     /// refresh in the background.
+    /// No-op until onboarding completes (issue #87): the first refresh
+    /// must run against the source set the user picks during onboarding,
+    /// so a pre-onboarding mount of HomeScreen never fires the pipeline.
+    /// `hasLoadedOnce` is intentionally not latched on the skip path so
+    /// the post-onboarding mount still triggers the initial load.
+    /// Missing preferences (no attached context) fail open to preserve
+    /// the closure-injected test seam.
     func loadInitialFeedIfNeeded() async {
         guard hasLoadedOnce == false else { return }
+
+        if let preferences = currentPreferences(), preferences.hasCompletedOnboarding == false {
+            logger.info(
+                "Skipping initial feed load until onboarding completes",
+                category: .ui,
+                service: "HomeViewModel"
+            )
+            return
+        }
+
         hasLoadedOnce = true
 
         let cached = loadCachedArticles()

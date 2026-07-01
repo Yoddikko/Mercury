@@ -71,6 +71,9 @@ struct HomeViewModelTests {
     func loadInitialFeedUsesCachedArticlesBeforeRefresh() async throws {
         let container = try Self.makeInMemoryContainer()
         let context = ModelContext(container)
+        // Issue #87: the initial load only runs after onboarding completes.
+        _ = try UserPreferencesService(modelContext: context)
+            .updatePreferences(.init(hasCompletedOnboarding: true))
         let cachedArticle = Self.sampleArticles(count: 1, prefix: "cached").first!
         context.insert(ArticleEntityMapper.makeEntity(from: cachedArticle))
         try context.save()
@@ -193,6 +196,45 @@ struct HomeViewModelTests {
 
         let captured = await capturedSources.value
         #expect(captured == nil)
+    }
+
+    @Test
+    func loadInitialFeedIsNoOpBeforeOnboardingCompletes() async throws {
+        let container = try Self.makeInMemoryContainer()
+        let context = ModelContext(container)
+        // Bootstrap default preferences: hasCompletedOnboarding == false.
+        _ = try UserPreferencesService(modelContext: context).loadPreferences()
+
+        let counter = CallCounter()
+        let articles = Self.sampleArticles(count: 1)
+        let viewModel = HomeViewModel(
+            feedRefreshAction: { _ in
+                await counter.increment()
+                return RSSFeedBatchResult(
+                    checkedAt: .now,
+                    groupMode: .mainOutlets,
+                    selectedRegion: nil,
+                    checks: [],
+                    deduplicatedArticles: articles
+                )
+            },
+            isDeveloperModeEnabled: false
+        )
+        viewModel.attach(modelContext: context)
+
+        await viewModel.loadInitialFeedIfNeeded()
+
+        #expect(await counter.value == 0)
+        #expect(viewModel.state == .idle)
+
+        // After onboarding completes, the same call runs the initial load.
+        _ = try UserPreferencesService(modelContext: context)
+            .updatePreferences(.init(hasCompletedOnboarding: true))
+
+        await viewModel.loadInitialFeedIfNeeded()
+
+        #expect(await counter.value == 1)
+        #expect(viewModel.hasArticles == true)
     }
 
     private actor SourcesCapture {

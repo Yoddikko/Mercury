@@ -251,3 +251,5 @@
 "onboarding.subtitle" = "Seleziona le regioni e le testate che vuoi nel feed Home. Potrai modificare in seguito dalle Impostazioni.";
 "onboarding.continue" = "Continua";
 "onboarding.footer" = "Puoi rivedere queste scelte da Impostazioni → Fonti del feed.";
+
+"router.loading" = "Caricamento";

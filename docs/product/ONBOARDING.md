@@ -19,6 +19,13 @@ The same region/source picker is also mounted inside the Settings screen
 under a "Feed sources" section so users can revisit their choices any
 time (see `docs/features/SETTINGS.md`).
 
+**No fetching before Continue** (issue #87): while onboarding is
+incomplete, no RSS fetch may run. `AppRouter` treats the persisted flag
+as tri-state — `nil` (still loading) renders a placeholder, never
+`HomeScreen` — and `HomeViewModel.loadInitialFeedIfNeeded` is a no-op
+until `hasCompletedOnboarding` is `true`. The first feed refresh
+therefore always runs against the source set picked during onboarding.
+
 ---
 
 ## Goals

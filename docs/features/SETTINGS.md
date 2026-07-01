@@ -104,6 +104,15 @@ choices captured during onboarding.
 4. The next Home refresh reads the updated preferences and only fetches
    the enabled subset.
 
+### Onboarding-first fetch order (issue #87)
+
+No feed fetch runs before onboarding completes. `HomeViewModel.
+loadInitialFeedIfNeeded` skips while `hasCompletedOnboarding == false`,
+and `AppRouter` never mounts `HomeScreen` while the flag is still
+loading from SwiftData. The first fetch of a fresh install is always
+the post-Continue one, resolved through `RSSSourceFilter` against the
+regions/outlets just picked.
+
 ## Notes
 
 * The Personalization (`PERSONALIZATION.md`) and Settings features both write into the same `UserPreference` model; their separation is **semantic only** (Personalization = ranking signals, Settings = display behavior).
