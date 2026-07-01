@@ -536,7 +536,17 @@ Suggested fields:
 * `hiddenSources`
 * `favoriteSources`
 * `preferredLanguage`
+* `enabledRegionRawValues` — raw values of `RSSFeedRegion` the user opted in to during onboarding / Settings. Empty means "all regions" (backwards compatible).
+* `hasCompletedOnboarding` — first-launch gate consumed by `AppRouter`. Optional so SwiftData migration stays additive; `nil`/`false` triggers the onboarding flow.
+* `articleRendererRawValue`
 * `updatedAt`
+
+Feed source resolution goes through `Domain/Services/RSSSourceFilter`,
+which combines `enabledRegionRawValues` and `hiddenSources` into the final
+`[RSSFeedSource]` list the `FeedRefreshService` fetches. Empty region
+selection and empty hidden list both defer to `RSSFeedCatalog.mainOutlets`,
+so a user who never touches Settings sees the same curated stream as
+before.
 
 ---
 

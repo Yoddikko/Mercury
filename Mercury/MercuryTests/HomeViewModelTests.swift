@@ -107,11 +107,105 @@ struct HomeViewModelTests {
     }
 
     @Test
+    func refreshForwardsResolvedSourcesWhenPreferencesFilterCatalog() async throws {
+        let container = try Self.makeInMemoryContainer()
+        let context = ModelContext(container)
+        // Seed preferences with an enabled region.
+        let service = UserPreferencesService(modelContext: context)
+        _ = try service.updatePreferences(
+            .init(
+                enabledRegionRawValues: [RSSFeedRegion.italy.rawValue],
+                hasCompletedOnboarding: true
+            )
+        )
+
+        let capturedSources = SourcesCapture()
+        let articles = Self.sampleArticles(count: 1)
+        let filter = RSSSourceFilter(allSources: [
+            RSSFeedSource(
+                id: "it-1",
+                outletName: "IT 1",
+                region: .italy,
+                feedURLString: "https://example.com/it",
+                isMainOutlet: true,
+                languageCode: "it",
+                tags: [],
+                note: nil
+            ),
+            RSSFeedSource(
+                id: "fr-1",
+                outletName: "FR 1",
+                region: .france,
+                feedURLString: "https://example.com/fr",
+                isMainOutlet: true,
+                languageCode: "fr",
+                tags: [],
+                note: nil
+            )
+        ])
+        let viewModel = HomeViewModel(
+            feedRefreshAction: { sources in
+                await capturedSources.set(sources)
+                return RSSFeedBatchResult(
+                    checkedAt: .now,
+                    groupMode: .mainOutlets,
+                    selectedRegion: nil,
+                    checks: [],
+                    deduplicatedArticles: articles
+                )
+            },
+            sourceFilter: filter,
+            isDeveloperModeEnabled: false
+        )
+        viewModel.attach(modelContext: context)
+
+        await viewModel.refresh()
+
+        let captured = await capturedSources.value
+        #expect(captured?.map(\.id) == ["it-1"])
+    }
+
+    @Test
+    func refreshDoesNotForwardExplicitSourcesWhenPreferencesAreEmpty() async throws {
+        let container = try Self.makeInMemoryContainer()
+        let context = ModelContext(container)
+        // Bootstrap default preferences (no regions, no hidden sources).
+        let service = UserPreferencesService(modelContext: context)
+        _ = try service.loadPreferences()
+
+        let capturedSources = SourcesCapture()
+        let viewModel = HomeViewModel(
+            feedRefreshAction: { sources in
+                await capturedSources.set(sources)
+                return RSSFeedBatchResult(
+                    checkedAt: .now,
+                    groupMode: .mainOutlets,
+                    selectedRegion: nil,
+                    checks: [],
+                    deduplicatedArticles: []
+                )
+            },
+            isDeveloperModeEnabled: false
+        )
+        viewModel.attach(modelContext: context)
+
+        await viewModel.refresh()
+
+        let captured = await capturedSources.value
+        #expect(captured == nil)
+    }
+
+    private actor SourcesCapture {
+        private(set) var value: [RSSFeedSource]?
+        func set(_ new: [RSSFeedSource]?) { value = new }
+    }
+
+    @Test
     func loadInitialFeedRunsOnlyOnce() async {
         let counter = CallCounter()
         let articles = Self.sampleArticles(count: 1)
         let viewModel = HomeViewModel(
-            feedRefreshAction: {
+            feedRefreshAction: { _ in
                 await counter.increment()
                 return RSSFeedBatchResult(
                     checkedAt: .now,
@@ -153,7 +247,7 @@ struct HomeViewModelTests {
             deduplicatedArticles: deduplicatedArticles
         )
         return HomeViewModel(
-            feedRefreshAction: { result },
+            feedRefreshAction: { _ in result },
             isDeveloperModeEnabled: false
         )
     }

@@ -32,8 +32,13 @@ protocol FetchHomeFeedUseCase: Sendable {
     /// Run the full Home-feed refresh pipeline.
     ///
     /// - Parameters:
+    ///   - sources: optional pre-resolved catalog subset. When non-nil the
+    ///     refresh runs against exactly this list (used by the preference-
+    ///     driven Home pipeline once onboarding lands). When nil the use
+    ///     case falls back to `groupMode`/`selectedRegion` for backwards
+    ///     compatibility.
     ///   - groupMode: which `RSSFeedCatalog` partition to fetch (typically
-    ///     `.mainOutlets` for production calls).
+    ///     `.mainOutlets` for production calls) when `sources` is nil.
     ///   - selectedRegion: optional region filter for region-scoped
     ///     refreshes; `nil` means "all regions in the group".
     ///   - requestID: caller-provided trace id; when `nil` the use case
@@ -41,6 +46,7 @@ protocol FetchHomeFeedUseCase: Sendable {
     /// - Returns: the deduplicated `RSSFeedBatchResult` produced by
     ///   `FeedRefreshService`, untouched by the persistence step.
     func execute(
+        sources: [RSSFeedSource]?,
         groupMode: RSSFeedGroupMode,
         selectedRegion: RSSFeedRegion?,
         requestID: String?
@@ -50,12 +56,14 @@ protocol FetchHomeFeedUseCase: Sendable {
 extension FetchHomeFeedUseCase {
     func execute(
         groupMode: RSSFeedGroupMode,
-        selectedRegion: RSSFeedRegion?
+        selectedRegion: RSSFeedRegion?,
+        requestID: String? = nil
     ) async -> RSSFeedBatchResult {
         await execute(
+            sources: nil,
             groupMode: groupMode,
             selectedRegion: selectedRegion,
-            requestID: nil
+            requestID: requestID
         )
     }
 }
@@ -70,6 +78,7 @@ struct LiveFetchHomeFeedUseCase: FetchHomeFeedUseCase {
     /// tests inject a stub so the orchestration can be exercised without
     /// the live RSS stack.
     typealias RefreshAction = @Sendable (
+        _ sources: [RSSFeedSource]?,
         _ groupMode: RSSFeedGroupMode,
         _ selectedRegion: RSSFeedRegion?,
         _ requestID: String
@@ -87,8 +96,16 @@ struct LiveFetchHomeFeedUseCase: FetchHomeFeedUseCase {
         logger: AppLogger = .shared
     ) {
         self.init(
-            refreshAction: { groupMode, region, requestID in
-                await feedRefreshService.refreshFeed(
+            refreshAction: { sources, groupMode, region, requestID in
+                if let sources {
+                    return await feedRefreshService.refreshFeed(
+                        sources: sources,
+                        groupMode: groupMode,
+                        selectedRegion: region,
+                        requestID: requestID
+                    )
+                }
+                return await feedRefreshService.refreshFeed(
                     groupMode: groupMode,
                     selectedRegion: region,
                     requestID: requestID
@@ -113,6 +130,7 @@ struct LiveFetchHomeFeedUseCase: FetchHomeFeedUseCase {
     }
 
     func execute(
+        sources: [RSSFeedSource]?,
         groupMode: RSSFeedGroupMode,
         selectedRegion: RSSFeedRegion?,
         requestID: String?
@@ -126,11 +144,12 @@ struct LiveFetchHomeFeedUseCase: FetchHomeFeedUseCase {
             requestID: flowRequestID,
             metadata: [
                 "group_mode": groupMode.rawValue,
-                "selected_region": selectedRegion?.rawValue ?? "none"
+                "selected_region": selectedRegion?.rawValue ?? "none",
+                "explicit_sources_count": sources.map { "\($0.count)" } ?? "none"
             ]
         )
 
-        let result = await refreshAction(groupMode, selectedRegion, flowRequestID)
+        let result = await refreshAction(sources, groupMode, selectedRegion, flowRequestID)
 
         await persistArticles(result.deduplicatedArticles, requestID: flowRequestID)
 

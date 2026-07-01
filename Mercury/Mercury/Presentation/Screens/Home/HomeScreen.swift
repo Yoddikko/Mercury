@@ -287,7 +287,7 @@ private struct ArticleCardSkeleton: View {
 
 #Preview("Loaded") {
     let viewModel = HomeViewModel(
-        feedRefreshAction: {
+        feedRefreshAction: { _ in
             RSSFeedBatchResult(
                 checkedAt: Date(),
                 groupMode: .mainOutlets,
@@ -310,7 +310,7 @@ private struct ArticleCardSkeleton: View {
 
 #Preview("Empty") {
     let viewModel = HomeViewModel(
-        feedRefreshAction: {
+        feedRefreshAction: { _ in
             RSSFeedBatchResult(
                 checkedAt: Date(),
                 groupMode: .mainOutlets,

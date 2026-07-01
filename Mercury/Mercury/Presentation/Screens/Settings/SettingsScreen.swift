@@ -18,10 +18,11 @@ import SwiftData
 struct SettingsScreen: View {
     @Environment(\.modelContext) private var modelContext
     @StateObject private var viewModel: SettingsViewModel
+    @StateObject private var feedSourcesViewModel: FeedSourcesViewModel
     private let usesInjectedViewModel: Bool
 
     init() {
-        // The "real" view model is built in `onAppear` because the
+        // The "real" view models are built in `onAppear` because the
         // environment is not available during `init`. The placeholder
         // here is replaced before the user can interact with anything.
         _viewModel = StateObject(
@@ -31,19 +32,28 @@ struct SettingsScreen: View {
                 )
             )
         )
+        _feedSourcesViewModel = StateObject(
+            wrappedValue: FeedSourcesViewModel(
+                service: UserPreferencesService(
+                    modelContext: ModelContext(SettingsScreen.placeholderContainer)
+                )
+            )
+        )
         self.usesInjectedViewModel = false
     }
 
-    /// Preview / test seam — accepts a fully-built view model so the
+    /// Preview / test seam — accepts fully-built view models so the
     /// screen can be exercised without a SwiftData stack.
-    init(viewModel: SettingsViewModel) {
+    init(viewModel: SettingsViewModel, feedSourcesViewModel: FeedSourcesViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
+        _feedSourcesViewModel = StateObject(wrappedValue: feedSourcesViewModel)
         self.usesInjectedViewModel = true
     }
 
     var body: some View {
         Form {
             articleRendererSection
+            feedSourcesSection
             if let message = viewModel.lastErrorMessage {
                 Section {
                     Label(message, systemImage: "exclamationmark.triangle")
@@ -59,8 +69,28 @@ struct SettingsScreen: View {
                 rebindToLiveContext()
             }
             viewModel.load()
+            feedSourcesViewModel.load()
         }
         .accessibilityIdentifier("settings.screen")
+    }
+
+    private var feedSourcesSection: some View {
+        Section {
+            NavigationLink {
+                Form {
+                    FeedSourcesPicker(viewModel: feedSourcesViewModel)
+                }
+                .navigationTitle(Self.feedSourcesTitle)
+                .navigationBarTitleDisplayMode(.inline)
+            } label: {
+                Text(Self.feedSourcesTitle)
+                    .accessibilityIdentifier("settings.feed_sources")
+            }
+        } header: {
+            Text(Self.feedSourcesSectionHeader)
+        } footer: {
+            Text(Self.feedSourcesSectionFooter)
+        }
     }
 
     private var articleRendererSection: some View {
@@ -91,10 +121,11 @@ struct SettingsScreen: View {
 
     private func rebindToLiveContext() {
         // Swap the placeholder context for the one provided by the
-        // environment. The view model is a class so reassigning its
+        // environment. The view models are classes so reassigning their
         // service is safe.
         let liveService = UserPreferencesService(modelContext: modelContext)
         viewModel.replaceService(liveService)
+        feedSourcesViewModel.replaceService(liveService)
     }
 
     // MARK: - Localized copy
@@ -116,6 +147,27 @@ struct SettingsScreen: View {
 
     private static var rendererPickerLabel: String {
         String(localized: "settings.section.renderer.picker", defaultValue: "Renderer")
+    }
+
+    private static var feedSourcesTitle: String {
+        String(
+            localized: "settings.section.feed_sources.title",
+            defaultValue: "Feed sources"
+        )
+    }
+
+    private static var feedSourcesSectionHeader: String {
+        String(
+            localized: "settings.section.feed_sources.header",
+            defaultValue: "Feed sources"
+        )
+    }
+
+    private static var feedSourcesSectionFooter: String {
+        String(
+            localized: "settings.section.feed_sources.footer",
+            defaultValue: "Choose the regions and outlets that feed the Home stream."
+        )
     }
 
     // MARK: - Placeholder container

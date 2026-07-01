@@ -13,7 +13,7 @@ struct MercuryTests {
     @Test @MainActor
     func homeViewModelStartsInIdleState() async throws {
         let viewModel = HomeViewModel(
-            feedRefreshAction: {
+            feedRefreshAction: { _ in
                 RSSFeedBatchResult(
                     checkedAt: .now,
                     groupMode: .mainOutlets,
