@@ -1,0 +1,7 @@
+outlet: gazzetta
+words: 527
+blocks: 16
+block-counts: heading=4 image=3 paragraph=9
+survivors: []
+head: milan e inter su ouedraogo dello schalke 04: il derby e le trattative | gazzetta.it milan-inter, derby di mercato per ouédraogo: i dettagli calciomercato milan: tutte le notizie il centrocampista, tra i migliori giovani di germania, a gennaio vuole restare allo schalke ma ha una 
+tail: endo un contratto livello pro a lui. a milano gli affitti costano caro ma insomma, se la caverebbe. inzaghi: "che orgoglio la qualificazione anticipata! ma quanto corre il salisburgo..." milan, sospiro di sollievo per pulisic: soltanto contrattura per l'esterno, allarme rientrato
