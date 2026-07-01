@@ -35,15 +35,31 @@ struct ArticleLocaleBoilerplateStripper: Sendable {
             let document = try SwiftSoup.parseBodyFragment(html)
             guard let body = document.body() else { return html }
 
-            // Apply only to paragraph-level elements so that a banned
-            // phrase appearing as a link label inside a container does
-            // not wipe out the surrounding article body.
-            let candidates = try body.select("p, li")
-            for element in candidates {
+            // Paragraph-level elements (`p, li`): drop whenever the
+            // text matches a boilerplate pattern, regardless of length.
+            // Container / heading elements (`div, span, h1..h6, header`):
+            // only drop when the matching text is short (≤ 80 chars),
+            // so a div that legitimately contains an article body which
+            // happens to mention a banned phrase is preserved while a
+            // standalone "Leggi anche" label divider gets removed.
+            let paragraphCandidates = try body.select("p, li")
+            for element in paragraphCandidates {
                 guard let text = try? element.text() else { continue }
                 let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
                 guard trimmed.isEmpty == false else { continue }
+                if Self.matches(text: trimmed, patterns: patterns) {
+                    try element.remove()
+                }
+            }
 
+            let containerCandidates = try body.select("div, span, h1, h2, h3, h4, h5, h6, header, aside, a")
+            for element in containerCandidates {
+                guard let text = try? element.text() else { continue }
+                let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+                guard trimmed.isEmpty == false else { continue }
+                // Bail when the text is long — that's a real container,
+                // not a boilerplate label.
+                guard trimmed.count <= 80 else { continue }
                 if Self.matches(text: trimmed, patterns: patterns) {
                     try element.remove()
                 }
@@ -88,6 +104,7 @@ struct ArticleLocaleBoilerplateStripper: Sendable {
             "\\bvedi\\s+anche\\b",
             "\\bapprofondimenti\\b",
             "\\biscriviti\\s+alla\\s+(?:nostra\\s+)?newsletter\\b",
+            "\\bnewsletter\\s+iscriviti\\b",
             "\\bresta\\s+aggiornato\\b",
             "\\bcondividi\\s+su\\b",
             "\\baccetta\\s+(?:tutti\\s+i\\s+)?cookie\\b",
@@ -97,7 +114,36 @@ struct ArticleLocaleBoilerplateStripper: Sendable {
             "\\bse\\s+hai\\s+scelto\\s+di\\s+non\\s+accettare\\b",
             "\\babbonamento\\s+[\"']?consentless\\b",
             "\\btrattamento\\s+dei\\s+dati\\s+personali\\b",
-            "\\bcontinua\\s+senza\\s+accettare\\b"
+            "\\bcontinua\\s+senza\\s+accettare\\b",
+            // "Follow us" widget copy (Google Discover / social).
+            "\\bseguici\\s+(?:anche\\s+)?su\\b",
+            "\\bgoogle\\s+discover\\b",
+            "\\bfonti\\s+preferite\\b",
+            // Subscribe / login menu labels (short standalone contexts).
+            "\\babbonati\\s+(?:entra|accedi|adesso|ora|per\\b|premium|a\\b)",
+            // Sponsored content / dynamic placeholders that survive
+            // the class strip on outlets like Il Sole 24 Ore.
+            "\\bbrand\\s+connect\\b",
+            "\\bloading\\.{2,}",
+            // Il Messaggero real-estate ad copy.
+            "\\bcerca\\s+il\\s+tuo\\s+immobile\\b",
+            "\\bimmobile\\s+all[\"' ]asta\\b",
+            // Standalone "Abbonati" button label (short-text guard
+            // in the container pass keeps this from over-matching).
+            "^\\s*abbonati\\s*$",
+            // Il Giornale skip-links + Explorer browser warning.
+            "\\bvai\\s+al\\s+(?:contenuto|footer|menu|piede)\\b",
+            "\\bstai\\s+utilizzando\\s+internet\\b",
+            // ANSA "Mostra meno / Mostra di più" expand-collapse label.
+            "^\\s*mostra\\s+(?:meno|di\\s+più|di\\s+piu|tutto)\\s*$",
+            // Comment-section title that surfaces as body text
+            // when the comment widget is stripped.
+            "\\bi\\s+commenti\\s+dei\\s+lettori\\b",
+            "^\\s*commenti\\s*$",
+            // HuffPost tagline that appears at the top of every article.
+            "\\bscegli\\s+di\\s+capire\\b",
+            // Weekly-magazine cross-sell that some outlets embed.
+            "\\bleggi\\s+il\\s+settimanale\\b"
         ]),
         "en": Self.compile([
             "^\\s*all\\s+rights\\s+reserved\\b",

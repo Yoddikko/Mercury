@@ -1,0 +1,7 @@
+outlet: tgla7
+words: 462
+blocks: 27
+block-counts: heading=8 paragraph=19
+survivors: []
+head: online il nuovo podcast del tg la7 “l'era delle macchine" il podcast è a cura di pina debbi, vicedirettrice del tg la7 di redazione digitale 23.06.2025 17:24 continuiamo a chiederci: l’intelligenza artificiale è più efficace (migliore) di noi? può pensare? comprendere? sostituirc
+tail: gno" tutti gli aggornamenti ora per ora 09.05.2026 dichiarazione dei redditi 2026, online il 730 precompilato: come funziona e tutte le novità del fisco dal 30 aprile, disponibili i modelli precompilati sul sito agenzia delle entrate: guida all’accesso, dati e scadenze 30.04.2026

@@ -1,0 +1,7 @@
+outlet: lettera43
+words: 170
+blocks: 10
+block-counts: heading=2 list=1 paragraph=7
+survivors: []
+head: le nuove nomine del papa: suor smerilli prefetto allo sviluppo umano alessandra smerilli (ansa). redazione 30 giugno 2026 – lettura: 1 minuto ultima ora la donna assumerà l’incarico dal primo settembre 2026. nominati segretari e sottosegretari in altri dicasteri. papa leone ha no
+tail: servizio dello sviluppo umano integrale; monsignor marco mellino segretario del dicastero per i testi legislativi; monsignor lucio adrián ruiz segretario del dicastero per il servizio della carità; il laico massimo ralli sottosegretario del dicastero per il servizio della carità.

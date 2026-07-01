@@ -1,0 +1,7 @@
+outlet: ilrestodelcarlino
+words: 186
+blocks: 8
+block-counts: heading=2 image=2 paragraph=4
+survivors: []
+head: 1 lug 2026 redazione rimini è tornato in stazione dopo 82 anni il trenino della linea san marino-rimini il trenino bianco azzurro ricomincia a scrivere la sua storia, riappropriandosi di un passato che sembrava relegato ai ricordi. con... il trenino bianco azzurro ricomincia a sc
+tail: o, ma un pezzo di storia. si tratta di un primo passo. l’ambizione è quella di restituire ai cittadini e ai turisti l’infrastruttura su rotaia che ha collegato rimini e san marino dal 1932 al 1944. circa 800 metri di percorso furono ripristinati nel 2012, ora il nuovo intervento.
