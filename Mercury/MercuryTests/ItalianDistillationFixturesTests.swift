@@ -49,6 +49,37 @@ struct ItalianDistillationFixturesTests {
             ]
         ),
         FixtureSpec(
+            // Second ANSA fixture (issue #81) — the July 2026
+            // Sinner-Borges Wimbledon article. It carries the full
+            // iubenda Consentless subscription CTA that motivated
+            // the boilerplate-remover class updates in #84 and the
+            // article-terminator truncation. Pin the specific CTA
+            // strings so a regression that lets Consentless leak
+            // back through fails loud.
+            name: "ansa-consentless-sinner",
+            language: "it",
+            mustContainAny: ["sinner", "borges", "wimbledon"],
+            bannedSubstrings: Self.commonChrome + [
+                "abbonamento consentless",
+                "accetta i cookie e continua",
+                "altri abbonamenti",
+                "iscrizione alle newsletter tematiche"
+            ]
+        ),
+        FixtureSpec(
+            // Fresh Corriere article covering the metered-paywall
+            // chrome pattern (issue #81). The page carries a
+            // `.Paywall` container and "abbonamento permette di
+            // leggere Corriere" CTA copy that must not leak.
+            name: "corriere-toti-spinelli",
+            language: "it",
+            mustContainAny: ["toti", "spinelli"],
+            bannedSubstrings: Self.commonChrome + [
+                "abbonato con un altro account",
+                "abbonamento permette di leggere corriere"
+            ]
+        ),
+        FixtureSpec(
             name: "corriere",
             language: "it",
             mustContainAny: ["codice della strada", "gabanelli"],
@@ -191,7 +222,15 @@ struct ItalianDistillationFixturesTests {
         let localeStripper = ArticleLocaleBoilerplateStripper()
 
         let sanitized = sanitizer.sanitize(html)
-        let withoutBoilerplate = remover.cleaning(sanitized)
+        // Mirror the production pipeline order (#81) — the terminator
+        // truncation runs before the boilerplate remover, so downstream
+        // chrome that appears after "Riproduzione riservata" never
+        // reaches the fixture assertions.
+        let truncated = ArticleContentEnrichmentService.truncatedAtTerminator(
+            html: sanitized,
+            language: spec.language
+        )
+        let withoutBoilerplate = remover.cleaning(truncated)
         let withoutHero = imageDedup.dedupingHero(in: withoutBoilerplate, heroImageURLString: nil)
         let final = localeStripper.stripping(html: withoutHero, language: spec.language)
 

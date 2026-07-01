@@ -352,10 +352,17 @@ struct ArticleContentEnrichmentService: Sendable {
     /// terminator (Italian: "Riproduzione riservata" / "©
     /// RIPRODUZIONE RISERVATA"). Case-insensitive.
     ///
-    /// Search deliberately skips `<script>` and `<style>` blocks:
-    /// ANSA in particular embeds the terminator string inside JS
-    /// image-slider captions near the top of the page, which would
-    /// otherwise cause the truncation to eat the whole article.
+    /// The scan walks the HTML with a small state machine and only
+    /// records characters that will actually render as visible text.
+    /// Skipped regions:
+    /// * `<script>...</script>` bodies — ANSA embeds the marker inside
+    ///   JS image-slider captions near the top of the page.
+    /// * `<style>...</style>` bodies.
+    /// * `<!-- ... -->` comments.
+    /// * Everything between `<` and `>` (tag markup + attribute
+    ///   values). ANSA also puts "RIPRODUZIONE RISERVATA" in
+    ///   `alt=""` on its hero image, and without this the truncation
+    ///   would still fire at the very top of the article.
     ///
     /// If the terminator is not present in the visible content, the
     /// input is returned unchanged. `nil` / unknown language also
@@ -366,85 +373,147 @@ struct ArticleContentEnrichmentService: Sendable {
             return html
         }
 
-        // Walk the HTML once, tracking whether we're inside a script /
-        // style block, and only search for terminators in the
-        // "visible" text. When a match is found, translate the
-        // position back to the original HTML index so we cut at the
-        // right byte.
-        let scriptOpen = "<script"
-        let scriptClose = "</script>"
-        let styleOpen = "<style"
-        let styleClose = "</style>"
-        let commentOpen = "<!--"
-        let commentClose = "-->"
+        // Precompute the lowercase HTML once so `<script` / `</script>`
+        // /`<!--` detection is O(n) case-insensitive without recompiling
+        // NSRegularExpression per iteration.
+        let lowered = html.lowercased()
+        let bytes = Array(lowered.utf8)
+        let originalBytes = Array(html.utf8)
+        let count = bytes.count
 
-        var searchStart = html.startIndex
-        var visibleAccumulator = ""
-        var visibleToHTMLOffsets: [Int] = []
-        visibleAccumulator.reserveCapacity(html.count)
+        // Prepare each terminator's UTF-8 lowercase byte pattern.
+        let markerPatterns: [[UInt8]] = terminators.map { Array($0.utf8) }
 
-        while searchStart < html.endIndex {
-            let range = html[searchStart..<html.endIndex]
-            let nextTag = [scriptOpen, styleOpen, commentOpen]
-                .compactMap { open -> (open: String, close: String, range: Range<String.Index>)? in
-                    guard let r = range.range(of: open, options: [.caseInsensitive]) else { return nil }
-                    let close: String
-                    switch open {
-                    case scriptOpen: close = scriptClose
-                    case styleOpen: close = styleClose
-                    default: close = commentClose
+        // Byte-level state machine.
+        var i = 0
+        while i < count {
+            let byte = bytes[i]
+            if byte == 0x3C { // '<'
+                // Handle <!-- ... -->
+                if Self.hasPrefix(bytes, at: i, "<!--".utf8) {
+                    if let end = Self.indexOfPrefix(bytes, from: i + 4, "-->".utf8) {
+                        i = end + 3
+                    } else {
+                        i = count
                     }
-                    return (open, close, r)
+                    continue
                 }
-                .min(by: { $0.range.lowerBound < $1.range.lowerBound })
-
-            let sliceEnd = nextTag?.range.lowerBound ?? html.endIndex
-            let visibleSlice = html[searchStart..<sliceEnd]
-            let visibleStartOffset = html.distance(from: html.startIndex, to: searchStart)
-            for i in 0..<visibleSlice.count {
-                visibleToHTMLOffsets.append(visibleStartOffset + i)
+                // Handle <script ...>...</script>
+                if Self.hasPrefix(bytes, at: i, "<script".utf8) {
+                    if let closeStart = Self.indexOfPrefix(bytes, from: i + 7, "</script>".utf8) {
+                        i = closeStart + 9
+                    } else {
+                        i = count
+                    }
+                    continue
+                }
+                // Handle <style ...>...</style>
+                if Self.hasPrefix(bytes, at: i, "<style".utf8) {
+                    if let closeStart = Self.indexOfPrefix(bytes, from: i + 6, "</style>".utf8) {
+                        i = closeStart + 8
+                    } else {
+                        i = count
+                    }
+                    continue
+                }
+                // Handle <figure ...>...</figure>. Italian outlets use
+                // "RIPRODUZIONE RISERVATA" as a hero-image credit
+                // caption ("Papa Leone - RIPRODUZIONE RISERVATA") that
+                // sits inside the figure wrapping the article's opening
+                // image. Without skipping figures the truncation would
+                // fire against that caption and eat the entire article
+                // body.
+                if Self.hasPrefix(bytes, at: i, "<figure".utf8) {
+                    if let closeStart = Self.indexOfPrefix(bytes, from: i + 7, "</figure>".utf8) {
+                        i = closeStart + 9
+                    } else {
+                        i = count
+                    }
+                    continue
+                }
+                // Handle bare <figcaption ...>...</figcaption> (some
+                // templates omit the wrapping <figure>).
+                if Self.hasPrefix(bytes, at: i, "<figcaption".utf8) {
+                    if let closeStart = Self.indexOfPrefix(bytes, from: i + 11, "</figcaption>".utf8) {
+                        i = closeStart + 13
+                    } else {
+                        i = count
+                    }
+                    continue
+                }
+                // Any other tag markup — skip up to the closing '>'.
+                var j = i + 1
+                while j < count, bytes[j] != 0x3E { // '>'
+                    j += 1
+                }
+                i = j < count ? j + 1 : count
+                continue
             }
-            visibleAccumulator.append(contentsOf: visibleSlice)
 
-            guard let tag = nextTag else { break }
-            let scanFrom = html.index(tag.range.upperBound, offsetBy: 0)
-            let scanRange = html[scanFrom..<html.endIndex]
-            if let closeRange = scanRange.range(of: tag.close, options: [.caseInsensitive]) {
-                searchStart = closeRange.upperBound
-            } else {
-                searchStart = html.endIndex
-            }
-        }
-
-        let lowered = visibleAccumulator.lowercased()
-        var earliestVisibleOffset: Int?
-        for marker in terminators {
-            if let range = lowered.range(of: marker) {
-                let offset = lowered.distance(from: lowered.startIndex, to: range.lowerBound)
-                if let current = earliestVisibleOffset {
-                    if offset < current { earliestVisibleOffset = offset }
-                } else {
-                    earliestVisibleOffset = offset
+            // Visible byte — try to match any terminator anchored here.
+            for pattern in markerPatterns {
+                if Self.hasPrefix(bytes, at: i, ArraySlice(pattern)) {
+                    return String(decoding: originalBytes.prefix(i), as: UTF8.self)
                 }
             }
+            i += 1
         }
-        guard let visibleOffset = earliestVisibleOffset,
-              visibleOffset < visibleToHTMLOffsets.count else {
-            return html
+        return html
+    }
+
+    /// Byte-slice prefix check. Kept nonisolated + inlinable so the
+    /// terminator scanner stays branch-predictable.
+    @inline(__always)
+    private static func hasPrefix<S: Collection>(
+        _ bytes: [UInt8],
+        at index: Int,
+        _ pattern: S
+    ) -> Bool where S.Element == UInt8 {
+        var i = index
+        for expected in pattern {
+            guard i < bytes.count else { return false }
+            if bytes[i] != expected { return false }
+            i += 1
         }
-        let htmlOffset = visibleToHTMLOffsets[visibleOffset]
-        let cutIndex = html.index(html.startIndex, offsetBy: htmlOffset)
-        return String(html[html.startIndex..<cutIndex])
+        return true
+    }
+
+    /// Find the earliest index ≥ `from` where `bytes` matches `pattern`.
+    private static func indexOfPrefix<S: Collection>(
+        _ bytes: [UInt8],
+        from: Int,
+        _ pattern: S
+    ) -> Int? where S.Element == UInt8 {
+        let patternArray = Array(pattern)
+        guard patternArray.isEmpty == false else { return from }
+        let last = bytes.count - patternArray.count
+        if last < from { return nil }
+        for start in from...last {
+            if hasPrefix(bytes, at: start, ArraySlice(patternArray)) {
+                return start
+            }
+        }
+        return nil
     }
 
     /// Per-locale article terminators. Kept minimal so we don't cut
     /// legitimate paragraphs; add new markers only when we've seen
     /// them survive the boilerplate remover on the fixture corpus.
+    ///
+    /// All Italian variants **require the copyright glyph** adjacent
+    /// to the phrase because Italian outlets use bare "RIPRODUZIONE
+    /// RISERVATA" as an image-credit caption ("Papa Leone -
+    /// RIPRODUZIONE RISERVATA") that sits near the top of the page —
+    /// truncating there would eat the article. The real
+    /// article-ending line always carries `©` / `&copy;`, so this
+    /// tightening loses nothing.
     private static let terminatorMarkers: [String: [String]] = [
         "it": [
-            "riproduzione riservata",
             "© riproduzione riservata",
-            "©riproduzione riservata"
+            "©riproduzione riservata",
+            "riproduzione riservata ©",
+            "riproduzione riservata &copy;",
+            "riproduzione riservata&copy;"
         ]
     ]
 }
