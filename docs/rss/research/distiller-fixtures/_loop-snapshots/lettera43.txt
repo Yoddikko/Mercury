@@ -1,7 +1,7 @@
 outlet: lettera43
-words: 189
-blocks: 14
-block-counts: heading=2 list=1 paragraph=11
+words: 183
+blocks: 11
+block-counts: heading=2 list=1 paragraph=8
 survivors: []
-head: le nuove nomine del papa: suor smerilli prefetto allo sviluppo umano - lettera43 le nuove nomine del papa: suor smerilli prefetto allo sviluppo umano alessandra smerilli (ansa). redazione 30 giugno 2026 – lettura: 1 minuto ultima ora seguici su google discover fonti preferite la 
+head: le nuove nomine del papa: suor smerilli prefetto allo sviluppo umano - lettera43 le nuove nomine del papa: suor smerilli prefetto allo sviluppo umano alessandra smerilli (ansa). redazione 30 giugno 2026 – lettura: 1 minuto ultima ora la donna assumerà l’incarico dal primo settemb
 tail: servizio dello sviluppo umano integrale; monsignor marco mellino segretario del dicastero per i testi legislativi; monsignor lucio adrián ruiz segretario del dicastero per il servizio della carità; il laico massimo ralli sottosegretario del dicastero per il servizio della carità.

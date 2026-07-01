@@ -1,7 +1,7 @@
 outlet: avvenire
-words: 881
-blocks: 17
-block-counts: heading=1 image=1 paragraph=15
+words: 874
+blocks: 16
+block-counts: heading=1 image=1 paragraph=14
 survivors: []
 head: ius soli, trump bocciato dalla corte suprema: «la cittadinanza resta una promessa da mantenere» june 30, 2026 abbonati ius soli, trump bocciato dalla corte suprema: «la cittadinanza resta una promessa da mantenere» di elena molinari , new york clamoroso “no” dei giudici all’ordin
-tail: to sapere che quest'anno leone non visiterà gli stati uniti. nel giorno del 250° anniversario della nazione, il papa andrà invece a lampedusa, porta d'accesso in europa per migliaia di migranti e rifugiati. seguici anche su google discover di avvenire temi stati uniti primo piano
+tail: vicepresidente j.d. vance, il vaticano ha fatto sapere che quest'anno leone non visiterà gli stati uniti. nel giorno del 250° anniversario della nazione, il papa andrà invece a lampedusa, porta d'accesso in europa per migliaia di migranti e rifugiati. temi stati uniti primo piano

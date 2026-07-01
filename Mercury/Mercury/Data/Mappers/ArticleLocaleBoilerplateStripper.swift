@@ -52,7 +52,7 @@ struct ArticleLocaleBoilerplateStripper: Sendable {
                 }
             }
 
-            let containerCandidates = try body.select("div, span, h1, h2, h3, h4, h5, h6, header, aside")
+            let containerCandidates = try body.select("div, span, h1, h2, h3, h4, h5, h6, header, aside, a")
             for element in containerCandidates {
                 guard let text = try? element.text() else { continue }
                 let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -104,6 +104,7 @@ struct ArticleLocaleBoilerplateStripper: Sendable {
             "\\bvedi\\s+anche\\b",
             "\\bapprofondimenti\\b",
             "\\biscriviti\\s+alla\\s+(?:nostra\\s+)?newsletter\\b",
+            "\\bnewsletter\\s+iscriviti\\b",
             "\\bresta\\s+aggiornato\\b",
             "\\bcondividi\\s+su\\b",
             "\\baccetta\\s+(?:tutti\\s+i\\s+)?cookie\\b",
@@ -113,7 +114,20 @@ struct ArticleLocaleBoilerplateStripper: Sendable {
             "\\bse\\s+hai\\s+scelto\\s+di\\s+non\\s+accettare\\b",
             "\\babbonamento\\s+[\"']?consentless\\b",
             "\\btrattamento\\s+dei\\s+dati\\s+personali\\b",
-            "\\bcontinua\\s+senza\\s+accettare\\b"
+            "\\bcontinua\\s+senza\\s+accettare\\b",
+            // "Follow us" widget copy (Google Discover / social).
+            "\\bseguici\\s+(?:anche\\s+)?su\\b",
+            "\\bgoogle\\s+discover\\b",
+            "\\bfonti\\s+preferite\\b",
+            // Subscribe / login menu labels (short standalone contexts).
+            "\\babbonati\\s+(?:entra|accedi|adesso|ora|per\\b|premium|a\\b)",
+            // Sponsored content / dynamic placeholders that survive
+            // the class strip on outlets like Il Sole 24 Ore.
+            "\\bbrand\\s+connect\\b",
+            "\\bloading\\.{2,}",
+            // Il Messaggero real-estate ad copy.
+            "\\bcerca\\s+il\\s+tuo\\s+immobile\\b",
+            "\\bimmobile\\s+all[\"' ]asta\\b"
         ]),
         "en": Self.compile([
             "^\\s*all\\s+rights\\s+reserved\\b",

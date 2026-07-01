@@ -1,7 +1,7 @@
 outlet: ilsole24ore
-words: 395
-blocks: 25
-block-counts: heading=8 image=2 list=1 paragraph=14
+words: 389
+blocks: 21
+block-counts: heading=6 image=1 list=1 paragraph=13
 survivors: []
 head: fs, l’ad donnarumma rassegna le dimissioni - il sole 24 ore politica economica ferrovie fs, l’ad donnarumma rassegna le dimissioni la decisione in un cda straordinario dopo che l’uscita era stata annunciata la scorsa settimana al termine di un incontro con salvini ferrovie, salvi
-tail:  pay tv il gruppo fs «conferma il proprio impegno nella realizzazione del piano industriale, garantendo continuità operativa, efficienza gestionale e piena attuazione dei programmi di investimento a servizio della mobilità del paese». brand connect loading... newsletter iscriviti
+tail: nternet casa, telefonia mobile, energia, gas e pay tv il gruppo fs «conferma il proprio impegno nella realizzazione del piano industriale, garantendo continuità operativa, efficienza gestionale e piena attuazione dei programmi di investimento a servizio della mobilità del paese».

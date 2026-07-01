@@ -1,7 +1,7 @@
 outlet: repubblica
-words: 78
-blocks: 9
-block-counts: heading=2 image=1 paragraph=6
+words: 72
+blocks: 8
+block-counts: heading=2 image=1 paragraph=5
 survivors: []
 head: uso improprio dei fondi ue da parte di identità e democrazia, perquisizioni anche in italia - la repubblica esteri il leader di rassemblement national, jordan bardella (afp) indagine sui 4,33 milioni di euro spesi tra il 2019 e il 2024 dal gruppo. la procura europea ha "confermat
-tail: 3 milioni di euro spesi tra il 2019 e il 2024 dal gruppo. la procura europea ha "confermato di star conducendo indagini in francia e in altri paesi europei" l'ascolto è riservato agli abbonati premium 30 giugno 2026 aggiornato alle 20:57 1 minuti di lettura i commenti dei lettori
+tail: onal, jordan bardella (afp) indagine sui 4,33 milioni di euro spesi tra il 2019 e il 2024 dal gruppo. la procura europea ha "confermato di star conducendo indagini in francia e in altri paesi europei" 30 giugno 2026 aggiornato alle 20:57 1 minuti di lettura i commenti dei lettori
