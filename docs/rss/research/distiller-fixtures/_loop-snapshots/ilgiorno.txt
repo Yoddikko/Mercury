@@ -1,0 +1,7 @@
+outlet: ilgiorno
+words: 454
+blocks: 13
+block-counts: heading=4 image=2 paragraph=7
+survivors: []
+head: il dramma del piccolo leonardo: morto in ospedale il bimbo di 5 mesi gravemente ferito nel frontale di montebello della battaglia 30 giu 2026 stefano zanette cronaca il dramma del piccolo leonardo: morto in ospedale il bimbo di 5 mesi gravemente ferito nel frontale di montebello 
+tail: tessa terminando al centro della carreggiata. le responsabilità del sinistro sono ancora al vaglio, ma pare che possa essere stata proprio l'auto della famiglia di broni, dopo una sbandata per cause che dovranno essere accertate, a invadere la corsia dell'opposto senso di marcia.

@@ -178,6 +178,7 @@ struct ItalianDistillationFixturesTests {
         let final = localeStripper.stripping(html: withoutHero, language: spec.language)
 
         let plain = ArticleBoilerplateRemover.plainText(from: final).lowercased()
+        let blocks = HTMLArticleBlockParser().parse(final)
 
         let bodyKeptOne = spec.mustContainAny.contains(where: { plain.contains($0.lowercased()) })
         #expect(
@@ -201,6 +202,40 @@ struct ItalianDistillationFixturesTests {
                 [\(spec.name)] words=\(wordCount) survivors=\(survivors)
                 HEAD: \(String(plain.prefix(800)))
                 """)
+        }
+
+        // Snapshot the per-fixture profile to disk so the loop can
+        // inspect what survives without re-running tests. Writes are
+        // best-effort — failures don't break the test.
+        let blockTypes = blocks.map { Self.kind(of: $0) }
+        let counts: [String: Int] = blockTypes.reduce(into: [:]) { $0[$1, default: 0] += 1 }
+        let snapshot = """
+        outlet: \(spec.name)
+        words: \(wordCount)
+        blocks: \(blocks.count)
+        block-counts: \(counts.sorted(by: { $0.key < $1.key }).map { "\($0.key)=\($0.value)" }.joined(separator: " "))
+        survivors: \(survivors)
+        head: \(String(plain.prefix(280)))
+        tail: \(String(plain.suffix(280)))
+        """
+        let snapURL = Self.fixturesDirectory
+            .appendingPathComponent("_loop-snapshots")
+            .appendingPathComponent("\(spec.name).txt")
+        try? FileManager.default.createDirectory(
+            at: snapURL.deletingLastPathComponent(),
+            withIntermediateDirectories: true
+        )
+        try? snapshot.write(to: snapURL, atomically: true, encoding: .utf8)
+    }
+
+    private static func kind(of block: ArticleBlock) -> String {
+        switch block {
+        case .paragraph: return "paragraph"
+        case .heading: return "heading"
+        case .image: return "image"
+        case .list: return "list"
+        case .quote: return "quote"
+        case .code: return "code"
         }
     }
 

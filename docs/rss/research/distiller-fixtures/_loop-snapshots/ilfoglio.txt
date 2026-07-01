@@ -1,0 +1,7 @@
+outlet: ilfoglio
+words: 1065
+blocks: 18
+block-counts: heading=1 image=1 paragraph=16
+survivors: []
+head: alla corte suprema, la statua della libertà batte trump, che non può restringere lo ius soli salta al contenuto principale esteri • nascere in america alla corte suprema, la statua della libertà batte trump, che non può restringere lo ius soli respingendo la decisione del preside
+tail: non ha molto spazio in europa, ma una trentina di altri paesi del mondo oltre agli stati uniti lo prevedono e in larga parte si trovano nell’emisfero occidentale, cioè in quel “cortile di casa” che trump dice di voler controllare: tra questi, brasile, canada, argentina e messico.
