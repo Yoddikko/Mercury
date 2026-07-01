@@ -49,10 +49,14 @@ struct AppRouter: View {
 #if DEBUG
             HomeScreen(
                 viewModel: homeViewModel,
-                developerPlaygroundViewModel: dependencyContainer.makeDeveloperPlaygroundViewModel()
+                developerPlaygroundViewModel: dependencyContainer.makeDeveloperPlaygroundViewModel(),
+                articleSummarize: dependencyContainer.makeArticleSummarize()
             )
 #else
-            HomeScreen(viewModel: homeViewModel)
+            HomeScreen(
+                viewModel: homeViewModel,
+                articleSummarize: dependencyContainer.makeArticleSummarize()
+            )
 #endif
         }
     }
