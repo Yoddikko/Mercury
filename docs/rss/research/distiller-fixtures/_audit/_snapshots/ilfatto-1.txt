@@ -1,0 +1,7 @@
+page: ilfatto-1
+host: www.ilfattoquotidiano.it lang: it
+words: 974
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium", "metered"]
+head: il mondo fq crime elisa claps, l’annuncio a sorpresa del fratello gildo nell’ultima puntata di chi l’ha visto: “la procura ha riaperto le indagini, cerca i complici di danilo restivo” ad annunciarlo è stato il fratello gildo claps, ieri, nel corso della puntata che chiude questa stagione di “chi l’ha visto”, l’ultima c
+tail: seo degli orrori, non è una chiesa. a ligorio avevo chiesto solo le scuse alla famiglia da parte della curia, per tutto quello che era successo. quelle scuse non sono mai arrivate”. resta in contatto con la community de il fatto quotidiano accedi o registrati per partecipare alla discussione registrati leggi i commenti

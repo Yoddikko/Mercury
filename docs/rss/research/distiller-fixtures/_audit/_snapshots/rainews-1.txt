@@ -1,0 +1,7 @@
+page: rainews-1
+host: www.rainews.it lang: it
+words: 543
+chrome-survivors: []
+raw-paywall-markers: ["premium"]
+head: arti e spettacolo musica musica francesco baccini, una storia di amicizia, libertà e delle scelte che ci rendono ciò che siamo il nuovo singolo è "carlo pernat", dedicato a un team manager, scopritore di talenti e procuratore di alcuni tra i più grandi piloti italiani del motomondiale 02/07/2026 ufficio stampa baccini 
+tail: nto è firmato da mauro ottolini che valorizza il dialogo tra i musicisti riuniti in studio: chitarre, basso, pianoforte, percussioni, fisarmonica e un kazoo impertinente danno vita a una registrazione eseguita dal vivo, senza artifici tecnologici, affidata all'esperienza di musicisti di grande esperienza e personalità.

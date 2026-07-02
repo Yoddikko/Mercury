@@ -1,0 +1,7 @@
+page: skytg24-1
+host: tg24.sky.it lang: it
+words: 1327
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium"]
+head: guerra ucraina russia, massiccio attacco russo su kiev: almeno 13 morti. live live mondo 02 lug 2026 - 10:20 ©getty migliaia di persone nei rifugi, almeno 13 morti e decine di feriti: è il bilancio del devastante attacco notturno su kiev. i russi hanno lanciato droni e missili sulla capitale ucraina massiccio attacco r
+tail: no rimasti feriti nel quartiere di shevchenkivskyi. uno di loro, un paramedico, è in condizioni critiche". in un altro quartiere è andato a fuoco il tetto di un grattacielo residenziale, mentre in un ulteriore edificio di nove piani colpito dai raid alcune persone risultano intrappolate. diretta live mondo: i più letti

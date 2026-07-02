@@ -1,0 +1,7 @@
+page: ansa-topnews-2
+host: www.ansa.it lang: it
+words: 154
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium", "bt-Subscribe"]
+head: calo degli occupati in maggio: lo certifica l'istat spiegando che il ribasso (-0,1%, pari a -22mila unità) coinvolge gli uomini, le donne, i dipendenti a termine e tutte le classi d'età ad eccezione di chi ha almeno 50 anni; in questa classe di età il numero di occupati risulta in crescita, così come tra i dipendenti p
+tail: ce rispetto a maggio 2025 (+228mila occupati in un anno) come sintesi dell'aumento dei dipendenti permanenti (+275mila) e degli autonomi (+198mila) e del calo dei dipendenti a termine (-244mila). su base mensile il tasso di occupazione scende al 63%, quello di disoccupazione al 5% e il tasso d'inattività sale al 33,6%.

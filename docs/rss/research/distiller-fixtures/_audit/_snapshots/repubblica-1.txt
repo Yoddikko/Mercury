@@ -1,0 +1,7 @@
+page: repubblica-1
+host: www.repubblica.it lang: it
+words: 44
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium"]
+head: la corte di giustizia ue conferma la multa da 4,1 miliardi a google per android a cura della redazione economia nel mirino la posizione dominante del motore di ricerca google search nel sistema operativo 02 luglio 2026 aggiornato alle 10:34 2 minuti di lettura
+tail: la corte di giustizia ue conferma la multa da 4,1 miliardi a google per android a cura della redazione economia nel mirino la posizione dominante del motore di ricerca google search nel sistema operativo 02 luglio 2026 aggiornato alle 10:34 2 minuti di lettura

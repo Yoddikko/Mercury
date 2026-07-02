@@ -1,0 +1,2623 @@
+<!doctype html>
+<html lang="en" data-edition="it">
+<head>
+    <script>
+(function (window) {
+    var contract = {"contract_version":1,"authoritative_vendor":"inmobi_choice","authoritative_source":"native_app","required_timing":"Consent must be provided before consent-dependent web scripts initialize.","statuses":["applied","missing","invalid","refresh_required"],"required_fields":["cmp_vendor","consent_source","consent_available","tc_string","addtl_consent","consent_collected_at","consent_required"],"optional_fields":["gpp_string","us_privacy_string","cmp_version","contract_version"],"stale_conditions":["contract_version_mismatch","consent_required_without_available_signal"],"globals":{"contract":"__TLConsentHandoverContract","bootstrap":"__TLConsentHandover","state":"__TLConsentHandoverState","preload_payload":"__TL_NATIVE_CONSENT__","apply_function":"__TLApplyNativeConsent"},"events":{"state":"tl:consent-handover:state"},"transports":[{"name":"preload_global","mode":"script_injection","description":"Native sets window.__TL_NATIVE_CONSENT__ before WebView article scripts execute."},{"name":"apply_function","mode":"javascript_bridge","description":"Native calls window.__TLApplyNativeConsent(payload) as soon as the bridge is ready."}]};
+    var globalNames = contract.globals || {};
+    var contractGlobalName = globalNames.contract || '__TLConsentHandoverContract';
+    var bootstrapGlobalName = globalNames.bootstrap || '__TLConsentHandover';
+    var stateGlobalName = globalNames.state || '__TLConsentHandoverState';
+    var preloadGlobalName = globalNames.preload_payload || '__TL_NATIVE_CONSENT__';
+    var applyFunctionName = globalNames.apply_function || '__TLApplyNativeConsent';
+    var stateEventName = contract.events && contract.events.state ? contract.events.state : 'tl:consent-handover:state';
+
+    window[contractGlobalName] = contract;
+
+    var clone = function (value) {
+        try {
+            return JSON.parse(JSON.stringify(value));
+        } catch (error) {
+            return value;
+        }
+    };
+
+    var hasOwn = function (object, key) {
+        return !!object && Object.prototype.hasOwnProperty.call(object, key);
+    };
+
+    var safeStateSnapshot = function (state) {
+        var currentState = state || {};
+        var payload = currentState.payload || {};
+
+        return {
+            status: typeof currentState.status === 'string' ? currentState.status : 'missing',
+            ready: currentState.ready === true,
+            transport: typeof currentState.transport === 'string' ? currentState.transport : null,
+            errors: Array.isArray(currentState.errors) ? currentState.errors.slice() : [],
+            payload_present: !!currentState.payload,
+            payload_summary: {
+                consent_available: typeof payload.consent_available === 'boolean',
+                consent_required: typeof payload.consent_required === 'boolean',
+                tc_string_present: typeof payload.tc_string === 'string' && payload.tc_string !== '',
+                gpp_string_present: typeof payload.gpp_string === 'string' && payload.gpp_string !== '',
+                us_privacy_string_present: typeof payload.us_privacy_string === 'string' && payload.us_privacy_string !== '',
+            },
+            updated_at: typeof currentState.updated_at === 'string' ? currentState.updated_at : null,
+        };
+    };
+
+    var buildDiagnosticsDecision = function (decision) {
+        var currentDecision = decision || {};
+
+        return {
+            surface: typeof currentDecision.surface === 'string' && currentDecision.surface !== ''
+                ? currentDecision.surface
+                : null,
+            consumer: typeof currentDecision.consumer === 'string' && currentDecision.consumer !== ''
+                ? currentDecision.consumer
+                : null,
+            allowed: typeof currentDecision.allowed === 'boolean' ? currentDecision.allowed : null,
+            reason: typeof currentDecision.reason === 'string' && currentDecision.reason !== ''
+                ? currentDecision.reason
+                : null,
+            event: typeof currentDecision.event === 'string' && currentDecision.event !== ''
+                ? currentDecision.event
+                : null,
+        };
+    };
+
+    var buildDiagnosticsSnapshot = function (decision) {
+        return {
+            contract_version: contract.contract_version || 1,
+            handover: safeStateSnapshot(window.__TLConsentHandoverState || null),
+            bootstrap: safeStateSnapshot(window[stateGlobalName] || null),
+            preload_present: hasOwn(window, preloadGlobalName) && !!window[preloadGlobalName],
+            decision: buildDiagnosticsDecision(decision),
+            updated_at: new Date().toISOString(),
+        };
+    };
+
+    var dispatchDiagnostics = function () {
+        if (typeof window.dispatchEvent !== 'function' || typeof window.CustomEvent !== 'function') {
+            return;
+        }
+
+        window.dispatchEvent(new CustomEvent(diagnosticsEventName, {
+            detail: clone(window[diagnosticsGlobalName]),
+        }));
+    };
+
+    var publishDiagnostics = function (decision) {
+        window[diagnosticsGlobalName] = buildDiagnosticsSnapshot(decision);
+        dispatchDiagnostics();
+
+        return clone(window[diagnosticsGlobalName]);
+    };
+
+    var dispatchState = function () {
+        if (typeof window.dispatchEvent !== 'function' || typeof window.CustomEvent !== 'function') {
+            return;
+        }
+
+        window.dispatchEvent(new CustomEvent(stateEventName, {
+            detail: clone(window[stateGlobalName]),
+        }));
+    };
+
+    var normalizeString = function (value) {
+        if (typeof value !== 'string') {
+            return null;
+        }
+
+        var normalized = value.trim();
+
+        return normalized === '' ? '' : normalized;
+    };
+
+    var parseTimestamp = function (value) {
+        if (typeof value !== 'string') {
+            return null;
+        }
+
+        var trimmed = value.trim();
+        if (trimmed === '') {
+            return null;
+        }
+
+        var timestamp = Date.parse(trimmed);
+
+        if (Number.isNaN(timestamp)) {
+            return null;
+        }
+
+        return new Date(timestamp).toISOString();
+    };
+
+    var evaluatePayload = function (payload) {
+        if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
+            return {
+                status: 'missing',
+                ready: false,
+                errors: ['payload_missing'],
+                payload: null,
+            };
+        }
+
+        var normalizedPayload = {
+            cmp_vendor: normalizeString(payload.cmp_vendor),
+            consent_source: normalizeString(payload.consent_source),
+            consent_available: typeof payload.consent_available === 'boolean' ? payload.consent_available : null,
+            tc_string: normalizeString(payload.tc_string),
+            addtl_consent: normalizeString(payload.addtl_consent),
+            gpp_string: normalizeString(payload.gpp_string),
+            us_privacy_string: normalizeString(payload.us_privacy_string),
+            consent_collected_at: parseTimestamp(payload.consent_collected_at),
+            cmp_version: normalizeString(payload.cmp_version),
+            consent_required: typeof payload.consent_required === 'boolean' ? payload.consent_required : null,
+            contract_version: Number.isInteger(payload.contract_version) ? payload.contract_version : contract.contract_version,
+        };
+
+        var errors = [];
+        if (normalizedPayload.cmp_vendor !== contract.authoritative_vendor) {
+            errors.push('unsupported_cmp_vendor');
+        }
+        if (normalizedPayload.consent_source !== contract.authoritative_source) {
+            errors.push('unsupported_consent_source');
+        }
+        if (normalizedPayload.consent_available === null) {
+            errors.push('consent_available_missing');
+        }
+        if (normalizedPayload.consent_required === null) {
+            errors.push('consent_required_missing');
+        }
+        if (normalizedPayload.consent_collected_at === null) {
+            errors.push('consent_collected_at_invalid');
+        }
+        if (normalizedPayload.addtl_consent === null) {
+            errors.push('addtl_consent_missing');
+        }
+
+        if (normalizedPayload.contract_version !== contract.contract_version) {
+            return {
+                status: 'refresh_required',
+                ready: true,
+                errors: ['contract_version_mismatch'],
+                payload: normalizedPayload,
+            };
+        }
+
+        if (normalizedPayload.consent_required === true && normalizedPayload.consent_available === false) {
+            return {
+                status: 'refresh_required',
+                ready: true,
+                errors: ['consent_refresh_required'],
+                payload: normalizedPayload,
+            };
+        }
+
+        if (normalizedPayload.consent_available === true && normalizedPayload.tc_string === '') {
+            errors.push('tc_string_missing');
+        }
+
+        if (errors.length > 0) {
+            return {
+                status: 'invalid',
+                ready: true,
+                errors: errors,
+                payload: normalizedPayload,
+            };
+        }
+
+        return {
+            status: 'applied',
+            ready: true,
+            errors: [],
+            payload: normalizedPayload,
+        };
+    };
+
+    var updateState = function (nextState) {
+        window[stateGlobalName] = {
+            contract_version: contract.contract_version,
+            status: nextState.status,
+            ready: nextState.ready,
+            errors: nextState.errors || [],
+            payload: nextState.payload || null,
+            transport: nextState.transport || null,
+            updated_at: new Date().toISOString(),
+        };
+
+        dispatchState();
+
+        return clone(window[stateGlobalName]);
+    };
+
+    if (!window[stateGlobalName]) {
+        window[stateGlobalName] = {
+            contract_version: contract.contract_version,
+            status: 'missing',
+            ready: false,
+            errors: [],
+            payload: null,
+            transport: null,
+            updated_at: null,
+        };
+    }
+
+    window[bootstrapGlobalName] = window[bootstrapGlobalName] || {
+        version: contract.contract_version,
+        statuses: contract.statuses,
+        requiredTiming: contract.required_timing,
+        getContract: function () {
+            return clone(contract);
+        },
+        getState: function () {
+            return clone(window[stateGlobalName]);
+        },
+        applyPayload: function (payload, metadata) {
+            var evaluated = evaluatePayload(payload);
+
+            return updateState({
+                status: evaluated.status,
+                ready: evaluated.ready,
+                errors: evaluated.errors,
+                payload: evaluated.payload,
+                transport: metadata && metadata.transport ? metadata.transport : 'javascript_bridge',
+            });
+        },
+        markMissing: function (metadata) {
+            return updateState({
+                status: 'missing',
+                ready: true,
+                errors: ['payload_missing'],
+                payload: null,
+                transport: metadata && metadata.transport ? metadata.transport : 'missing',
+            });
+        },
+        onStateChange: function (callback) {
+            if (typeof callback !== 'function' || typeof window.addEventListener !== 'function') {
+                return function () {
+                };
+            }
+
+            var listener = function (event) {
+                callback(event.detail);
+            };
+
+            window.addEventListener(stateEventName, listener);
+
+            return function () {
+                if (typeof window.removeEventListener === 'function') {
+                    window.removeEventListener(stateEventName, listener);
+                }
+            };
+        },
+    };
+
+    window[applyFunctionName] = function (payload) {
+        return window[bootstrapGlobalName].applyPayload(payload, {
+            transport: 'javascript_bridge',
+        });
+    };
+
+    if (
+        Object.prototype.hasOwnProperty.call(window, preloadGlobalName)
+        && window[preloadGlobalName]
+    ) {
+        window[bootstrapGlobalName].applyPayload(window[preloadGlobalName], {
+            transport: 'script_injection',
+        });
+    } else {
+        dispatchState();
+    }
+})(window);
+</script><script>
+(function (window) {
+    var legacyCookieNames = [
+        'OptanonConsent',
+        'OptanonAlertBoxClosed',
+        'OnetrustActiveGroups',
+        'cmapi_cookie_privacy',
+        'cmapi_cookie_privacy_custom',
+        'cmapi_gtm_bl',
+        'cmapi_gtm_privacy',
+    ];
+    var legacyCookiePrefixes = ['__cmp', 'cmapi_'];
+    var legacyGlobalNames = [
+        '__cmp',
+        '__dsa',
+        '__gpp',
+        '__tcfapi',
+        '__dsaLocator',
+        '__gppLocator',
+        '__tcfapiLocator',
+        'Optanon',
+        'OptanonWrapper',
+        'cmp_addFrame',
+        'cmp_dsastub',
+        'cmp_gpp_ping',
+        'cmp_gppstub',
+        'cmp_msghandler',
+        'cmp_rc',
+        'cmp_setGppStub',
+        'cmp_setStub',
+        'cmp_stub',
+    ];
+    var legacyStorageKeys = [
+        'OptanonConsent',
+        'OptanonAlertBoxClosed',
+        'OnetrustActiveGroups',
+    ];
+
+    var clearCookieAcrossScopes = function (cookieName) {
+        if (typeof cookieName !== 'string' || cookieName === '') {
+            return;
+        }
+
+        var hostname = window.location.hostname || '';
+        var parts = hostname.split('.').filter(Boolean);
+        var domains = [''];
+
+        for (var index = 0; index < parts.length; index += 1) {
+            domains.push('.' + parts.slice(index).join('.'));
+        }
+
+        domains.forEach(function (domain) {
+            var domainPart = domain ? ';domain=' + domain : '';
+            window.document.cookie = cookieName + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/' + domainPart;
+        });
+    };
+
+    var clearStorageValue = function (storage, key) {
+        try {
+            if (storage && typeof storage.removeItem === 'function') {
+                storage.removeItem(key);
+            }
+        } catch (error) {
+        }
+    };
+
+    var clearPrefixedCookies = function () {
+        var cookies = window.document.cookie ? window.document.cookie.split(';') : [];
+
+        cookies.forEach(function (rawCookie) {
+            var separatorIndex = rawCookie.indexOf('=');
+            var cookieName = (separatorIndex >= 0 ? rawCookie.slice(0, separatorIndex) : rawCookie).trim();
+
+            if (!cookieName) {
+                return;
+            }
+
+            if (!legacyCookiePrefixes.some(function (prefix) {
+                return cookieName.indexOf(prefix) === 0;
+            })) {
+                return;
+            }
+
+            clearCookieAcrossScopes(cookieName);
+        });
+    };
+
+    window.__TLClearLegacyConsentArtifacts = window.__TLClearLegacyConsentArtifacts || function () {
+        legacyCookieNames.forEach(function (cookieName) {
+            clearCookieAcrossScopes(cookieName);
+        });
+
+        clearPrefixedCookies();
+
+        legacyStorageKeys.forEach(function (storageKey) {
+            clearStorageValue(window.localStorage, storageKey);
+            clearStorageValue(window.sessionStorage, storageKey);
+        });
+
+        legacyGlobalNames.forEach(function (globalName) {
+            try {
+                if (Object.prototype.hasOwnProperty.call(window, globalName)) {
+                    delete window[globalName];
+                    return;
+                }
+            } catch (error) {
+            }
+
+            try {
+                window[globalName] = undefined;
+            } catch (error) {
+            }
+        });
+    };
+
+    window.__TLClearLegacyConsentArtifacts();
+})(window);
+</script><script>
+(function (window) {
+    var contract = window.__TLConsentHandoverContract || {};
+    var bootstrap = window.__TLConsentHandover || null;
+    var stateGlobalName = '__TLArticleConsentBootstrapState';
+    var diagnosticsGlobalName = '__TLArticleConsentDiagnosticsState';
+    var preloadGlobalName = '__TL_NATIVE_CONSENT__';
+    var applyFunctionName = '__TLApplyNativeConsent';
+    var stateEventName = 'tl:article-consent-bootstrap:state';
+    var diagnosticsEventName = 'tl:consent-handover:diagnostics';
+    var bootstrapTimeoutMs = 250;
+    var timeoutId = null;
+    var tcfEventListeners = [];
+    var gppEventListeners = [];
+
+    var clone = function (value) {
+        try {
+            return JSON.parse(JSON.stringify(value));
+        } catch (error) {
+            return value;
+        }
+    };
+
+    if (typeof window.__TLClearLegacyConsentArtifacts === 'function') {
+        window.__TLClearLegacyConsentArtifacts();
+    }
+
+    window[diagnosticsGlobalName] = window[diagnosticsGlobalName] || buildDiagnosticsSnapshot({
+        surface: 'bootstrap',
+        consumer: 'article_bootstrap',
+        allowed: false,
+        reason: 'awaiting_consent',
+        event: 'initial_state',
+    });
+
+    var dispatchState = function () {
+        if (typeof window.dispatchEvent !== 'function' || typeof window.CustomEvent !== 'function') {
+            return;
+        }
+
+        window.dispatchEvent(new CustomEvent(stateEventName, {
+            detail: clone(window[stateGlobalName]),
+        }));
+    };
+
+    var publishState = function (nextState) {
+        window[stateGlobalName] = {
+            contract_version: contract.contract_version || 1,
+            status: nextState.status || 'missing',
+            ready: !!nextState.ready,
+            errors: Array.isArray(nextState.errors) ? nextState.errors.slice() : [],
+            payload: nextState.payload || null,
+            transport: nextState.transport || null,
+            updated_at: new Date().toISOString(),
+        };
+
+        dispatchState();
+        publishDiagnostics({
+            surface: 'bootstrap',
+            consumer: 'article_bootstrap',
+            allowed: window[stateGlobalName].status === 'applied',
+            reason: window[stateGlobalName].status === 'applied'
+                ? 'consent_applied'
+                : window[stateGlobalName].status,
+            event: 'state_update',
+        });
+
+        return clone(window[stateGlobalName]);
+    };
+
+    var buildTcfData = function () {
+        var state = window[stateGlobalName] || {};
+        var payload = state.payload || {};
+        var consentGranted = state.status === 'applied' && state.ready === true;
+        var tcString = typeof payload.tc_string === 'string' ? payload.tc_string : '';
+        var gppString = typeof payload.gpp_string === 'string' ? payload.gpp_string : '';
+        var usPrivacyString = typeof payload.us_privacy_string === 'string' ? payload.us_privacy_string : '';
+        var eventStatus = consentGranted ? 'tcloaded' : 'cmpuishown';
+
+        return {
+            gdprApplies: consentGranted,
+            tcString: tcString,
+            eventStatus: eventStatus,
+            cmpStatus: consentGranted ? 'loaded' : 'stub',
+            cmpLoaded: consentGranted,
+            listenerId: 0,
+            purpose: {
+                consents: {
+                    1: consentGranted,
+                },
+            },
+            tcData: {
+                tcString: tcString,
+                gppString: gppString,
+                usPrivacyString: usPrivacyString,
+            },
+        };
+    };
+
+    var notifyListeners = function () {
+        var tcfData = buildTcfData();
+
+        tcfEventListeners.slice().forEach(function (listener) {
+            try {
+                listener(tcfData, true);
+            } catch (error) {
+            }
+        });
+
+        gppEventListeners.slice().forEach(function (listener) {
+            try {
+                listener(tcfData, true);
+            } catch (error) {
+            }
+        });
+    };
+
+    var installConsentApis = function () {
+        if (typeof window.__tcfapi !== 'function') {
+            window.__tcfapi = function (command, version, callback, parameter) {
+                var tcfData = buildTcfData();
+
+                if (command === 'ping') {
+                    if (typeof callback === 'function') {
+                        callback({
+                            gdprApplies: tcfData.gdprApplies,
+                            cmpLoaded: tcfData.cmpLoaded,
+                            cmpStatus: tcfData.cmpStatus,
+                        }, true);
+                    }
+
+                    return;
+                }
+
+                if (command === 'addEventListener' && typeof callback === 'function') {
+                    tcfEventListeners.push(callback);
+                    callback(tcfData, true);
+                    return tcfEventListeners.length;
+                }
+
+                if (command === 'removeEventListener') {
+                    tcfEventListeners = tcfEventListeners.filter(function (listener) {
+                        return listener !== callback;
+                    });
+
+                    if (typeof callback === 'function') {
+                        callback(true, true);
+                    }
+
+                    return true;
+                }
+
+                if (command === 'getTCData' && typeof callback === 'function') {
+                    callback(tcfData, true);
+                    return;
+                }
+
+                if (command === 'displayConsentUi' && typeof callback === 'function') {
+                    callback(true, true);
+                    return;
+                }
+
+                if (typeof callback === 'function') {
+                    callback(tcfData, true);
+                }
+            };
+        }
+
+        if (typeof window.__gpp !== 'function') {
+            window.__gpp = function (command, callback, parameter, version) {
+                var tcfData = buildTcfData();
+
+                if (command === 'ping') {
+                    if (typeof callback === 'function') {
+                        callback({
+                            gppVersion: '1.1',
+                            cmpStatus: tcfData.cmpStatus,
+                            cmpDisplayStatus: tcfData.gdprApplies ? 'visible' : 'hidden',
+                            signalStatus: tcfData.gdprApplies ? 'ready' : 'not ready',
+                            supportedAPIs: ['2:tcfeuv2', '6:uspv1', '7:usnatv1'],
+                            cmpId: 10,
+                            sectionList: [],
+                            applicableSections: [-1],
+                            gppString: tcfData.tcData.gppString,
+                            parsedSections: {},
+                        }, true);
+                    }
+
+                    return;
+                }
+
+                if (command === 'addEventListener' && typeof callback === 'function') {
+                    gppEventListeners.push(callback);
+                    callback({
+                        eventName: 'listenerRegistered',
+                        listenerId: gppEventListeners.length,
+                        data: true,
+                        pingData: {
+                            gppVersion: '1.1',
+                            cmpStatus: tcfData.cmpStatus,
+                            cmpDisplayStatus: tcfData.gdprApplies ? 'visible' : 'hidden',
+                            signalStatus: tcfData.gdprApplies ? 'ready' : 'not ready',
+                            supportedAPIs: ['2:tcfeuv2', '6:uspv1', '7:usnatv1'],
+                            cmpId: 10,
+                            sectionList: [],
+                            applicableSections: [-1],
+                            gppString: tcfData.tcData.gppString,
+                            parsedSections: {},
+                        },
+                    }, true);
+                    return gppEventListeners.length;
+                }
+
+                if (command === 'removeEventListener' && typeof callback === 'function') {
+                    gppEventListeners = gppEventListeners.filter(function (listener) {
+                        return listener !== callback;
+                    });
+
+                    callback({
+                        eventName: 'listenerRemoved',
+                        listenerId: parameter,
+                        data: true,
+                    }, true);
+                    return true;
+                }
+
+                if (typeof callback === 'function') {
+                    callback(tcfData, true);
+                }
+            };
+        }
+    };
+
+    var mirrorContractState = function () {
+        if (!window.__TLConsentHandoverState) {
+            return null;
+        }
+
+        return publishState(window.__TLConsentHandoverState);
+    };
+
+    var clearBootstrapTimeout = function () {
+        if (timeoutId) {
+            window.clearTimeout(timeoutId);
+            timeoutId = null;
+        }
+    };
+
+    var settleMissing = function () {
+        var currentState = window.__TLConsentHandoverState || {};
+
+        if (currentState.ready && currentState.status !== 'missing') {
+            clearBootstrapTimeout();
+            return mirrorContractState();
+        }
+
+        if (!bootstrap || typeof bootstrap.markMissing !== 'function') {
+            clearBootstrapTimeout();
+            publishDiagnostics({
+                surface: 'bootstrap',
+                consumer: 'article_bootstrap',
+                allowed: false,
+                reason: 'consent_missing',
+                event: 'timeout_missing',
+            });
+            return mirrorContractState();
+        }
+
+        clearBootstrapTimeout();
+
+        var nextState = publishState(bootstrap.markMissing({
+            transport: 'article_bootstrap',
+        }));
+
+        publishDiagnostics({
+            surface: 'bootstrap',
+            consumer: 'article_bootstrap',
+            allowed: false,
+            reason: nextState.status === 'missing' ? 'consent_missing' : nextState.status,
+            event: 'timeout_missing',
+        });
+
+        return nextState;
+    };
+
+    var syncNativeConsent = function () {
+        if (!bootstrap) {
+            return false;
+        }
+
+        if (
+            Object.prototype.hasOwnProperty.call(window, preloadGlobalName)
+            && window[preloadGlobalName]
+            && typeof window[applyFunctionName] === 'function'
+        ) {
+            clearBootstrapTimeout();
+            publishState(window[applyFunctionName](window[preloadGlobalName]));
+            return true;
+        }
+
+        if (window.__TLConsentHandoverState && window.__TLConsentHandoverState.ready) {
+            clearBootstrapTimeout();
+            mirrorContractState();
+            return true;
+        }
+
+        return false;
+    };
+
+    window[stateGlobalName] = window[stateGlobalName] || {
+        contract_version: contract.contract_version || 1,
+        status: 'missing',
+        ready: false,
+        errors: [],
+        payload: null,
+        transport: null,
+        updated_at: null,
+    };
+
+    window.__TLArticleConsentBootstrap = window.__TLArticleConsentBootstrap || {
+        version: contract.contract_version || 1,
+        getState: function () {
+            return clone(window[stateGlobalName]);
+        },
+        shouldSuppressWebCmp: function () {
+            var state = window[stateGlobalName] || {};
+
+            return state.ready === true && state.status === 'applied';
+        },
+        refresh: function () {
+            return syncNativeConsent();
+        },
+    };
+
+    window.__TLArticleConsentDiagnostics = window.__TLArticleConsentDiagnostics || {
+        version: contract.contract_version || 1,
+        getState: function () {
+            return clone(window[diagnosticsGlobalName]);
+        },
+        record: function (decision) {
+            return publishDiagnostics(decision);
+        },
+    };
+
+    window.__TLRecordArticleConsentDiagnostics = window.__TLRecordArticleConsentDiagnostics || function (decision) {
+        return publishDiagnostics(decision);
+    };
+
+    if (!bootstrap || typeof bootstrap.onStateChange !== 'function') {
+        syncNativeConsent();
+        timeoutId = window.setTimeout(settleMissing, bootstrapTimeoutMs);
+        return;
+    }
+
+    bootstrap.onStateChange(function (state) {
+        if (!state) {
+            return;
+        }
+
+        if (state.ready && state.status !== 'missing') {
+            clearBootstrapTimeout();
+            if (state.status === 'applied') {
+                installConsentApis();
+                notifyListeners();
+            }
+        }
+
+        publishState(state);
+    });
+
+    if (!syncNativeConsent()) {
+        timeoutId = window.setTimeout(settleMissing, bootstrapTimeoutMs);
+    } else if (window[stateGlobalName] && window[stateGlobalName].status === 'applied') {
+        installConsentApis();
+        notifyListeners();
+    }
+
+    window.addEventListener('pagehide', function () {
+        if (timeoutId) {
+            window.clearTimeout(timeoutId);
+        }
+    }, { once: true });
+})(window);
+</script><script>
+(function (window) {
+    var eventName = 'tl:article-consent-bootstrap:state';
+    var diagnosticsFunctionName = '__TLRecordArticleConsentDiagnostics';
+    var diagnosticsDefaultSurface = 'consent_gate';
+
+    var recordDiagnostics = function (state, metadata, allowed, reason) {
+        var diagnostics = typeof window[diagnosticsFunctionName] === 'function'
+            ? window[diagnosticsFunctionName]
+            : null;
+
+        if (!diagnostics) {
+            return;
+        }
+
+        diagnostics({
+            surface: metadata && typeof metadata.surface === 'string' && metadata.surface !== ''
+                ? metadata.surface
+                : diagnosticsDefaultSurface,
+            consumer: metadata && typeof metadata.consumer === 'string' && metadata.consumer !== ''
+                ? metadata.consumer
+                : null,
+            allowed: typeof allowed === 'boolean' ? allowed : null,
+            reason: typeof reason === 'string' && reason !== ''
+                ? reason
+                : null,
+            event: 'consent_gate',
+            state: state && typeof state.status === 'string' ? state.status : null,
+        });
+    };
+
+    var reasonFromState = function (currentState) {
+        if (!currentState) {
+            return 'consent_missing';
+        }
+
+        if (currentState.status === 'applied') {
+            return 'consent_applied';
+        }
+
+        if (currentState.status === 'refresh_required') {
+            return 'consent_refresh_required';
+        }
+
+        if (currentState.status === 'invalid') {
+            return 'consent_invalid';
+        }
+
+        if (currentState.status === 'missing') {
+            return 'consent_missing';
+        }
+
+        return 'awaiting_consent';
+    };
+
+    window.__TLExecuteWhenArticleConsentReady = window.__TLExecuteWhenArticleConsentReady || function (callback, metadata) {
+        var bootstrap = window.__TLArticleConsentBootstrap || null;
+        var state = bootstrap && typeof bootstrap.getState === 'function'
+            ? bootstrap.getState()
+            : window.__TLArticleConsentBootstrapState || null;
+
+        var canRun = function (currentState) {
+            return !!currentState && currentState.ready === true && currentState.status === 'applied';
+        };
+
+        var isSettled = function (currentState) {
+            return !!currentState && currentState.ready === true;
+        };
+
+        if (typeof callback !== 'function') {
+            return false;
+        }
+
+        if (canRun(state)) {
+            recordDiagnostics(state, metadata, true, 'consent_applied');
+            callback(state);
+            return true;
+        }
+
+        if (isSettled(state)) {
+            recordDiagnostics(state, metadata, false, reasonFromState(state));
+            return false;
+        }
+
+        recordDiagnostics(state, metadata, null, 'awaiting_consent');
+        var listener = function (event) {
+            var nextState = event && event.detail ? event.detail : null;
+
+            if (!isSettled(nextState)) {
+                return;
+            }
+
+            window.removeEventListener(eventName, listener);
+
+            if (canRun(nextState)) {
+                recordDiagnostics(nextState, metadata, true, 'consent_applied');
+                callback(nextState);
+            } else {
+                recordDiagnostics(nextState, metadata, false, reasonFromState(nextState));
+            }
+        };
+
+        window.addEventListener(eventName, listener);
+
+        return null;
+    };
+})(window);
+</script><!-- InMobi Choice. Consent Manager Tag v3.0 (for TCF 2.3) -->
+<link rel="preload" as="script" href="https://cmp.inmobi.com/choice/Uznnx7uFLxujG/www.thelocal.it/choice.js?tag_version=V3">
+<script type="text/javascript">
+(function() {
+var articleConsentBootstrap = window.__TLArticleConsentBootstrap || null;
+
+if (articleConsentBootstrap && typeof articleConsentBootstrap.shouldSuppressWebCmp === 'function' && articleConsentBootstrap.shouldSuppressWebCmp()) {
+    return;
+}
+
+var uspTries = 0;
+var uspTriesLimit = 3;
+
+function makeStub() {
+var TCF_LOCATOR_NAME = '__tcfapiLocator';
+var queue = [];
+var win = window;
+var cmpFrame;
+
+function addFrame() {
+var doc = win.document;
+var otherCMP = !!(win.frames[TCF_LOCATOR_NAME]);
+
+if (!otherCMP) {
+if (doc.body) {
+var iframe = doc.createElement('iframe');
+
+iframe.style.cssText = 'display:none';
+iframe.name = TCF_LOCATOR_NAME;
+doc.body.appendChild(iframe);
+} else {
+setTimeout(addFrame, 5);
+}
+}
+return !otherCMP;
+}
+
+function tcfAPIHandler() {
+var gdprApplies;
+var args = arguments;
+
+if (!args.length) {
+return queue;
+} else if (args[0] === 'setGdprApplies') {
+if (
+args.length > 3 &&
+args[2] === 2 &&
+typeof args[3] === 'boolean'
+) {
+gdprApplies = args[3];
+if (typeof args[2] === 'function') {
+args[2]('set', true);
+}
+}
+} else if (args[0] === 'ping') {
+var retr = {
+gdprApplies: gdprApplies,
+cmpLoaded: false,
+cmpStatus: 'stub'
+};
+
+if (typeof args[2] === 'function') {
+args[2](retr);
+}
+} else {
+if (args[0] === 'init' && typeof args[3] === 'object') {
+args[3] = Object.assign(args[3], { tag_version: 'V3' });
+}
+queue.push(args);
+}
+}
+
+function postMessageEventHandler(event) {
+var msgIsString = typeof event.data === 'string';
+var json = {};
+
+try {
+if (msgIsString) {
+json = JSON.parse(event.data);
+} else {
+json = event.data;
+}
+} catch (ignore) {}
+
+var payload = json.__tcfapiCall;
+
+if (payload) {
+window.__tcfapi(
+payload.command,
+payload.version,
+function(retValue, success) {
+var returnMsg = {
+  __tcfapiReturn: {
+    returnValue: retValue,
+    success: success,
+    callId: payload.callId
+  }
+};
+if (msgIsString) {
+  returnMsg = JSON.stringify(returnMsg);
+}
+if (event && event.source && event.source.postMessage) {
+  event.source.postMessage(returnMsg, '*');
+}
+},
+payload.parameter
+);
+}
+}
+
+while (win) {
+try {
+if (win.frames[TCF_LOCATOR_NAME]) {
+cmpFrame = win;
+break;
+}
+} catch (ignore) {}
+
+if (win === window.top) {
+break;
+}
+win = win.parent;
+}
+if (!cmpFrame) {
+addFrame();
+win.__tcfapi = tcfAPIHandler;
+win.addEventListener('message', postMessageEventHandler, false);
+}
+}
+
+makeStub();
+
+function makeGppStub() {
+const CMP_ID = 10;
+const SUPPORTED_APIS = [
+'2:tcfeuv2',
+'6:uspv1',
+'7:usnatv1',
+'8:usca',
+'9:usvav1',
+'10:uscov1',
+'11:usutv1',
+'12:usctv1'
+];
+
+window.__gpp_addFrame = function (n) {
+if (!window.frames[n]) {
+if (document.body) {
+var i = document.createElement('iframe');
+i.style.cssText = 'display:none';
+i.name = n;
+document.body.appendChild(i);
+} else {
+window.setTimeout(window.__gpp_addFrame, 10, n);
+}
+}
+};
+window.__gpp_stub = function () {
+var b = arguments;
+__gpp.queue = __gpp.queue || [];
+__gpp.events = __gpp.events || [];
+
+if (!b.length || (b.length == 1 && b[0] == 'queue')) {
+return __gpp.queue;
+}
+
+if (b.length == 1 && b[0] == 'events') {
+return __gpp.events;
+}
+
+var cmd = b[0];
+var clb = b.length > 1 ? b[1] : null;
+var par = b.length > 2 ? b[2] : null;
+if (cmd === 'ping') {
+clb(
+{
+gppVersion: '1.1',
+cmpStatus: 'stub',
+cmpDisplayStatus: 'hidden',
+signalStatus: 'not ready',
+supportedAPIs: SUPPORTED_APIS,
+cmpId: CMP_ID,
+sectionList: [],
+applicableSections: [-1],
+gppString: '',
+parsedSections: {},
+},
+true
+);
+} else if (cmd === 'addEventListener') {
+if (!('lastId' in __gpp)) {
+__gpp.lastId = 0;
+}
+__gpp.lastId++;
+var lnr = __gpp.lastId;
+__gpp.events.push({
+id: lnr,
+callback: clb,
+parameter: par,
+});
+clb(
+{
+eventName: 'listenerRegistered',
+listenerId: lnr,
+data: true,
+pingData: {
+  gppVersion: '1.1',
+  cmpStatus: 'stub',
+  cmpDisplayStatus: 'hidden',
+  signalStatus: 'not ready',
+  supportedAPIs: SUPPORTED_APIS,
+  cmpId: CMP_ID,
+  sectionList: [],
+  applicableSections: [-1],
+  gppString: '',
+  parsedSections: {},
+},
+},
+true
+);
+} else if (cmd === 'removeEventListener') {
+var success = false;
+for (var i = 0; i < __gpp.events.length; i++) {
+if (__gpp.events[i].id == par) {
+__gpp.events.splice(i, 1);
+success = true;
+break;
+}
+}
+clb(
+{
+eventName: 'listenerRemoved',
+listenerId: par,
+data: success,
+pingData: {
+  gppVersion: '1.1',
+  cmpStatus: 'stub',
+  cmpDisplayStatus: 'hidden',
+  signalStatus: 'not ready',
+  supportedAPIs: SUPPORTED_APIS,
+  cmpId: CMP_ID,
+  sectionList: [],
+  applicableSections: [-1],
+  gppString: '',
+  parsedSections: {},
+},
+},
+true
+);
+} else if (cmd === 'hasSection') {
+clb(false, true);
+} else if (cmd === 'getSection' || cmd === 'getField') {
+clb(null, true);
+} else {
+__gpp.queue.push([].slice.apply(b));
+}
+};
+window.__gpp_msghandler = function (event) {
+var msgIsString = typeof event.data === 'string';
+try {
+var json = msgIsString ? JSON.parse(event.data) : event.data;
+} catch (e) {
+var json = null;
+}
+if (typeof json === 'object' && json !== null && '__gppCall' in json) {
+var i = json.__gppCall;
+window.__gpp(
+i.command,
+function(retValue, success) {
+var returnMsg = {
+  __gppReturn: {
+    returnValue: retValue,
+    success: success,
+    callId: i.callId,
+  },
+};
+event.source.postMessage(msgIsString ? JSON.stringify(returnMsg) : returnMsg, '*');
+},
+'parameter' in i ? i.parameter : null,
+'version' in i ? i.version : '1.1'
+);
+}
+};
+if (!('__gpp' in window) || typeof window.__gpp !== 'function') {
+window.__gpp = window.__gpp_stub;
+window.addEventListener('message', window.__gpp_msghandler, false);
+window.__gpp_addFrame('__gppLocator');
+}
+}
+
+makeGppStub();
+
+var uspStubFunction = function() {
+var arg = arguments;
+if (typeof window.__uspapi !== uspStubFunction) {
+setTimeout(function() {
+if (typeof window.__uspapi !== 'undefined') {
+window.__uspapi.apply(window.__uspapi, arg);
+}
+}, 500);
+}
+};
+
+var checkIfUspIsReady = function() {
+uspTries++;
+if (window.__uspapi === uspStubFunction && uspTries < uspTriesLimit) {
+console.warn('USP is not accessible');
+} else {
+clearInterval(uspInterval);
+}
+};
+
+if (typeof window.__uspapi === 'undefined') {
+window.__uspapi = uspStubFunction;
+var uspInterval = setInterval(checkIfUspIsReady, 6000);
+}
+})();
+</script>
+<script type="text/javascript" src="https://cmp.inmobi.com/choice/Uznnx7uFLxujG/www.thelocal.it/choice.js?tag_version=V3" fetchpriority="high"></script>
+<!-- End InMobi Choice. Consent Manager Tag v3.0 -->
+<script async src="https://functions.adnami.io/api/macro/adsm.macro.thelocal.it.js"></script>
+    <script>
+        !(function(n){function t(e){n.addEventListener(e,B)}function o(e){n.removeEventListener(e,B)}function u(e,n,t){L?C(e,n):(t||u.lazy&&void 0===t?q:S).push(e,n)}function c(e){k.head.appendChild(e)}function i(e,n){z.call(e.attributes)[y](n)}function r(e,n,t,o){return o=(n?k.getElementById(n):o)||k.createElement(e),n&&(o.id=n),t&&(o.onload=t),o}function s(e,n,t){(t=e.src)&&((n=r(m)).rel="preload",n.as=h,n.href=t,(t=e[g](w))&&n[b](w,t),(t=e[g](x))&&n[b](x,t),c(n))}function a(e,n){return z.call((n||k).querySelectorAll(e))}function f(e,n){e.parentNode.replaceChild(n,e)}function l(t,e){a("source,img",t)[y](l),i(t,function(e,n){(n=/^data-(.+)/.exec(e.name))&&t[b](n[1],e.value)}),"string"==typeof e&&e&&(t.className+=" "+e),p in t&&t[p]()}function e(e,n,t){u(function(t){(t=a(e||N))[y](s),(function o(e,n){(e=t[E]())&&((n=r(e.nodeName)).text=e.text,i(e,function(e){"type"!=e.name&&n[b](e.name,e.value)}),n.src&&!n[g]("async")?(n.onload=n.onerror=o,f(e,n)):(f(e,n),o()))})()},n,t)}var d="Defer",m="link",h="script",p="load",v="pageshow",y="forEach",g="getAttribute",b="setAttribute",E="shift",w="crossorigin",x="integrity",A=["mousemove","keydown","touchstart","wheel"],I="on"+v in n?v:p,N=h+"[type=deferjs]",j=n.IntersectionObserver,k=n.document||n,C=n.setTimeout,L=/p/.test(k.readyState),S=[],q=[],z=S.slice,B=function(e,n){for(n=I==e.type?(o(I),L=u,A[y](t),S):(A[y](o),q);n[0];)C(n[E](),n[E]())};e(),u.all=e,u.dom=function(e,n,i,c,r){u(function(t){function o(e){c&&!1===c(e)||l(e,i)}t=!!j&&new j(function(e){e[y](function(e,n){e.isIntersecting&&(t.unobserve(n=e.target),o(n))})},r),a(e||"[data-src]")[y](function(e){e[d]!=u&&(e[d]=u,t?t.observe(e):o(e))})},n,!1)},u.css=function(n,t,e,o,i){u(function(e){(e=r(m,t,o)).rel="stylesheet",e.href=n,c(e)},e,i)},u.js=function(n,t,e,o,i){u(function(e){(e=r(h,t,o)).src=n,c(e)},e,i)},u.reveal=l,n[d]=u,L||t(I)})(this);
+    </script>
+
+    <link rel="dns-prefetch" href="//cmp.inmobi.com">
+    <link rel="dns-prefetch" href="//experience.piano.io">
+    <link rel="preconnect" href="https://cmp.inmobi.com" crossorigin>
+    <link rel="preconnect" href="https://experience.piano.io" crossorigin>
+            <link rel="dns-prefetch" href="//assets.thelocal.com">
+    <link rel="preconnect" href="https://assets.thelocal.com" crossorigin>
+    
+        <link rel="preload" href="https://www.thelocal.it/fonts/noto-sans-v27-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://www.thelocal.it/fonts/noto-sans-v27-latin-700.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://www.thelocal.it/fonts/eb-garamond-v26-latin-700.woff2" as="font" type="font/woff2" crossorigin>
+    <style>
+        .article-card__media {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            aspect-ratio: var(--article-card-media-ratio, 300 / 190);
+        }
+
+        .article-card--hero .article-card__media {
+            max-height: 390px;
+        }
+
+        .article-card--regular .article-card__media,
+        .article-card--center .article-card__media {
+            max-height: 190px;
+        }
+
+        @media (max-width: 576px) {
+            .hp-new__container .hp-new__article {
+                min-width: 0;
+            }
+
+            .hp-new__container .hp-new__article--mobileRight .article-card,
+            .hp-new__container .hp-new__article--mobileRight .article-card__content {
+                min-width: 0;
+            }
+
+            .article-card--hero .article-card__media {
+                max-height: 230px;
+            }
+        }
+    </style>
+    
+        <link
+        rel="preload"
+        as="image"
+        href="https://assets.thelocal.com/cdn-cgi/rs:fit:450/quality:75/plain/https://apiwp.thelocal.com/wp-content/uploads/2025/07/AFP__20150327__Par8132064__v1__HighRes-1.jpg@webp"
+                imagesrcset="https://assets.thelocal.com/cdn-cgi/rs:fit:450/quality:75/plain/https://apiwp.thelocal.com/wp-content/uploads/2025/07/AFP__20150327__Par8132064__v1__HighRes-1.jpg@webp 450w, https://assets.thelocal.com/cdn-cgi/rs:fit:850/quality:75/plain/https://apiwp.thelocal.com/wp-content/uploads/2025/07/AFP__20150327__Par8132064__v1__HighRes-1.jpg@webp 850w"
+                imagesizes="(max-width: 576px) 92vw, (max-width: 1200px) 80vw, 850px"
+        fetchpriority="high"
+    >
+    
+    
+    
+        <script type="tl-js">
+            document.cookie = "__adblocker=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+            var setNptTechAdblockerCookie = function(adblocker) {
+                var d = new Date();
+                d.setTime(d.getTime() + 60 * 5 * 1000);
+                document.cookie = "__adblocker=" + (adblocker ? "true" : "false") + "; expires=" + d.toUTCString() + "; path=/";
+            };
+            var script = document.createElement("script");
+            script.setAttribute("async", true);
+            script.setAttribute("src", "//www.npttech.com/advertising.js");
+            script.setAttribute("onerror", "setNptTechAdblockerCookie(true);");
+            document.getElementsByTagName("head")[0].appendChild(script);
+        </script>
+        
+    <meta name="csrf-token" content="mn1NCzfE2P2tpGxoIAYGvCgrQsD5OLvISAs0yzIC">
+    <meta charset="utf-8">
+    <meta name="referrer" content="origin">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name='robots' content='max-image-preview:large'/>
+    <meta name="robots" content="max-snippet:-1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-itunes-app" content="app-id=1078564301">
+    <meta name="p:domain_verify" content="8948a77d334a5a512e1a94f7df2371e4"/>
+    <meta property="fb:pages" content="384349881653734" />
+    <meta property="fb:app_id" content="674180839423131" />
+    <link rel="profile" href="https://gmpg.org/xfn/11">
+    <link rel="icon" href="/images/favicons/it.ico" type="image/x-icon"/>
+    <link rel="shortcut icon" href="/images/favicons/it.ico"/>
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/it/image/apple-touch-icon/120.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/it/image/apple-touch-icon/152.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="/images/it/image/apple-touch-icon/167.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/it/image/apple-touch-icon/180.png">
+    <meta name="theme-color" content="#EF6C00"/>
+
+ 
+    <title>Anger as sunbathing tourists delay Dolomites mountain rescue</title>
+    <meta property="news_keywords" content="tourism"/>
+    <meta property="article:published_time" content="2026-07-02T10:36:23+02:00" />
+    <meta property="article:modified_time" content="2026-07-02T10:50:24+02:00"/>
+    <meta name="cXenseParse:articleid" content="267339"/>
+    <meta property="cXenseParse:image" content="https://assets.thelocal.com/cdn-cgi/rs:fit:1200/quality:75/plain/https://apiwp.thelocal.com/wp-content/uploads/2025/07/AFP__20150327__Par8132064__v1__HighRes-1.jpg@webp"/>
+    <meta property="cXenseParse:url" content="https://www.thelocal.it/20260702/anger-as-sunbathing-tourists-delay-dolomites-mountain-rescue"/>
+    <meta property="og:article:author" content="Elaine Allaby"/>
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="article"/>
+    <meta property="og:url" content="https://www.thelocal.it/20260702/anger-as-sunbathing-tourists-delay-dolomites-mountain-rescue"/>
+    <meta property="og:title" content="Anger as sunbathing tourists delay Dolomites mountain rescue"/>
+    <meta property="og:description" content="The Veneto Alpine Rescue service has issued an appeal for holidaymakers to keep clear of helipads after a recent rescue mission in the Dolomites was delayed by sunbathing hikers."/>
+    <meta property="og:image" content="https://assets.thelocal.com/cdn-cgi/rs:fit:1200/quality:75/plain/https://apiwp.thelocal.com/wp-content/uploads/2025/07/watermarks-logo-AFP__20150327__Par8132064__v1__HighRes-1.jpg@webp"/>
+    <meta property="og:image:type" content="image/webp">
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="The Local Italy" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@thelocalitaly" />
+    <meta name="twitter:title" content="Anger as sunbathing tourists delay Dolomites mountain rescue" />
+    <meta name="twitter:description" content="The Veneto Alpine Rescue service has issued an appeal for holidaymakers to keep clear of helipads after a recent rescue mission in the Dolomites was delayed by sunbathing hikers." />
+    <meta name="twitter:image" content="https://assets.thelocal.com/cdn-cgi/rs:fit:1200/quality:75/plain/https://apiwp.thelocal.com/wp-content/uploads/2025/07/watermarks-logo-AFP__20150327__Par8132064__v1__HighRes-1.jpg@webp" />
+    <meta name="twitter:label1" content="Written by">
+    <meta name="twitter:data1" content="Elaine Allaby">
+    <meta name="description" content="The Veneto Alpine Rescue service has issued an appeal for holidaymakers to keep clear of helipads after a recent rescue mission in the Dolomites was delayed by sunbathing hikers." />
+        <link rel="canonical" href="https://www.thelocal.it/20260702/anger-as-sunbathing-tourists-delay-dolomites-mountain-rescue" />
+            <meta name="googlebot" content="index">
+                <meta property="article:content_tier" content="locked" />
+                <link rel="alternate" type="application/rss+xml" href="https://feeds.thelocal.com/rss/it/premium">
+    
+    
+    
+    <!-- Styles -->
+        <link href="/css/app.css?id=c1eb32e57e0097b2fb1f435b0f2e8e12" rel="stylesheet">
+    <noscript><link rel="stylesheet" href="/css/app.css?id=c1eb32e57e0097b2fb1f435b0f2e8e12"></noscript>
+                <script>
+            window.dataLayer = window.dataLayer || [];
+            dataLayer.push({
+                'event': 'Pageview',
+                'pagePath': 'https://www.thelocal.it/20260702/anger-as-sunbathing-tourists-delay-dolomites-mountain-rescue',
+                'pageTitle': 'Anger as sunbathing tourists delay Dolomites mountain rescue',
+                'pageId': '866894',
+                'pageTags': 'premiumarticle, tourism',
+                'visitorType': 'free',
+                'UID': '',
+            });
+            
+            if(document.referrer !== '') {
+                let prevUrl = new URL(document.referrer);
+                if(prevUrl.pathname === '/') {
+                    dataLayer.push({ ecommerce: null });
+                    dataLayer.push({
+                        event: 'select_promotion',
+                        ecommerce: {
+                            promotion_name: 'Homepage',
+                            items: [
+                                {
+                                    item_id: '866894',
+                                    item_name: 'Anger as sunbathing tourists delay Dolomites mountain rescue',
+                                    item_category: 'Tourism'
+                                }
+                            ]
+                        }
+                    });
+                }
+            }
+            </script>
+        <script type='tl-js'>window.__tlAfterConsentIdle = window.__tlAfterConsentIdle || function(callback) {
+    window.__tlAfterConsentIdleState = window.__tlAfterConsentIdleState || {
+        ready: false,
+        listening: false,
+        callbacks: []
+    };
+
+    var runOnIdle = function(cb) {
+        if ('requestIdleCallback' in window) {
+            window.requestIdleCallback(cb, { timeout: 2500 });
+            return;
+        }
+        setTimeout(cb, 1200);
+    };
+
+    var flushCallbacks = function() {
+        if (window.__tlAfterConsentIdleState.ready) {
+            return;
+        }
+        window.__tlAfterConsentIdleState.ready = true;
+        var queued = window.__tlAfterConsentIdleState.callbacks.slice();
+        window.__tlAfterConsentIdleState.callbacks = [];
+        queued.forEach(function(cb) {
+            runOnIdle(cb);
+        });
+    };
+
+    if (typeof callback !== 'function') {
+        return;
+    }
+
+    if (window.__tlAfterConsentIdleState.ready) {
+        runOnIdle(callback);
+        return;
+    }
+
+    window.__tlAfterConsentIdleState.callbacks.push(callback);
+
+    if (window.__tlAfterConsentIdleState.listening) {
+        return;
+    }
+    window.__tlAfterConsentIdleState.listening = true;
+
+    if (typeof window.__tcfapi !== 'function') {
+        flushCallbacks();
+        return;
+    }
+
+    try {
+        window.__tcfapi('addEventListener', 2, function(tcData, success) {
+            if (!success || !tcData || !tcData.eventStatus) {
+                return;
+            }
+
+            var readyStatuses = { tcloaded: true, useractioncomplete: true };
+            if (!readyStatuses[tcData.eventStatus]) {
+                return;
+            }
+
+            var purposeConsent = tcData.purpose && tcData.purpose.consents ? tcData.purpose.consents : {};
+            var canTrack = !!purposeConsent[1];
+            if (canTrack) {
+                flushCallbacks();
+            }
+        });
+    } catch (error) {
+        flushCallbacks();
+    }
+};
+            window.__tlAfterConsentIdle(function() {
+                if (window.__TLPerfMarks && typeof window.__TLPerfMarks.mark === 'function') {
+                    window.__TLPerfMarks.mark('tl:thirdparty:gtm:start');
+                }
+                (function(w,d,s,l,i){
+                    w[l]=w[l]||[];
+                    w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});
+                    var f=d.getElementsByTagName(s)[0];
+                    var j=d.createElement(s);
+                    var dl=l!='dataLayer' ? '&l='+l : '';
+                    j.async=true;
+                    j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+                    f.parentNode.insertBefore(j,f);
+                })(window,document,'script','dataLayer','GTM-NMLDXPL');
+                if (window.__TLPerfMarks && typeof window.__TLPerfMarks.measure === 'function') {
+                    window.__TLPerfMarks.mark('tl:thirdparty:gtm:end');
+                    window.__TLPerfMarks.measure('tl:thirdparty:gtm', 'tl:thirdparty:gtm:start', 'tl:thirdparty:gtm:end');
+                }
+            });
+        </script>
+        <script type="application/javascript" async defer src="https://experience.piano.io/xbuilder/experience/load?aid=TZSopsa7pu"></script><script type="application/javascript" async defer src="https://cdn.cxense.com/cx.cce.js" data-vendor="iab:412"></script><script type='application/javascript' data-vendor="iab:412">var cX = window.cX = window.cX || {}; cX.callQueue = cX.callQueue || []; cX.options = cX.options || { compat: { c1x: { wait: 3000 } } };cX.CCE = cX.CCE || {}; cX.CCE.callQueue = cX.CCE.callQueue || [];cX.callQueue.push(['setSiteId', '1129593794869594600']);</script>
+
+    <script>
+        (function () {
+            window.tp = window.tp || [];
+            const tp = window.tp;
+
+            tp.push([
+                'addHandler',
+                'loginSuccess',
+                function () {
+                    if (document.body && document.body.classList.contains('article-page')) {
+                        window.location.reload();
+                    }
+                },
+            ]);
+
+            function hasPendingForcedPianoLogout() {
+                const key = 'tl-force-piano-logout-at';
+                const maxAgeMs = 5 * 60 * 1000;
+                const readTimestamp = (storage) => {
+                    try {
+                        if (!storage || typeof storage.getItem !== 'function') {
+                            return 0;
+                        }
+
+                        return Number(storage.getItem(key) || 0);
+                    } catch (error) {
+                        return 0;
+                    }
+                };
+
+                const lastMarkedAt = Math.max(
+                    readTimestamp(window.sessionStorage),
+                    readTimestamp(window.localStorage)
+                );
+
+                return lastMarkedAt > 0 && Date.now() - lastMarkedAt < maxAgeMs;
+            }
+
+            tp.push([
+                'init',
+                function () {
+                    if (window.__TL_PIANO_EXPERIENCE_STARTED__) {
+                        return;
+                    }
+
+                    if (hasPendingForcedPianoLogout()) {
+                        window.__TL_PIANO_EXPERIENCE_DEFERRED__ = true;
+                        return;
+                    }
+
+                    try {
+                        if (tp && tp.experience && typeof tp.experience.init === 'function') {
+                            window.__TL_PIANO_EXPERIENCE_STARTED__ = true;
+                            tp.experience.init();
+                        }
+                    } catch (error) {
+                        window.__TL_PIANO_EXPERIENCE_STARTED__ = false;
+                    }
+                },
+            ]);
+        })();
+    </script>
+            <script type="application/ld+json">{"@context":"https://schema.org","@type":"NewsArticle","mainEntityOfPage":{"@type":"WebPage","@id":"https://www.thelocal.it/20260702/anger-as-sunbathing-tourists-delay-dolomites-mountain-rescue"},"headline":"Anger as sunbathing tourists delay Dolomites mountain rescue","datePublished":"2026-07-02T10:36:23+02:00","dateModified":"2026-07-02T10:50:24+02:00","description":"The Veneto Alpine Rescue service has issued an appeal for holidaymakers to keep clear of helipads after a recent rescue mission in the Dolomites was delayed by sunbathing hikers.","keywords":"Italy news, tourism","isAccessibleForFree":false,"author":{"@type":"Person","name":"The Local","email":"news@thelocal.com","url":""},"isPartOf":{"@type":["CreativeWork","Product"],"name":"The Local Italy","productID":"thelocal.it:member"},"publisher":{"@type":"NewsMediaOrganization","name":"The Local Italy","keywords":"Italy's news in English","logo":{"@type":"ImageObject","url":"https://www.thelocal.it/images/the-local-network-logo-300x60.png","width":300,"height":60}},"image":{"@type":"ImageObject","url":"https://assets.thelocal.com/cdn-cgi/rs:fit:1200/quality:75/plain/https://apiwp.thelocal.com/wp-content/uploads/2025/07/AFP__20150327__Par8132064__v1__HighRes-1.jpg@webp","width":1200,"height":800}}</script>
+        <script async type="tl-js" subscriptions-control="manual" src="https://news.google.com/swg/js/v1/swg.js"></script>
+            
+    
+            <script type='application/javascript' async='async' src='https://securepubads.g.doubleclick.net/tag/js/gpt.js'></script><script type='application/javascript' async='async' src='https://proad-cdn.relevant-digital.com/static/tags/69c2893cac4389ed3e5cb338.js'></script>
+        <script type='application/javascript'>
+    window.googletag = window.googletag || { cmd: [] };
+    googletag.cmd.push(function () {
+        googletag.pubads().setCentering(true);
+        googletag.pubads().setTargeting('pageType', "article");
+        googletag.pubads().setTargeting('premium_user', "false");
+    });
+
+    function loadAds() {
+        window.relevantDigital = window.relevantDigital || {};
+        relevantDigital.cmd = relevantDigital.cmd || [];
+        relevantDigital.cmd.push(function () {
+            relevantDigital.loadPrebid({"configId":"69c29207370ab0b76116b489","manageAdserver":true,"collapseEmptyDivs":true,"collapseBeforeAdFetch":false,"allowedDivIds":null,"noGpt":true,"noSlotReload":true});
+        });
+    }
+</script>
+        
+        <!-- MailerLite Universal -->
+        <script type="tl-js">
+            (function(m,a,i,l,e,r){ m['MailerLiteObject']=e;function f(){
+            var c={ a:arguments,q:[]};var r=this.push(c);return "number"!=typeof r?r:f.bind(c.q);}
+            f.q=f.q||[];m[e]=m[e]||f.bind(f.q);m[e].q=m[e].q||f.q;r=a.createElement(i);
+            var _=a.getElementsByTagName(i)[0];r.async=1;r.src=l+'?v'+(~~(new Date().getTime()/1000000));
+            _.parentNode.insertBefore(r,_);})(window, document, 'script', 'https://static.mailerlite.com/js/universal.js', 'ml');
+
+            var ml_account = ml('accounts', '3138025', 'd2z5z7j0w6', 'load');
+        </script>
+        <!-- End MailerLite Universal -->
+        
+        <script>
+        window.__EDITION__ = "it";
+    </script>
+
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css' type='text/css' media='all' />
+
+    
+    
+                <script type="tl-js">
+                    window._taboola = window._taboola || [];
+                    _taboola.push({article:"auto"});
+                    !function (e, f, u, i) {
+                        if (!document.getElementById(i)){
+                        e.async = 1;
+                        e.src = u;
+                        e.id = i;
+                        f.parentNode.insertBefore(e, f);
+                        }
+                    }(document.createElement("script"),
+                    document.getElementsByTagName("script")[0],
+                    "//cdn.taboola.com/libtrc/thelocal-network/loader.js",
+                    "tb_loader_script");
+                    if(window.performance && typeof window.performance.mark == "function")
+                        {window.performance.mark("tbl_ic");}
+                </script>
+                
+    </head>
+<body class="antialiased article-page article-page--regular" data-auth="false">
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NMLDXPL" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <div id='outofpage' class='thelocal-ad-slot thelocal-ad-slot--outofpage' data-ad-unit-id='/14604472/thelocal_it/outofpage' data-collapse-empty-divs=''></div>
+    <div class="relative min-h-screen sm:pt-0" id="app" data-immediate-vue-mount="true">
+        <default-js :data="{&quot;login_route&quot;:&quot;https:\/\/www.thelocal.it\/login&quot;,&quot;register_route&quot;:&quot;https:\/\/www.thelocal.it\/register&quot;,&quot;logout_route&quot;:&quot;https:\/\/www.thelocal.it\/logout&quot;,&quot;piano_sync_route&quot;:&quot;https:\/\/www.thelocal.it\/piano-sync&quot;,&quot;account_route&quot;:&quot;https:\/\/www.thelocal.it\/members\/account&quot;,&quot;account_path&quot;:&quot;\/members\/account&quot;,&quot;piano_abandoned_cart_route&quot;:&quot;https:\/\/www.thelocal.it\/api\/v1\/piano\/abandoned-cart&quot;,&quot;home_route&quot;:&quot;https:\/\/www.thelocal.it&quot;,&quot;auth&quot;:false,&quot;auth_paid&quot;:false}"></default-js>
+                                                                            <div class='mobile-ad-container' style='min-height: 348px; overflow: hidden; position: relative;'><h3 class='tl-ad-heading'>Advertisement</h3><div id='topbanner' class='thelocal-ad-slot' data-ad-unit-id='/14604472/thelocal_it/topbanner' data-collapse-empty-divs=''></div></div>
+                                        <header class="site-header">
+                <div class="container">
+    <nav class="navbar navbar--complex">
+        <div class="nav-spacer nav-spacer--toggler">
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBackdrop" aria-controls="offcanvasWithBackdrop" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+        <a class="navbar-brand" href="https://www.thelocal.it">
+            <img width="269" height="51" src="https://www.thelocal.it/images/logo-it.svg" alt="The Local">
+        </a>
+        <div class="nav-spacer nav-spacer--menu" role="navigation" aria-label="Quick Links">
+            
+            <div class="login-box tablet-login-box"></div>
+                            <ul class="secondary-menu navbar-nav">
+                                            <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="ItalianNewsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Italian News
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="ItalianNewsDropdown">
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/category/italy-news">Latest news</a>
+                                            
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/travel-news">Travel news</a>
+                                            
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/strikes">Strikes</a>
+                                            
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/rome">Rome</a>
+                                            
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/milan">Milan</a>
+                                            
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/naples">Naples</a>
+                                            
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/sicily">Sicily</a>
+                                            
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/politics">Politics</a>
+                                            
+                            </li>
+                                            </ul>
+                </li>
+                                                                                                                                                                                                                                                                                            <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="PracticalhelpDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Practical help
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="PracticalhelpDropdown">
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/category/living-in-italy">Living in Italy</a>
+                                            
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/italian-citizenship">Italian citizenship</a>
+                                            
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/visas">Visas</a>
+                                            
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/residency-permits">Residency permits</a>
+                                            
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/taxes">Taxes</a>
+                                            
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/pensions">Pensions</a>
+                                            
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/cost-of-living">Cost of living</a>
+                                            
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/moving-to-italy">Moving to Italy</a>
+                                            
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/driving-licences">Driving licences</a>
+                                            
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/question">Reader questions</a>
+                                            
+                            </li>
+                                            </ul>
+                </li>
+                                                                                                                                                                                                                                                                                                                                                    <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="DiscoverItalyDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Discover Italy
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="DiscoverItalyDropdown">
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/discover-italy">Discover Italy</a>
+                                            
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="/visit-italy">Visit Italy</a>
+                                            
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/category/italy-explained">Italy explained</a>
+                                            
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/italian-traditions">Italian traditions</a>
+                                            
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/history">History</a>
+                                            
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/italian-habits">Italian habits</a>
+                                            
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/food-drink">Food and Drink</a>
+                                            
+                            </li>
+                                            </ul>
+                </li>
+                                                                                                                                                                                                                                                                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="LanguageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Language
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="LanguageDropdown">
+                                                    <li>
+                                                                        <a class="dropdown-item" href="/language-lessons">Language Lessons</a>
+                                            
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/category/learning-italian">Learning Italian</a>
+                                            
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/italian-word-of-the-day">Italian word of the day</a>
+                                            
+                            </li>
+                                            </ul>
+                </li>
+                                                                                                                                                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="HomesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Homes
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="HomesDropdown">
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/property">Property</a>
+                                            
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/renting">Renting</a>
+                                            
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/one-euro-homes">One-euro homes</a>
+                                            
+                            </li>
+                                            </ul>
+                </li>
+                                                                                                                                                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="JobsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Jobs
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="JobsDropdown">
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/working-in-italy">Working in Italy</a>
+                                            
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="/jobs">Find jobs in Italy</a>
+                                            
+                            </li>
+                                            </ul>
+                </li>
+                                                                                <li class="nav-item nav-item--btn login-box"></li>
+</ul>
+                    </div>
+                <div class="search-nav-container">
+            <search-component-js :data='{"search_route":"\/search","api_search_route":"\/api\/search","api_popular_route":"\/api\/search\/popular","api_autocomplete_route":"\/api\/search\/autocomplete","api_click_route":"\/api\/search\/click","edition":"it","popular_searches":["italy","residence permit","taxes","housing","travel"],"source":"header"}'></search-component-js>
+        </div>
+
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasWithBackdrop" aria-labelledby="offcanvasWithBackdropLabel">
+            <div class="offcanvas-header">
+                <a href="https://www.thelocal.it">
+                    <img width="200" height="51" src="https://www.thelocal.it/images/logo-it.svg" alt="The Local">
+                </a>
+
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <div class="login-box"></div>
+
+                                    <ul class="navbar-nav">
+    <h5>Topics</h5>
+                                            <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Italian News
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/category/italy-news">Latest news</a>
+                                                      
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/travel-news">Travel news</a>
+                                                      
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/strikes">Strikes</a>
+                                                      
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/rome">Rome</a>
+                                                      
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/milan">Milan</a>
+                                                      
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/naples">Naples</a>
+                                                      
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/sicily">Sicily</a>
+                                                      
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/politics">Politics</a>
+                                                      
+                            </li>
+                                            </ul>
+                </li>
+                                                                                                                                                                                                                                                                                            <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Practical help
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/category/living-in-italy">Living in Italy</a>
+                                                      
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/italian-citizenship">Italian citizenship</a>
+                                                      
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/visas">Visas</a>
+                                                      
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/residency-permits">Residency permits</a>
+                                                      
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/taxes">Taxes</a>
+                                                      
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/pensions">Pensions</a>
+                                                      
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/cost-of-living">Cost of living</a>
+                                                      
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/moving-to-italy">Moving to Italy</a>
+                                                      
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/driving-licences">Driving licences</a>
+                                                      
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/question">Reader questions</a>
+                                                      
+                            </li>
+                                            </ul>
+                </li>
+                                                                                                                                                                                                                                                                                                                                                    <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Discover Italy
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/discover-italy">Discover Italy</a>
+                                                      
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="/visit-italy">Visit Italy</a>
+                                                      
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/category/italy-explained">Italy explained</a>
+                                                      
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/italian-traditions">Italian traditions</a>
+                                                      
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/history">History</a>
+                                                      
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/italian-habits">Italian habits</a>
+                                                      
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/food-drink">Food and Drink</a>
+                                                      
+                            </li>
+                                            </ul>
+                </li>
+                                                                                                                                                                                                                                                                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Language
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                    <li>
+                                                                        <a class="dropdown-item" href="/language-lessons">Language Lessons</a>
+                                                      
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/category/learning-italian">Learning Italian</a>
+                                                      
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/italian-word-of-the-day">Italian word of the day</a>
+                                                      
+                            </li>
+                                            </ul>
+                </li>
+                                                                                                                                                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Homes
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/property">Property</a>
+                                                      
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/renting">Renting</a>
+                                                      
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/one-euro-homes">One-euro homes</a>
+                                                      
+                            </li>
+                                            </ul>
+                </li>
+                                                                                                                                                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Jobs
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                                    <li>
+                                                                        <a class="dropdown-item" href="https://www.thelocal.it/tag/working-in-italy">Working in Italy</a>
+                                                      
+                            </li>
+                                                    <li>
+                                                                        <a class="dropdown-item" href="/jobs">Find jobs in Italy</a>
+                                                      
+                            </li>
+                                            </ul>
+                </li>
+                                                                            </ul>
+                                <ul class="navbar-nav">
+    <h5>Choose edition</h5>
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle editorial-select text-capitalize" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            italy
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li class="nav-item">
+                <a class="dropdown-item " aria-current="page" href="https://www.thelocal.com">All Editions</a>
+            </li>
+            <li class="nav-item">
+                <a class="dropdown-item " href="https://www.thelocal.at">
+                    <div class="fflag fflag-AT ff-sm" title="Austria AT"></div>
+                    Austria
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="dropdown-item " href="https://www.thelocal.dk">
+                    <div class="fflag fflag-DK ff-sm" title="Denmark DK"></div>
+                    Denmark
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="dropdown-item " href="https://www.thelocal.fr">
+                    <div class="fflag fflag-FR ff-sm" title="France FR"></div>
+                    France
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="dropdown-item " href="https://www.thelocal.de">
+                    <div class="fflag fflag-DE ff-sm" title="Germany DE"></div>
+                    Germany
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="dropdown-item active" href="https://www.thelocal.it">
+                    <div class="fflag fflag-IT ff-sm" title="Italy IT"></div>
+                    Italy
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="dropdown-item " href="https://www.thelocal.no">
+                    <div class="fflag fflag-NO ff-sm" title="Norway NO"></div>
+                    Norway
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="dropdown-item " href="https://www.thelocal.es">
+                    <div class="fflag fflag-ES ff-sm" title="Spain ES"></div>
+                    Spain
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="dropdown-item " href="https://www.thelocal.se">
+                    <div class="fflag fflag-SE ff-sm" title="Sweden SE"></div>
+                    Sweden
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="dropdown-item " href="https://www.thelocal.ch">
+                    <div class="fflag fflag-CH ff-sm" title="Switzerland CH"></div>
+                    Switzerland
+                </a>
+            </li>
+        </ul>
+    </li>
+</ul>                <ul class="navbar-nav">
+    <h5>Membership</h5>
+                                    <li class="nav-item">
+                    <a class="nav-link" href="/membership-offer?tpcc=it-menu">
+                        <i class="fas fa-user"></i> Become a member
+                    </a>
+                </li>
+                                                    <li class="nav-item">
+                    <a class="nav-link" href="https://www.thelocal.it/free-newsletter">
+                        <i class="far fa-envelope"></i> Newsletters
+                    </a>
+                </li>
+                                                                                            <li class="nav-item">
+                    <a class="nav-link" href="https://thelocalhelp.zendesk.com/hc/en-us">
+                        <i class="far fa-circle-question"></i> Help Centre
+                    </a>
+                </li>
+                                                    <li class="nav-item">
+                    <a class="nav-link" href="https://www.thelocal.it/gift-voucher">
+                        <i class="fas fa-gift"></i> Gift Vouchers
+                    </a>
+                </li>
+                                                    <li class="nav-item">
+                    <a class="nav-link" href="https://www.thelocal.it/membership-student">
+                        <i class="fas fa-user-graduate"></i> Educational Access
+                    </a>
+                </li>
+                                                    <li class="nav-item">
+                    <a class="nav-link" href="https://www.thelocal.it/corporate-membership">
+                        <i class="fas fa-shop"></i> Corporate Access
+                    </a>
+                </li>
+                        
+</ul>                <ul class="navbar-nav">
+    <h5>The Local</h5>
+                                    <li class="nav-item">
+                    <a class="nav-link " href="https://www.thelocal.it/aboutus">
+                        <svg width="19" height="21" viewBox="0 0 19 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M10.8308 0.140769C12.1981 0.11446 13.3947 0.545022 14.4697 1.31952C15.7353 2.23134 16.8409 3.33514 17.7224 4.66327C19.3268 7.08071 19.3926 9.64971 18.0746 12.1655C16.5195 15.1337 14.2777 17.4821 11.4716 19.1511C8.9412 20.6559 6.44941 20.4185 4.12068 18.5811C2.97483 17.677 1.98205 16.5975 1.17851 15.3519C-0.183885 13.2406 -0.384344 10.9492 0.677905 8.68117C2.32618 5.16019 4.89327 2.53048 8.21247 0.740604C9.03625 0.296567 9.94191 0.110995 10.8308 0.140769ZM5.89386 10.1305C5.89386 11.9832 5.89308 13.8359 5.89464 15.6885C5.89464 16.0886 5.96593 16.1658 6.34723 16.166C8.45369 16.1685 10.5604 16.1683 12.667 16.1663C13.06 16.166 13.1893 16.0309 13.1938 15.6164C13.1992 15.0853 13.199 14.5544 13.1938 14.0233C13.1896 13.6005 13.0926 13.4997 12.6988 13.4995C11.4213 13.4981 10.1436 13.4886 8.86679 13.5063C8.55971 13.5105 8.46343 13.4226 8.46575 13.0947C8.47902 11.2776 8.472 9.46015 8.472 7.64307C8.472 6.65168 8.47519 5.66056 8.46981 4.6693C8.46762 4.19074 8.36233 4.08564 7.91767 4.08422C7.42438 4.08255 6.93146 4.08306 6.43828 4.08397C5.93732 4.08474 5.89431 4.12876 5.89407 4.64325C5.89407 6.4724 5.89407 8.30142 5.89407 10.1304L5.89386 10.1305Z" fill="#666666"/>
+                            </svg> About Us
+                    </a>
+                </li>
+                                                    <li class="nav-item">
+                    <a class="nav-link " href="https://www.thelocal.it/contact">
+                        <i class="far fa-envelope"></i>Contact Us
+                    </a>
+                </li>
+                                                    <li class="nav-item">
+                    <a class="nav-link " href="https://www.thelocal.it/news-archive">
+                        <i class="fa-solid fa-box-archive"></i>News Archive
+                    </a>
+                </li>
+                                                    <li class="nav-item">
+                    <a class="nav-link " href="https://www.thelocal.it/search">
+                        <i class="fa-solid fa-magnifying-glass"></i>Search articles
+                    </a>
+                </li>
+                                                    <li class="nav-item">
+                    <a class="nav-link " href="https://www.thelocal.it/topics">
+                        <i class="fa-solid fa-newspaper"></i>All topics
+                    </a>
+                </li>
+                                                                                            <li class="nav-item">
+                    <a class="nav-link " href="https://www.thelocal.it/advertise-with-us">
+                        <i class="fas fa-tag"></i> Advertise with us
+                    </a>
+                </li>
+                                                    <li class="nav-item">
+                    <a class="nav-link " href="https://jobs.thelocal.com/employers/">
+                        <i class="fa-solid fa-clipboard-list"></i> Post a job ad
+                    </a>
+                </li>
+                    </ul>                <ul class="navbar-nav">
+    <div class="footer-badges">
+        <h5>Get The Local App</h5>
+        <a href="https://apps.apple.com/app/the-local/id1078564301?ppid=b24d4255-45dc-4530-a714-f172dfb7d73d" target="_blank">
+            <img class="lazyload" data-src="https://www.thelocal.it/images/App_Store_Badge__wht.svg" width="120" height="40" alt="App Store">
+        </a>
+
+        <a href="https://play.google.com/store/apps/details?id=com.thelocal.app" target="_blank">
+            <img class="lazyload" data-src="https://www.thelocal.it/images/google-play-badge.webp" width="150" height="60" alt="Google Play Store">
+        </a>
+    </div>
+
+    <ul class="footer-socialLinks">
+                                                    <li>
+                        <a href="https://www.facebook.com/TheLocalItaly" target="_blank">
+                            <i class="fab fa-square-facebook"></i>
+                        </a>
+                    </li>
+                                                                        <li>
+                        <a href="https://bsky.app/profile/thelocalitaly.bsky.social" target="_blank">
+                            <i class="fab fa-square-bluesky"></i>
+                        </a>
+                    </li>
+                                                                        <li>
+                        <a href="https://instagram.com/TheLocalItaly" target="_blank">
+                            <i class="fab fa-square-instagram"></i>
+                        </a>
+                    </li>
+                                                                        <li>
+                        <a href="https://www.threads.net/@thelocalitaly" target="_blank">
+                            <i class="fab fa-square-threads"></i>
+                        </a>
+                    </li>
+                                                                        <li>
+                        <a href="https://www.linkedin.com/company/thelocaleurope/" target="_blank">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                    </li>
+                                </ul>
+</ul>
+                <div class="footer-column footer-column__general d-block d-md-none">
+                    <img width="211" height="40" src="https://www.thelocal.it/images/logo-it.svg" alt="The Local" class="footer-logo">
+                    <p class="footer-info">The Local Europe AB<br>Västmannagatan 43<br>113 25 Stockholm<br>Sweden</p>
+                </div>
+
+            </div>
+        </div>
+    </nav>
+</div>
+            </header>
+                
+                <div id="pn-header" class="pn-header"></div>
+                <div id="main" class="site">
+            <article-js :data="{&quot;post_comment_route&quot;:&quot;https:\/\/www.thelocal.it\/comment\/save&quot;,&quot;comments_load_route&quot;:&quot;https:\/\/www.thelocal.it\/comment\/267339\/load&quot;,&quot;comments_load_token&quot;:&quot;eyJhcnRpY2xlX2lkIjoyNjczMzl9.a26e9bdb6b4bb32271b556a03125c6e97c3e2373e0a82e7fdb88e87843a041ed&quot;,&quot;comments_page_size&quot;:5,&quot;terms_url&quot;:&quot;https:\/\/www.thelocal.it\/terms-of-use&quot;,&quot;initExtendedAccess&quot;:&quot;&quot;,&quot;googleAuthorizationUrl&quot;:&quot;&quot;,&quot;loginUserFromGoogleSocialRedirectUrl&quot;:&quot;https:\/\/www.thelocal.it\/api\/v1\/extended-access\/login-user-from-google&quot;,&quot;loginUser&quot;:&quot;https:\/\/www.thelocal.it\/api\/v1\/extended-access\/login-user&quot;,&quot;getArticleBodyRoute&quot;:&quot;https:\/\/www.thelocal.it\/api\/v1\/extended-access\/get-article-body\/267339&quot;,&quot;extendedAccessData&quot;:[],&quot;currentEditorial&quot;:&quot;it&quot;,&quot;articleUrl&quot;:&quot;https:\/\/www.thelocal.it\/20260702\/anger-as-sunbathing-tourists-delay-dolomites-mountain-rescue&quot;,&quot;isCommercial&quot;:false,&quot;updateUserRoute&quot;:&quot;https:\/\/www.thelocal.it\/api\/v1\/user\/update-piano-custom-fields&quot;,&quot;userPianoId&quot;:null,&quot;articleTypes&quot;:{&quot;for_members&quot;:true,&quot;partner_content&quot;:false,&quot;paywall_free&quot;:false,&quot;sponsored_elementor&quot;:false,&quot;css_classes&quot;:&quot;article--members &quot;}}"></article-js>
+<div class="article-single article-single--regular">
+    <div class="container-md">
+        <div class="row mb-3">
+            <div class="col-xl-8 mobile-full-width">
+                <main class="article-single__main article-single__main--featured article--members " data-url="https://www.thelocal.it/20260702/anger-as-sunbathing-tourists-delay-dolomites-mountain-rescue">
+                    <div class="tag-wrapper">
+
+                                                                                    <a href="https://www.thelocal.it/tag/tourism" class="tag">Tourism</a>
+                                                    
+                                                                            
+                                                    <span class="tag-access tag-access--members">Members only</span>
+                        
+                    </div>
+
+                    <h1>Anger as sunbathing tourists delay Dolomites mountain rescue</h1>
+                    <div class="meta">
+                        <div class="article-single__author">
+                                                                                                <img width="47" height="47" src="https://assets.thelocal.com/cdn-cgi/rs:fit:47/quality:75/plain/https://apiwp.thelocal.com/wp-content/uploads/2021/08/PXL_20260126_140650897-670x1024.jpeg@webp" class="rounded-circle" alt="Elaine Allaby">
+                                                                                        <div>
+                                                                <span>
+                                                                        <strong><a href="/author/elaine-allaby-2">Elaine Allaby</a></strong> - elaine.allaby@thelocal.com
+                                                                    </span>
+                                
+                                <div class="article__published">
+                                    <span>Published: 2 Jul, 2026 CET.</span>
+                                                                            <span>Updated: Thu 2 Jul 2026 10:50 CET</span>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                                                                        <div class="article-single__social">
+                            <div class="article-actions-bar">
+                               <button class="copy article-action article-action--share" type="button">Share</button>
+                                <ul class="social-sharers article-actions">
+                                    <li class="social-sharers__save article-actions__item">
+                                        <save-article-js :data="{&quot;currentEditorial&quot;:&quot;it&quot;,&quot;articleUrl&quot;:&quot;https:\/\/www.thelocal.it\/20260702\/anger-as-sunbathing-tourists-delay-dolomites-mountain-rescue&quot;,&quot;isCommercial&quot;:false,&quot;save_article_route&quot;:&quot;https:\/\/www.thelocal.it\/api\/v1\/user\/save-article&quot;,&quot;saved_articles_route&quot;:&quot;https:\/\/www.thelocal.it\/members\/saved-articles&quot;,&quot;articleId&quot;:267339,&quot;userId&quot;:null,&quot;websitePlatform&quot;:&quot;mobile&quot;,&quot;isArticleSavedByUser&quot;:false,&quot;inSavedPage&quot;:false,&quot;isPaidUser&quot;:false}"></save-article-js>
+                                    </li>
+                                                                            <li class="article-actions__item article-actions__item--comments">
+                                            <a class="comments-link" href="#article-comments">
+                                                <i class="fas fa-comment"></i>
+                                                                                                <span>Add a comment</span>
+                                                                                            </a>
+                                        </li>
+                                                                        <li>
+                                        <button class="social-share facebook" data-sharer="facebook" title="Facebook">
+                                            <i class="fab fa-facebook-f"></i>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button class="social-share twitter" data-sharer="twitter" data-tweet="Anger as sunbathing tourists delay Dolomites mountain rescue" title="Twitter">
+                                            <i class="fab fa-twitter"></i>
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button class="social-share linkedin" data-sharer="linkedin" title="LinkedIn">
+                                            <i class="fab fa-linkedin-in"></i>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <button
+                        type="button"
+                        aria-label="Get the app"
+                        data-label="Get the app"
+                        data-ios-url="https://apps.apple.com/app/the-local/id1078564301?ppid=b24d4255-45dc-4530-a714-f172dfb7d73d"
+                        data-android-url="https://play.google.com/store/apps/details?id=com.thelocal.app"
+                        class="article-app-cta"
+                    ></button>
+                    <figure class="figure article-single__feature">
+                            <img
+                                width="540"
+                                height="349"
+                                src="https://assets.thelocal.com/cdn-cgi/rs:fit:450/quality:75/plain/https://apiwp.thelocal.com/wp-content/uploads/2025/07/AFP__20150327__Par8132064__v1__HighRes-1.jpg@webp"
+                                                                srcset="https://assets.thelocal.com/cdn-cgi/rs:fit:450/quality:75/plain/https://apiwp.thelocal.com/wp-content/uploads/2025/07/AFP__20150327__Par8132064__v1__HighRes-1.jpg@webp 450w, https://assets.thelocal.com/cdn-cgi/rs:fit:850/quality:75/plain/https://apiwp.thelocal.com/wp-content/uploads/2025/07/AFP__20150327__Par8132064__v1__HighRes-1.jpg@webp 850w"
+                                sizes="(max-width: 576px) 92vw, (max-width: 1200px) 80vw, 850px"
+                                                                fetchpriority="high"
+                                loading="eager"
+                                decoding="async"
+                                style="aspect-ratio: 850 / 550;"
+                                class="figure-img img-fluid"
+                                alt="Anger as sunbathing tourists delay Dolomites mountain rescue"
+                            >
+                            <figcaption class="figure-caption">A rescue team helicopter flies over the Alps. AFP PHOTO / FRANCIS PELLIER / DICOM / MINISTERE DE L'INTERIEUR</figcaption>
+                    </figure>
+                    <p class="article-single__excerpt">
+                        The Veneto Alpine Rescue service has issued an appeal for holidaymakers to keep clear of helipads after a recent rescue mission in the Dolomites was delayed by sunbathing hikers.
+                    </p>
+                                                                                                                            <div id="articleAdContainer"></div>
+                    <div id="articleBody"  class="article-single__content cXenseParse"  style="display: none;" >
+                    <p><span style="font-weight: 400;">Tourists lying on the helicopter landing area in Belluno "did not move away even when they saw the aircraft approaching", La Repubblica newspaper </span><a href="https://www.repubblica.it/cronaca/2026/07/01/news/belluno_elicottero_118_rifugio_piazzola_sosta_soccorso_turisti-425444163/" target="_blank" rel="noopener"><span style="font-weight: 400;">reported</span></a><span style="font-weight: 400;"> on Wednesday, "forcing the rescuers to waste precious minutes."</span></p>
+<p><span style="font-weight: 400;">"Please take note: helicopter landing pads must not be obstructed!" the service wrote in </span><a href="https://www.facebook.com/CnsasVeneto/posts/1430083995812355?ref=embed_post" target="_blank" rel="noopener"><span style="font-weight: 400;">post</span></a><span style="font-weight: 400;"> on Facebook.</span></p>
+<div class="ml-manual-widget-container"></div>
+<p><span style="font-weight: 400;">"Remember that the helipad – easily recognisable by the large ‘H’ marked on the ground, as well as by the official signs – is essential in the event of an emergency.</span></p>
+<p><span style="font-weight: 400;">"Failing to move out of the way when a SUEM helicopter is approaching creates an obstacle and wastes time for the medical team and those in need of assistance."</span></p>
+<p><span style="font-weight: 400;">Readers commenting online </span><a href="https://www.facebook.com/giornaleladige/posts/alcuni-turisti-prendono-il-sole-sulla-piazzola-del-118-lelicottero-non-pu%C3%B2-atter/1462558845917841/" target="_blank" rel="noopener"><span style="font-weight: 400;">expressed outrage</span></a><span style="font-weight: 400;"> over the incident, with more than a few suggesting the helicopter should have landed on top of the uncooperative sunbathers.</span></p>
+<p><span style="font-weight: 400;">Others called for them to be sanctioned by Italian authorities.</span></p>
+<p><span style="font-weight: 400;">“I hope that if they’re at least given a hefty fine… perhaps they’ll realise how serious the situation is”, said one person.</span></p>
+<p><span style="font-weight: 400;">Italy’s Dolomites mountain range has struggled with heavy tourist pressure in recent years, with reports surfacing each year of foreign tourists <a href="https://corrieredellaltoadige.corriere.it/notizie/cronaca/26_giugno_19/turisti-indisciplinati-sulle-dolomiti-in-alto-adige-arrivano-i-ranger-per-arginare-chi-usa-droni-si-fa-selfie-rischiosi-e-si-7585bdfb-ed1b-4eed-bedf-9088900bdxlk.shtml" target="_blank" rel="noopener">flouting local ordinances</a> and unprepared hikers needing to be airlifted to safety.</span></p>
+
+                            <div class='mobile-ad-container' style='min-height: 348px; overflow: hidden; position: relative;'><h3 class='tl-ad-heading'>Advertisement</h3><div id='intext_2' class='thelocal-ad-slot' data-ad-unit-id='/14604472/thelocal_it/intext' data-collapse-empty-divs=''></div></div>
+            <p><span style="font-weight: 400;">Last summer a British tourist <a href="https://www.thelocal.it/20250804/british-hiker-hit-with-e14000-bill-after-being-rescued-in-italys-dolomites" target="_blank" rel="noopener">was hit</a> with a €14,000 bill after he ignored warning signs and got caught in a rockfall, requiring a helicopter rescue.</span></p>
+<p><span style="font-weight: 400;">In December, five foreign hikers <a href="https://www.thelocal.it/20251201/today-in-italy-a-roundup-of-the-latest-news-on-monday-457-4" target="_blank" rel="noopener">were saved</a> by an Alpine rescue team after attempting to climb the Sass Rigais peak in Puez-Odle Nature Park in gym shoes and tracksuits.</span></p>                    </div>
+                    <p id="articleBodyForbidden"  style="display: block;text-align: center;margin-top: 50px; font-size: 30px; font-weight: bold;" >Become a member or log in to continue reading</p>
+                    
+                    <div class="member-container"></div>
+                    
+                    <div class="article-single__tags">
+                        <h3 class="block-title border-0">More</h3>
+                        <div class="tags-block">
+                                                                                                <a href="https://www.thelocal.it/tag/tourism">#Tourism</a>
+                                                                                    </div>
+                    </div>
+
+                                            <div class="article-single__comments" id="article-comments">
+    <div data-bs-toggle="collapse" data-bs-target="#comments-collapsible" role="button" aria-expanded="true" aria-controls="comments-collapsible" aria-label="Show comments" class="comments-title-block">
+        <h3 class="block-title mb-0">Comments </h3>
+        <span><i class="fas fa-chevron-down"></i></span>
+    </div>
+    
+    <div class="comments-collapsible collapse show" id="comments-collapsible">
+        <div class="comment-wrapper comment-wrapper--intro">
+            <p>
+                <strong>Join the conversation in our comments section below.</strong> Share your own views and experience and if you have a question or suggestion for our journalists then email us at <a href="mailto:news@thelocal.it">news@thelocal.it</a>.<br/>
+                Please keep comments civil, constructive and on topic – and make sure to read our <a href="https://www.thelocal.it/terms-of-use">terms of use</a> before getting involved.
+            </p>
+        </div>
+                <div id="commentFormNotAuth">
+            <p>Please log in <a class="pn-login" href="javascript:void(0);" role="button" tabindex="-1">here</a> to leave a comment.</p>
+        </div>
+                                <div
+            class="comments-list"
+            id="comments-list"
+            data-comments-list
+            data-comments-visible-limit="5"
+            data-comments-next-cursor=""
+            data-comments-has-more="0"
+            data-comments-sort="recent"
+        >
+                    </div>
+            </div>
+</div>
+                    
+
+                    <div class="article-single__worth">
+                        
+                        <h3 class="block-title">See Also</h3>
+                        <div class="read-also-recs"></div>
+                    </div>
+
+                </main>
+            </div>
+            <div class="col-xl-4">
+                <aside class="article-single__side sticky sticky--sidebar">
+                                                            <div class="article-single__recommend">
+
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div>
+    <taboola-widget-js></taboola-widget-js>
+</div>
+
+<script type="application/javascript">
+	window.tp = window.tp || [];
+
+	var tp = window.tp;
+
+	tp.push(["setContentCreated", "2026-07-02T10:36:23+02:00"]);
+	tp.push(["setContentSection", "Italy: 2nd Homepage section"]);
+	tp.push(["setTags", ["premiumarticle","tourism"]]);
+</script>
+        </div>
+                
+        <div id="pn-footer" class="pn-footer"><div id="pn-footer-show"></div></div>
+        <footer class="site-footer dark">
+            <div class="container">
+    <div class="footer-links">
+        <div class="row">
+            <div class="col-lg-3 d-none d-md-block">
+                <div class="footer-column footer-column__general">
+                    <img width="211" height="40"
+                        src="https://www.thelocal.it/images/logo-it.svg" alt="The Local"
+                        class="footer-logo">
+                    <p class="footer-info">The Local Europe AB<br>Västmannagatan 43<br>113 25 Stockholm<br>Sweden</p>
+                </div>
+                <div class="footer-badges">
+                    <a href="https://apps.apple.com/app/the-local/id1078564301?ppid=b24d4255-45dc-4530-a714-f172dfb7d73d" target="_blank" aria-label="Apple App Store link">
+                        <img class="lazyload" data-src="https://www.thelocal.it/images/App_Store_Badge__wht.svg" width="120" height="40" alt="App Store">
+                    </a>
+
+                    <a href="https://play.google.com/store/apps/details?id=com.thelocal.app" target="_blank" aria-label="Google Play Store link">
+                        <img class="lazyload" data-src="https://www.thelocal.it/images/google-play-badge.webp" width="150" height="60" alt="Google Play Store">
+                    </a>
+                </div>
+                <ul class="footer-socialLinks">
+                    <li>
+                        <a href="https://www.facebook.com/TheLocalItaly" target="_blank" aria-label="The Local Facebook profile">
+                            <i class="fab fa-square-facebook"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://bsky.app/profile/thelocalitaly.bsky.social" target="_blank" aria-label="The Local X profile">
+                            <i class="fab fa-square-bluesky"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://instagram.com/TheLocalItaly" target="_blank" aria-label="The Local Instagram profile">
+                            <i class="fab fa-square-instagram"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.threads.net/@thelocalitaly" target="_blank" aria-label="The Local Threads profile">
+                            <i class="fab fa-square-threads"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.linkedin.com/company/thelocaleurope/" target="_blank" aria-label="The Local LinkedIn profile">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-lg-2 d-none d-md-block">
+                <div class="footer-column">
+                    <h4>The Local</h4>
+                    <nav class="footer-nav">
+                        <a href="https://www.thelocal.it/aboutus">About us</a>
+                        <a href="https://www.thelocal.it/contact">Contact us</a>
+                        <a href="https://www.thelocal.it/news-archive">News Archive</a>
+                        <a href="https://www.thelocal.it/search">Search articles</a>
+                        <a href="https://www.thelocal.it/tag/working-in-italy">Find jobs in Italy</a>
+                        
+                                                                        <a href="https://jobs.thelocal.com/employers/" target="_blank">Post a job ad</a>
+                        <a href="https://www.thelocal.it/advertise-with-us">Advertise with us</a>
+                                            </nav>
+                </div>
+            </div>
+            <div class="col-lg-2 d-none d-md-block">
+                <div class="footer-column">
+                    <h4>Membership</h4>
+                    <nav class="footer-nav">
+                        
+                                                <a class="pn-login" href="javascript:void(0);" role="button" tabindex="-1">Login</a>
+                            <a href="/membership-offer?tpcc=it-menu">Become a member</a>
+                                                        <a href="https://www.thelocal.it/free-newsletter">Newsletters</a>
+                                                                            <a href="https://thelocalhelp.zendesk.com/hc/en-us" target="_blank">Help Centre</a>
+                                                <a href="https://www.thelocal.it/gift-voucher">Gift Vouchers</a>
+                        <a href="https://www.thelocal.it/membership-student">Educational access</a>
+                                                <a href="https://www.thelocal.it/corporate-membership">Corporate access</a>
+                    </nav>
+                </div>
+            </div>
+            <div class="col-lg-2 d-none d-md-block">
+                <div class="footer-column">
+                    <h4>Popular Topics</h4>
+                    <nav class="footer-nav">
+    <a href="https://www.thelocal.it/category/italy-news">Latest News</a>
+    <a href="https://www.thelocal.it/tag/travel-news">Travel news</a>
+    <a href="https://www.thelocal.it/tag/strikes">Strikes</a>
+    <a href="/visit-italy">Visit Italy</a>
+    <a href="https://www.thelocal.it/tag/working-in-italy">Working in Italy</a>
+    <a href="https://www.thelocal.it/tag/italian-word-of-the-day">Word of the day</a>
+    <a href="https://www.thelocal.it/topics">All topics</a>
+</nav>
+                </div>
+            </div>
+            <div class="col-lg-3">
+                <div class="footer-column footer-column__subscribe">
+                    <h4>Get daily news straight in your inbox</h4>
+                    <div class="tl-newsletter tl-newsletter--footer">
+                        <div class='ml-form-embed-wrapper' id='ml-form-embed-wrapper'><div class='ml-form-embed-footer ml-form-embed' data-account='3138025:d2z5z7j0w6' data-form='5594285:h9r9t6'></div></div>
+                    </div>
+                    <p class="footer-terms">
+                        By signing up you agree to our <a href="https://www.thelocal.it/terms-of-use">Terms of Use</a> and <a href="https://www.thelocal.it/privacy-policy">Privacy Policy.</a> We will use your email address to send you newsletters as well as information and offers related to your account.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="footer-copyright">
+    <div class="container">
+        <p>2026 The Local, All Rights Reserved.</p>
+        <div class="dp-links">
+                            <a href="javascript:void(0);" class="cmp-manage-cookies" role="button" tabindex="0">Manage Cookies</a>
+                        <a href="https://www.thelocal.it/privacy-policy">Privacy Policy</a>
+            <a href="https://www.thelocal.it/terms-of-use">Terms & Conditions</a>
+        </div>
+    </div>
+</div>
+        </footer>
+            </div>
+        <script src="/js/manifest.js?id=e18a6d31899807bcf26caa3901670256"></script>
+    <script src="/js/js/vendor-utils.1cd4678413e6ef15.js?id=3386e19637a4657e3f311ed9221431ad"></script>
+    <script src="/js/vendor.js?id=9f4833b40453c6f04949adc25a2635d2"></script>
+    <script src="/js/vue.js?id=31a3093f90e1a46ac1171699c4e46f8b"></script>
+    <script src="/js/js/bootstrap.8c0aa6d31d7d2b59.js?id=1ee00102a9731642dc805b8e3f873d11"></script>
+    <script src="/js/app.js?id=47176b48b3225e78f6f86bf395b7dd80"></script>
+                <script type='application/javascript'>
+    loadAds();
+</script>
+        <script type="tl-js">
+            function makeid(length) {
+                var result           = "";
+                var characters       = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+                var charactersLength = characters.length;
+                for ( var i = 0; i < length; i++ ) {
+                    result += characters.charAt(Math.floor(Math.random() * 
+                    charactersLength));
+                }
+                return result;
+            }
+            + new Date()
+            let timestampMS = new Date().getTime();
+            let timestamp = Math.floor(timestampMS / 1000);
+            let g4_location_hostname = encodeURIComponent(window.location.hostname)
+            let g4_location_path;
+            if(encodeURIComponent(window.location.pathname) !== "" || encodeURIComponent(window.location.pathname) !== null || encodeURIComponent(window.location.pathname) !== undefined){
+                g4_location_path = encodeURIComponent(window.location.pathname)
+            } else {
+                g4_location_path = "path_not_exist";
+            }
+            let g4_location = encodeURIComponent(window.location)
+            let referrer = encodeURIComponent(document.referrer);
+            let siteTitle = encodeURIComponent(document.title);
+            let cid = makeid(9) + "." + Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000
+            var queryString = window.location.search
+            var queryParams = new URLSearchParams(queryString);
+            let utm_campaign = queryParams.has("utm_campaign") ? queryParams.get("utm_campaign") : "";
+            let utm_source = queryParams.has("utm_source") ? queryParams.get("utm_source") : "";
+            let utm_term = queryParams.has("utm_term") ? queryParams.get("utm_term") : "";
+            let utm_medium = queryParams.has("utm_medium") ? queryParams.get("utm_medium") : "";
+            let domain = "it";
+            let country = "";
+            var req = new XMLHttpRequest();
+            req.open("GET", document.location, true);
+            req.send(null);
+            var headers = req.getAllResponseHeaders().toLowerCase();
+            let headersArr = headers.split("\r\n")
+
+            for (let index = 0; index < headersArr.length; index++) {
+                const element = headersArr[index];
+                if(element.includes("visitor-country")){
+                    country = element.split(":").pop();
+                }
+            }
+
+            function sendToAllNewsEvent() {
+                    if(referrer.includes("thelocal.")){
+                        referrer = "";
+                    } 
+        
+                    fetch(`https://ss.thelocal.com/g/collect?v=2&en=total_page_view_ga4&tid=G-XFSR2700S9&cid=${cid}&dt=${siteTitle}&dr=${referrer}&dl=${g4_location}&ep.country_c=${country}&ep.hostname_c=${g4_location_hostname}&ep.path_c=${g4_location_path}&ep.utm_campaign_c=${utm_campaign}&ep.utm_source_c=${utm_source}&ep.utm_term_c=${utm_term}&ep.utm_medium_c=${utm_medium}`,
+                    {
+                    method: "POST",
+                    mode: "no-cors",
+                },).then((response) => {
+                    // console.log(response)
+                });
+        
+            }
+        
+            function sendEvent() {
+                
+                let measurement_id = "";
+                const measurement_ids = {
+                    "at":"G-M0QF2J98ZG",
+                    "ch":"G-RKPPBTRQGN",
+                    "com":"G-PXG8C23QQX",
+                    "de":"G-68EFP8XFKZ",
+                    "dk":"G-87R3SHFK20",
+                    "es":"G-XZ791ZL201",
+                    "fr":"G-1LX6T78HZR",
+                    "it":"G-FYSRWRX4T3",
+                    "no":"G-B6VF16B85K",
+                    "se":"G-S57KNFL4T3"
+                }
+        
+                if(referrer.includes("thelocal.")){
+                    referrer = "";
+                } 
+        
+                if(measurement_ids.hasOwnProperty(domain)){
+                    measurement_id = measurement_ids[domain];
+                }
+        
+                fetch(`https://ss.thelocal.com/g/collect?v=2&en=total_page_view_ga4&tid=${measurement_id}&cid=${cid}&dt=${siteTitle}&dr=${referrer}&dl=${g4_location}&ep.country_c=${country}&ep.hostname_c=${g4_location_hostname}&ep.path_c=${g4_location_path}&ep.utm_campaign_c=${utm_campaign}&ep.utm_source_c=${utm_source}&ep.utm_term_c=${utm_term}&ep.utm_medium_c=${utm_medium}`,
+                {
+                    method: "POST",
+                    mode: "no-cors",
+                },).then((response) => {
+                    // console.log(response)
+                });
+        
+            }
+        
+            function runAnalyticsEvents() {
+                sendEvent();
+                sendToAllNewsEvent();
+            }
+
+            if ("requestIdleCallback" in window) {
+                window.requestIdleCallback(runAnalyticsEvents, { timeout: 2500 });
+            } else {
+                setTimeout(runAnalyticsEvents, 1200);
+            }
+        </script>
+    
+                <script type="tl-js">
+                    window._taboola = window._taboola || [];
+                    _taboola.push({flush: true});
+                </script>
+                
+    <script>
+        Defer.all('script[type="tl-js"]', 0, true);
+    </script>
+    <script>
+        Defer.all('script[type="tl-chunk-js"]', 0, false);
+    </script>
+</body>
+</html>

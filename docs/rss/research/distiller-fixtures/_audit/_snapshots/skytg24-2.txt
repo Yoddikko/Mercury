@@ -1,0 +1,7 @@
+page: skytg24-2
+host: tg24.sky.it lang: it
+words: 1491
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium"]
+head: lo speciale di sky tg24 sulla guerra in iran guerra iran usa, proseguono i colloqui a doha. trump: "in iran è stata una gita". live live mondo 02 lug 2026 - 10:20 ©ansa il presidente degli stati uniti cerca di tranquillizzare gli americani dicendo loro che i prezzi della benzina torneranno ai livelli precedenti a quell
+tail: a, majed al ansari. "le parti hanno concordato di proseguire le discussioni nel prossimo periodo, con il prossimo incontro che sarà fissato il prima possibile dopo le cerimonie funebri dell'ex leader supremo iraniano", ha aggiunto il funzionario, riferendosi alle esequie di ali khamenei. diretta live mondo: i più letti

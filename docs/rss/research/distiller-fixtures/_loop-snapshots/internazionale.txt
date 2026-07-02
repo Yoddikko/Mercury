@@ -1,0 +1,7 @@
+outlet: internazionale
+words: 1233
+blocks: 30
+block-counts: heading=2 image=2 paragraph=26
+survivors: ["newsletter iscriviti"]
+head: https://intern.az/1qcy venezuela il terremoto in venezuela mette alla prova l’interventismo di washington simon dunaway, giornalista di internazionale 2.7.2026 persone in fila per il cibo a la guaira, in venezuela, il 27 giugno 2026 (matias delacroix, ap/lapresse) a una settimana
+tail: do in cui un paese affronta un terremoto”, conclude la folha, “è il risultato di decisioni politiche prese nel corso dei decenni”. internazionale pubblica ogni settimana una pagina di lettere. ci piacerebbe sapere cosa pensi di questo articolo. scrivici a: posta@internazionale.it

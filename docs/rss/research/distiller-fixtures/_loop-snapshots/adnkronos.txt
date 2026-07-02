@@ -1,0 +1,7 @@
+outlet: adnkronos
+words: 1333
+blocks: 27
+block-counts: heading=5 paragraph=22
+survivors: []
+head: palio di siena oggi, orario e dove vederlo (in diretta): contrade, cavalli e fantini l'appuntamento unico al mondo che unisce cultura, identità e una fede tramandata nei secoli. anche quest'anno tanta sardegna un momento di un palio di siena - (ufficio stampa) 02 luglio 2026 | 07
+tail: io, capace di custodire secoli di storia, tradizioni, leggende e memoria collettiva. un patrimonio che vive nelle contrade, tra rivalità storiche e antiche alleanze, e che ogni anno trasforma le vie della città fino al cuore di piazza del campo, gremita da migliaia di spettatori.

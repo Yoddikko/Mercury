@@ -1,0 +1,7 @@
+page: milannews-1
+host: www.milannews.it lang: it
+words: 169
+chrome-survivors: []
+raw-paywall-markers: []
+head: milan, tomori verso l'addio: probabile ritorno in premier league 02.07.2026 10:46 di enrico ferrazzi vedi letture fikayo tomori, che è in scadenza con il milan nel 2027, potrebbe tornare a giocare in inghilterra dopo cinque anni e mezzo in rossonero © foto di www.imagephotoagency.it il milan è al lavoro per rinforzare 
+tail:  perderlo a zero, il diavolo punta a venderlo durante questa finestra di mercato estivo. ma dove potrebbe essere il futuro di tomori che era sbarcato a milanello a gennaio 2021? lo scenario più probabile è il ritorno in inghilterra dove ha già indossato le maglie di chelsea, brighton, hull city e derby county. indietro

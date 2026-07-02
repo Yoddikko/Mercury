@@ -1,0 +1,7 @@
+outlet: panorama
+words: 515
+blocks: 11
+block-counts: heading=1 image=1 paragraph=9
+survivors: []
+head: giovedì 2 luglio 2026 tensioni usa-vaticano sui migranti: ecco cosa pensano davvero di trump i cattolici americani jd vance (ansa) stefano graziosi 1 luglio 2026 – lettura: 3 minuti tensioni tra casa bianca e santa sede a pochi mesi dalle midterm. come si posizionano i cattolici 
+tail: 8 giugno, il 51% dei cattolici statunitensi ritiene che trump sia stato troppo critico verso il papa. dall’altra parte, però, rispetto a un anno fa, la quota di americani che ha un’opinione favorevole di leone è leggermente calata dall’84% al 78%. jd vance , tensioni usa-vaticano

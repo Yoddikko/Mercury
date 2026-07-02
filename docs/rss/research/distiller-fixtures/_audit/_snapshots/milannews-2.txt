@@ -1,0 +1,7 @@
+page: milannews-2
+host: www.milannews.it lang: it
+words: 210
+chrome-survivors: []
+raw-paywall-markers: []
+head: milan, avanti con pulisic. romano: "parlerà con amorim e con il club dopo il mondiale" 02.07.2026 10:34 di enrico ferrazzi vedi letture l'esperto di mercato fabrizio romano ha dato un aggiornamento sul futuro di christian pulisic che sarà una pedina importante anche del nuovo milan © foto di www.imagephotoagency.it fab
+tail: inee sul suo futuro". sul canale whatsapp, romano ha confermato: "christian pulisic è parte del progetto milan anche nei nuovi piani di gerry cardinale. è rafa leão l’indiziato a partire, più di capitan america che parlerá di futuro in generale col milan dopo il mondiale ma per il diavolo è pedina importante". indietro

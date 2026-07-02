@@ -1,0 +1,7 @@
+page: panorama-1
+host: www.panorama.it lang: it
+words: 911
+chrome-survivors: []
+raw-paywall-markers: ["premium"]
+head: giovedì 2 luglio 2026 scatta la tassa europea sui piccoli pacchi: perché i 3 euro possono diventare molti di più ansa cristina colli 2 luglio 2026 – lettura: 5 minuti entra in vigore la nuova tassa europea sui piccoli pacchi. attenzione al «cumulo»: acquistare prodotti diversi nello stesso ordine può far aumentare il c
+tail: ei ministri l’ha rinviata al 1ottobre 2026. bruxelles ha già fatto sapere che, con l’arrivo della handling fee europea a novembre 2026, le tasse nazionali dello stesso tipo dovranno sparire. risultato: la tassa italiana potrebbe durare in tutto un mese, salvo colpi di scena dell’ultimo momento. tassa sui piccoli pacchi

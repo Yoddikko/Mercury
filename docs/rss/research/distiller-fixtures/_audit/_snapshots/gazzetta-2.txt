@@ -1,0 +1,7 @@
+page: gazzetta-2
+host: www.gazzetta.it lang: it
+words: 754
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium"]
+head: competizioni per nazionali cardinale: "col psg abbiamo fatto vedere al mondo di cosa siamo capaci". e ora arriva ibra la trattativa per il ritorno di zlatan al milan alle battute finali: tra oggi e domani la fumata bianca la torta, dolce, dolcissima, l’hanno servita quelli con la maglia rossonera l’altra sera sul prato
+tail:  ma questa è un’occasione di crescita anche per lui: ora che zlatan sta per allargare i suoi orizzonti oltre il calcio, meglio muoversi con una bussola. e seguire il punto cardinale che gli indica la strada. cardinale show, che esultanza per la vittoria del milan milan, cardinale e ibra a colloquio per due ore in hotel

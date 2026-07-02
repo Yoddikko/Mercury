@@ -221,6 +221,91 @@ struct ItalianDistillationFixturesTests {
             host: "www.ilrestodelcarlino.it",
             mustContainAny: ["stazione", "trenino"],
             bannedSubstrings: Self.commonChrome
+        ),
+        // MARK: Fixture-fill wave (issue #89) — one pinned fixture per
+        // previously uncovered Italian outlet host.
+        FixtureSpec(
+            name: "adnkronos",
+            language: "it",
+            host: "www.adnkronos.com",
+            mustContainAny: ["palio", "contrade"],
+            bannedSubstrings: Self.commonChrome
+        ),
+        FixtureSpec(
+            name: "fanpage",
+            language: "it",
+            host: "www.fanpage.it",
+            mustContainAny: ["nascondi la mia mail", "indirizzi"],
+            bannedSubstrings: Self.commonChrome
+        ),
+        FixtureSpec(
+            name: "internazionale",
+            language: "it",
+            host: "www.internazionale.it",
+            mustContainAny: ["venezuela", "washington"],
+            bannedSubstrings: Self.commonChrome
+        ),
+        FixtureSpec(
+            name: "liberoquotidiano",
+            language: "it",
+            host: "www.liberoquotidiano.it",
+            mustContainAny: ["gemelle", "intercettate"],
+            bannedSubstrings: Self.commonChrome
+        ),
+        FixtureSpec(
+            name: "linkiesta",
+            language: "it",
+            host: "www.linkiesta.it",
+            mustContainAny: ["kyjiv", "bombardamento"],
+            bannedSubstrings: Self.commonChrome
+        ),
+        FixtureSpec(
+            name: "thelocal",
+            language: "en",
+            host: "www.thelocal.it",
+            mustContainAny: ["heatwave", "storm"],
+            bannedSubstrings: Self.commonChrome + [
+                "membership",
+                "log in"
+            ]
+        ),
+        FixtureSpec(
+            name: "milannews",
+            language: "it",
+            host: "www.milannews.it",
+            mustContainAny: ["ramos", "vieri"],
+            bannedSubstrings: Self.commonChrome
+        ),
+        FixtureSpec(
+            name: "panorama",
+            language: "it",
+            host: "www.panorama.it",
+            mustContainAny: ["vaticano", "cattolici"],
+            bannedSubstrings: Self.commonChrome
+        ),
+        FixtureSpec(
+            name: "tgcom24",
+            language: "it",
+            host: "www.tgcom24.mediaset.it",
+            mustContainAny: ["corte", "android"],
+            bannedSubstrings: Self.commonChrome
+        ),
+        FixtureSpec(
+            name: "guardianitaly",
+            language: "en",
+            host: "www.theguardian.com",
+            mustContainAny: ["albania", "detention"],
+            bannedSubstrings: Self.commonChrome + [
+                "support the guardian",
+                "sign up for"
+            ]
+        ),
+        FixtureSpec(
+            name: "rainews",
+            language: "it",
+            host: "www.rainews.it",
+            mustContainAny: ["kallas", "sanzioni"],
+            bannedSubstrings: Self.commonChrome
         )
     ]
 
