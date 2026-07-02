@@ -12,7 +12,9 @@ struct ArticleContentEnrichmentService: Sendable {
     /// distilled by this service. Bump when the pipeline composition
     /// changes so old records re-distill on next ingest.
     /// v2: per-outlet extraction rule layer (#91).
-    static let distillerVersion: Int = 2
+    /// v3: paywalled-teaser classification (#95) — subscriber-only
+    ///     pages keep the RSS summary instead of teaser/CTA leftovers.
+    static let distillerVersion: Int = 3
 
     /// Minimum word count required for the distilled output to be
     /// preferred over the raw extractor output. Below this threshold
@@ -28,6 +30,7 @@ struct ArticleContentEnrichmentService: Sendable {
     private let boilerplateRemover: ArticleBoilerplateRemover
     private let imageDeduplicator: ArticleImageDeduplicator
     private let localeStripper: ArticleLocaleBoilerplateStripper
+    private let paywallClassifier: ArticlePaywallClassifier
     private let logger: AppLogger
     private let maxFetchesPerSource: Int
 
@@ -40,6 +43,7 @@ struct ArticleContentEnrichmentService: Sendable {
         boilerplateRemover: ArticleBoilerplateRemover = ArticleBoilerplateRemover(),
         imageDeduplicator: ArticleImageDeduplicator = ArticleImageDeduplicator(),
         localeStripper: ArticleLocaleBoilerplateStripper = ArticleLocaleBoilerplateStripper(),
+        paywallClassifier: ArticlePaywallClassifier = ArticlePaywallClassifier(),
         logger: AppLogger = .shared,
         maxFetchesPerSource: Int = 3
     ) {
@@ -51,6 +55,7 @@ struct ArticleContentEnrichmentService: Sendable {
         self.boilerplateRemover = boilerplateRemover
         self.imageDeduplicator = imageDeduplicator
         self.localeStripper = localeStripper
+        self.paywallClassifier = paywallClassifier
         self.logger = logger
         self.maxFetchesPerSource = max(0, maxFetchesPerSource)
     }
@@ -176,6 +181,25 @@ struct ArticleContentEnrichmentService: Sendable {
                 requestID: requestID
             )
 
+            // Subscriber-only teaser (#95): the page has no readable
+            // body, only teaser + subscription CTA. Rendering the
+            // fallback extractor text would surface that CTA as the
+            // article body, so keep the article un-enriched — the
+            // reader shows the RSS item summary instead.
+            if distillation.isPaywalledTeaser {
+                logger.info(
+                    "Article kept un-enriched: page is a subscriber-only teaser",
+                    category: .business,
+                    service: "ArticleContentEnrichmentService",
+                    requestID: requestID,
+                    metadata: [
+                        "article_id": article.id,
+                        "url": article.articleURL.absoluteString
+                    ]
+                )
+                return article
+            }
+
             return article.updatingContent(
                 rawContent: extraction.rawHTML,
                 cleanedContent: distillation.cleanedText,
@@ -281,10 +305,14 @@ struct ArticleContentEnrichmentService: Sendable {
     /// when the pipeline could not produce a usable output (short,
     /// empty, parse failure) — callers then keep the original raw HTML
     /// in place and skip stamping `distillerVersion`.
+    /// `isPaywalledTeaser` (#95) is `true` when the short output is
+    /// classified as a subscriber-only teaser — callers must then keep
+    /// the article un-enriched instead of using the fallback text.
     private struct DistillationOutput {
         let distilledHTML: String?
         let cleanedText: String
         let wordCount: Int?
+        let isPaywalledTeaser: Bool
     }
 
     private func distill(
@@ -302,8 +330,9 @@ struct ArticleContentEnrichmentService: Sendable {
         // Repubblica link blocks) the rule narrows the document to the
         // outlet's body container and strips outlet-specific chrome.
         // Hosts without a rule pass through untouched.
+        let rule = outletRuleCatalog.rule(forHost: host)
         let ruled: String
-        if let rule = outletRuleCatalog.rule(forHost: host) {
+        if let rule {
             logger.debug(
                 "Per-outlet extraction rule matched",
                 category: .business,
@@ -360,10 +389,21 @@ struct ArticleContentEnrichmentService: Sendable {
                     "threshold": "\(Self.distilledMinimumWords)"
                 ]
             )
+            // Teaser-short output → run the paywall classifier (#95)
+            // on the RAW page. Scanning raw HTML is deliberate: the
+            // markers (JSON-LD `isAccessibleForFree`, CTA copy) live
+            // in regions the pipeline already stripped.
+            let isPaywalledTeaser = paywallClassifier.isLikelyPaywalledTeaser(
+                rawHTML: rawHTML,
+                distilledWordCount: wordCount,
+                outletMarkers: rule?.paywallMarkers ?? [],
+                requestID: requestID
+            )
             return DistillationOutput(
                 distilledHTML: nil,
                 cleanedText: fallbackCleanedText,
-                wordCount: nil
+                wordCount: nil,
+                isPaywalledTeaser: isPaywalledTeaser
             )
         }
 
@@ -382,7 +422,8 @@ struct ArticleContentEnrichmentService: Sendable {
         return DistillationOutput(
             distilledHTML: final,
             cleanedText: plainText,
-            wordCount: wordCount
+            wordCount: wordCount,
+            isPaywalledTeaser: false
         )
     }
 

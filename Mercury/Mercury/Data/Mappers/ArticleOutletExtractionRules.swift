@@ -35,6 +35,13 @@ struct ArticleOutletExtractionRule: Sendable {
     /// removed with the same paragraph/short-container policy as
     /// `ArticleLocaleBoilerplateStripper`.
     let stripTextPatterns: [NSRegularExpression]
+    /// Case-insensitive regexes scanned against the RAW page HTML by
+    /// `ArticlePaywallClassifier` (issue #95). Markers alone never
+    /// classify a page as paywalled — the distilled output must ALSO
+    /// be teaser-short — so listing a marker that appears on free
+    /// pages (e.g. ANSA ships `bt-Subscribe` on every article) is
+    /// safe. Optional in JSON; defaults to empty.
+    let paywallMarkers: [NSRegularExpression]
 }
 
 /// Loads, indexes and matches per-outlet extraction rules by article
@@ -160,19 +167,18 @@ struct ArticleOutletRuleCatalog: Sendable {
                 continue
             }
 
-            var patterns: [NSRegularExpression] = []
-            for pattern in dto.stripTextPatterns ?? [] {
-                do {
-                    patterns.append(try NSRegularExpression(pattern: pattern, options: [.caseInsensitive]))
-                } catch {
-                    logger.warn(
-                        "Skipping invalid stripTextPattern in outlet extraction rule",
-                        category: .business,
-                        service: "ArticleOutletRuleCatalog",
-                        metadata: ["rule_id": dto.id, "pattern": pattern]
-                    )
-                }
-            }
+            let patterns = compiledPatterns(
+                dto.stripTextPatterns ?? [],
+                field: "stripTextPatterns",
+                ruleID: dto.id,
+                logger: logger
+            )
+            let markers = compiledPatterns(
+                dto.paywallMarkers ?? [],
+                field: "paywallMarkers",
+                ruleID: dto.id,
+                logger: logger
+            )
 
             rules.append(
                 ArticleOutletExtractionRule(
@@ -180,7 +186,8 @@ struct ArticleOutletRuleCatalog: Sendable {
                     hosts: hosts,
                     bodySelectors: dto.bodySelectors ?? [],
                     stripSelectors: dto.stripSelectors ?? [],
-                    stripTextPatterns: patterns
+                    stripTextPatterns: patterns,
+                    paywallMarkers: markers
                 )
             )
         }
@@ -197,6 +204,32 @@ struct ArticleOutletRuleCatalog: Sendable {
         return ArticleOutletRuleCatalog(rules: rules)
     }
 
+    /// Compiles raw regex strings case-insensitively; invalid patterns
+    /// are skipped with a WARN so one bad entry never disables the
+    /// whole rule.
+    private static func compiledPatterns(
+        _ raw: [String],
+        field: String,
+        ruleID: String,
+        logger: AppLogger
+    ) -> [NSRegularExpression] {
+        var patterns: [NSRegularExpression] = []
+        patterns.reserveCapacity(raw.count)
+        for pattern in raw {
+            do {
+                patterns.append(try NSRegularExpression(pattern: pattern, options: [.caseInsensitive]))
+            } catch {
+                logger.warn(
+                    "Skipping invalid \(field) pattern in outlet extraction rule",
+                    category: .business,
+                    service: "ArticleOutletRuleCatalog",
+                    metadata: ["rule_id": ruleID, "pattern": pattern]
+                )
+            }
+        }
+        return patterns
+    }
+
     // MARK: - DTOs
 
     private struct RuleFileDTO: Decodable {
@@ -210,6 +243,7 @@ struct ArticleOutletRuleCatalog: Sendable {
         let bodySelectors: [String]?
         let stripSelectors: [String]?
         let stripTextPatterns: [String]?
+        let paywallMarkers: [String]?
     }
 }
 

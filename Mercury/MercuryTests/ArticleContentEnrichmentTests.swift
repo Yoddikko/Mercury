@@ -85,6 +85,59 @@ struct ArticleContentEnrichmentTests {
     }
 
     @Test
+    func enrichmentServiceKeepsArticleUnEnrichedForSubscriberOnlyTeaser() async {
+        // Subscriber-only page (#95): headline + teaser + subscription
+        // CTA, body absent, schema.org `isAccessibleForFree: false`.
+        // The service must return the article unchanged so the reader
+        // keeps the RSS summary instead of rendering CTA copy.
+        let teaserHTML = """
+        <html>
+          <head>
+            <script type="application/ld+json">
+            {"@type": "NewsArticle", "isAccessibleForFree": false,
+             "articleBody": "La vicenda risale al 2018 ma rischia di…"}
+            </script>
+          </head>
+          <body>
+            <article>
+              <h1>Titolo dell'articolo premium</h1>
+              <p>Prime righe del sommario che anticipano il contenuto riservato dell'articolo.</p>
+              <p>Abbonati per continuare a leggere questo contenuto esclusivo sul nostro sito.</p>
+            </article>
+          </body>
+        </html>
+        """
+
+        let pageClient = ArticlePageClient { request in
+            let responseURL = request.url ?? URL(string: "https://example.invalid/article")!
+            let response = HTTPURLResponse(
+                url: responseURL,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: ["Content-Type": "text/html; charset=utf-8"]
+            )!
+            return (Data(teaserHTML.utf8), response)
+        }
+        let service = ArticleContentEnrichmentService(
+            pageClient: pageClient,
+            extractor: ArticlePageContentExtractor(),
+            maxFetchesPerSource: 1
+        )
+
+        let input = makeArticle(
+            contentSource: "feed_summary",
+            contentWordCount: 3,
+            cleanedContent: "RSS summary text."
+        )
+
+        let enriched = await service.enrichArticlesIfNeeded([input])
+        #expect(enriched == [input])
+        #expect(enriched[0].contentSource == "feed_summary")
+        #expect(enriched[0].cleanedContent == "RSS summary text.")
+        #expect(enriched[0].distilledBodyHTML == nil)
+    }
+
+    @Test
     func enrichmentServiceKeepsOriginalArticleWhenFetchFails() async {
         let pageClient = ArticlePageClient { _ in
             throw URLError(.timedOut)
