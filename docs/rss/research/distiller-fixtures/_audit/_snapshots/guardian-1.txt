@@ -1,0 +1,7 @@
+page: guardian-1
+host: www.theguardian.com lang: en
+words: 119
+chrome-survivors: []
+raw-paywall-markers: []
+head: skip to main content skip to navigation volcanoes mount etna lava lights up sicilian sky – video lava flowing from mount etna in sicily lit up the sky on 29 june. the national institute of geophysics and volcanology reported that lava gushed from an eruptive vent at an altitude of about 3,000 metres. drone footage from
+tail: st coast, is europe’s largest volcano. its activity, according to the civil protection department, is typically characterised by episodic eruptions, lava flows and ash emissions source: reuters wed 1 jul 2026 19.27 cestlast modified on thu 2 jul 2026 10.30 cest share explore more on these topics most viewed most viewed

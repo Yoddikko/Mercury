@@ -1,0 +1,7 @@
+outlet: rainews
+words: 342
+blocks: 16
+block-counts: heading=5 paragraph=11
+survivors: []
+head: esteri guerre e conflitti l'intervento attacco russo, kallas: "parole non fermano mosca, proporrò nuove sanzioni oggi" l'alto rappresentante dell'unione europea: "misure contro ulteriori entità che sostengono l'industria militare russa". kiev: "alleati non ritardino le decisioni 
+tail: sono stati tratti in salvo. lo ha comunicato il servizio statale di emergenza dell'ucraina e lo riporta ukrainska pravda. degli 86 feriti, 70 sono ricoverati in ospedale. macerie fumo, gente che corre tra i detriti: il violentissimo attacco russo su kiev 02/07/2026 apri contenuto

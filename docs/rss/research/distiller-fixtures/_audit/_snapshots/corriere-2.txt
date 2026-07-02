@@ -1,0 +1,7 @@
+page: corriere-2
+host: www.corriere.it lang: it
+words: 819
+chrome-survivors: []
+raw-paywall-markers: ["paywall"]
+head: dai nostri inviati genova - ha costantemente bisogno di soldi per mandare avanti nelle varie elezioni il suo piccolo movimento personale con il quale ha conquistato per ben due volte la liguria. la politica costa, e quando non ce la fa giovanni toti batte cassa con il suo finanziatore aldo spinelli che trova sempre dis
+tail: inelli, anche quando i suoi mezzi occupano abusivamente un tratto del porto. a signorini, dal quale evidentemente si sente protetto, confida candidamente che «tanto a 83 anni cosa mi possono fare? un ca...». chiosa la gdf: «il presidente non obiettava nulla». 13 maggio 2024, 06:09 - aggiornata il 13 maggio 2024 , 12:12

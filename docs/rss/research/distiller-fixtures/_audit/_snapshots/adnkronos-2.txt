@@ -1,0 +1,7 @@
+page: adnkronos-2
+host: www.adnkronos.com lang: it
+words: 460
+chrome-survivors: []
+raw-paywall-markers: []
+head: aubac, protezione civile, anbi e autorità appennino settentrionale firmano protocollo su frane e siccità casini: "serve una prevenzione fondata su dati, mappe, presidio territoriale e coordinamento istituzionale" firma protocollo aubac - (ufficio stampa) 02 luglio 2026 | 10.26 redazione adnkronos lettura: 2 minuti è st
+tail: n gruppo di lavoro coordinato dal dipartimento della protezione civile, con rappresentanti delle parti, incaricato di predisporre programmi annuali di attività, individuare ambiti prioritari, promuovere modalità condivise di scambio dati e favorire eventuali accordi attuativi per attività specialistiche o sperimentali.

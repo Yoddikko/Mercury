@@ -1,0 +1,7 @@
+page: adnkronos-1
+host: www.adnkronos.com lang: it
+words: 153
+chrome-survivors: []
+raw-paywall-markers: []
+head: mezzaroma: "con sport illumina 85 playground gratuiti in tutta italia" "facilitare l'accesso allo sport offrendo spazi pubblici gratuiti" marco mezzaroma - (adnkronos) 02 luglio 2026 | 10.43 redazione adnkronos lettura: 1 minuti "il playground che inauguriamo fa parte del progetto sport illumina, voluto dal ministro pe
+tail: atuitamente". è quanto affermato da marco mezzaroma, presidente di sport e salute, nel corso dell'inaugurazione dello spazio illumina guidonia, a roma: gratuito, aperto a tutti e pensato per diventare parte della vita di ogni giorno. non solo sport, ma un luogo dove incontrarsi, condividere passioni e costruire legami.

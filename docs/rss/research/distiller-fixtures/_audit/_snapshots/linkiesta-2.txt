@@ -1,0 +1,7 @@
+page: linkiesta-2
+host: www.linkiesta.it lang: it
+words: 562
+chrome-survivors: []
+raw-paywall-markers: []
+head: accedi 2 luglio 2026 raid notturnoil bombardamento russo su kyjiv ha provocato almeno 10 morti e 56 feriti linkiesta missili e droni russi hanno colpito la capitale ucraina nella notte, danneggiando edifici residenziali, un hotel nel centro e oltre trenta aree della città. l’attacco è arrivato poche ore dopo l’allarme 
+tail:  alcune regioni di confine e nella regione di leningrado. questi attacchi hanno contribuito a creare difficoltà nel settore dei carburanti in russia. secondo reuters, mosca avrebbe iniziato a importare benzina via mare dall’india per compensare le carenze causate dai raid ucraini contro le infrastrutture energetiche. x

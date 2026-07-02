@@ -1,0 +1,7 @@
+outlet: liberoquotidiano
+words: 462
+blocks: 10
+block-counts: heading=1 image=1 paragraph=8
+survivors: []
+head: gemelle k, clamoroso: "intercettate per 5 mesi", cosa emerge dalle ambientali mercoledì 1 luglio 2026 2' di lettura da gennaio a maggio 2025 i telefoni di stefania e paola cappa sono finiti nel mirino degli inquirenti. al centro il secondo filone di indagine sul delitto di garlas
+tail: ono state ritenute dalla squadra omicidi di rilevanza probatoria, ma solo investigativa ai fini del mantenimento delle intercettazioni per la verifica della posizione delle gemelle. questo, anche se qualche giornalista le pubblica interamente, violando l’obbligo di riservatezza".

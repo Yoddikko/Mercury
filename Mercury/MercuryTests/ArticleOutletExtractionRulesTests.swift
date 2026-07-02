@@ -22,7 +22,8 @@ struct ArticleOutletExtractionRulesTests {
         hosts: [String],
         bodySelectors: [String] = [],
         stripSelectors: [String] = [],
-        stripTextPatterns: [String] = []
+        stripTextPatterns: [String] = [],
+        paywallMarkers: [String] = []
     ) -> ArticleOutletExtractionRule {
         ArticleOutletExtractionRule(
             id: id,
@@ -30,6 +31,9 @@ struct ArticleOutletExtractionRulesTests {
             bodySelectors: bodySelectors,
             stripSelectors: stripSelectors,
             stripTextPatterns: stripTextPatterns.compactMap {
+                try? NSRegularExpression(pattern: $0, options: [.caseInsensitive])
+            },
+            paywallMarkers: paywallMarkers.compactMap {
                 try? NSRegularExpression(pattern: $0, options: [.caseInsensitive])
             }
         )
@@ -88,6 +92,40 @@ struct ArticleOutletExtractionRulesTests {
         #expect(rule.id == "partial")
         #expect(rule.hosts == ["example.com"])
         #expect(rule.stripTextPatterns.count == 1)
+    }
+
+    @Test
+    func decodePaywallMarkersIsOptionalAndSkipsInvalidPatterns() throws {
+        let json = """
+        {
+          "version": 1,
+          "rules": [
+            { "id": "no-markers", "hosts": ["a.example"], "stripSelectors": [".x"] },
+            {
+              "id": "with-markers",
+              "hosts": ["b.example"],
+              "stripSelectors": [".y"],
+              "paywallMarkers": ["\\\\bmembers\\\\s+only\\\\b", "(unclosed"]
+            }
+          ]
+        }
+        """
+        let catalog = ArticleOutletRuleCatalog.decode(data: Data(json.utf8))
+
+        #expect(catalog.rules.count == 2)
+        let plain = try #require(catalog.rules.first(where: { $0.id == "no-markers" }))
+        #expect(plain.paywallMarkers.isEmpty)
+        let marked = try #require(catalog.rules.first(where: { $0.id == "with-markers" }))
+        #expect(marked.paywallMarkers.count == 1)
+    }
+
+    @Test
+    func bundledTheLocalRuleDeclaresPaywallMarkers() throws {
+        // The Local's membership gate is the first outlet-specific
+        // marker shipped in the bundled ruleset (#95).
+        let rule = try #require(ArticleOutletRuleCatalog.bundled.rule(forHost: "www.thelocal.it"))
+        #expect(rule.id == "thelocal")
+        #expect(rule.paywallMarkers.isEmpty == false)
     }
 
     // MARK: - Host matching

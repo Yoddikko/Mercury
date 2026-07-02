@@ -1,0 +1,7 @@
+page: ilsole24ore-2
+host: www.ilsole24ore.com lang: it
+words: 411
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium"]
+head: attualità dati istat lavoro, il tasso di inattività cresce ancora: è al 33,6% allo stesso tempo, dato che diminuisce la forza lavoro (chi è inattivo non cerca lavoro), calano i tassi di occupazione e disoccupazione imagoeconomica allo stesso tempo, dato che diminuisce la forza lavoro (chi è inattivo non cerca lavoro), 
+tail: i (+275mila, +1,7%) e dagli indipendenti (+198mila, +3,8%), mentre i contratti a termine perdono 244mila posizioni (-9,3%). nel confronto mensile il quadro si inverte: gli occupati scendono di 22mila unità, per effetto del solo calo dei dipendenti a termine (-81mila), a fronte della tenuta di permanenti e indipendenti.

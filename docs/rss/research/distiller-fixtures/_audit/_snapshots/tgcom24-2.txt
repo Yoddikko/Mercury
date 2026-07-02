@@ -1,0 +1,7 @@
+page: tgcom24-2
+host: www.tgcom24.mediaset.it lang: it
+words: 1116
+chrome-survivors: []
+raw-paywall-markers: []
+head: giovedì 2 luglio 2026 - aggiornato alle 10:46 milano 26° economia economia financialounge.com massari (aipb) a financialounge.com: “grazie alla consulenza i patrimoni private restano investiti anche nei momenti di turbolenza” antonella massari, segretario generale dell’associazione italiana private banking, spiega come
+tail: tezza non è più un’eccezione, ma una componente strutturale delle scelte finanziarie. la capacità di combinare rendimento, protezione, pianificazione successoria e orizzonte di lungo periodo diventerà sempre più centrale per preservare e far crescere il valore reale dei patrimoni. contenuto a cura di financialounge.com

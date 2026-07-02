@@ -1,0 +1,7 @@
+page: guardian-2
+host: www.theguardian.com lang: en
+words: 1163
+chrome-survivors: []
+raw-paywall-markers: []
+head: skip to main content skip to navigation giorgia meloni, italy’s prime minister, and donald trump at the g7 summit in evian-les-bains, france, 16 june 2026. photograph: yoan valat/epa giorgia meloni, italy’s prime minister, and donald trump at the g7 summit in evian-les-bains, france, 16 june 2026. photograph: yoan vala
+tail: fference. riccardo alcaro is head of research at iai, istituto affari internazionali in rome do you have an opinion on the issues raised in this article? if you would like to submit a response of up to 300 words by email to be considered for publication in our letters section, please click here. most viewed most viewed

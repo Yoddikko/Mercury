@@ -1,0 +1,7 @@
+page: rainews-2
+host: www.rainews.it lang: it
+words: 261
+chrome-survivors: []
+raw-paywall-markers: ["premium"]
+head: economia e finanza borse e mercati mercati europa in positivo, il tech affonda l'asia le borse europee virano in positivo dopo un avvio di contrattazioni debole 02/07/2026 chiara merico pixabay andamento mercati le borse europee virano in positivo dopo un avvio di contrattazioni debole: milano avanza di circa lo 0,4%, 
+tail: nding spoons: nel primo giorno di quotazione il titolo ha chiuso con un rialzo di oltre il 38% a 40 dollari per azione, contro un prezzo di collocamento di 29 dollari. continua infine a calare il prezzo del petrolio: oggi il brent si aggira attorno ai 70 dollari al barile e il wti supera di poco i 67 dollari al barile.

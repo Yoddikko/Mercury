@@ -1,0 +1,7 @@
+page: thelocal-1
+host: www.thelocal.it lang: en
+words: 332
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium"]
+head: tourism members only anger as sunbathing tourists delay dolomites mountain rescue elaine allaby - elaine.allaby@thelocal.com published: 2 jul, 2026 cet. updated: thu 2 jul 2026 10:50 cet a rescue team helicopter flies over the alps. afp photo / francis pellier / dicom / ministere de l'interieur the veneto alpine rescue
+tail: mer a british tourist was hit with a €14,000 bill after he ignored warning signs and got caught in a rockfall, requiring a helicopter rescue. in december, five foreign hikers were saved by an alpine rescue team after attempting to climb the sass rigais peak in puez-odle nature park in gym shoes and tracksuits. see also

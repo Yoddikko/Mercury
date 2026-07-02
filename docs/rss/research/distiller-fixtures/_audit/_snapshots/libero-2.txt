@@ -1,0 +1,7 @@
+page: libero-2
+host: www.liberoquotidiano.it lang: it
+words: 198
+chrome-survivors: []
+raw-paywall-markers: ["paywall"]
+head: usa, trump: la spagna "non si sta comportando bene" nella nato di tmnews giovedì 2 luglio 2026 1' di lettura medora (north dakota), 1 lug. (askanews) - gli alleati della nato "si sono comportati male" con gli stati uniti. "non vogliono aiutare gli altri ma impareranno la lezione". così ha detto donald trump, nel corso 
+tail: rra mondiale, pearl harbor e l'11 settembre penso che sia una minaccia più grande, potenzialmente una minaccia più grande di tutto ciò, perché è come un cancro che si diffonde, e faresti meglio a fermarlo in fretta". il riferimento fatto dal presidente è ai candidati 'socialisti' nelle primarie del partito democratico.

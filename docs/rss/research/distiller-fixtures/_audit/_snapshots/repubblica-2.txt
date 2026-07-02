@@ -1,0 +1,7 @@
+page: repubblica-2
+host: www.repubblica.it lang: it
+words: 67
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium"]
+head: cronaca lefebvriani, la santa sede formalizza lo scisma: “porte aperte ai fedeli che non aderiscono” di iacopo scaramuzzi il vaticano pubblica l’atteso decreto che formalizza le sanzioni della consacrazione di quattro nuovi vescovi ieri a écône. vescovi e preti fuori della chiesa, e anche per i laici “sono da ritenersi
+tail: i il vaticano pubblica l’atteso decreto che formalizza le sanzioni della consacrazione di quattro nuovi vescovi ieri a écône. vescovi e preti fuori della chiesa, e anche per i laici “sono da ritenersi scomunicati coloro che aderiscono formalmente alla fraternità” 02 luglio 2026 aggiornato alle 09:37 2 minuti di lettura

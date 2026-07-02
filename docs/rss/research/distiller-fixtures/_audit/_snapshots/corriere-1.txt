@@ -1,0 +1,7 @@
+page: corriere-1
+host: www.corriere.it lang: it
+words: 1476
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium", "metered"]
+head: l’automobile è diventata il primo predatore dell’uomo, e non per colpa dell’auto. il dato calcolato dall’ oms in tutto il mondo è questo: 1,19 milioni di vittime ogni anno. in italia ogni tre ore più di una persona muore a causa di incidenti stradali. nel 2022 le vittime infatti sono state 3.159, in più 223 mila feriti
+tail: struire nuove co rsie: si potranno fare solo nelle strade in cui è impossibile realizzare piste «protette», non potranno essere realizzate «contromano» come in molti paesi europei. e molti degli interventi ad oggi realizzati, anche con i fondi pnrr, dovranno essere eliminati. dataroom@corriere.it 13 maggio 2024 | 06:03

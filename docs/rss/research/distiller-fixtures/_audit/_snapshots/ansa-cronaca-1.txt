@@ -1,0 +1,7 @@
+page: ansa-cronaca-1
+host: www.ansa.it lang: it
+words: 209
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium", "bt-Subscribe"]
+head: rimane basso il livello di severità idrica nel bacino dell'adige e del brenta, mentre sale a medio nel bacino del po. è il quadro delineato dagli osservatori permanenti sugli utilizzi idrici dei due distretti idrografici, ai quali partecipa anche la provincia autonoma di trento. l'osservatorio del distretto delle alpi 
+tail: 'approvvigionamento di acqua potabile nelle aree prossime alla foce e contrastare la risalita di acqua salata dall'adriatico. nel bacino del po, invece, l'innalzamento del livello di severità tiene conto delle previsioni di temperature superiori alla media e dell'aumento dei consumi idrici tipico della stagione estiva.

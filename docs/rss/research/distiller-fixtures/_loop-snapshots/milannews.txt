@@ -1,0 +1,7 @@
+outlet: milannews
+words: 349
+blocks: 7
+block-counts: heading=1 image=1 paragraph=5
+survivors: []
+head: gonçalo ramos al milan, vieri applaude la scelta: "finalmente! era da 10 anni che non aveva un centravanti così forte" 02.07.2026 10:22 di enrico ferrazzi vedi letture l'ex attaccante christian vieri ha applaudito la scelta del milan di prendere gonçalo ramos da psg come nuovo at
+tail: rtogallo. con la selezione lusitana prende parte a due edizioni della coppa del mondo fifa e conquista la uefa nations league 2024/25. ac milan rivolge a gonçalo un caloroso benvenuto e gli augura le migliori soddisfazioni personali e di squadra con la maglia rossonera". indietro

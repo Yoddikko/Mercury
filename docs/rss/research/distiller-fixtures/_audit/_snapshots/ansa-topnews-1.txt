@@ -1,0 +1,7 @@
+page: ansa-topnews-1
+host: www.ansa.it lang: it
+words: 112
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium", "bt-Subscribe"]
+head: l'utilizzo dell'ia nel tessuto imprenditoriale italiano è in grado di portare benefici "alla produttività" ma "richiederà investimenti ingenti soprattuto nell'immateriale quali ricerca e organizzazione che sono difficili da valutare e con ritorni incerti e lontani".lo afferma il governatore della banca d'italia fabio p
+tail:  rischio". per il governatore "l'italia e l'europa non partono da zero, hanno risparmio, ricerca e competenze, tuttavia troppo spesso le risorse non si combinano per sostenere progetti ambiziosi e anche quelli non ambiziosi". e' necessario quindi "mobilitare i capitali affincheè l'ia sia davvero una leva di sviluppo ".

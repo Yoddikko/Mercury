@@ -1,0 +1,7 @@
+page: internazionale-1
+host: www.internazionale.it lang: it
+words: 604
+chrome-survivors: []
+raw-paywall-markers: ["paywall"]
+head: https://intern.az/1qd2 stati uniti quanto si è arricchito donald trump facendo il presidente una statua di donald trump, in bronzo e oro, nello studio dello scultore alan cottrill. zanesville, ohio, stati uniti, 5 febbraio 2026 (eli hiller, afp) barack obama una volta ha ironizzato sul fatto che quando era presidente d
+tail: ti uniti la possibilità di sfruttare una miniera di tungsteno. la società che ha ricevuto l’appalto è legata ai figli di lutnick e trump. per quanto tempo ancora gli elettori di trump chiuderanno un occhio davanti a questi metodi discutibili? la risposta arriverà a novembre, dalle urne. (traduzione di andrea sparacino)

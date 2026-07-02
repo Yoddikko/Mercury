@@ -101,7 +101,12 @@ struct ItalianDistillationFixturesTests {
             language: "it",
             host: "www.ilfattoquotidiano.it",
             mustContainAny: ["juventus", "uefa"],
-            bannedSubstrings: Self.commonChrome
+            bannedSubstrings: Self.commonChrome + [
+                // Community CTA rail — leaked on the live audit
+                // (2026-07-02) until the ilfatto rule stripped
+                // `.ifq-news-comments`.
+                "resta in contatto con la community"
+            ]
         ),
         FixtureSpec(
             name: "ilmessaggero",
@@ -115,7 +120,14 @@ struct ItalianDistillationFixturesTests {
             language: "it",
             host: "www.ilsole24ore.com",
             mustContainAny: ["donnarumma", "dimissioni"],
-            bannedSubstrings: Self.commonChrome
+            bannedSubstrings: Self.commonChrome + [
+                // Article-footer author card + related-links block —
+                // leaked on the live audit (2026-07-02) until the
+                // ilsole24ore rule stripped `.afoot`/`.minibio`/
+                // `.acor--moreon`.
+                "per approfondire",
+                "lingue parlate"
+            ]
         ),
         FixtureSpec(
             name: "open",
@@ -171,7 +183,13 @@ struct ItalianDistillationFixturesTests {
             language: "it",
             host: "www.ilgiornale.it",
             mustContainAny: ["bastoni", "zulu"],
-            bannedSubstrings: Self.commonChrome
+            bannedSubstrings: Self.commonChrome + [
+                // Comment-form chrome — leaked on the live audit
+                // (2026-07-02) until the ilgiornale rule stripped
+                // `#ilg_comments`.
+                "pubblica un commento",
+                "scegli il giornale come fonte preferita"
+            ]
         ),
         FixtureSpec(
             name: "avvenire",
@@ -213,6 +231,10 @@ struct ItalianDistillationFixturesTests {
             language: "it",
             host: "www.gazzetta.it",
             mustContainAny: ["ouedraogo", "schalke"],
+            // "leggi anche" itself is in `commonChrome`; the gazzetta
+            // rule additionally strips the `.bck-tile-slider`
+            // related-article rail that leaked headline links on the
+            // live audit (2026-07-02).
             bannedSubstrings: Self.commonChrome
         ),
         FixtureSpec(
@@ -220,6 +242,105 @@ struct ItalianDistillationFixturesTests {
             language: "it",
             host: "www.ilrestodelcarlino.it",
             mustContainAny: ["stazione", "trenino"],
+            bannedSubstrings: Self.commonChrome
+        ),
+        // MARK: Fixture-fill wave (issue #89) — one pinned fixture per
+        // previously uncovered Italian outlet host.
+        FixtureSpec(
+            name: "adnkronos",
+            language: "it",
+            host: "www.adnkronos.com",
+            mustContainAny: ["palio", "contrade"],
+            bannedSubstrings: Self.commonChrome
+        ),
+        FixtureSpec(
+            name: "fanpage",
+            language: "it",
+            host: "www.fanpage.it",
+            mustContainAny: ["nascondi la mia mail", "indirizzi"],
+            bannedSubstrings: Self.commonChrome + [
+                // Continue-read promo + autopromo banner — leaked on
+                // the live audit (2026-07-02) until the fanpage rule
+                // stripped `.cr`/`.bnr`.
+                "continua a leggere su fanpage.it",
+                "più che un giornale"
+            ]
+        ),
+        FixtureSpec(
+            name: "internazionale",
+            language: "it",
+            host: "www.internazionale.it",
+            mustContainAny: ["venezuela", "washington"],
+            bannedSubstrings: Self.commonChrome + [
+                // Letters-page CTA (`.item_note2`) — leaked on the
+                // live audit (2026-07-02).
+                "pagina di lettere"
+            ]
+        ),
+        FixtureSpec(
+            name: "liberoquotidiano",
+            language: "it",
+            host: "www.liberoquotidiano.it",
+            mustContainAny: ["gemelle", "intercettate"],
+            bannedSubstrings: Self.commonChrome
+        ),
+        FixtureSpec(
+            name: "linkiesta",
+            language: "it",
+            host: "www.linkiesta.it",
+            mustContainAny: ["kyjiv", "bombardamento"],
+            bannedSubstrings: Self.commonChrome
+        ),
+        FixtureSpec(
+            name: "thelocal",
+            language: "en",
+            host: "www.thelocal.it",
+            mustContainAny: ["heatwave", "storm"],
+            bannedSubstrings: Self.commonChrome + [
+                "membership",
+                "log in"
+            ]
+        ),
+        FixtureSpec(
+            name: "milannews",
+            language: "it",
+            host: "www.milannews.it",
+            mustContainAny: ["ramos", "vieri"],
+            bannedSubstrings: Self.commonChrome
+        ),
+        FixtureSpec(
+            name: "panorama",
+            language: "it",
+            host: "www.panorama.it",
+            mustContainAny: ["vaticano", "cattolici"],
+            bannedSubstrings: Self.commonChrome
+        ),
+        FixtureSpec(
+            name: "tgcom24",
+            language: "it",
+            host: "www.tgcom24.mediaset.it",
+            mustContainAny: ["corte", "android"],
+            bannedSubstrings: Self.commonChrome + [
+                // Next.js related-content rail — leaked on the live
+                // audit (2026-07-02) until the tgcom24 rule stripped it.
+                "ti potrebbe interessare"
+            ]
+        ),
+        FixtureSpec(
+            name: "guardianitaly",
+            language: "en",
+            host: "www.theguardian.com",
+            mustContainAny: ["albania", "detention"],
+            bannedSubstrings: Self.commonChrome + [
+                "support the guardian",
+                "sign up for"
+            ]
+        ),
+        FixtureSpec(
+            name: "rainews",
+            language: "it",
+            host: "www.rainews.it",
+            mustContainAny: ["kallas", "sanzioni"],
             bannedSubstrings: Self.commonChrome
         )
     ]

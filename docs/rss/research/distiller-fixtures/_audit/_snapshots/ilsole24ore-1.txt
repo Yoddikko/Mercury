@@ -1,0 +1,7 @@
+page: ilsole24ore-1
+host: www.ilsole24ore.com lang: it
+words: 532
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium"]
+head: attualità made in italy se il vino italiano è in difficoltà, l’alta langa va a ruba: sottratte 3mila bottiglie a banfi nei giorni scorsi in piemonte rubati interi bancali dello spumante metodo classico prodotto dall’azienda leader del brunello di montalcino stock.adobe.com nei giorni scorsi in piemonte rubati interi ba
+tail: tari di vigneto sono 490 e la produzione ha superato nel 2024 quota 2 milioni di bottiglie. un’etichetta che da dieci anni cresce al ritmo del 10% l’anno. nel panorama del vino italiano che sconta più di una difficoltà di mercato l’alta langa docg va annoverato tra le eccezioni: un vino che va - letteralmente - a ruba.

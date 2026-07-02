@@ -199,9 +199,39 @@ The original spec singled out lake-of-fire as the primary choice; investigation 
 Distillation **must never** produce worse content than the existing pipeline:
 
 1. Distiller returns body with ≥ 80 words **and** ≥ 1 `<p>` → use it.
-2. Distiller returns short or empty → fall back to current `ArticlePageContentExtractor` output.
+2. Distiller returns short or empty → fall back to current `ArticlePageContentExtractor` output — **unless** the page is classified as a subscriber-only teaser (issue #95, see below), in which case the article is kept un-enriched so the reader shows the RSS item summary instead of subscription copy.
 3. Both fail → fall back to the original `rawContent` (RSS body).
 4. Every fallback logs the article URL and the reason, so per-outlet tuning is auditable.
+
+### Paywalled-teaser classification (issue #95)
+
+Some outlets ship subscriber-only pages whose readable body simply is
+not in the HTML — a headline, a one-paragraph teaser, and a
+subscription CTA (Repubblica premium via schema.org
+`isAccessibleForFree: false`, The Local members-only via its
+`articleBodyForbidden` gate). No amount of chrome-stripping produces
+an article from those pages, and the old fallback (step 2 above)
+surfaced the teaser + CTA as the body.
+
+`ArticlePaywallClassifier` runs after distillation, only when the
+distilled output is teaser-short (< 80 words, aligned with the
+minimum-distilled-words threshold), and classifies the page as a
+paywalled teaser when the **raw** page HTML additionally matches a
+paywall marker:
+
+* **default markers** (checked for every host): schema.org
+  `"isAccessibleForFree": false` and Italian subscriber-CTA copy
+  ("solo per (gli) abbonati", "riservato/a agli abbonati", "abbonati
+  per continuare");
+* **outlet markers** from the matched rule's `paywallMarkers`.
+
+Both conditions are required by design: live evidence (2026-07-02)
+showed a *free* ANSA article carrying `PAYWALL` / `Premium` tokens in
+its raw HTML, so a marker alone must never classify. A short
+marker-free news brief also stays unclassified. Classified articles
+are returned un-enriched (no `distillerVersion` stamp, RSS summary
+kept as body) and the decision is logged with request ID and the
+matched marker. `distillerVersion` was bumped to 3 for this change.
 
 ### Image deduplication
 
@@ -243,7 +273,8 @@ Each rule entry:
   "hosts": ["ansa.it"],
   "bodySelectors": ["div[itemprop=articleBody]"],
   "stripSelectors": [".bt-Subscribe", ".prompt-to-accept"],
-  "stripTextPatterns": ["\\babbonamento\\s+consentless\\b"]
+  "stripTextPatterns": ["\\babbonamento\\s+consentless\\b"],
+  "paywallMarkers": ["\\bsolo\\s+per\\s+abbonati\\b"]
 }
 ```
 
@@ -261,12 +292,25 @@ Each rule entry:
 * `stripTextPatterns` — case-insensitive regexes; matching `p`/`li`
   elements are always dropped, containers/headings only when their
   text is ≤ 80 chars (same policy as the locale stripper).
+* `paywallMarkers` (optional, issue #95) — case-insensitive regexes
+  scanned against the **raw** page HTML by `ArticlePaywallClassifier`
+  when the distilled output is teaser-short. Markers alone never
+  classify a page as paywalled (see the classifier section below), so
+  listing a marker that also appears on free pages is safe.
 
 Seeded rules: **ANSA** (iubenda "Consentless" subscription CTA:
 `.bt-Subscribe` / `.bt-abbonati` / `.prompt-to-accept`), **Corriere**
 (metered-paywall chrome: `[id^=pno-]`, `.modal-access` variants),
 **Repubblica** (related-link blocks: `.aside-story`,
 `.limio-fr-related`; body selector ported from FiveFilters).
+The 2026-07-02 live audit (issues #89/#95; report in
+`docs/rss/VALIDATION.md`) added **tgcom24** (Next.js related-content
+rail), **internazionale** (newsletter + letters-page CTAs),
+**thelocal** (membership gate + `paywallMarkers`), **fanpage**
+(continue-read promo, autopromo banner), **gazzetta**
+(related-article slider), **ilfatto** (community CTA), **ilgiornale**
+(comment form), and **ilsole24ore** (author card, topic links,
+"Per approfondire" block).
 
 Adding a rule is a 4-step ritual:
 
@@ -320,7 +364,7 @@ Distillation improves the **input** to AI summarization (`Article.cleanedContent
 * The user-cited ANSA URL renders the article body only — no cookie banner, no "Leggi anche" sidebar, no share strip, no newsletter CTA, no duplicate hero image — in both Web and Native modes.
 * `distillerVersion` is stamped on every distilled article so re-rolls are possible.
 * Fallback fires (and is logged) on outlets where Readability collapses, never showing a blank or shorter article than the legacy extractor.
-* **Italian fixture corpus** committed under `docs/rss/research/distiller-fixtures/` (18 outlets at time of writing): ANSA, la Repubblica, Corriere della Sera, Il Sole 24 Ore, Il Messaggero, Il Fatto Quotidiano, Il Post, Il Foglio, Il Giornale, Il Giorno, Il Manifesto, Open, Sky TG24, TG La7, Wired Italia, Avvenire, HuffPost Italia, Lettera43. Each fixture has a parameterized integration test in `MercuryTests/ItalianDistillationFixturesTests.swift` that pins (a) at least one keyword from the article title that MUST survive, (b) seven generic chrome substrings that MUST be absent. Adding a new fixture is a 3-step ritual: drop the HTML under `distiller-fixtures/<name>.html`, append a `FixtureSpec` to `Self.fixtures`, run the suite; if it fails, tune the heuristics until it passes. Pages with no static article body (live-coverage diretta pages, fully JS-rendered SPAs like Adnkronos / TGCom24, paywall preview-only pages) are skipped by design — the distiller cannot recover what isn't in the HTML.
+* **Italian fixture corpus** committed under `docs/rss/research/distiller-fixtures/` (33 fixtures after the #89 fixture-fill wave), covering every outlet host currently in the Italy region of `RSSFeedCatalog` plus historical outlets kept for regression: ANSA (×2), la Repubblica, Corriere della Sera (×2), Il Sole 24 Ore, Il Messaggero, Il Fatto Quotidiano, Il Post, Il Foglio, Il Giornale, Il Giorno, Il Manifesto, Open, Sky TG24, TG La7, Wired Italia, Avvenire, HuffPost Italia, Lettera43, Gazzetta dello Sport, Il Resto del Carlino, Adnkronos, Fanpage, Internazionale, Libero Quotidiano, Linkiesta, The Local Italy, MilanNews, Panorama, TGCom24, The Guardian (Italy), RaiNews. Each fixture has a parameterized integration test in `MercuryTests/ItalianDistillationFixturesTests.swift` that pins (a) at least one keyword from the article title that MUST survive, (b) generic chrome substrings that MUST be absent (plus per-outlet pins for chrome fixed via extraction rules). Adding a new fixture is a 3-step ritual: drop the HTML under `distiller-fixtures/<name>.html`, append a `FixtureSpec` to `Self.fixtures`, run the suite; if it fails, tune the heuristics until it passes. Pages with no static article body (live-coverage diretta pages, paywall preview-only pages — handled by the #95 teaser classifier) are skipped by design — the distiller cannot recover what isn't in the HTML. An ad-hoc audit harness (`MercuryTests/ItalianOutletAuditHarness.swift`) additionally profiles freshly downloaded pages dropped under `distiller-fixtures/_audit/`; the 2026-07-02 full-catalog audit results live in `_audit/AUDIT-2026-07-02.md`.
 * International corpus to follow (BBC, NYT, Reuters, Le Monde, Spiegel, El País).
 
 ### Out of scope

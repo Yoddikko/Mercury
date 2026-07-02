@@ -1,0 +1,7 @@
+page: linkiesta-1
+host: www.linkiesta.it lang: it
+words: 614
+chrome-survivors: []
+raw-paywall-markers: []
+head: accedi 2 luglio 2026 malafedei lefebvriani hanno ordinato quattro vescovi senza il permesso del papa linkiesta lo strappo dei lefebvriani nasce da una frattura più profonda con roma: il rifiuto di molte riforme del concilio vaticano ii, della messa moderna e del dialogo con le altre religioni lapresse i lefebvriani, i 
+tail: ati da lefebvre, in un tentativo di favorire la riconciliazione. anche papa francesco mantenne alcuni canali di apertura, riconoscendo in determinati casi la possibilità per i sacerdoti della fraternità di assolvere in confessione e autorizzando forme di regolarizzazione per i matrimoni celebrati nelle loro comunità. x

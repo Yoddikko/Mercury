@@ -1,0 +1,7 @@
+page: ansa-cronaca-2
+host: www.ansa.it lang: it
+words: 311
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium", "bt-Subscribe"]
+head: si sta spostando rapidamente verso il centro-sud, che ne sarà investito in pieno nella giornata di oggi, il fronte temporalesco che, dopo due settimane di caldo asfissiante, ha colpito il settentrione. "i fenomeni più intensi - spiega mattia gussoni, meteorologo de ilmeteo.it - si concentreranno inizialmente sulla roma
+tail: lità con temporali sparsi su puglia, campania e basilicata. venerdì 3. al nord: sole e caldo in aumento. al centro: sole, acquazzoni su basso lazio e bassa sardegna. al sud: temporali a carattere irregolare, specie sui settori tirrenici. tendenza: nuova pulsazione dell'anticiclone africano dal weekend, caldo in aumento
