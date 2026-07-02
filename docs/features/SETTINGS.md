@@ -92,6 +92,15 @@ choices captured during onboarding.
   list.
 * `RSSSourceFilter` is the single service that resolves preferences into
   the final `[RSSFeedSource]` list consumed by `HomeViewModel`.
+* Toggling a region or outlet OFF also purges cached articles from the
+  now-disabled sources via `ArticleCacheMaintenanceService`
+  (issue #94). Favorited articles are never purged. The purge is
+  best-effort: if it fails, the cache replay filter still hides the
+  rows and the retention sweep reclaims them later.
+* The same preferences gate the SwiftData cache replay and search (see
+  `docs/features/FEED.md` § Cache Replay & Retention), so previously
+  cached articles from disabled sources disappear from the feed
+  immediately — not just from the next network fetch.
 
 ### Flow
 
@@ -101,8 +110,11 @@ choices captured during onboarding.
    plus an expandable list of outlets.
 3. Toggles build a `UserPreferencePatch` and call
    `UserPreferencesService.updatePreferences(_:)`.
-4. The next Home refresh reads the updated preferences and only fetches
-   the enabled subset.
+4. After a successful write, cached articles from now-disabled sources
+   are purged (favorites preserved).
+5. The next Home refresh reads the updated preferences and only fetches
+   the enabled subset; the cold-start cache replay applies the same
+   filter.
 
 ### Onboarding-first fetch order (issue #87)
 

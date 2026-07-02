@@ -75,7 +75,10 @@ struct OnboardingScreen: View {
             .task {
                 if usesInjectedViewModel == false {
                     let liveService = UserPreferencesService(modelContext: modelContext)
-                    viewModel.replaceService(liveService)
+                    viewModel.replaceService(
+                        liveService,
+                        cacheMaintenance: ArticleCacheMaintenanceService(modelContext: modelContext)
+                    )
                 }
                 viewModel.load()
             }

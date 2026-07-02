@@ -256,6 +256,26 @@ Users should be able to:
 
 ---
 
+## Cached Content Rules (issue #94)
+
+The offline cache must never widen the feed beyond the user's source
+choices:
+
+* cache replay (cold start) and search honor the same enabled-region /
+  hidden-source preferences as the network fetch
+* articles are stamped with their outlet's stable source id at ingest;
+  legacy cached rows without the stamp are matched by source name
+  against the catalog
+* disabling a region or outlet purges its cached articles immediately
+* favorited (bookmarked) articles are never purged — bookmarking is the
+  explicit "keep this" signal
+* non-favorite cached articles expire after 30 days (retention sweep at
+  refresh time)
+* when the user has expressed no source preferences, replay stays
+  unfiltered (pre-onboarding behavior)
+
+---
+
 ## Notes
 
 * feed ranking must be fast

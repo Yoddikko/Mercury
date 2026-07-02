@@ -25,6 +25,7 @@ enum ArticleEntityMapper {
             externalID: article.externalID,
             title: article.title,
             sourceName: article.sourceName,
+            sourceID: article.sourceID,
             sourceURL: article.sourceURL.absoluteString,
             articleURL: article.articleURL.absoluteString,
             publishedAt: article.publishedAt,
@@ -57,6 +58,10 @@ enum ArticleEntityMapper {
         entity.externalID = article.externalID
         entity.title = article.title
         entity.sourceName = article.sourceName
+        // Never wipe an already-stamped source id with `nil`: a refreshed
+        // in-memory Article that lost the id (legacy round-trip) must not
+        // degrade an entity that already carries it.
+        entity.sourceID = article.sourceID ?? entity.sourceID
         entity.sourceURL = article.sourceURL.absoluteString
         entity.articleURL = article.articleURL.absoluteString
         entity.publishedAt = article.publishedAt
@@ -95,6 +100,7 @@ enum ArticleEntityMapper {
             externalID: entity.externalID,
             title: entity.title,
             sourceName: entity.sourceName,
+            sourceID: entity.sourceID,
             sourceURL: sourceURL,
             articleURL: articleURL,
             publishedAt: entity.publishedAt,

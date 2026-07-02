@@ -46,6 +46,8 @@ final class SearchViewModel: ObservableObject {
     let debounce: Duration
 
     private var repository: ArticleRepository?
+    private let sourceFilter: RSSSourceFilter
+    private var modelContext: ModelContext?
     private let logger: AppLogger
     private let maxResults: Int
 
@@ -56,6 +58,9 @@ final class SearchViewModel: ObservableObject {
     ///     `nil` at construction time when the screen needs to defer the
     ///     SwiftData wiring (`attach(repository:)`) until after a
     ///     `ModelContext` becomes available.
+    ///   - sourceFilter: resolves the user's Feed sources preferences into
+    ///     the allow list applied to search results (issue #94), so cached
+    ///     articles from disabled sources never surface through search.
     ///   - debounce: Debounce window applied to user input before a fetch
     ///     is issued. Defaults to 300 ms to match the documented search
     ///     UX guideline.
@@ -63,11 +68,13 @@ final class SearchViewModel: ObservableObject {
     ///   - logger: AppLogger sink used for trace + result-count logging.
     init(
         repository: ArticleRepository? = nil,
+        sourceFilter: RSSSourceFilter = RSSSourceFilter(),
         debounce: Duration = .milliseconds(300),
         maxResults: Int = 50,
         logger: AppLogger = .shared
     ) {
         self.repository = repository
+        self.sourceFilter = sourceFilter
         self.debounce = debounce
         self.maxResults = max(1, maxResults)
         self.logger = logger
@@ -94,6 +101,21 @@ final class SearchViewModel: ObservableObject {
                 service: "SearchViewModel"
             )
         }
+    }
+
+    /// Wire the SwiftData model context used to read the Feed sources
+    /// preferences that gate search results (issue #94). Safe to call
+    /// repeatedly: subsequent calls are no-ops unless the underlying
+    /// context actually changes. Without a context the search stays
+    /// unfiltered, preserving the closure-injected test seam.
+    func attach(modelContext: ModelContext) {
+        guard self.modelContext !== modelContext else { return }
+        self.modelContext = modelContext
+        logger.debug(
+            "Attached SwiftData model context",
+            category: .database,
+            service: "SearchViewModel"
+        )
     }
 
     deinit {
@@ -224,7 +246,15 @@ final class SearchViewModel: ObservableObject {
             )
             if Task.isCancelled { return }
 
-            let articles = entities.compactMap(ArticleEntityMapper.makeArticle(from:))
+            var articles = entities.compactMap(ArticleEntityMapper.makeArticle(from:))
+            var filteredOut = 0
+            if let allowList = sourceFilter.makeArticleAllowList(for: currentPreferences()) {
+                let unfilteredCount = articles.count
+                articles = articles.filter { article in
+                    allowList.allows(sourceID: article.sourceID, sourceName: article.sourceName)
+                }
+                filteredOut = unfilteredCount - articles.count
+            }
             results = articles
             state = articles.isEmpty ? .empty : .results(articles: articles)
 
@@ -235,6 +265,7 @@ final class SearchViewModel: ObservableObject {
                 requestID: requestID,
                 metadata: [
                     "results_count": "\(articles.count)",
+                    "filtered_out": "\(filteredOut)",
                     "entities_count": "\(entities.count)"
                 ]
             )
@@ -253,6 +284,11 @@ final class SearchViewModel: ObservableObject {
                 metadata: ["error": String(describing: error)]
             )
         }
+    }
+
+    private func currentPreferences() -> UserPreference? {
+        guard let modelContext else { return nil }
+        return try? UserPreferencesService(modelContext: modelContext).loadPreferences()
     }
 
     private func normalized(_ value: String) -> String? {

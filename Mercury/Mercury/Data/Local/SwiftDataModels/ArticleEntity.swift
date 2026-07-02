@@ -14,6 +14,12 @@ final class ArticleEntity {
     var externalID: String?
     var title: String
     var sourceName: String
+    /// Stable `RSSFeedSource.id` of the outlet that produced this article,
+    /// stamped at ingest (issue #94). Nullable so SwiftData lightweight
+    /// migration stays additive (precedent: `hasCompletedOnboarding` on
+    /// `UserPreferenceEntity`). `nil` for legacy rows persisted before this
+    /// field existed — cache filtering falls back to `sourceName` for them.
+    var sourceID: String?
     var sourceURL: String
     var articleURL: String
     var publishedAt: Date
@@ -49,6 +55,7 @@ final class ArticleEntity {
         externalID: String? = nil,
         title: String,
         sourceName: String,
+        sourceID: String? = nil,
         sourceURL: String,
         articleURL: String,
         publishedAt: Date = .now,
@@ -76,6 +83,7 @@ final class ArticleEntity {
         self.externalID = externalID
         self.title = title
         self.sourceName = sourceName
+        self.sourceID = sourceID
         self.sourceURL = sourceURL
         self.articleURL = articleURL
         self.publishedAt = publishedAt

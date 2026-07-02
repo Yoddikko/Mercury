@@ -60,6 +60,11 @@ final class FeedSourcesViewModel: ObservableObject {
     @Published private(set) var lastErrorMessage: String?
 
     private var service: UserPreferencesService
+    /// Optional cache cleanup seam (issue #94). When present, every
+    /// persisted region/outlet toggle triggers a purge of cached articles
+    /// from now-disabled sources (favorites are always preserved). `nil`
+    /// keeps previews and lightweight tests free of the article schema.
+    private var cacheMaintenance: ArticleCacheMaintenanceService?
     private let logger: AppLogger
     private var preference: UserPreference?
     /// Precomputed region -> outlets memo (issue #78). Built once from
@@ -69,13 +74,22 @@ final class FeedSourcesViewModel: ObservableObject {
     /// Cached available regions (in the order `RSSFeedCatalog` publishes).
     private var availableRegions: [RSSFeedRegion] = []
 
-    init(service: UserPreferencesService, logger: AppLogger = .shared) {
+    init(
+        service: UserPreferencesService,
+        cacheMaintenance: ArticleCacheMaintenanceService? = nil,
+        logger: AppLogger = .shared
+    ) {
         self.service = service
+        self.cacheMaintenance = cacheMaintenance
         self.logger = logger
     }
 
-    func replaceService(_ service: UserPreferencesService) {
+    func replaceService(
+        _ service: UserPreferencesService,
+        cacheMaintenance: ArticleCacheMaintenanceService? = nil
+    ) {
         self.service = service
+        self.cacheMaintenance = cacheMaintenance
     }
 
     /// Hydrate the picker from the persisted preferences. Safe to call
@@ -200,6 +214,7 @@ final class FeedSourcesViewModel: ObservableObject {
             let updated = try service.updatePreferences(patch)
             preference = updated
             lastErrorMessage = nil
+            purgeCacheForDisabledSources(preferences: updated)
         } catch {
             switch optimistic {
             case let .region(rawValue, _):
@@ -221,6 +236,36 @@ final class FeedSourcesViewModel: ObservableObject {
             lastErrorMessage = String(
                 localized: "feed_sources.error.save",
                 defaultValue: "We couldn't save that change. Try again."
+            )
+        }
+    }
+
+    /// Purge cached articles from sources the user just disabled (issue
+    /// #94). Best-effort: the preference write already succeeded, so a
+    /// cleanup failure is logged and swallowed — leftover rows are still
+    /// hidden by the replay filter and reclaimed by the retention sweep.
+    private func purgeCacheForDisabledSources(preferences: UserPreference) {
+        guard let cacheMaintenance else { return }
+        let requestID = "feed-sources-purge-\(UUID().uuidString.lowercased())"
+        do {
+            let purged = try cacheMaintenance.purgeDisabledSources(
+                preferences: preferences,
+                requestID: requestID
+            )
+            logger.debug(
+                "Cache purge after feed sources change completed",
+                category: .cache,
+                service: "FeedSourcesViewModel",
+                requestID: requestID,
+                metadata: ["purged_rows": "\(purged)"]
+            )
+        } catch {
+            logger.error(
+                "Cache purge after feed sources change failed",
+                category: .cache,
+                service: "FeedSourcesViewModel",
+                requestID: requestID,
+                metadata: ["error": String(describing: error)]
             )
         }
     }

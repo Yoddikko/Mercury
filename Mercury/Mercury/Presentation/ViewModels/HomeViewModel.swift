@@ -238,7 +238,7 @@ final class HomeViewModel: ObservableObject {
 
         hasLoadedOnce = true
 
-        let cached = loadCachedArticles()
+        let cached = loadCachedArticles(requestID: "home-cache-\(UUID().uuidString.lowercased())")
         if cached.isEmpty == false {
             applyArticles(cached, source: "cache")
         } else {
@@ -271,6 +271,11 @@ final class HomeViewModel: ObservableObject {
             service: "HomeViewModel",
             requestID: requestID
         )
+
+        // Cache retention (issue #94): drop stale non-favorite rows before
+        // the network round-trip so the cap applies even when the fetch
+        // later fails offline.
+        runRetentionSweep(requestID: requestID)
 
         let startedAt = DispatchTime.now().uptimeNanoseconds
         // Resolve the effective source list from the user's onboarding /
@@ -424,12 +429,21 @@ final class HomeViewModel: ObservableObject {
         return try? UserPreferencesService(modelContext: modelContext).loadPreferences()
     }
 
-    private func loadCachedArticles() -> [Article] {
+    /// Replay the SwiftData cache, honoring the user's Feed sources
+    /// preferences (issue #94): rows from disabled sources are filtered out
+    /// before ranking, matching by `sourceID` when stamped and falling back
+    /// to `sourceName` for legacy rows. Without preferences the replay is
+    /// unfiltered, preserving pre-onboarding behavior.
+    ///
+    /// Internal (not private) so unit tests can drive the replay path
+    /// directly without racing the network refresh.
+    func loadCachedArticles(requestID: String? = nil) -> [Article] {
         guard let modelContext else {
             logger.debug(
                 "No model context attached when loading cached articles",
                 category: .database,
-                service: "HomeViewModel"
+                service: "HomeViewModel",
+                requestID: requestID
             )
             return []
         }
@@ -444,15 +458,26 @@ final class HomeViewModel: ObservableObject {
 
         do {
             let entities = try modelContext.fetch(descriptor)
-            let articles = entities.compactMap { ArticleEntityMapper.makeArticle(from: $0) }
-            let ranked = ranker.rank(articles, preferences: currentPreferences())
+            let preferences = currentPreferences()
+            var articles = entities.compactMap { ArticleEntityMapper.makeArticle(from: $0) }
+            var filteredOut = 0
+            if let allowList = sourceFilter.makeArticleAllowList(for: preferences) {
+                let unfilteredCount = articles.count
+                articles = articles.filter { article in
+                    allowList.allows(sourceID: article.sourceID, sourceName: article.sourceName)
+                }
+                filteredOut = unfilteredCount - articles.count
+            }
+            let ranked = ranker.rank(articles, preferences: preferences)
             let trimmed = Array(ranked.prefix(maxDisplayedArticles))
             logger.debug(
                 "Loaded cached articles from SwiftData",
                 category: .database,
                 service: "HomeViewModel",
+                requestID: requestID,
                 metadata: [
                     "entities_in": "\(entities.count)",
+                    "filtered_out": "\(filteredOut)",
                     "articles_out": "\(trimmed.count)"
                 ]
             )
@@ -462,9 +487,40 @@ final class HomeViewModel: ObservableObject {
                 "Failed to fetch cached articles",
                 category: .database,
                 service: "HomeViewModel",
+                requestID: requestID,
                 metadata: ["error": error.localizedDescription]
             )
             return []
+        }
+    }
+
+    /// Run the time-based cache retention sweep (issue #94). Failures are
+    /// logged and swallowed: cleanup must never block the refresh flow.
+    private func runRetentionSweep(requestID: String) {
+        guard let modelContext else { return }
+        do {
+            let purged = try ArticleCacheMaintenanceService(
+                modelContext: modelContext,
+                sourceFilter: sourceFilter,
+                logger: logger
+            ).enforceRetention(requestID: requestID)
+            if purged > 0 {
+                logger.debug(
+                    "Cache retention sweep completed",
+                    category: .cache,
+                    service: "HomeViewModel",
+                    requestID: requestID,
+                    metadata: ["purged_rows": "\(purged)"]
+                )
+            }
+        } catch {
+            logger.error(
+                "Cache retention sweep failed",
+                category: .cache,
+                service: "HomeViewModel",
+                requestID: requestID,
+                metadata: ["error": String(describing: error)]
+            )
         }
     }
 

@@ -242,6 +242,139 @@ struct HomeViewModelTests {
         func set(_ new: [RSSFeedSource]?) { value = new }
     }
 
+    // MARK: - Cache replay source filtering (issue #94)
+
+    @Test
+    func cachedReplayFiltersDisabledSourcesAndKeepsLegacyNameMatches() async throws {
+        let container = try Self.makeInMemoryContainer()
+        let context = ModelContext(container)
+        _ = try UserPreferencesService(modelContext: context).updatePreferences(
+            .init(
+                enabledRegionRawValues: [RSSFeedRegion.italy.rawValue],
+                hasCompletedOnboarding: true
+            )
+        )
+        // Stamped rows (post-#94 ingest) + legacy rows without a sourceID.
+        context.insert(Self.makeCachedEntity(id: "it-a", sourceID: "it-1", sourceName: "IT 1"))
+        context.insert(Self.makeCachedEntity(id: "fr-a", sourceID: "fr-1", sourceName: "FR 1"))
+        context.insert(Self.makeCachedEntity(id: "legacy-it", sourceID: nil, sourceName: "IT 1"))
+        context.insert(Self.makeCachedEntity(id: "legacy-fr", sourceID: nil, sourceName: "FR 1"))
+        try context.save()
+
+        let viewModel = HomeViewModel(
+            feedRefreshAction: { _ in
+                RSSFeedBatchResult(
+                    checkedAt: .now,
+                    groupMode: .mainOutlets,
+                    selectedRegion: nil,
+                    checks: [],
+                    deduplicatedArticles: []
+                )
+            },
+            sourceFilter: RSSSourceFilter(allSources: Self.twoRegionCatalog()),
+            isDeveloperModeEnabled: false
+        )
+        viewModel.attach(modelContext: context)
+
+        let replayed = viewModel.loadCachedArticles()
+
+        #expect(Set(replayed.map(\.id)) == ["it-a", "legacy-it"])
+    }
+
+    @Test
+    func cachedReplayIsUnfilteredWhenPreferencesImposeNoFilter() async throws {
+        let container = try Self.makeInMemoryContainer()
+        let context = ModelContext(container)
+        // Bootstrap default preferences: no regions, no hidden sources.
+        _ = try UserPreferencesService(modelContext: context).loadPreferences()
+        context.insert(Self.makeCachedEntity(id: "it-a", sourceID: "it-1", sourceName: "IT 1"))
+        context.insert(Self.makeCachedEntity(id: "fr-a", sourceID: "fr-1", sourceName: "FR 1"))
+        try context.save()
+
+        let viewModel = HomeViewModel(
+            feedRefreshAction: { _ in
+                RSSFeedBatchResult(
+                    checkedAt: .now,
+                    groupMode: .mainOutlets,
+                    selectedRegion: nil,
+                    checks: [],
+                    deduplicatedArticles: []
+                )
+            },
+            sourceFilter: RSSSourceFilter(allSources: Self.twoRegionCatalog()),
+            isDeveloperModeEnabled: false
+        )
+        viewModel.attach(modelContext: context)
+
+        let replayed = viewModel.loadCachedArticles()
+
+        #expect(Set(replayed.map(\.id)) == ["it-a", "fr-a"])
+    }
+
+    @Test
+    func refreshRunsRetentionSweepOnStaleCachedRows() async throws {
+        let container = try Self.makeInMemoryContainer()
+        let context = ModelContext(container)
+        let stale = Self.makeCachedEntity(id: "stale", sourceID: "it-1", sourceName: "IT 1")
+        stale.createdAt = Date().addingTimeInterval(-31 * 86_400)
+        let staleFavorite = Self.makeCachedEntity(
+            id: "stale-fav", sourceID: "it-1", sourceName: "IT 1"
+        )
+        staleFavorite.createdAt = Date().addingTimeInterval(-31 * 86_400)
+        staleFavorite.isBookmarked = true
+        context.insert(stale)
+        context.insert(staleFavorite)
+        try context.save()
+
+        let viewModel = makeViewModel(deduplicatedArticles: [])
+        viewModel.attach(modelContext: context)
+
+        await viewModel.refresh()
+
+        let remaining = try context.fetch(FetchDescriptor<ArticleEntity>())
+        #expect(remaining.map(\.id) == ["stale-fav"])
+    }
+
+    private static func makeCachedEntity(
+        id: String,
+        sourceID: String?,
+        sourceName: String
+    ) -> ArticleEntity {
+        ArticleEntity(
+            id: id,
+            title: "Cached \(id)",
+            sourceName: sourceName,
+            sourceID: sourceID,
+            sourceURL: "https://example.com/source",
+            articleURL: "https://example.com/article/\(id)"
+        )
+    }
+
+    private static func twoRegionCatalog() -> [RSSFeedSource] {
+        [
+            RSSFeedSource(
+                id: "it-1",
+                outletName: "IT 1",
+                region: .italy,
+                feedURLString: "https://example.com/it",
+                isMainOutlet: true,
+                languageCode: "it",
+                tags: [],
+                note: nil
+            ),
+            RSSFeedSource(
+                id: "fr-1",
+                outletName: "FR 1",
+                region: .france,
+                feedURLString: "https://example.com/fr",
+                isMainOutlet: true,
+                languageCode: "fr",
+                tags: [],
+                note: nil
+            )
+        ]
+    }
+
     @Test
     func loadInitialFeedRunsOnlyOnce() async {
         let counter = CallCounter()

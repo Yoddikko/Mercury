@@ -61,6 +61,10 @@ struct HomeScreen: View {
                     searchViewModel.attach(
                         repository: SwiftDataArticleRepository(modelContainer: modelContext.container)
                     )
+                    // Feed sources preferences gate search results too
+                    // (issue #94): without the context the search would
+                    // surface cached articles from disabled sources.
+                    searchViewModel.attach(modelContext: modelContext)
                     await viewModel.loadInitialFeedIfNeeded()
                 }
                 .searchable(
