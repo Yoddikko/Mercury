@@ -305,3 +305,33 @@ xcodebuild test \
 
 Total wall-clock for one full run was about 5 minutes 50 seconds.
 
+
+---
+
+# Italian Distillation Audit Report — 2026-07-02 (issues #89 / #95, meta #80)
+
+Follow-up to the Phase 3 feed validation above: this audit validates
+**article distillation quality** (not feed availability) for every
+outlet host in the Italy region — 48 feeds collapsing to 19 distinct
+outlet hosts. Two live articles per outlet (three ANSA sections) were
+fetched on 2026-07-02 and run through the full distillation pipeline.
+
+- **Corpus + per-page profiles**: `research/distiller-fixtures/_audit/`
+  (pages, `.url` provenance, `_snapshots/` profiles)
+- **Full result table**: [`research/distiller-fixtures/_audit/AUDIT-2026-07-02.md`](research/distiller-fixtures/_audit/AUDIT-2026-07-02.md)
+- **Harness**: `Mercury/MercuryTests/ItalianOutletAuditHarness.swift`
+
+## Disposition summary
+
+| Verdict | Outlets |
+| --- | --- |
+| clean (no change needed) | Adnkronos, ANSA, Corriere, Guardian (Italy), Libero, Linkiesta, MilanNews, Panorama, RaiNews, Sky TG24, TGCom24 |
+| fixed via per-outlet extraction rule | Fanpage, Gazzetta, Il Fatto Quotidiano, Il Giornale, Il Sole 24 Ore, Internazionale, The Local |
+| paywalled → #95 teaser classifier (kept) | la Repubblica (premium articles), The Local (members-only articles) |
+| removed / replaced | **none** |
+
+No outlet was hopeless: every Italy-region entry either distills to a
+body-only article or (for subscriber-only teasers with no body in the
+HTML) degrades gracefully to the RSS item summary via
+`ArticlePaywallClassifier` (#95) instead of surfacing subscription CTA
+copy. `RSSFeedCatalog.swift` is therefore unchanged by this audit.

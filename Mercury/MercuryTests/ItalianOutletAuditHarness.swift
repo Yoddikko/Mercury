@@ -17,10 +17,11 @@ import Testing
 /// **ad-hoc downloaded pages** dropped under
 /// `docs/rss/research/distiller-fixtures/_audit/` and dumps a
 /// per-page profile (word count, chrome survivors, paywall-marker
-/// hits, head/tail excerpt) to `_audit/_snapshots/`. The `_audit`
-/// directory is scratch space — never committed — so the harness
-/// passes trivially when it is absent. It never fails the build: it is
-/// an inspection tool, not a gate.
+/// hits, head/tail excerpt) to `_audit/_snapshots/`. The 2026-07-02
+/// full-catalog corpus and its results are committed under `_audit/`
+/// (see `_audit/AUDIT-2026-07-02.md`); the harness passes trivially
+/// when the directory is absent. It never fails the build: it is an
+/// inspection tool, not a gate.
 ///
 /// Naming convention for audit pages: `<slug>__<host>__<lang>.html`
 /// (host and language drive the per-outlet rule lookup and the locale
