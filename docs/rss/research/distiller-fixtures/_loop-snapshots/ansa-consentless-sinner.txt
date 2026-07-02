@@ -1,7 +1,7 @@
 outlet: ansa-consentless-sinner
-words: 790
-blocks: 11
-block-counts: heading=1 image=3 paragraph=7
+words: 769
+blocks: 10
+block-counts: heading=1 image=3 paragraph=6
 survivors: []
-head: wimbledon: borges battuto in tre set, sinner al terzo turno. l'azzurro: 'e' stata molto dura, ma così entro in ritmo' /ricerca/ansait/search.shtml?tag= approda al terzo turno, sedicesimi di finale, di wimbledon jannik sinner. sul centrale dell'all england club, il numero 1 del mo
+head: approda al terzo turno, sedicesimi di finale, di wimbledon jannik sinner. sul centrale dell'all england club, il numero 1 del mondo ha superato il portoghese nuno borges, n. 48 al mondo, in tre set con il punteggio di 7-6, 7-6, 6-4. ora il campione altoatesino sfiderà lo statunit
 tail: le break annullate dal portoghese. con un grande recupero dal lato destro, sinner si conquista la terza palla break, ancora annullata da borges con un rovescio sulla linea. palla del primo game per il portoghese che alla fine mantiene il turno di battuta: 0-1 tennis-gbr-wimbledon

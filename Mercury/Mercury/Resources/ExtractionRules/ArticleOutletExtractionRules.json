@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "id": "ansa",
+      "hosts": ["ansa.it"],
+      "bodySelectors": [
+        "div[itemprop=articleBody]",
+        "div.post-single-text"
+      ],
+      "stripSelectors": [
+        ".prompt-to-accept",
+        ".bt-Subscribe",
+        ".bt-abbonati",
+        ".article-related",
+        ".article-share",
+        ".article-tags",
+        ".article-outbrain",
+        ".article-side-outbrain"
+      ],
+      "stripTextPatterns": [
+        "\\babbonamento\\s+consentless\\b",
+        "\\baccetta\\s+i\\s+cookie\\s+e\\s+continua\\b",
+        "\\baltri\\s+abbonamenti\\b",
+        "\\biscrizione\\s+alle\\s+newsletter\\s+tematiche\\b"
+      ]
+    },
+    {
+      "id": "corriere",
+      "hosts": ["corriere.it"],
+      "bodySelectors": [
+        "section.body-article",
+        ".container-body-article"
+      ],
+      "stripSelectors": [
+        "[id^=pno-]",
+        ".bck-modal-access",
+        ".modal-access",
+        ".newsletterArticleOuter",
+        ".comment__content",
+        ".widget-audio-article"
+      ],
+      "stripTextPatterns": [
+        "\\babbonato\\s+con\\s+un\\s+altro\\s+account\\b",
+        "\\babbonamento\\s+permette\\s+di\\s+leggere\\b"
+      ]
+    },
+    {
+      "id": "repubblica",
+      "hosts": ["repubblica.it"],
+      "bodySelectors": [
+        "div[itemprop=articleBody]",
+        ".story__text"
+      ],
+      "stripSelectors": [
+        ".aside-story",
+        "gdwc-recommendations",
+        ".limio-fr-related",
+        ".ph-audio-paywall",
+        ".story__comments",
+        "[data-outbrain]"
+      ],
+      "stripTextPatterns": [
+        "\\babbonati\\s+per\\s+leggere\\s+anche\\b"
+      ]
+    }
+  ]
+}
