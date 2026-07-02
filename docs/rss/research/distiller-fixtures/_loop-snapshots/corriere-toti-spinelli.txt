@@ -1,7 +1,7 @@
 outlet: corriere-toti-spinelli
-words: 908
-blocks: 27
-block-counts: heading=9 image=1 paragraph=17
+words: 819
+blocks: 18
+block-counts: heading=6 paragraph=12
 survivors: []
-head: news e ultime notizie oggi da italia e mondo politica _ sinner: «ora so che cosa mi è successo a parigi. non si risolverà in fretta, potrebbe ricapitare» i tuoi preferiti salva questo articolo e leggilo quando vuoi. il servizio è dedicato agli utenti registrati. i tuoi preferiti 
+head: dai nostri inviati genova - ha costantemente bisogno di soldi per mandare avanti nelle varie elezioni il suo piccolo movimento personale con il quale ha conquistato per ben due volte la liguria. la politica costa, e quando non ce la fa giovanni toti batte cassa con il suo finanzi
 tail: no abusivamente un tratto del porto. a signorini, dal quale evidentemente si sente protetto, confida candidamente che «tanto a 83 anni cosa mi possono fare? un ca...». chiosa la gdf: «il presidente non obiettava nulla». 13 maggio 2024, 06:09 - aggiornata il 13 maggio 2024 , 12:12

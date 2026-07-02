@@ -19,7 +19,10 @@ import Testing
 /// are fetched offline so the test runs reproducibly without network.
 ///
 /// When this test surfaces a regression on a specific outlet, the
-/// remediation lives in one of three places:
+/// remediation lives in one of four places (prefer the first — rules
+/// are data, not code, per #91):
+/// * `ArticleOutletExtractionRules.json` for outlet-specific selectors
+///   and text patterns,
 /// * `ArticleBoilerplateRemover.negativeRegex` for new class tokens,
 /// * `ArticleLocaleBoilerplateStripper.patterns` for text patterns,
 /// * `ArticleImageDeduplicator` for image edge cases.
@@ -28,6 +31,10 @@ struct ItalianDistillationFixturesTests {
     struct FixtureSpec: Sendable, CustomStringConvertible {
         let name: String
         let language: String
+        /// Host the fixture was fetched from — drives the per-outlet
+        /// extraction rule lookup (#91). Hosts without a rule exercise
+        /// the generic-pipeline passthrough.
+        let host: String
         /// At least ONE token from this list must appear in the
         /// distilled plain text — proves the article body survived.
         let mustContainAny: [String]
@@ -42,6 +49,7 @@ struct ItalianDistillationFixturesTests {
         FixtureSpec(
             name: "ansa-papa-conflitti",
             language: "it",
+            host: "www.ansa.it",
             mustContainAny: ["papa", "conflitti"],
             bannedSubstrings: Self.commonChrome + [
                 "riproduzione riservata",
@@ -58,6 +66,7 @@ struct ItalianDistillationFixturesTests {
             // back through fails loud.
             name: "ansa-consentless-sinner",
             language: "it",
+            host: "www.ansa.it",
             mustContainAny: ["sinner", "borges", "wimbledon"],
             bannedSubstrings: Self.commonChrome + [
                 "abbonamento consentless",
@@ -73,6 +82,7 @@ struct ItalianDistillationFixturesTests {
             // leggere Corriere" CTA copy that must not leak.
             name: "corriere-toti-spinelli",
             language: "it",
+            host: "www.corriere.it",
             mustContainAny: ["toti", "spinelli"],
             bannedSubstrings: Self.commonChrome + [
                 "abbonato con un altro account",
@@ -82,114 +92,133 @@ struct ItalianDistillationFixturesTests {
         FixtureSpec(
             name: "corriere",
             language: "it",
+            host: "www.corriere.it",
             mustContainAny: ["codice della strada", "gabanelli"],
             bannedSubstrings: Self.commonChrome
         ),
         FixtureSpec(
             name: "ilfatto",
             language: "it",
+            host: "www.ilfattoquotidiano.it",
             mustContainAny: ["juventus", "uefa"],
             bannedSubstrings: Self.commonChrome
         ),
         FixtureSpec(
             name: "ilmessaggero",
             language: "it",
+            host: "www.ilmessaggero.it",
             mustContainAny: ["bastoni", "inter"],
             bannedSubstrings: Self.commonChrome
         ),
         FixtureSpec(
             name: "ilsole24ore",
             language: "it",
+            host: "www.ilsole24ore.com",
             mustContainAny: ["donnarumma", "dimissioni"],
             bannedSubstrings: Self.commonChrome
         ),
         FixtureSpec(
             name: "open",
             language: "it",
+            host: "www.open.online",
             mustContainAny: ["norvegia", "mondiali"],
             bannedSubstrings: Self.commonChrome
         ),
         FixtureSpec(
             name: "repubblica",
             language: "it",
+            host: "www.repubblica.it",
             mustContainAny: ["identità e democrazia", "fondi"],
             bannedSubstrings: Self.commonChrome
         ),
         FixtureSpec(
             name: "skytg24",
             language: "it",
+            host: "tg24.sky.it",
             mustContainAny: ["superenalotto", "lotto"],
             bannedSubstrings: Self.commonChrome
         ),
         FixtureSpec(
             name: "wired",
             language: "it",
+            host: "www.wired.it",
             mustContainAny: ["dreame", "essiccare"],
             bannedSubstrings: Self.commonChrome
         ),
         FixtureSpec(
             name: "ilpost",
             language: "it",
+            host: "www.ilpost.it",
             mustContainAny: ["vannacci", "mistero"],
             bannedSubstrings: Self.commonChrome
         ),
         FixtureSpec(
             name: "ilfoglio",
             language: "it",
+            host: "www.ilfoglio.it",
             mustContainAny: ["corte suprema", "trump"],
             bannedSubstrings: Self.commonChrome
         ),
         FixtureSpec(
             name: "tgla7",
             language: "it",
+            host: "tg.la7.it",
             mustContainAny: ["podcast", "tg la7"],
             bannedSubstrings: Self.commonChrome
         ),
         FixtureSpec(
             name: "ilgiornale",
             language: "it",
+            host: "www.ilgiornale.it",
             mustContainAny: ["bastoni", "zulu"],
             bannedSubstrings: Self.commonChrome
         ),
         FixtureSpec(
             name: "avvenire",
             language: "it",
+            host: "www.avvenire.it",
             mustContainAny: ["ius soli", "corte suprema"],
             bannedSubstrings: Self.commonChrome
         ),
         FixtureSpec(
             name: "huffpost",
             language: "it",
+            host: "www.huffingtonpost.it",
             mustContainAny: ["trump", "ius soli"],
             bannedSubstrings: Self.commonChrome
         ),
         FixtureSpec(
             name: "ilgiorno",
             language: "it",
+            host: "www.ilgiorno.it",
             mustContainAny: ["leonardo", "ospedale"],
             bannedSubstrings: Self.commonChrome
         ),
         FixtureSpec(
             name: "ilmanifesto",
             language: "it",
+            host: "ilmanifesto.it",
             mustContainAny: ["melonellum", "vannacci"],
             bannedSubstrings: Self.commonChrome
         ),
         FixtureSpec(
             name: "lettera43",
             language: "it",
+            host: "www.lettera43.it",
             mustContainAny: ["papa", "smerilli"],
             bannedSubstrings: Self.commonChrome
         ),
         FixtureSpec(
             name: "gazzetta",
             language: "it",
+            host: "www.gazzetta.it",
             mustContainAny: ["ouedraogo", "schalke"],
             bannedSubstrings: Self.commonChrome
         ),
         FixtureSpec(
             name: "ilrestodelcarlino",
             language: "it",
+            host: "www.ilrestodelcarlino.it",
             mustContainAny: ["stazione", "trenino"],
             bannedSubstrings: Self.commonChrome
         )
@@ -222,12 +251,21 @@ struct ItalianDistillationFixturesTests {
         let localeStripper = ArticleLocaleBoilerplateStripper()
 
         let sanitized = sanitizer.sanitize(html)
-        // Mirror the production pipeline order (#81) — the terminator
-        // truncation runs before the boilerplate remover, so downstream
-        // chrome that appears after "Riproduzione riservata" never
-        // reaches the fixture assertions.
+        // Mirror the production pipeline order (#91) — the per-outlet
+        // extraction rule runs right after sanitization, BEFORE the
+        // generic passes. Fixtures whose host has no rule exercise the
+        // unchanged generic pipeline.
+        let ruled: String
+        if let rule = ArticleOutletRuleCatalog.bundled.rule(forHost: spec.host) {
+            ruled = ArticleOutletRuleApplier().applying(rule, to: sanitized)
+        } else {
+            ruled = sanitized
+        }
+        // Terminator truncation (#81) runs before the boilerplate
+        // remover, so downstream chrome that appears after
+        // "Riproduzione riservata" never reaches the fixture assertions.
         let truncated = ArticleContentEnrichmentService.truncatedAtTerminator(
-            html: sanitized,
+            html: ruled,
             language: spec.language
         )
         let withoutBoilerplate = remover.cleaning(truncated)

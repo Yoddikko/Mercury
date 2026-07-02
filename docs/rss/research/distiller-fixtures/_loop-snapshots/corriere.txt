@@ -1,7 +1,7 @@
 outlet: corriere
-words: 1506
-blocks: 34
-block-counts: heading=9 paragraph=25
+words: 1476
+blocks: 28
+block-counts: heading=6 paragraph=22
 survivors: []
-head: desktop includes2013/ssi/notification/global.json /includes2013/ssi/utility/ajax_ssi_loader.shtml dataroom 13 maggio 2024 - 06:03 codice della strada, ecco cosa cambia e perché non ridurrà il numero delle vittime di milena gabanelli e alessio ribaudo a- a+ l’automobile è diventat
-tail: elle strade in cui è impossibile realizzare piste «protette», non potranno essere realizzate «contromano» come in molti paesi europei. e molti degli interventi ad oggi realizzati, anche con i fondi pnrr, dovranno essere eliminati. dataroom@corriere.it altre notizie su corriere.it
+head: l’automobile è diventata il primo predatore dell’uomo, e non per colpa dell’auto. il dato calcolato dall’ oms in tutto il mondo è questo: 1,19 milioni di vittime ogni anno. in italia ogni tre ore più di una persona muore a causa di incidenti stradali. nel 2022 le vittime infatti 
+tail: solo nelle strade in cui è impossibile realizzare piste «protette», non potranno essere realizzate «contromano» come in molti paesi europei. e molti degli interventi ad oggi realizzati, anche con i fondi pnrr, dovranno essere eliminati. dataroom@corriere.it 13 maggio 2024 | 06:03

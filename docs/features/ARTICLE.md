@@ -134,6 +134,18 @@ RSS body OR page-fetched HTML
 [ArticleHTMLSanitizer]               (render-time safety strip)
         │
         ▼
+[Per-outlet extraction rule]         (issue #91 — FiveFilters-style,
+        │                             matched by article host; hosts
+        │                             with no rule skip this stage)
+        │   • bodySelectors: narrow the document to the outlet's known
+        │     article container (first matching selector wins; no match
+        │     keeps the full document)
+        │   • stripSelectors: remove outlet-specific chrome (ANSA
+        │     Consentless CTA, Corriere paywall promos, Repubblica
+        │     related-link blocks)
+        │   • stripTextPatterns: regex text pass with the same
+        │     paragraph / short-container policy as the locale stripper
+        ▼
 [Terminator truncation]              (issue #81 — script/style-aware)
         │   • cuts the HTML at the first visible occurrence of the
         │     per-language article terminator ("Riproduzione riservata"
@@ -207,6 +219,75 @@ The dedup also walks `<picture><source srcset>` and image `srcset` attributes �
 Most Italian outlets end the article body with `Riproduzione riservata` / `© RIPRODUZIONE RISERVATA`. Everything after is chrome (newsletter CTAs, related-article grids, subscribe prompts, share strips). Truncating at the first visible occurrence of that marker (before the Readability pass runs) is by far the highest-ROI Italian cleanup — one match kills a long chain of downstream widgets.
 
 The truncation is `<script>` / `<style>` / `<!-- -->`-aware: ANSA embeds the same marker inside a JS image-slider caption near the top of the page, and a naïve search would cut everything after. The pass walks the HTML once, tracks whether the current position is inside a script/style/comment block, and only records offsets in the visible content stream. If no visible terminator is present, the input passes through unchanged.
+
+### Per-outlet extraction rules (issue #91)
+
+A declarative, FiveFilters-style rule layer runs **before** the generic
+Readability pass. Rules are **data, not code**: they live in
+`Mercury/Resources/ExtractionRules/ArticleOutletExtractionRules.json`
+(bundled with the app, decoded once per process by
+`ArticleOutletRuleCatalog`), so adding an outlet never touches the
+pipeline. A JSON resource was chosen over a Swift static table because
+the rule fields (CSS selectors, regex strings, host lists) are pure
+data with no behavior, the format mirrors `fivefilters/ftr-site-config`
+entries (making translation mechanical — the Repubblica rule is a
+direct port of `.repubblica.it.txt`), and a decode failure degrades
+safely to the generic pipeline instead of a compile error. Everything
+stays on-device — no server-side extraction, no remote rule fetch.
+
+Each rule entry:
+
+```json
+{
+  "id": "ansa",
+  "hosts": ["ansa.it"],
+  "bodySelectors": ["div[itemprop=articleBody]"],
+  "stripSelectors": [".bt-Subscribe", ".prompt-to-accept"],
+  "stripTextPatterns": ["\\babbonamento\\s+consentless\\b"]
+}
+```
+
+* `hosts` — lowercase host suffixes; `ansa.it` matches `www.ansa.it`
+  and every other subdomain, never `notansa.it` or `ansa.it.evil.com`.
+  When several rules match, the longest (most specific) rule host wins.
+* `bodySelectors` — CSS selectors tried in order; the first that
+  matches at least one element replaces the working document with the
+  matched element(s). No match keeps the full document, so an outlet
+  template change can never blank an article (list multiple selectors
+  to cover template variants, e.g. Corriere's `section.body-article`
+  vs the older `.container-body-article`).
+* `stripSelectors` — CSS selectors whose matches are removed
+  (outlet-specific chrome the generic class heuristics cannot name).
+* `stripTextPatterns` — case-insensitive regexes; matching `p`/`li`
+  elements are always dropped, containers/headings only when their
+  text is ≤ 80 chars (same policy as the locale stripper).
+
+Seeded rules: **ANSA** (iubenda "Consentless" subscription CTA:
+`.bt-Subscribe` / `.bt-abbonati` / `.prompt-to-accept`), **Corriere**
+(metered-paywall chrome: `[id^=pno-]`, `.modal-access` variants),
+**Repubblica** (related-link blocks: `.aside-story`,
+`.limio-fr-related`; body selector ported from FiveFilters).
+
+Adding a rule is a 4-step ritual:
+
+1. Append an entry to `ArticleOutletExtractionRules.json` (translate
+   the `fivefilters/ftr-site-config` entry if one exists — `body:`
+   XPath becomes a CSS selector, `strip:`/`strip_id_or_class:` become
+   `stripSelectors`).
+2. Make sure a fixture for the outlet exists under
+   `docs/rss/research/distiller-fixtures/` with its host set in
+   `ItalianDistillationFixturesTests.fixtures` (every rule must be
+   exercised by at least one fixture).
+3. Pin the outlet's specific chrome as `bannedSubstrings` on that
+   fixture.
+4. Run `MercuryTests/ItalianDistillationFixturesTests` and
+   `MercuryTests/ArticleOutletExtractionRulesTests`.
+
+Rule application is applied at distill time by
+`ArticleOutletRuleApplier` (SwiftSoup, never throws — parse failure
+returns the input) and logged with rule id, matched body selector and
+strip counts. Hosts with no rule skip the stage entirely, leaving the
+generic pipeline unchanged.
 
 ### Realistic HTTP fetching (issue #82)
 

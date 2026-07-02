@@ -11,7 +11,8 @@ struct ArticleContentEnrichmentService: Sendable {
     /// Version stamped on `Article.distillerVersion` for every record
     /// distilled by this service. Bump when the pipeline composition
     /// changes so old records re-distill on next ingest.
-    static let distillerVersion: Int = 1
+    /// v2: per-outlet extraction rule layer (#91).
+    static let distillerVersion: Int = 2
 
     /// Minimum word count required for the distilled output to be
     /// preferred over the raw extractor output. Below this threshold
@@ -22,6 +23,8 @@ struct ArticleContentEnrichmentService: Sendable {
     private let pageClient: ArticlePageClient
     private let extractor: ArticlePageContentExtractor
     private let sanitizer: ArticleHTMLSanitizer
+    private let outletRuleCatalog: ArticleOutletRuleCatalog
+    private let outletRuleApplier: ArticleOutletRuleApplier
     private let boilerplateRemover: ArticleBoilerplateRemover
     private let imageDeduplicator: ArticleImageDeduplicator
     private let localeStripper: ArticleLocaleBoilerplateStripper
@@ -32,6 +35,8 @@ struct ArticleContentEnrichmentService: Sendable {
         pageClient: ArticlePageClient = ArticlePageClient(),
         extractor: ArticlePageContentExtractor = ArticlePageContentExtractor(),
         sanitizer: ArticleHTMLSanitizer = ArticleHTMLSanitizer(),
+        outletRuleCatalog: ArticleOutletRuleCatalog = .bundled,
+        outletRuleApplier: ArticleOutletRuleApplier = ArticleOutletRuleApplier(),
         boilerplateRemover: ArticleBoilerplateRemover = ArticleBoilerplateRemover(),
         imageDeduplicator: ArticleImageDeduplicator = ArticleImageDeduplicator(),
         localeStripper: ArticleLocaleBoilerplateStripper = ArticleLocaleBoilerplateStripper(),
@@ -41,6 +46,8 @@ struct ArticleContentEnrichmentService: Sendable {
         self.pageClient = pageClient
         self.extractor = extractor
         self.sanitizer = sanitizer
+        self.outletRuleCatalog = outletRuleCatalog
+        self.outletRuleApplier = outletRuleApplier
         self.boilerplateRemover = boilerplateRemover
         self.imageDeduplicator = imageDeduplicator
         self.localeStripper = localeStripper
@@ -165,6 +172,7 @@ struct ArticleContentEnrichmentService: Sendable {
                 fallbackCleanedText: extraction.cleanedText,
                 heroURLString: resolvedImageURL?.absoluteString,
                 language: article.language,
+                host: article.articleURL.host,
                 requestID: requestID
             )
 
@@ -284,16 +292,46 @@ struct ArticleContentEnrichmentService: Sendable {
         fallbackCleanedText: String,
         heroURLString: String?,
         language: String?,
+        host: String?,
         requestID: String?
     ) -> DistillationOutput {
         let sanitized = sanitizer.sanitize(rawHTML)
+        // Per-outlet extraction rule (#91) — applied BEFORE the generic
+        // Readability-style pass. When the article host has a declared
+        // rule (ANSA Consentless CTA, Corriere paywall chrome,
+        // Repubblica link blocks) the rule narrows the document to the
+        // outlet's body container and strips outlet-specific chrome.
+        // Hosts without a rule pass through untouched.
+        let ruled: String
+        if let rule = outletRuleCatalog.rule(forHost: host) {
+            logger.debug(
+                "Per-outlet extraction rule matched",
+                category: .business,
+                service: "ArticleContentEnrichmentService",
+                requestID: requestID,
+                metadata: [
+                    "rule_id": rule.id,
+                    "host": host ?? "unknown"
+                ]
+            )
+            ruled = outletRuleApplier.applying(rule, to: sanitized, requestID: requestID)
+        } else {
+            logger.trace(
+                "No per-outlet extraction rule for host, generic pipeline only",
+                category: .business,
+                service: "ArticleContentEnrichmentService",
+                requestID: requestID,
+                metadata: ["host": host ?? "unknown"]
+            )
+            ruled = sanitized
+        }
         // Truncate at the Italian article terminator (#81). Most IT
         // outlets end the body with "Riproduzione riservata" and follow
         // it with newsletter CTAs, related-article grids, subscribe
         // prompts, and share strips. Cutting there is the single
         // highest-ROI cleanup step we can take.
         let truncated = ArticleContentEnrichmentService.truncatedAtTerminator(
-            html: sanitized,
+            html: ruled,
             language: language
         )
         let withoutBoilerplate = boilerplateRemover.cleaning(truncated)
