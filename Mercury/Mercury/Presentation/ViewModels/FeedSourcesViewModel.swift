@@ -60,6 +60,11 @@ final class FeedSourcesViewModel: ObservableObject {
     @Published private(set) var lastErrorMessage: String?
 
     private var service: UserPreferencesService
+    /// Optional cache cleanup seam (issue #94). When present, every
+    /// persisted region/outlet toggle triggers a purge of cached articles
+    /// from now-disabled sources (favorites are always preserved). `nil`
+    /// keeps previews and lightweight tests free of the article schema.
+    private var cacheMaintenance: ArticleCacheMaintenanceService?
     private let logger: AppLogger
     private var preference: UserPreference?
     /// Precomputed region -> outlets memo (issue #78). Built once from
@@ -69,13 +74,22 @@ final class FeedSourcesViewModel: ObservableObject {
     /// Cached available regions (in the order `RSSFeedCatalog` publishes).
     private var availableRegions: [RSSFeedRegion] = []
 
-    init(service: UserPreferencesService, logger: AppLogger = .shared) {
+    init(
+        service: UserPreferencesService,
+        cacheMaintenance: ArticleCacheMaintenanceService? = nil,
+        logger: AppLogger = .shared
+    ) {
         self.service = service
+        self.cacheMaintenance = cacheMaintenance
         self.logger = logger
     }
 
-    func replaceService(_ service: UserPreferencesService) {
+    func replaceService(
+        _ service: UserPreferencesService,
+        cacheMaintenance: ArticleCacheMaintenanceService? = nil
+    ) {
         self.service = service
+        self.cacheMaintenance = cacheMaintenance
     }
 
     /// Hydrate the picker from the persisted preferences. Safe to call

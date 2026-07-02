@@ -44,6 +44,10 @@ actor ArticleLocalStore {
         if let existing = try fetchEntity(id: id) {
             existing.title = article.title
             existing.sourceName = article.sourceName
+            // Keep the already-stamped source id when the incoming row does
+            // not carry one (issue #94): a legacy in-memory copy must not
+            // wipe the ingest-time stamp.
+            existing.sourceID = article.sourceID ?? existing.sourceID
             existing.sourceURL = article.sourceURL
             existing.articleURL = article.articleURL
             existing.publishedAt = article.publishedAt

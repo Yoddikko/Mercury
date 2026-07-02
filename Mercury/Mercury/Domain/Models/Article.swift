@@ -12,6 +12,10 @@ struct Article: Identifiable, Equatable, Sendable {
     let externalID: String?
     let title: String
     let sourceName: String
+    /// Stable `RSSFeedSource.id` of the outlet that produced this article,
+    /// stamped by `ArticleNormalizer` at ingest (issue #94). `nil` for
+    /// legacy cached rows persisted before the field existed.
+    let sourceID: String?
     let sourceURL: URL
     let articleURL: URL
     let publishedAt: Date
@@ -43,6 +47,7 @@ struct Article: Identifiable, Equatable, Sendable {
         externalID: String?,
         title: String,
         sourceName: String,
+        sourceID: String? = nil,
         sourceURL: URL,
         articleURL: URL,
         publishedAt: Date,
@@ -70,6 +75,7 @@ struct Article: Identifiable, Equatable, Sendable {
         self.externalID = externalID
         self.title = title
         self.sourceName = sourceName
+        self.sourceID = sourceID
         self.sourceURL = sourceURL
         self.articleURL = articleURL
         self.publishedAt = publishedAt
@@ -113,6 +119,7 @@ extension Article {
             externalID: externalID,
             title: title,
             sourceName: sourceName,
+            sourceID: sourceID,
             sourceURL: sourceURL,
             articleURL: articleURL,
             publishedAt: publishedAt,

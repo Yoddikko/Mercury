@@ -129,6 +129,7 @@ struct ArticleNormalizer: Sendable {
             externalID: sanitizedOptionalText(item.guid),
             title: cleanedTitle,
             sourceName: source.outletName,
+            sourceID: source.id,
             sourceURL: sourceURL,
             articleURL: articleURL,
             publishedAt: publishedAt,
