@@ -69,6 +69,39 @@ Score is based on:
 
 ---
 
+## Cache Replay & Retention (issue #94)
+
+The cold-start replay (`HomeViewModel.loadCachedArticles`) and search
+(`SearchViewModel`) apply the same Feed sources preferences as the
+network fetch, via `RSSSourceFilter.makeArticleAllowList`:
+
+* `Article` / `ArticleEntity` carry a nullable `sourceID` — the stable
+  `RSSFeedSource.id` stamped by `ArticleNormalizer` at ingest. The field
+  is additive, so SwiftData migrates existing stores lightweight-ly.
+* Rows with a `sourceID` are matched against the resolved outlet ids.
+  Legacy rows (`sourceID == nil`) fall back to matching `sourceName`
+  against the resolved outlets' display names.
+* When the preferences impose no filter (no enabled regions and no
+  hidden sources — the pre-onboarding state), replay stays unfiltered.
+
+`ArticleCacheMaintenanceService` owns cache cleanup:
+
+* **Purge on preference change** — every persisted region/outlet toggle
+  in `FeedSourcesViewModel` deletes cached articles from now-disabled
+  sources (best-effort; the replay filter still hides leftovers if the
+  purge fails).
+* **Retention sweep** — at refresh time, non-favorite cached articles
+  whose `createdAt` (ingest time) is older than 30 days are deleted
+  (`defaultRetentionDays`). `createdAt` is used instead of `publishedAt`
+  because unparsable feed dates persist as `.distantPast`.
+* Favorited articles (`isBookmarked == true`) are **never** deleted by
+  either operation.
+
+All maintenance operations log purged-row counts through `AppLogger`
+(`cache` category) with request-id propagation.
+
+---
+
 ## RSS Ingestion (Debug)
 
 Debug mode includes a dedicated RSS diagnostics flow to validate ingestion quality
