@@ -1,0 +1,6481 @@
+{
+ "generated_at": "2026-07-01T22:45:20.390604+00:00",
+ "user_agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1",
+ "timeout_s": 12,
+ "concurrency": 4,
+ "results": [
+  {
+   "id": "derstandard-international",
+   "outlet": "Der Standard – International",
+   "region": "austria",
+   "url": "https://www.derstandard.at/rss/international",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.derstandard.at/rss/international",
+   "feed_kind": "rss",
+   "item_count": 36,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1070,
+     "long_paragraphs": 5,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.derstandard.at/story/3000000329496/putin-bringt-seine-superyachten-offenbar-vor-ukrainischen-drohnenangriffen-in-sicherheit?ref=rss"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1281,
+     "long_paragraphs": 5,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.derstandard.at/jetzt/livebericht/3000000329319/dekrainische-tankstellen-an?ref=rss"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "diepresse-politik",
+   "outlet": "Die Presse – Politik",
+   "region": "austria",
+   "url": "https://www.diepresse.com/rss/Politik",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.diepresse.com/rss/Politik",
+   "feed_kind": "rss",
+   "item_count": 10,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1693,
+     "long_paragraphs": 5,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.diepresse.com/34411777/van-der-bellen-vor-oesterreich-match-bitte-kinder-laenger-aufbleiben-lassen"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 5284,
+     "long_paragraphs": 8,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.diepresse.com/34094658/die-grosse-staatsreform-was-sich-bei-bildung-und-gesundheit-jetzt-aendert"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "kleinezeitung",
+   "outlet": "Kleine Zeitung",
+   "region": "austria",
+   "url": "https://www.kleinezeitung.at/rss/",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.kleinezeitung.at/rss/hp_stmk",
+   "feed_kind": "rss",
+   "item_count": 97,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 401,
+     "error": null,
+     "verdict": "http_401",
+     "url": "https://www.kleinezeitung.at/artikel/29151722/fussball-wm-match-slider"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3445,
+     "long_paragraphs": 9,
+     "jsonld_body_chars": 228,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.kleinezeitung.at/artikel/34124582/gewitter-mit-hoher-energie-rollen-heute-ueber-die-steiermark"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "orf-news",
+   "outlet": "ORF – News",
+   "region": "austria",
+   "url": "https://rss.orf.at/news.xml",
+   "main": true,
+   "feed_http_code": 200,
+   "feed_final_url": "https://rss.orf.at/news.xml",
+   "feed_kind": "rdf",
+   "item_count": 24,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1185,
+     "long_paragraphs": 4,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://orf.at/stories/3435008/"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 6163,
+     "long_paragraphs": 17,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://orf.at/stories/3434866/"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "orf-sport",
+   "outlet": "ORF – Sport",
+   "region": "austria",
+   "url": "https://rss.orf.at/news.xml?sports",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://rss.orf.at/news.xml?sports",
+   "feed_kind": "rdf",
+   "item_count": 24,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1185,
+     "long_paragraphs": 4,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://orf.at/stories/3435008/"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 6163,
+     "long_paragraphs": 17,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://orf.at/stories/3434866/"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "destandaard-nieuws",
+   "outlet": "De Standaard – Nieuws",
+   "region": "belgium",
+   "url": "https://www.standaard.be/rss/section/1f2838d4-99ea-49f0-9102-138784c7ea7c",
+   "main": false,
+   "feed_http_code": 403,
+   "feed_final_url": "https://www.standaard.be/rss/section/1f2838d4-99ea-49f0-9102-138784c7ea7c",
+   "initial_classification": "dead",
+   "initial_reason": "feed HTTP 403",
+   "final_classification": "ok",
+   "disposition": "kept",
+   "recheck": "curl 403 on feed; URLSession 200, articles extract (16-17k chars)"
+  },
+  {
+   "id": "hln",
+   "outlet": "Het Laatste Nieuws",
+   "region": "belgium",
+   "url": "https://www.hln.be/rss.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.hln.be/home/rss.xml",
+   "feed_kind": "rss",
+   "item_count": 30,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 403,
+     "error": null,
+     "verdict": "http_403",
+     "url": "https://www.hln.be/rode-duivels/live-het-delirium-youri-tielemans-zet-in-slotminuten-van-verlengingen-penalty-om-rode-duivels-op-weg-naar-volgende-ronde~vadb5d8fe/"
+    },
+    {
+     "http_code": 403,
+     "error": null,
+     "verdict": "http_403",
+     "url": "https://www.hln.be/wk-voetbal/live-kan-algerije-doorstoten-tegen-zwitserland~a910df78/"
+    }
+   ],
+   "initial_classification": "dead",
+   "initial_reason": "no extractable article body in sampled pages (http_403; http_403)",
+   "final_classification": "dead",
+   "disposition": "removed",
+   "recheck": "DPG Media consent interstitial: article pages return an 8KB JS shell with no content (URLSession too)"
+  },
+  {
+   "id": "lesoir-une",
+   "outlet": "Le Soir – Une",
+   "region": "belgium",
+   "url": "https://www.lesoir.be/rss/section/0.xml",
+   "main": false,
+   "feed_http_code": 403,
+   "feed_final_url": "https://www.lesoir.be/rss/section/0.xml",
+   "initial_classification": "dead",
+   "initial_reason": "feed HTTP 403",
+   "final_classification": "dead",
+   "disposition": "removed",
+   "recheck": "feed returns an empty channel (0 items); ARC alternates 403/404"
+  },
+  {
+   "id": "rtbf-belgique",
+   "outlet": "RTBF Info – Belgique",
+   "region": "belgium",
+   "url": "https://rss.rtbf.be/article/rss/highlight_rtbf_info-belgique.xml",
+   "main": true,
+   "feed_http_code": 200,
+   "feed_final_url": "https://rss.rtbf.be/article/rss/highlight_rtbf_info-belgique.xml",
+   "feed_kind": "rss",
+   "item_count": 20,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4546,
+     "long_paragraphs": 13,
+     "jsonld_body_chars": 3549,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.rtbf.be/article/visites-domiciliaires-le-projet-suscite-de-nombreuses-questions-jusque-dans-la-majorite-11751147"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2518,
+     "long_paragraphs": 6,
+     "jsonld_body_chars": 1472,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.rtbf.be/article/weekend-catastrophique-et-situation-desastreuse-des-organisations-alertent-sur-des-problemes-rencontres-lors-de-la-canicule-avec-les-numeros-d-urgence-112-et-1733-11751117"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "rtbf-top",
+   "outlet": "RTBF Info – Top stories",
+   "region": "belgium",
+   "url": "https://rss.rtbf.be/article/rss/highlight_rtbf_info.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://rss.rtbf.be/article/rss/highlight_rtbf_info.xml",
+   "feed_kind": "rss",
+   "item_count": 20,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1808,
+     "long_paragraphs": 6,
+     "jsonld_body_chars": 808,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.rtbf.be/article/direct-video-coupe-du-monde-2026-belgique-senegal-lukebakio-touche-la-barre-11750079"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 8686,
+     "long_paragraphs": 20,
+     "jsonld_body_chars": 8008,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.rtbf.be/article/le-roi-leopold-ii-entreprenant-et-fin-stratege-colonise-des-peuples-alors-consideres-comme-inferieurs-l-epreuve-du-ceb-declenche-une-polemique-11750763"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "agencia-brasil",
+   "outlet": "Agência Brasil",
+   "region": "brazil",
+   "url": "https://agenciabrasil.ebc.com.br/rss.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://agenciabrasil.ebc.com.br/rss.xml",
+   "feed_kind": "rss",
+   "item_count": 10,
+   "newest_item_age_days": 1038.1,
+   "initial_classification": "dead",
+   "initial_reason": "stale feed: newest item is 1038 days old",
+   "final_classification": "ok",
+   "disposition": "replaced",
+   "replacement_url": "https://agenciabrasil.ebc.com.br/rss/ultimasnoticias/feed.xml",
+   "recheck": "old rss.xml frozen ~2023-08 (1038 days stale); ultimasnoticias feed is fresh, articles extract 9-13k chars"
+  },
+  {
+   "id": "brasil-wire-en",
+   "outlet": "Brasil Wire (EN)",
+   "region": "brazil",
+   "url": "https://www.brasilwire.com/feed/",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.brasilwire.com/feed/",
+   "feed_kind": "rss",
+   "item_count": 10,
+   "newest_item_age_days": 2.6,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 8911,
+     "long_paragraphs": 38,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.brasilwire.com/in-offering-brazil-to-the-us-flavio-bolsonaro-endangers-our-sovereignty-and-democracy/?utm_source=rss&utm_medium=rss&utm_campaign=in-offering-brazil-to-the-us-flavio-bolsonaro-endangers-our-sovereignty-and-democracy&utm_source=rss&utm_medium=rss&utm_campaign=in-offering-brazil-to-the-us-flavio-bolsonaro-endangers-our-sovereignty-and-democracy"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 13082,
+     "long_paragraphs": 16,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.brasilwire.com/bolsomaster-bolsonaro-ties-to-brazils-biggest-banking-fraud-in-history-exposed/?utm_source=rss&utm_medium=rss&utm_campaign=bolsomaster-bolsonaro-ties-to-brazils-biggest-banking-fraud-in-history-exposed&utm_source=rss&utm_medium=rss&utm_campaign=bolsomaster-bolsonaro-ties-to-brazils-biggest-banking-fraud-in-history-exposed"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "folha-emcima",
+   "outlet": "Folha de S.Paulo – Em cima da hora",
+   "region": "brazil",
+   "url": "https://feeds.folha.uol.com.br/emcimadahora/rss091.xml",
+   "main": true,
+   "feed_http_code": 200,
+   "feed_final_url": "https://feeds.folha.uol.com.br/emcimadahora/rss091.xml",
+   "feed_kind": "rss",
+   "item_count": 100,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 6859,
+     "long_paragraphs": 28,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://redir.folha.com.br/redir/online/emcimadahora/rss091/*https://www1.folha.uol.com.br/mundo/2026/07/trump-faz-sua-1a-viagem-em-aviao-de-bilhoes-que-ganhou-de-presente-do-qatar.shtml"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1863,
+     "long_paragraphs": 8,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://redir.folha.com.br/redir/online/emcimadahora/rss091/*https://f5.folha.uol.com.br/celebridades/2026/07/the-rock-treina-no-rio-durante-divulgacao-do-live-action-de-moana.shtml"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "g1-globo",
+   "outlet": "G1 – Globo",
+   "region": "brazil",
+   "url": "https://g1.globo.com/rss/g1/",
+   "main": true,
+   "feed_http_code": 200,
+   "feed_final_url": "https://g1.globo.com/rss/g1/",
+   "feed_kind": "rss",
+   "item_count": 100,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3764,
+     "long_paragraphs": 19,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://g1.globo.com/sp/sorocaba-jundiai/noticia/2026/07/01/operacao-policia-civil-itu.ghtml"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2981,
+     "long_paragraphs": 17,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://g1.globo.com/ba/bahia/noticia/2026/07/01/pessoas-sao-encontradas-mortas-em-itabela.ghtml"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "riotimes-en",
+   "outlet": "The Rio Times (EN)",
+   "region": "brazil",
+   "url": "https://riotimesonline.com/feed/",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.riotimesonline.com/feed/",
+   "feed_kind": "rss",
+   "item_count": 10,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 5617,
+     "long_paragraphs": 37,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.riotimesonline.com/world-cup-2026-mexico-england-preview/"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 5908,
+     "long_paragraphs": 36,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.riotimesonline.com/world-cup-2026-england-dr-congo-2-1/"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "uol-home",
+   "outlet": "UOL",
+   "region": "brazil",
+   "url": "https://rss.home.uol.com.br/index.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.uol.com.br/vueland/api/?loadComponent=XmlFeedRss",
+   "feed_kind": "rss",
+   "item_count": 115,
+   "newest_item_age_days": -0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 16918,
+     "long_paragraphs": 79,
+     "jsonld_body_chars": 282,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://placar.uol.com.br/esporte/futebol/copa-do-mundo/2026/07/01/belgica-x-senegal.htm"
+    },
+    {
+     "http_code": 403,
+     "error": null,
+     "verdict": "http_403",
+     "url": "https://noticias.uol.com.br/colunas/mariana-sanches/2026/07/01/eua-impoem-sancoes-a-pessoas-e-empresas-supostamente-ligadas-ao-pcc.htm"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "bta-bulgaria-en",
+   "outlet": "BTA – Bulgaria (EN)",
+   "region": "bulgaria",
+   "url": "https://www.bta.bg/en/news/bulgaria/rss",
+   "main": true,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.bta.bg/en/news/bulgaria/rss",
+   "feed_kind": "rss",
+   "item_count": 20,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1520,
+     "long_paragraphs": 5,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.bta.bg/en/news/bulgaria/1159450-bulgarian-top-diplomat-meets-council-of-europe-human-rights-commissioner"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4676,
+     "long_paragraphs": 13,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.bta.bg/en/news/bulgaria/1159383-parents-hold-nationwide-protest-for-higher-maternity-allowances"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "bta-economy-en",
+   "outlet": "BTA – Economy (EN)",
+   "region": "bulgaria",
+   "url": "https://www.bta.bg/en/news/economy/rss",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.bta.bg/en/news/economy/rss",
+   "feed_kind": "rss",
+   "item_count": 20,
+   "newest_item_age_days": 0.2,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1828,
+     "long_paragraphs": 6,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.bta.bg/en/news/economy/1159375-finance-ministry-expects-eur-2-4-bln-government-deficit-by-end-june"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2211,
+     "long_paragraphs": 7,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.bta.bg/en/news/economy/1159381-financial-regulator-refers-dallbogg-insurer-to-prosecutors-over-asset-sale"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "bta-world-en",
+   "outlet": "BTA – World (EN)",
+   "region": "bulgaria",
+   "url": "https://www.bta.bg/en/news/world/rss",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.bta.bg/en/news/world/rss",
+   "feed_kind": "rss",
+   "item_count": 20,
+   "newest_item_age_days": 0.2,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1808,
+     "long_paragraphs": 5,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.bta.bg/en/news/world/1159378-stronger-bulgaria-means-stronger-europe-nato-supreme-allied-commander-says"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1645,
+     "long_paragraphs": 5,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.bta.bg/en/news/world/1159339-no-specific-nato-initiative-on-strait-of-hormuz-all-options-are-being-explored-"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "dr-indland",
+   "outlet": "DR Nyheder – Indland",
+   "region": "denmark",
+   "url": "https://www.dr.dk/nyheder/service/feeds/indland",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.dr.dk/nyheder/service/feeds/indland",
+   "feed_kind": "rss",
+   "item_count": 20,
+   "newest_item_age_days": 0.2,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 9158,
+     "long_paragraphs": 51,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.dr.dk/nyheder/indland/betjent-anklages-sparke-ved anholdelse-der-gik-viralt-her-er-hvad-vi-ved-om-forloebet"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 406,
+     "long_paragraphs": 1,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "thin",
+     "url": "https://www.dr.dk/nyheder/indland/reels/er-sommerens-studenter-blevet-dumme-af-kunstig-intelligens"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "dr-seneste",
+   "outlet": "DR Nyheder – Alle Nyheder",
+   "region": "denmark",
+   "url": "https://www.dr.dk/nyheder/service/feeds/allenyheder",
+   "main": true,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.dr.dk/nyheder/service/feeds/allenyheder",
+   "feed_kind": "rss",
+   "item_count": 20,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 10223,
+     "long_paragraphs": 65,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.dr.dk/nyheder/seneste/mistaenkeligt-forhold-fik-politiet-til-rykke-ud-til-russisk-ambassade"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 10223,
+     "long_paragraphs": 65,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.dr.dk/nyheder/seneste/fire-venezuelanske-betjente-anholdt-efter-jordskaelv"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "dr-udland",
+   "outlet": "DR Nyheder – Udland",
+   "region": "denmark",
+   "url": "https://www.dr.dk/nyheder/service/feeds/udland",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.dr.dk/nyheder/service/feeds/udland",
+   "feed_kind": "rss",
+   "item_count": 20,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4267,
+     "long_paragraphs": 27,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.dr.dk/nyheder/udland/hernan-kan-vaere-en-af-de-sidste-der-findes-i-live-kan-du-bevaege-dig-mod-lyset"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1863,
+     "long_paragraphs": 12,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.dr.dk/nyheder/udland/zelenskyj-advarer-om-stort-forestaaende-angreb-paa-ukraine-og-haster-hjem-fra-moede-i-dublin"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "politiken-forside",
+   "outlet": "Politiken – Forside",
+   "region": "denmark",
+   "url": "https://politiken.dk/rss/senestenyt.rss",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://politiken.dk/rss/senestenyt.rss",
+   "feed_kind": "rss",
+   "item_count": 20,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1125,
+     "long_paragraphs": 6,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://politiken.dk/kultur/musik/roskildefestival/art10772524/Hun-var-b%C3%A5de-kompromisl%C3%B8s-og-dybt-politisk"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2494,
+     "long_paragraphs": 15,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://politiken.dk/danmark/art10904130/Kystsikringsprojekt-i-Esbjerg-viser-tegn-p%C3%A5-%C3%B8get-biodiversitet"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "bbc-world",
+   "outlet": "BBC News – World",
+   "region": "europeWide",
+   "url": "https://feeds.bbci.co.uk/news/world/rss.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://feeds.bbci.co.uk/news/world/rss.xml",
+   "feed_kind": "rss",
+   "item_count": 32,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 5891,
+     "long_paragraphs": 31,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.bbc.co.uk/news/articles/c05yv34qlnlo?at_medium=RSS&at_campaign=rss"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4481,
+     "long_paragraphs": 20,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.bbc.co.uk/news/articles/c33yjk0ldkdo?at_medium=RSS&at_campaign=rss"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "dw-all-en",
+   "outlet": "Deutsche Welle – All (EN)",
+   "region": "europeWide",
+   "url": "https://rss.dw.com/rdf/rss-en-all",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://rss.dw.com/rdf/rss-en-all",
+   "feed_kind": "rdf",
+   "item_count": 144,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4369,
+     "long_paragraphs": 20,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.dw.com/en/us-declines-to-renew-usmca-trade-pact-with-mexico-canada/a-77793686?maca=en-rss-en-all-1573-rdf"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 5004,
+     "long_paragraphs": 15,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.dw.com/en/explosion-in-monaco-who-is-vadym-yermolaiev/a-77792178?maca=en-rss-en-all-1573-rdf"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "dw-europe-en",
+   "outlet": "Deutsche Welle – Europe (EN)",
+   "region": "europeWide",
+   "url": "https://rss.dw.com/rdf/rss-en-eu",
+   "main": true,
+   "feed_http_code": 200,
+   "feed_final_url": "https://rss.dw.com/rdf/rss-en-eu",
+   "feed_kind": "rdf",
+   "item_count": 20,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 5004,
+     "long_paragraphs": 15,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.dw.com/en/explosion-in-monaco-who-is-vadym-yermolaiev/a-77792178?maca=en-rss-en-eu-2092-rdf"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 6480,
+     "long_paragraphs": 31,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.dw.com/en/russia-s-fuel-crisis-is-putin-under-pressure/a-77783803?maca=en-rss-en-eu-2092-rdf"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "euractiv-news",
+   "outlet": "EURACTIV – News",
+   "region": "europeWide",
+   "url": "https://www.euractiv.com/?feed=mcfeed",
+   "main": true,
+   "feed_http_code": 403,
+   "feed_final_url": "https://www.euractiv.com/?feed=mcfeed",
+   "initial_classification": "dead",
+   "initial_reason": "feed HTTP 403",
+   "final_classification": "ok",
+   "disposition": "kept",
+   "recheck": "curl 403 on feed; URLSession 200 (24 fresh items), articles extract (~10k chars)"
+  },
+  {
+   "id": "euronews-world",
+   "outlet": "Euronews – World",
+   "region": "europeWide",
+   "url": "https://www.euronews.com/rss?format=mrss&level=theme&name=news",
+   "main": true,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.euronews.com/rss?format=mrss&level=theme&name=news",
+   "feed_kind": "rss",
+   "item_count": 50,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 8542,
+     "long_paragraphs": 33,
+     "jsonld_body_chars": 4999,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "http://www.euronews.com/2026/07/01/eu-looks-to-south-caucasus-for-solutions-as-von-der-leyen-holds-talks-with-president-aliye"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 6203,
+     "long_paragraphs": 27,
+     "jsonld_body_chars": 2537,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "http://www.euronews.com/2026/07/01/two-arrested-after-unfurling-power-of-love-banner-on-empire-state-building-antenna"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "france24-europe-en",
+   "outlet": "France 24 – Europe (EN)",
+   "region": "europeWide",
+   "url": "https://www.france24.com/en/europe/rss",
+   "main": true,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.france24.com/en/europe/rss",
+   "feed_kind": "rss",
+   "item_count": 30,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 403,
+     "error": null,
+     "verdict": "http_403",
+     "url": "https://www.france24.com/en/europe/20260701-fire-breaks-out-in-central-kyiv-after-explosion-during-air-raid-alert"
+    },
+    {
+     "http_code": 403,
+     "error": null,
+     "verdict": "http_403",
+     "url": "https://www.france24.com/en/raids-in-europe-over-alleged-far-right-embezzlement-eu-prosecutors"
+    }
+   ],
+   "initial_classification": "dead",
+   "initial_reason": "no extractable article body in sampled pages (http_403; http_403)",
+   "final_classification": "ok",
+   "disposition": "kept",
+   "recheck": "curl 403 on article pages; URLSession 200 with full body"
+  },
+  {
+   "id": "france24-top-en",
+   "outlet": "France 24 – Top stories (EN)",
+   "region": "europeWide",
+   "url": "https://www.france24.com/en/rss",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.france24.com/en/rss",
+   "feed_kind": "rss",
+   "item_count": 24,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 403,
+     "error": null,
+     "verdict": "http_403",
+     "url": "https://www.france24.com/en/americas/20260701-two-arrested-after-scaling-empire-state-building-antenna-for-marriage-proposal"
+    },
+    {
+     "http_code": 403,
+     "error": null,
+     "verdict": "http_403",
+     "url": "https://www.france24.com/en/europe/20260701-fire-breaks-out-in-central-kyiv-after-explosion-during-air-raid-alert"
+    }
+   ],
+   "initial_classification": "dead",
+   "initial_reason": "no extractable article body in sampled pages (http_403; http_403)",
+   "final_classification": "ok",
+   "disposition": "kept",
+   "recheck": "curl 403 on article pages; URLSession 200 with full body"
+  },
+  {
+   "id": "guardian-world",
+   "outlet": "The Guardian – World",
+   "region": "europeWide",
+   "url": "https://www.theguardian.com/world/rss",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.theguardian.com/world/rss",
+   "feed_kind": "rss",
+   "item_count": 45,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3250,
+     "long_paragraphs": 15,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.theguardian.com/world/2026/jul/01/sudan-rsf-rapid-support-forces-crimes-against-humanity-el-fasher-amnesty-ethnic-cleansing"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 5014,
+     "long_paragraphs": 22,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.theguardian.com/world/2026/jul/01/witch-hunt-in-niger-as-military-regime-rounds-up-lgbtq-population"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "politico-eu-playbook",
+   "outlet": "Politico Europe – Playbook",
+   "region": "europeWide",
+   "url": "https://rss.politico.com/playbook.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://rss.politico.com/playbook.xml",
+   "feed_kind": "rss",
+   "item_count": 30,
+   "newest_item_age_days": 0.2,
+   "articles": [
+    {
+     "http_code": 403,
+     "error": null,
+     "verdict": "http_403",
+     "url": "https://www.politico.com/newsletters/playbook/2026/07/01/the-insurgent-lefts-newest-star-00983534"
+    },
+    {
+     "http_code": 403,
+     "error": null,
+     "verdict": "http_403",
+     "url": "https://www.politico.com/newsletters/playbook/2026/06/30/the-supreme-court-justices-to-watch-today-00981451"
+    }
+   ],
+   "initial_classification": "dead",
+   "initial_reason": "no extractable article body in sampled pages (http_403; http_403)",
+   "final_classification": "ok",
+   "disposition": "kept",
+   "recheck": "curl 403 on article pages; URLSession 200, ~27-30k chars body"
+  },
+  {
+   "id": "helsinki-times-en",
+   "outlet": "Helsinki Times (EN)",
+   "region": "finland",
+   "url": "https://www.helsinkitimes.fi/?format=feed&type=rss",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.helsinkitimes.fi/?format=feed&type=rss",
+   "feed_kind": "rss",
+   "item_count": 16,
+   "newest_item_age_days": 0.5,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 7148,
+     "long_paragraphs": 34,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.helsinkitimes.fi/finland/finland-news/domestic/28997-questions-grow-over-35m-state-backing-for-helsinki-garden.html"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3571,
+     "long_paragraphs": 18,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.helsinkitimes.fi/world-int/28996-media-russia-closes-several-rail-border-crossings-with-finland.html"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "hs-etusivu",
+   "outlet": "Helsingin Sanomat – Etusivu",
+   "region": "finland",
+   "url": "https://www.hs.fi/rss/tuoreimmat.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.hs.fi/rss/tuoreimmat.xml",
+   "feed_kind": "rss",
+   "item_count": 99,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 898,
+     "long_paragraphs": 5,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall",
+      "metered"
+     ],
+     "verdict": "thin",
+     "url": "https://www.hs.fi/maailma/art-2000012115401.html"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1142,
+     "long_paragraphs": 6,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall",
+      "metered"
+     ],
+     "verdict": "ok",
+     "url": "https://www.hs.fi/urheilu/art-2000012114838.html"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "yle-news-en",
+   "outlet": "Yle News (EN)",
+   "region": "finland",
+   "url": "https://feeds.yle.fi/uutiset/v1/recent.rss?publisherIds=YLE_NEWS&concepts=18-34837",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://feeds.yle.fi/uutiset/v1/recent.rss?publisherIds=YLE_NEWS&concepts=18-34837",
+   "feed_kind": "rss",
+   "item_count": 30,
+   "newest_item_age_days": 0.4,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2704,
+     "long_paragraphs": 14,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://yle.fi/a/74-20234374?origin=rss"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1567,
+     "long_paragraphs": 11,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://yle.fi/a/74-20234320?origin=rss"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "yle-uutiset",
+   "outlet": "Yle Uutiset",
+   "region": "finland",
+   "url": "https://feeds.yle.fi/uutiset/v1/recent.rss?publisherIds=YLE_UUTISET",
+   "main": true,
+   "feed_http_code": 200,
+   "feed_final_url": "https://feeds.yle.fi/uutiset/v1/recent.rss?publisherIds=YLE_UUTISET",
+   "feed_kind": "rss",
+   "item_count": 30,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 574,
+     "long_paragraphs": 2,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "thin",
+     "url": "https://yle.fi/a/74-20234443?origin=rss"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1461,
+     "long_paragraphs": 8,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://yle.fi/a/74-20234440?origin=rss"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "france24-top-fr",
+   "outlet": "France 24 – Top stories (EN)",
+   "region": "france",
+   "url": "https://www.france24.com/en/rss",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.france24.com/en/rss",
+   "feed_kind": "rss",
+   "item_count": 24,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 403,
+     "error": null,
+     "verdict": "http_403",
+     "url": "https://www.france24.com/en/americas/20260701-two-arrested-after-scaling-empire-state-building-antenna-for-marriage-proposal"
+    },
+    {
+     "http_code": 403,
+     "error": null,
+     "verdict": "http_403",
+     "url": "https://www.france24.com/en/europe/20260701-fire-breaks-out-in-central-kyiv-after-explosion-during-air-raid-alert"
+    }
+   ],
+   "initial_classification": "dead",
+   "initial_reason": "no extractable article body in sampled pages (http_403; http_403)",
+   "final_classification": "ok",
+   "disposition": "kept",
+   "recheck": "curl 403 on article pages; URLSession 200 with full body"
+  },
+  {
+   "id": "franceinfo-titres",
+   "outlet": "France Info – Titres",
+   "region": "france",
+   "url": "https://www.francetvinfo.fr/titres.rss",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.franceinfo.fr/titres.rss",
+   "feed_kind": "rss",
+   "item_count": 31,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": null,
+     "error": "curl: (3) bad range in URL position 270:\nhttps://www.franceinfo.fr/environnement/evenements-meteorologiques-extremes/vagues-de-chaleur-canicules/meteo-france-prevoit-sans-doute-un-nouvel-episode-de-fo",
+     "verdict": "fetch_error",
+     "url": "https://www.franceinfo.fr/environnement/evenements-meteorologiques-extremes/vagues-de-chaleur-canicules/meteo-france-prevoit-sans-doute-un-nouvel-episode-de-fortes-chaleurs-a-partir-de-ce-week-end-avec-entre-30-c-et-38-c-dans-l-ouest-et-le-sud_8089022.html#xtor=RSS-3-[lestitres]"
+    },
+    {
+     "http_code": null,
+     "error": "curl: (3) bad range in URL position 219:\nhttps://www.franceinfo.fr/coupe-du-monde/l-angleterre-s-en-sort-de-justesse-contre-la-republique-democratique-du-congo-et-retrouvera-le-mexique-en-huitiemes-de",
+     "verdict": "fetch_error",
+     "url": "https://www.franceinfo.fr/coupe-du-monde/l-angleterre-s-en-sort-de-justesse-contre-la-republique-democratique-du-congo-et-retrouvera-le-mexique-en-huitiemes-de-finale-de-la-coupe-du-monde-2026_8088983.html#xtor=RSS-3-[lestitres]"
+    }
+   ],
+   "initial_classification": "dead",
+   "initial_reason": "no extractable article body in sampled pages (fetch_error; fetch_error)",
+   "final_classification": "ok",
+   "disposition": "kept",
+   "recheck": "curl HTTP/2 fetch error on articles; URLSession 200, 12-15k chars + JSON-LD articleBody"
+  },
+  {
+   "id": "huffpost-fr",
+   "outlet": "Le HuffPost France",
+   "region": "france",
+   "url": "https://www.huffingtonpost.fr/feeds/index.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.huffingtonpost.fr/rss/all_headline.xml",
+   "feed_kind": "rss",
+   "item_count": 20,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4147,
+     "long_paragraphs": 14,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.huffingtonpost.fr/france/article/le-premier-feu-de-l-ete-ravage-800-hectares-dans-l-aude-la-situation-stabilisee_281888.html"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4295,
+     "long_paragraphs": 13,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.huffingtonpost.fr/sport/article/meteo-protocole-on-ne-voit-pas-comment-le-8e-de-finale-des-bleus-pourrait-se-derouler-normalement_281822.html"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "ladepeche",
+   "outlet": "La Dépêche du Midi",
+   "region": "france",
+   "url": "https://www.ladepeche.fr/rss.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.ladepeche.fr/rss.xml",
+   "feed_kind": "rss",
+   "item_count": 100,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1673,
+     "long_paragraphs": 5,
+     "jsonld_body_chars": 1382,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ladepeche.fr/2026/07/01/il-a-disparu-quelques-instants-un-enfant-de-deux-ans-et-demi-meurt-noye-dans-une-riviere-des-pyrenees-orientales-13448083.php"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2268,
+     "long_paragraphs": 9,
+     "jsonld_body_chars": 1586,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ladepeche.fr/2026/07/01/tfc-deja-condamne-pour-le-meurtre-du-supporter-toulousain-brice-taton-un-hooligan-serbe-implique-dans-la-violente-agression-dun-entraineur-du-partizan-13448111.php"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "lemonde-europe-en",
+   "outlet": "Le Monde – Europe (EN)",
+   "region": "france",
+   "url": "https://www.lemonde.fr/en/europe/rss_full.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.lemonde.fr/en/europe/rss_full.xml",
+   "feed_kind": "rss",
+   "item_count": 20,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 402,
+     "error": null,
+     "verdict": "http_402",
+     "url": "https://www.lemonde.fr/en/economy/article/2026/07/01/starlink-pushes-back-against-eu-imposed-restrictions-on-satellite-telephony_6755058_19.html"
+    },
+    {
+     "http_code": 402,
+     "error": null,
+     "verdict": "http_402",
+     "url": "https://www.lemonde.fr/en/international/article/2026/07/01/us-signs-agreement-to-build-permanent-embassy-in-jerusalem_6755057_4.html"
+    }
+   ],
+   "initial_classification": "dead",
+   "initial_reason": "no extractable article body in sampled pages (http_402; http_402)",
+   "final_classification": "ok",
+   "disposition": "kept",
+   "recheck": "curl 402 on article pages; URLSession 200, 11-13k chars body"
+  },
+  {
+   "id": "lemonde-une",
+   "outlet": "Le Monde – À la une",
+   "region": "france",
+   "url": "https://www.lemonde.fr/rss/une.xml",
+   "main": true,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.lemonde.fr/rss/une.xml",
+   "feed_kind": "rss",
+   "item_count": 16,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 402,
+     "error": null,
+     "verdict": "http_402",
+     "url": "https://www.lemonde.fr/international/article/2026/07/01/les-russes-sentent-que-la-guerre-est-arrivee-sur-leur-territoire-en-trois-heures-de-nuit-des-unites-speciales-ukrainiennes-arment-et-lancent-leurs-drones-loin-derriere-les-lignes-ennemies_6717604_3210.html"
+    },
+    {
+     "http_code": 402,
+     "error": null,
+     "verdict": "http_402",
+     "url": "https://www.lemonde.fr/politique/article/2026/07/01/presidentielle-2027-les-questions-que-souleve-le-choix-des-dates-du-scrutin_6717597_823448.html"
+    }
+   ],
+   "initial_classification": "dead",
+   "initial_reason": "no extractable article body in sampled pages (http_402; http_402)",
+   "final_classification": "ok",
+   "disposition": "kept",
+   "recheck": "curl 402 on article pages; URLSession 200, 17k chars body"
+  },
+  {
+   "id": "lobs-une",
+   "outlet": "L'Obs – À la une",
+   "region": "france",
+   "url": "https://www.nouvelobs.com/a-la-une/rss.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.nouvelobs.com/a-la-une/rss.xml",
+   "feed_kind": "rss",
+   "item_count": 288,
+   "newest_item_age_days": 0.2,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4224,
+     "long_paragraphs": 18,
+     "jsonld_body_chars": 1230,
+     "paywall_hits": [
+      "paywall",
+      "réservé aux abonnés"
+     ],
+     "verdict": "ok",
+     "url": "https://www.nouvelobs.com/histoire/20260701.OBS116317/qu-est-devenu-le-reve-americain-c-est-l-opium-des-americains-il-refrene-les-velleites-revolutionnaires-du-peuple.html"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3970,
+     "long_paragraphs": 17,
+     "jsonld_body_chars": 1451,
+     "paywall_hits": [
+      "paywall",
+      "réservé aux abonnés"
+     ],
+     "verdict": "ok",
+     "url": "https://www.nouvelobs.com/politique/20260701.OBS116318/sur-la-question-climatique-il-y-a-clairement-de-quoi-proposer-une-censure-les-ecolos-soutenus-par-lfi-vent-debout-contre-l-executif.html"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "mediapart-articles",
+   "outlet": "Mediapart – Articles",
+   "region": "france",
+   "url": "https://www.mediapart.fr/articles/feed",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.mediapart.fr/articles/feed",
+   "feed_kind": "rss",
+   "item_count": 10,
+   "newest_item_age_days": 0.2,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 7718,
+     "long_paragraphs": 25,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.mediapart.fr/journal/france/010726/la-mefiance-envers-les-personnes-immigrees-s-ancre-d-annee-en-annee-dans-la-societe-francaise"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 7694,
+     "long_paragraphs": 26,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.mediapart.fr/journal/ecologie/010726/sainte-soline-la-cour-d-appel-confirme-les-condamnations-de-militants"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "ouestfrance-encontinu",
+   "outlet": "Ouest-France – En continu",
+   "region": "france",
+   "url": "https://www.ouest-france.fr/rss-en-continu.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.ouest-france.fr/rss/une",
+   "feed_kind": "rss",
+   "item_count": 10,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 403,
+     "error": null,
+     "verdict": "http_403",
+     "url": "https://www.ouest-france.fr/sport/football/premier-league/premier-league-tottenham-va-debourser-100-millions-de-livres-pour-un-milieu-de-terrain-italien-2abda500-7596-11f1-9172-187ee382b87f?utm_source=fluxpublicactu&utm_medium=fluxrss&utm_campaign=banquedecontenu"
+    },
+    {
+     "http_code": 403,
+     "error": null,
+     "verdict": "http_403",
+     "url": "https://www.ouest-france.fr/sport/coupe-du-monde/video-coupe-du-monde-le-joli-but-dismaila-sarr-qui-permet-le-break-du-senegal-face-a-la-belgique-en-16e-de-finale-d5f044fe-7592-11f1-9172-187ee382b87f?utm_source=fluxpublicactu&utm_medium=fluxrss&utm_campaign=banquedecontenu"
+    }
+   ],
+   "initial_classification": "dead",
+   "initial_reason": "no extractable article body in sampled pages (http_403; http_403)",
+   "final_classification": "ok",
+   "disposition": "kept",
+   "recheck": "curl 403 on article pages; URLSession 200, 2-6k chars body"
+  },
+  {
+   "id": "sudouest-essentiel",
+   "outlet": "Sud Ouest – Essentiel",
+   "region": "france",
+   "url": "https://www.sudouest.fr/essentiel/rss.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.sudouest.fr/essentiel/rss.xml",
+   "feed_kind": "rss",
+   "item_count": 20,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4987,
+     "long_paragraphs": 11,
+     "jsonld_body_chars": 202,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.sudouest.fr/ile-de-france/paris/violences-dans-le-periscolaire-au-senat-des-parents-denoncent-un-systeme-qui-tient-par-le-silence-29753159.php"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1469,
+     "long_paragraphs": 6,
+     "jsonld_body_chars": 207,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.sudouest.fr/politique/presidentielle-2027-marine-le-pen-juge-incompatible-une-campagne-avec-un-bracelet-electronique-29752785.php"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "dw-business-en-de",
+   "outlet": "Deutsche Welle – Business (EN)",
+   "region": "germany",
+   "url": "https://rss.dw.com/rdf/rss-en-bus",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://rss.dw.com/rdf/rss-en-bus",
+   "feed_kind": "rdf",
+   "item_count": 20,
+   "newest_item_age_days": 0.6,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 6333,
+     "long_paragraphs": 33,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.dw.com/en/digital-euro-the-plan-to-trump-proof-the-eu-s-economies/a-77686564?maca=en-rss-en-bus-2091-rdf"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 7213,
+     "long_paragraphs": 38,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.dw.com/en/portugal-s-golden-visa-delays-spark-legal-fight/a-77755949?maca=en-rss-en-bus-2091-rdf"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "dw-deutschland-de",
+   "outlet": "Deutsche Welle – Deutschland (DE)",
+   "region": "germany",
+   "url": "https://rss.dw.com/rdf/rss-de-deutschland",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://rss.dw.com/rdf/rss-de-deutschland",
+   "feed_kind": "rdf",
+   "item_count": 20,
+   "newest_item_age_days": 0.2,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 5519,
+     "long_paragraphs": 14,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.dw.com/de/deutschland-geht-selbstbewusst-in-den-nato-gipfel/a-77790880?maca=de-rss-de-deutschland-1017-rdf"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4513,
+     "long_paragraphs": 15,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.dw.com/de/parteitag-der-afd-ausnahmezustand-in-erfurt-erwartet/a-77750962?maca=de-rss-de-deutschland-1017-rdf"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "faz-aktuell",
+   "outlet": "FAZ – Aktuell",
+   "region": "germany",
+   "url": "https://www.faz.net/rss/aktuell/",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.faz.net/rss/aktuell/",
+   "feed_kind": "rss",
+   "item_count": 100,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 5355,
+     "long_paragraphs": 13,
+     "jsonld_body_chars": 4581,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.faz.net/aktuell/wirtschaft/mehr-wirtschaft/donald-trump-krypto-milliardaer-die-fragwuerdigen-geschaefte-des-us-praesidenten-200987302.html"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 937,
+     "long_paragraphs": 5,
+     "jsonld_body_chars": 947,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "thin",
+     "url": "https://www.faz.net/aktuell/politik/usa-unter-trump/liveticker-usa-unter-trump-trump-verteidigt-milliardeneinnahmen-alle-profitieren-faz-19444916.html"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "spiegel-schlagzeilen",
+   "outlet": "Spiegel Online – Schlagzeilen",
+   "region": "germany",
+   "url": "https://www.spiegel.de/schlagzeilen/index.rss",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.spiegel.de/schlagzeilen/index.rss",
+   "feed_kind": "rss",
+   "item_count": 30,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3491,
+     "long_paragraphs": 12,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall",
+      "metered"
+     ],
+     "verdict": "ok",
+     "url": "https://www.spiegel.de/politik/koalition-einigt-sich-ueber-reformpaket-a-ae0f6cc9-a2b7-4dc4-8620-b7ceb8d92fe6#ref=rss"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 832,
+     "long_paragraphs": 2,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall",
+      "metered"
+     ],
+     "verdict": "thin",
+     "url": "https://www.spiegel.de/wissenschaft/venezuela-satellitenbilder-zeigen-das-ausmass-der-katastrophe-a-8f07e2ae-a919-4cbe-87c3-0325ae9be904#ref=rss"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "sueddeutsche-topthemen",
+   "outlet": "Süddeutsche Zeitung – Topthemen",
+   "region": "germany",
+   "url": "https://rss.sueddeutsche.de/rss/Topthemen",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://rss.sueddeutsche.de/rss/Topthemen",
+   "feed_kind": "rss",
+   "item_count": 15,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 575,
+     "long_paragraphs": 3,
+     "jsonld_body_chars": 1716,
+     "paywall_hits": [
+      "metered"
+     ],
+     "verdict": "ok",
+     "url": "https://www.sueddeutsche.de/politik/bundespolitik-liveblog-koalition-reformen-li.3495864"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1221,
+     "long_paragraphs": 4,
+     "jsonld_body_chars": 569,
+     "paywall_hits": [
+      "paywall",
+      "metered"
+     ],
+     "verdict": "ok",
+     "url": "https://www.sueddeutsche.de/sport/wm-2026-fussball-wm-england-kongo-kane-tuchel-li.3508338"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "tagesschau",
+   "outlet": "Tagesschau",
+   "region": "germany",
+   "url": "https://www.tagesschau.de/xml/rss2/",
+   "main": true,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.tagesschau.de/infoservices/alle-meldungen-100~rss2.xml",
+   "feed_kind": "rss",
+   "item_count": 40,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2668,
+     "long_paragraphs": 13,
+     "jsonld_body_chars": 558,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.tagesschau.de/inland/innenpolitik/koalitionsausschuss-reformen-102.html"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3334,
+     "long_paragraphs": 14,
+     "jsonld_body_chars": 328,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.tagesschau.de/ausland/europa/polen-spritpreise-100.html"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "zeit-online-index",
+   "outlet": "ZEIT ONLINE – Index",
+   "region": "germany",
+   "url": "https://newsfeed.zeit.de/index",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://newsfeed.zeit.de/index",
+   "feed_kind": "rss",
+   "item_count": 15,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4744,
+     "long_paragraphs": 13,
+     "jsonld_body_chars": 3781,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.zeit.de/wirtschaft/unternehmen/2026-07/knds-boersengang-ipo-paris-frankfurt-ruestungsaktien"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 249,
+     "long_paragraphs": 2,
+     "jsonld_body_chars": 781,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "thin",
+     "url": "https://www.zeit.de/sport/2026-05/fussball-wm-2026-liveblog"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "amna-news",
+   "outlet": "AMNA – Athens-Macedonian News Agency",
+   "region": "greece",
+   "url": "https://www.amna.gr/news/rss",
+   "main": true,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.amna.gr/news/rss",
+   "initial_classification": "dead",
+   "initial_reason": "feed parse failed (text/html): mismatched tag: line 7, column 9",
+   "final_classification": "dead",
+   "disposition": "removed",
+   "recheck": "feed endpoint now returns HTML; all tested alternates (rss.php, /en/rss, /feeds/rss) return HTML/404"
+  },
+  {
+   "id": "ertnews",
+   "outlet": "ERT News",
+   "region": "greece",
+   "url": "https://www.ertnews.gr/feed/",
+   "main": true,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.ertnews.gr/feed/",
+   "feed_kind": "rss",
+   "item_count": 35,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 12924,
+     "long_paragraphs": 29,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.ertnews.gr/eidiseis/to-ksafnika-fetos-to-kalokairi-epistrefei-gia-dekati-pempti-synexomeni-xronia-9-15-kai-18-iouliou/"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2604,
+     "long_paragraphs": 9,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.ertnews.gr/eidiseis/epithesi-sto-monako-katethese-o-13xronos-pou-traymatistike-stin-ekriksi-me-pagideymeno-dema-synexizontai-oi-ereynes/"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "index-hu",
+   "outlet": "Index.hu",
+   "region": "hungary",
+   "url": "https://index.hu/24ora/rss",
+   "main": true,
+   "feed_http_code": 200,
+   "feed_final_url": "https://index.hu/24ora/rss",
+   "feed_kind": "rss",
+   "item_count": 35,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1196,
+     "long_paragraphs": 5,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://index.hu/sport/futball/2026/vb/2026/07/01/iszmael-szaibari-bayern-munchen-atigazolas-marokkoi-valogatott/"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1681,
+     "long_paragraphs": 4,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://index.hu/belfold/2026/07/01/magyar-peter-nmhh-elnok-felmentes/"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "telex-hu",
+   "outlet": "Telex.hu",
+   "region": "hungary",
+   "url": "https://telex.hu/rss",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://telex.hu/rss",
+   "feed_kind": "rss",
+   "item_count": 50,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2201,
+     "long_paragraphs": 6,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://telex.hu/gazdasag/2026/07/01/semcorp-hungary-kft-debrecen-akkuipari-uzem-sajtokozlemeny"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1472,
+     "long_paragraphs": 6,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://telex.hu/belfold/2026/07/01/vitezy-david-epitesi-engedelyek-etdr"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "breakingnews-ie",
+   "outlet": "BreakingNews.ie",
+   "region": "ireland",
+   "url": "https://feeds.breakingnews.ie/bntopstories",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://feeds.breakingnews.ie/bntopstories",
+   "feed_kind": "rss",
+   "item_count": 5,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 19895,
+     "long_paragraphs": 89,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.breakingnews.ie/ireland/we-are-not-savages-the-full-story-of-the-parnell-square-attack-1921107.html"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2503,
+     "long_paragraphs": 13,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.breakingnews.ie/ireland/mother-of-parnell-square-attack-victim-does-not-feel-anger-towards-bouchaker-1921249.html"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "irish-examiner",
+   "outlet": "Irish Examiner – Top Stories",
+   "region": "ireland",
+   "url": "https://feeds.feedburner.com/ietopstories",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://feeds.feedburner.com/ietopstories",
+   "feed_kind": "atom",
+   "item_count": 9,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 20897,
+     "long_paragraphs": 134,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall",
+      "metered"
+     ],
+     "verdict": "ok",
+     "url": "https://www.irishexaminer.com/news/spotlight/arid-41872371.html"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4687,
+     "long_paragraphs": 20,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall",
+      "metered"
+     ],
+     "verdict": "ok",
+     "url": "https://www.irishexaminer.com/property/commercial/arid-41872476.html"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "irish-mirror",
+   "outlet": "Irish Mirror",
+   "region": "ireland",
+   "url": "https://www.irishmirror.ie/?service=rss",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.irishmirror.ie/?service=rss",
+   "feed_kind": "rss",
+   "item_count": 25,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2548,
+     "long_paragraphs": 10,
+     "jsonld_body_chars": 473,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.irishmirror.ie/news/irish-news/tiktok-restructure-could-see-hundreds-37375145"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 5936,
+     "long_paragraphs": 27,
+     "jsonld_body_chars": 559,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.irishmirror.ie/news/irish-news/enoch-burke-breaks-silence-scandal-37375106"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "the42-sport",
+   "outlet": "The42 (Sport)",
+   "region": "ireland",
+   "url": "https://www.the42.ie/feed/",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.the42.ie/feed/",
+   "feed_kind": "rss",
+   "item_count": 40,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4147,
+     "long_paragraphs": 28,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "piano-id",
+      "metered"
+     ],
+     "verdict": "ok",
+     "url": "https://www.the42.ie/wimbledon-results-2-7087662-Jul2026/"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3460,
+     "long_paragraphs": 20,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "piano-id",
+      "metered"
+     ],
+     "verdict": "ok",
+     "url": "https://www.the42.ie/harry-kane-reaction-england-congo-7088000-Jul2026/"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "thejournal-ie",
+   "outlet": "TheJournal.ie",
+   "region": "ireland",
+   "url": "https://www.thejournal.ie/feed/",
+   "main": true,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.thejournal.ie/feed/",
+   "feed_kind": "rss",
+   "item_count": 40,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 6724,
+     "long_paragraphs": 42,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "metered"
+     ],
+     "verdict": "ok",
+     "url": "https://www.thejournal.ie/riad-bouchaker-trial-parnell-square-7087115-Jul2026/"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 7908,
+     "long_paragraphs": 42,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "metered"
+     ],
+     "verdict": "ok",
+     "url": "https://www.thejournal.ie/one-off-housing-new-rules-what-are-they-7087192-Jul2026/"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "adnkronos-prima",
+   "outlet": "Adnkronos – Prima Pagina",
+   "region": "italy",
+   "url": "https://www.adnkronos.com/RSS_PrimaPagina.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.adnkronos.com/RSS_PrimaPagina.xml",
+   "feed_kind": "rss",
+   "item_count": 12,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2720,
+     "long_paragraphs": 5,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.adnkronos.com/salute/sanita/zecche-zanzare-virus-in-vacanza_27EKShCeDdKm8WQvQRB3zd"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2547,
+     "long_paragraphs": 7,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.adnkronos.com/cronaca/ventilatore-condizionatore-spesa-rinfrescare-casa_6UhLqFIoq3BxZbH7w0Si5R"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "ansa-cronaca",
+   "outlet": "ANSA – Cronaca",
+   "region": "italy",
+   "url": "https://www.ansa.it/sito/notizie/cronaca/cronaca_rss.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.ansa.it/sito/notizie/cronaca/cronaca_rss.xml",
+   "feed_kind": "rss",
+   "item_count": 120,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3494,
+     "long_paragraphs": 9,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ansa.it/sito/notizie/cronaca/2026/07/02/in-fuga-dai-carabinieri-muore-lomicida-di-un-tifoso-del-pescara_9ac8d008-7039-42b8-99d0-2c74e617bb15.html"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3832,
+     "long_paragraphs": 13,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ansa.it/sito/notizie/cronaca/2026/07/02/un-uomo-ucciso-con-una-coltellata-in-casa-nelle-marche-indaga-la-polizia_e5d81c3d-21b5-4af8-b451-6a5cc172291e.html"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "ansa-cultura",
+   "outlet": "ANSA – Cultura",
+   "region": "italy",
+   "url": "https://www.ansa.it/sito/notizie/cultura/cultura_rss.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.ansa.it/sito/notizie/cultura/cultura_rss.xml",
+   "feed_kind": "rss",
+   "item_count": 158,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4733,
+     "long_paragraphs": 10,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ansa.it/sito/notizie/cultura/tv/2026/07/02/laddio-di-sciarelli-chi-lha-visto-questi-22-anni-una-bellissima-passeggiata_13d56ed9-f0f4-40f6-aa95-080950af1bfa.html"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 5197,
+     "long_paragraphs": 10,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ansa.it/sito/notizie/cultura/arte/2026/07/01/arte-sostantivo-femminile-da-rocio-munoz-morales-a-pasquini-e-leone-8-donne-premiate_7befc71e-591c-4144-bdde-5d7c634bfc92.html"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "ansa-economia",
+   "outlet": "ANSA – Economia",
+   "region": "italy",
+   "url": "https://www.ansa.it/sito/notizie/economia/economia_rss.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.ansa.it/sito/notizie/economia/economia_rss.xml",
+   "feed_kind": "rss",
+   "item_count": 59,
+   "newest_item_age_days": 0.2,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2777,
+     "long_paragraphs": 9,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ansa.it/sito/notizie/economia/2026/07/01/il-petrolio-chiude-a-new-york-a-160-il-wti-scende-a-6839-dollari_8a368501-f939-43d2-afb6-4dae8fa9c572.html"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3431,
+     "long_paragraphs": 9,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ansa.it/sito/notizie/economia/2026/07/01/mef-nel-2025-223.000-accertamenti-fiscali-saliti-del-18_7e5a28f4-04db-4cca-b987-82982923f48d.html"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "ansa-homepage",
+   "outlet": "ANSA – Homepage",
+   "region": "italy",
+   "url": "https://www.ansa.it/sito/ansait_rss.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.ansa.it/sito/ansait_rss.xml",
+   "feed_kind": "rss",
+   "item_count": 29,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3832,
+     "long_paragraphs": 13,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ansa.it/sito/notizie/cronaca/2026/07/02/un-uomo-ucciso-con-una-coltellata-in-casa-nelle-marche-indaga-la-polizia_e5d81c3d-21b5-4af8-b451-6a5cc172291e.html"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 5608,
+     "long_paragraphs": 9,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ansa.it/sito/notizie/cultura/libri/altre_proposte/2026/07/01/a-bologna-apre-la-biblioteca-umberto-eco-oltre-30mila-volumi-del-semiologo_89f6bcbf-cdb5-4c06-a0f4-0e2de6a31e0f.html"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "ansa-lifestyle",
+   "outlet": "ANSA – Lifestyle",
+   "region": "italy",
+   "url": "https://www.ansa.it/canale_lifestyle/notizie/lifestyle_rss.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.ansa.it/canale_lifestyle/notizie/lifestyle_rss.xml",
+   "feed_kind": "rss",
+   "item_count": 19,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 10987,
+     "long_paragraphs": 12,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ansa.it/canale_lifestyle/notizie/tempo_libero/2026/07/02/fenomeno-booktok-la-letteratura-vola-con-la-community-di-booktoker_e6d5d5ae-5519-4582-a3ea-e39e10ac716e.html"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3963,
+     "long_paragraphs": 9,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ansa.it/canale_lifestyle/notizie/moda/2026/07/01/new-york-fashion-week-in-calendario-da-diane-von-furstenberg-a-thom-browne_e381920a-8bb0-4958-89bf-ead0c447ca95.html"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "ansa-mondo",
+   "outlet": "ANSA – Mondo",
+   "region": "italy",
+   "url": "https://www.ansa.it/sito/notizie/mondo/mondo_rss.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.ansa.it/sito/notizie/mondo/mondo_rss.xml",
+   "feed_kind": "rss",
+   "item_count": 43,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3397,
+     "long_paragraphs": 9,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ansa.it/sito/notizie/mondo/americalatina/2026/07/01/colombia-xi-si-congratula-con-de-la-espriella-rafforzeremo-i-rapporti_338cbc7e-6530-4ce5-8158-c120e7887fcf.html"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3426,
+     "long_paragraphs": 9,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ansa.it/sito/notizie/mondo/americalatina/2026/07/01/lula-ad-ancelotti-vinci-unaltra-partita-per-lamor-di-dio_bb294f5b-ebde-4eda-a742-c309bbf663d4.html"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "ansa-politica",
+   "outlet": "ANSA – Politica",
+   "region": "italy",
+   "url": "https://www.ansa.it/sito/notizie/politica/politica_rss.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.ansa.it/sito/notizie/politica/politica_rss.xml",
+   "feed_kind": "rss",
+   "item_count": 16,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 6725,
+     "long_paragraphs": 13,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ansa.it/sito/notizie/politica/2026/07/01/riunione-con-meloni-verso-il-vertice-nato-focus-sulle-spese-militari_79e2e49c-6c14-4bef-b177-c57e5fffcc67.html"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 6507,
+     "long_paragraphs": 10,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ansa.it/sito/notizie/politica/2026/07/01/rompicapo-preferenze-slitta-lapprodo-in-aula-della-legge-elettorale_1058c686-0759-40bb-b763-adbcc7ae753d.html"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "ansa-salute-benessere",
+   "outlet": "ANSA – Salute & Benessere",
+   "region": "italy",
+   "url": "https://www.ansa.it/canale_saluteebenessere/notizie/saluteebenessere_rss.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.ansa.it/canale_saluteebenessere/notizie/saluteebenessere_rss.xml",
+   "feed_kind": "rss",
+   "item_count": 30,
+   "newest_item_age_days": 0.2,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4465,
+     "long_paragraphs": 10,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ansa.it/canale_saluteebenessere/notizie/focus_tumore/2026/07/01/basse-dosi-di-tamoxifene-efficaci-contro-il-tumore-del-seno_b219c0b4-639f-4fba-859a-4cfc4f4b9a46.html"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3629,
+     "long_paragraphs": 10,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ansa.it/canale_saluteebenessere/notizie/sanita/2026/07/01/usa-ok-della-fda-alle-bustine-di-nicotina_b41b4b35-4935-43f6-b055-5698d900e5fb.html"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "ansa-scienza",
+   "outlet": "ANSA – Scienza",
+   "region": "italy",
+   "url": "https://www.ansa.it/canale_scienza_tecnica/notizie/scienzaetecnica_rss.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.ansa.it/canale_scienza_tecnica/notizie/scienzaetecnica_rss.xml",
+   "feed_kind": "rss",
+   "item_count": 23,
+   "newest_item_age_days": 0.4,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4667,
+     "long_paragraphs": 9,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ansa.it/canale_scienza/notizie/ricerca_istituzioni/2026/07/01/ricerca-in-utile-di-87-milioni-il-bilancio-del-cnr-2025_44f2fa81-8570-4617-b434-92149b314f17.html"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4949,
+     "long_paragraphs": 11,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ansa.it/canale_scienza/notizie/ricerca_istituzioni/2026/07/01/parmitano-da-meloni-curiosita-e-piacere-di-incontrarsi_a81d84c8-a394-4aad-8589-c3d27c13ad09.html"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "ansa-sicilia",
+   "outlet": "ANSA – Sicilia (regionale)",
+   "region": "italy",
+   "url": "https://www.ansa.it/sicilia/notizie/sicilia_rss.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.ansa.it/sicilia/notizie/sicilia_rss.xml",
+   "feed_kind": "rss",
+   "item_count": 36,
+   "newest_item_age_days": 0.2,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2895,
+     "long_paragraphs": 9,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ansa.it/sicilia/notizie/2026/07/01/omicidio-piersanti-mattarella-esame-dna-su-impronta-non-ha-dato-risultati_a752fe0d-18b9-4494-98db-928e960dc1d1.html"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4361,
+     "long_paragraphs": 9,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ansa.it/sicilia/notizie/2026/07/01/corruzione-a-processo-lex-portavoce-del-presidente-dellars_6b8ed0a3-bdf6-4daf-9551-ccde8be891b3.html"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "ansa-sport-calcio",
+   "outlet": "ANSA – Sport Calcio",
+   "region": "italy",
+   "url": "https://www.ansa.it/sito/notizie/sport/calcio/calcio_rss.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.ansa.it/sito/notizie/sport/calcio/calcio_rss.xml",
+   "feed_kind": "rss",
+   "item_count": 95,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3162,
+     "long_paragraphs": 9,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ansa.it/sito/notizie/sport/calcio/2026/07/01/ekhator-juve-una-grande-occasione-e-la-scelta-giusta_e179b027-d8b8-4b1e-b9f0-41a491d72801.html"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4023,
+     "long_paragraphs": 10,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ansa.it/sito/notizie/sport/calcio/2026/07/01/abodi-con-malago-non-parlero-di-dt-e-ct-daremo-al-calcio-cio-che-sapra_61f995b5-999b-4604-bda4-0058f291e19a.html"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "ansa-sport-generale",
+   "outlet": "ANSA – Sport (Generale)",
+   "region": "italy",
+   "url": "https://www.ansa.it/sito/notizie/sport/sport_rss.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.ansa.it/sito/notizie/sport/sport_rss.xml",
+   "feed_kind": "rss",
+   "item_count": 62,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2905,
+     "long_paragraphs": 11,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ansa.it/sito/notizie/sport/tennis/2026/07/01/wimbledon-djokovic-batte-tsitsipas-e-va-al-terzo-turno_8b393839-60dd-4cb3-a130-c1f1cbaca6dc.html"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3419,
+     "long_paragraphs": 9,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ansa.it/sito/notizie/sport/tennis/2026/07/01/wimbledon-djokovic-elimina-tsitsipas-e-passa-al-terzo-turno_7ccef4fe-2590-4eb3-a0ec-7d57c3351656.html"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "ansa-tecnologia",
+   "outlet": "ANSA – Tecnologia",
+   "region": "italy",
+   "url": "https://www.ansa.it/canale_tecnologia/notizie/tecnologia_rss.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.ansa.it/canale_tecnologia/notizie/tecnologia_rss.xml",
+   "feed_kind": "rss",
+   "item_count": 21,
+   "newest_item_age_days": 0.4,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3814,
+     "long_paragraphs": 11,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ansa.it/canale_tecnologia/notizie/tecnologia/2026/07/01/anthropic-rimosse-restrizioni-usa-su-export-modelli-ia-fable-5-e-mythos-5_642038a7-2dbc-427a-85a1-5a86d1169fd7.html"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3915,
+     "long_paragraphs": 9,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ansa.it/canale_tecnologia/notizie/tecnologia/2026/07/01/lia-spinge-il-mercato-del-digitale-in-italia-34-a-844-miliardi_ce45f940-7b36-47f4-8694-c0ede86b81f9.html"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "ansa-topnews",
+   "outlet": "ANSA – Top News",
+   "region": "italy",
+   "url": "https://www.ansa.it/sito/notizie/topnews/topnews_rss.xml",
+   "main": true,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.ansa.it/sito/notizie/topnews/topnews_rss.xml",
+   "feed_kind": "rss",
+   "item_count": 10,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4733,
+     "long_paragraphs": 10,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ansa.it/sito/notizie/topnews/2026/07/02/laddio-di-sciarelli-chi-lha-visto-questi-22-anni-una-bellissima-passeggiata_9f63ea25-6090-415d-8fd1-6b29ae0f5d4a.html"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2741,
+     "long_paragraphs": 9,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ansa.it/sito/notizie/topnews/2026/07/01/il-petrolio-chiude-a-new-york-a-160-il-wti-scende-a-6839-dollari_da348a8c-51af-4fbb-bb5a-b01105597ffa.html"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "corriere-cronaca",
+   "outlet": "Corriere della Sera – Cronaca",
+   "region": "italy",
+   "url": "https://www.corriere.it/rss/cronaca.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.corriere.it/rss/cronaca.xml",
+   "feed_kind": "rss",
+   "item_count": 18,
+   "newest_item_age_days": 28.4,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2424,
+     "long_paragraphs": 3,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall",
+      "metered"
+     ],
+     "verdict": "ok",
+     "url": "https://corrierefiorentino.corriere.it/firenze/notizie/cronaca/22_giugno_13/concorsi-truccati-camilla-bianchi-sospesa-sei-mesi-dall-incarico-garante-dell-infanzia-136194c6-eb24-11ec-9cc0-55d446633252.shtml"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3826,
+     "long_paragraphs": 14,
+     "jsonld_body_chars": 1187,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://corrierefiorentino.corriere.it/firenze/notizie/cronaca/22_dicembre_13/lucca-pusher-tenta-fuga-lanciandosi-dall-auto-corsa-6b9b3162-7b00-11ed-af0d-6a1578a6bf54.shtml"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "dead",
+   "disposition": "removed",
+   "recheck": "newest item 28 days old and every sibling corriere.it feed is a frozen archive; corriere.it retired RSS"
+  },
+  {
+   "id": "corriere-economia",
+   "outlet": "Corriere della Sera – Economia",
+   "region": "italy",
+   "url": "https://www.corriere.it/rss/economia.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.corriere.it/rss/economia.xml",
+   "feed_kind": "rss",
+   "item_count": 23,
+   "newest_item_age_days": 883.5,
+   "initial_classification": "dead",
+   "initial_reason": "stale feed: newest item is 884 days old",
+   "final_classification": "dead",
+   "disposition": "removed",
+   "recheck": "feed frozen at 2023/2024 archive (884 days stale); corriere.it retired RSS"
+  },
+  {
+   "id": "corriere-esteri",
+   "outlet": "Corriere della Sera – Esteri",
+   "region": "italy",
+   "url": "https://www.corriere.it/rss/esteri.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.corriere.it/rss/esteri.xml",
+   "feed_kind": "rss",
+   "item_count": 49,
+   "newest_item_age_days": 482.7,
+   "initial_classification": "dead",
+   "initial_reason": "stale feed: newest item is 483 days old",
+   "final_classification": "dead",
+   "disposition": "removed",
+   "recheck": "feed frozen (483 days stale); corriere.it retired RSS"
+  },
+  {
+   "id": "corriere-homepage",
+   "outlet": "Corriere della Sera – Homepage",
+   "region": "italy",
+   "url": "https://www.corriere.it/rss/homepage.xml",
+   "main": true,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.corriere.it/rss/homepage.xml",
+   "feed_kind": "rss",
+   "item_count": 69,
+   "newest_item_age_days": 779.7,
+   "initial_classification": "dead",
+   "initial_reason": "stale feed: newest item is 780 days old",
+   "final_classification": "dead",
+   "disposition": "removed",
+   "recheck": "feed frozen at 2024-05-13 (780 days stale); corriere.it retired RSS"
+  },
+  {
+   "id": "corriere-politica",
+   "outlet": "Corriere della Sera – Politica",
+   "region": "italy",
+   "url": "https://www.corriere.it/rss/politica.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.corriere.it/rss/politica.xml",
+   "feed_kind": "rss",
+   "item_count": 49,
+   "newest_item_age_days": 694.5,
+   "initial_classification": "dead",
+   "initial_reason": "stale feed: newest item is 695 days old",
+   "final_classification": "dead",
+   "disposition": "removed",
+   "recheck": "feed frozen (695 days stale); corriere.it retired RSS"
+  },
+  {
+   "id": "corriere-sport",
+   "outlet": "Corriere della Sera – Sport",
+   "region": "italy",
+   "url": "https://www.corriere.it/rss/sport.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.corriere.it/rss/sport.xml",
+   "feed_kind": "rss",
+   "item_count": 49,
+   "newest_item_age_days": 260.3,
+   "initial_classification": "dead",
+   "initial_reason": "stale feed: newest item is 260 days old",
+   "final_classification": "dead",
+   "disposition": "removed",
+   "recheck": "feed frozen (260 days stale); corriere.it retired RSS"
+  },
+  {
+   "id": "fanpage",
+   "outlet": "Fanpage",
+   "region": "italy",
+   "url": "https://www.fanpage.it/feed/",
+   "main": false,
+   "feed_http_code": 403,
+   "feed_final_url": "https://www.fanpage.it/feed/",
+   "initial_classification": "dead",
+   "initial_reason": "feed HTTP 403",
+   "final_classification": "ok",
+   "disposition": "kept",
+   "recheck": "curl 403 on feed; URLSession 200, articles extract (~5.5k chars)"
+  },
+  {
+   "id": "gazzetta-dello-sport",
+   "outlet": "Gazzetta dello Sport",
+   "region": "italy",
+   "url": "https://www.gazzetta.it/rss/homepage.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.gazzetta.it/rss/homepage.xml",
+   "feed_kind": "rss",
+   "item_count": 127,
+   "newest_item_age_days": 965.5,
+   "initial_classification": "dead",
+   "initial_reason": "stale feed: newest item is 966 days old",
+   "final_classification": "degraded",
+   "disposition": "replaced",
+   "replacement_url": "https://www.gazzetta.it/dynamic-feed/rss/section/last.xml",
+   "recheck": "old /rss/homepage.xml frozen 2023-12; dynamic-feed is fresh; article bodies are shortish (0.9-1.9k chars)"
+  },
+  {
+   "id": "guardian-italy",
+   "outlet": "The Guardian – Italy",
+   "region": "italy",
+   "url": "https://www.theguardian.com/world/italy/rss",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.theguardian.com/world/italy/rss",
+   "feed_kind": "rss",
+   "item_count": 20,
+   "newest_item_age_days": 0.2,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 481,
+     "long_paragraphs": 1,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "thin",
+     "url": "https://www.theguardian.com/world/video/2026/jul/01/mount-etna-lava-lights-up-sicilian-sky-video"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 6488,
+     "long_paragraphs": 16,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.theguardian.com/commentisfree/2026/jul/01/why-meloni-has-hit-back-hard-against-trump-and-his-made-up-photo-claim"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "il-fatto-quotidiano",
+   "outlet": "Il Fatto Quotidiano",
+   "region": "italy",
+   "url": "https://www.ilfattoquotidiano.it/feed/",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.ilfattoquotidiano.it/feed/",
+   "feed_kind": "rss",
+   "item_count": 25,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 6373,
+     "long_paragraphs": 17,
+     "jsonld_body_chars": 341,
+     "paywall_hits": [
+      "paywall",
+      "metered"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ilfattoquotidiano.it/2026/07/02/giorgio-panariello-a-mediaset-portero-la-mia-storia-sono-un-prestigiatore-cerco-di-distrarre-il-mio-pubblico-perche-non-ce-da-ridere/8436123/"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 20404,
+     "long_paragraphs": 30,
+     "jsonld_body_chars": 1536,
+     "paywall_hits": [
+      "paywall",
+      "metered"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ilfattoquotidiano.it/2026/07/01/la-protesta-dei-procuratori-minorili-contro-nordio-ai-nostri-uffici-assegnati-solo-29-tecnici-su-7-631/8436609/"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "il-giornale",
+   "outlet": "Il Giornale",
+   "region": "italy",
+   "url": "https://www.ilgiornale.it/feed.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.ilgiornale.it/feed.xml",
+   "feed_kind": "rss",
+   "item_count": 36,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4681,
+     "long_paragraphs": 14,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.ilgiornale.it/news/quindi-oggi/arriva-tassa-chi-assume-migranti-pietro-sindaco-milano-e-2687357.html"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2266,
+     "long_paragraphs": 7,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.ilgiornale.it/news/storie/jacobs-urlo-vola-l-aiuto-vento-e-realizza-9-67-nei-100-metri-2687355.html"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "ilsole24ore-finanza",
+   "outlet": "Il Sole 24 Ore – Finanza",
+   "region": "italy",
+   "url": "https://www.ilsole24ore.com/rss/finanza.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.ilsole24ore.com/rss/finanza.xml",
+   "feed_kind": "rss",
+   "item_count": 4,
+   "newest_item_age_days": 0.2,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2801,
+     "long_paragraphs": 6,
+     "jsonld_body_chars": 2040,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ilsole24ore.com/art/il-fondo-ribassista-trevi-che-si-prende-faccia-l-ops-AI3FDDyD"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4637,
+     "long_paragraphs": 9,
+     "jsonld_body_chars": 3745,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ilsole24ore.com/art/the-italian-sea-group-il-concordato-preventivo-AIMGwKxD"
+    }
+   ],
+   "initial_classification": "degraded",
+   "initial_reason": "only 4 items in feed",
+   "final_classification": "degraded",
+   "disposition": "kept"
+  },
+  {
+   "id": "ilsole24ore-italia",
+   "outlet": "Il Sole 24 Ore – Italia",
+   "region": "italy",
+   "url": "https://www.ilsole24ore.com/rss/italia.xml",
+   "main": true,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.ilsole24ore.com/rss/italia.xml",
+   "feed_kind": "rss",
+   "item_count": 12,
+   "newest_item_age_days": 0.2,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3389,
+     "long_paragraphs": 8,
+     "jsonld_body_chars": 2893,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ilsole24ore.com/art/friuli-venezia-giulia-via-libera-ritorno-province-AIIQzVxD"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4965,
+     "long_paragraphs": 9,
+     "jsonld_body_chars": 4142,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ilsole24ore.com/art/salvini-frena-meloni-quirinale-la-vedo-bene-come-premier-nell-autunno-2027-AIXcXzxD"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "ilsole24ore-mondo",
+   "outlet": "Il Sole 24 Ore – Mondo",
+   "region": "italy",
+   "url": "https://www.ilsole24ore.com/rss/mondo.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.ilsole24ore.com/rss/mondo.xml",
+   "feed_kind": "rss",
+   "item_count": 11,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2150,
+     "long_paragraphs": 6,
+     "jsonld_body_chars": 1468,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ilsole24ore.com/art/kiev-attaccata-droni-forti-esplosioni-e-incendio-centro-AIEBbRyD"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3902,
+     "long_paragraphs": 9,
+     "jsonld_body_chars": 3221,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.ilsole24ore.com/art/usa-medici-e-preti-contro-genocidio-chiedono-congresso-azioni-subito-gaza-AIUerMyD"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "internazionale",
+   "outlet": "Internazionale",
+   "region": "italy",
+   "url": "https://www.internazionale.it/sitemaps/rss.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.internazionale.it/sitemaps/rss.xml",
+   "feed_kind": "rss",
+   "item_count": 11,
+   "newest_item_age_days": 0.6,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3648,
+     "long_paragraphs": 10,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.internazionale.it/opinione/pierre-haski/2026/07/01/anche-in-sudafrica-l-immigrazione-e-un-capro-espiatorio"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 9151,
+     "long_paragraphs": 24,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.internazionale.it/notizie/alessio-marchionna/2026/07/01/corte-suprema-sentenze-trump"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "libero-quotidiano",
+   "outlet": "Libero Quotidiano",
+   "region": "italy",
+   "url": "https://www.liberoquotidiano.it/rss.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.liberoquotidiano.it/rss.xml",
+   "feed_kind": "rss",
+   "item_count": 60,
+   "newest_item_age_days": 0.2,
+   "articles": [
+    {
+     "http_code": 403,
+     "error": null,
+     "verdict": "http_403",
+     "url": "https://www.liberoquotidiano.it/news/politica/48394339/perego-inchioda-il-pd-tutto-questo-deve-finire-che-faccia-fa-la-de-micheli-/"
+    },
+    {
+     "http_code": 403,
+     "error": null,
+     "verdict": "http_403",
+     "url": "https://www.liberoquotidiano.it/news/48393931/undefined/"
+    }
+   ],
+   "initial_classification": "dead",
+   "initial_reason": "no extractable article body in sampled pages (http_403; http_403)",
+   "final_classification": "degraded",
+   "disposition": "kept",
+   "recheck": "URLSession: one article 200 with 5.7k chars, one feed link is a broken '/undefined/' 404 stub"
+  },
+  {
+   "id": "linkiesta",
+   "outlet": "Linkiesta",
+   "region": "italy",
+   "url": "https://www.linkiesta.it/it/feed/",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.linkiesta.it/feed/",
+   "feed_kind": "rss",
+   "item_count": 12,
+   "newest_item_age_days": 0.3,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2051,
+     "long_paragraphs": 6,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.linkiesta.it/2026/07/dopo-stelle-e-chiavi-arrivano-i-grappoli-michelin-per-le-cantine/"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2736,
+     "long_paragraphs": 5,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.linkiesta.it/2026/07/pieter-mulier-direttore-creativo-versace/"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "milan-news",
+   "outlet": "Milan News",
+   "region": "italy",
+   "url": "https://www.milannews.it/rss/",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.milannews.it/rss/",
+   "feed_kind": "rss",
+   "item_count": 20,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 714,
+     "long_paragraphs": 2,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "thin",
+     "url": "https://www.milannews.it/news/bortolazzi-goncalo-ramos-anche-bravo-so-differenza-622287"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1067,
+     "long_paragraphs": 4,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.milannews.it/news/mn-brambati-problemi-milan-la-difesa-piace-maignan-leader-622305"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "panorama",
+   "outlet": "Panorama",
+   "region": "italy",
+   "url": "https://www.panorama.it/feeds/feed.rss",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.panorama.it/feed/gn",
+   "feed_kind": "rss",
+   "item_count": 10,
+   "newest_item_age_days": 0.2,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3295,
+     "long_paragraphs": 5,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.panorama.it/attualita/esteri/usa-vaticano-migranti-trump-vance"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4741,
+     "long_paragraphs": 17,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.panorama.it/tempo-libero/viaggi/la-vera-spada-nella-roccia-e-in-italia-il-mistero-di-san-galgano-che-sfida-la-leggenda-di-re-artu"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "rai-portale-rss",
+   "outlet": "RAI News – Portale RSS",
+   "region": "italy",
+   "url": "https://www.rai.it/dl/portale/html/PublishingBlock-15c2c340-e282-473d-b944-661e818d667b-rss.xml",
+   "main": true,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.rai.it/dl/portale/html/PublishingBlock-15c2c340-e282-473d-b944-661e818d667b-rss.xml",
+   "feed_kind": "rss",
+   "item_count": 7,
+   "newest_item_age_days": null,
+   "articles": [
+    {
+     "http_code": 404,
+     "error": null,
+     "verdict": "http_404",
+     "url": "http://www.rainews24.rai.it/notizia.asp?NewsId=113201"
+    },
+    {
+     "http_code": 404,
+     "error": null,
+     "verdict": "http_404",
+     "url": "http://www.rainews24.rai.it/notizia.asp?NewsId=113196"
+    }
+   ],
+   "initial_classification": "dead",
+   "initial_reason": "no extractable article body in sampled pages (http_404; http_404)",
+   "final_classification": "ok",
+   "disposition": "replaced",
+   "replacement_url": "https://www.rainews.it/rss/tutti",
+   "recheck": "old rai.it PublishingBlock feed links to dead rainews24.rai.it (404); rainews.it/rss/tutti is fresh, text articles extract"
+  },
+  {
+   "id": "repubblica-cronaca",
+   "outlet": "La Repubblica – Cronaca",
+   "region": "italy",
+   "url": "https://www.repubblica.it/rss/cronaca/rss2.0.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.repubblica.it/rss/cronaca/rss2.0.xml",
+   "feed_kind": "rss",
+   "item_count": 25,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1623,
+     "long_paragraphs": 6,
+     "jsonld_body_chars": 1286,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.repubblica.it/cronaca/2026/07/02/news/omicidio_civitanova_marche_accoltellato-425445722/?rss"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2822,
+     "long_paragraphs": 8,
+     "jsonld_body_chars": 2514,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.repubblica.it/cronaca/2026/07/02/news/previsioni_meteo_grandine_temporali_weekend_nuova_ondata_di_calore-425445600/?rss"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "repubblica-economia",
+   "outlet": "La Repubblica – Economia",
+   "region": "italy",
+   "url": "https://www.repubblica.it/rss/economia/rss2.0.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.repubblica.it/rss/economia/rss2.0.xml",
+   "feed_kind": "rss",
+   "item_count": 25,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 509,
+     "long_paragraphs": 1,
+     "jsonld_body_chars": 402,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "thin",
+     "url": "https://www.repubblica.it/economia/2026/07/01/news/fed_indipendente_warsh_banchieri_centrali_bce_sintra-425445208/?rss"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 5613,
+     "long_paragraphs": 12,
+     "jsonld_body_chars": 2251,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.repubblica.it/economia/rapporti/energitalia/trasformazione/2026/07/01/news/la_carinzia_diventa_la_hydrogen_valley-425445178/?rss"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "repubblica-esteri",
+   "outlet": "La Repubblica – Esteri",
+   "region": "italy",
+   "url": "https://www.repubblica.it/rss/esteri/rss2.0.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.repubblica.it/rss/esteri/rss2.0.xml",
+   "feed_kind": "rss",
+   "item_count": 25,
+   "newest_item_age_days": 0.2,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2364,
+     "long_paragraphs": 5,
+     "jsonld_body_chars": 854,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.repubblica.it/esteri/2026/07/01/news/grecia_attacchi_esplosivi_contro_esponenti_politici_una_persona_e_morta_quattro_i_feriti-425445253/?rss"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 443,
+     "long_paragraphs": 1,
+     "jsonld_body_chars": 400,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "thin",
+     "url": "https://www.repubblica.it/esteri/2026/07/02/news/trump_nuovo_air_force_one_qatar_inaugurazione-425444415/?rss"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "repubblica-homepage",
+   "outlet": "La Repubblica – Homepage",
+   "region": "italy",
+   "url": "https://www.repubblica.it/rss/homepage/rss2.0.xml",
+   "main": true,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.repubblica.it/rss/homepage/rss2.0.xml",
+   "feed_kind": "rss",
+   "item_count": 30,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1623,
+     "long_paragraphs": 6,
+     "jsonld_body_chars": 1286,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.repubblica.it/cronaca/2026/07/02/news/omicidio_civitanova_marche_accoltellato-425445722/"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2719,
+     "long_paragraphs": 6,
+     "jsonld_body_chars": 1639,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.repubblica.it/cronaca/2026/07/01/news/scooter_alt_inseguimento_carabinieri_morto-425445598/"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "repubblica-politica",
+   "outlet": "La Repubblica – Politica",
+   "region": "italy",
+   "url": "https://www.repubblica.it/rss/politica/rss2.0.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.repubblica.it/rss/politica/rss2.0.xml",
+   "feed_kind": "rss",
+   "item_count": 25,
+   "newest_item_age_days": 0.3,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 670,
+     "long_paragraphs": 3,
+     "jsonld_body_chars": 361,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "thin",
+     "url": "https://www.repubblica.it/politica/2026/07/01/news/palazzo_chigi_vertice_meloni_tajani_crosetto_giorgetti-425445028/?rss"
+    },
+    {
+     "http_code": 403,
+     "error": null,
+     "verdict": "http_403",
+     "url": "https://milano.repubblica.it/cronaca/2026/07/01/news/antonio_di_pietro_candidato_centrodestra_sindaco_milano-425445020/?rss"
+    }
+   ],
+   "initial_classification": "degraded",
+   "initial_reason": "sampled article bodies are thin (<1000 chars)",
+   "final_classification": "degraded",
+   "disposition": "kept"
+  },
+  {
+   "id": "sky-tg24-homepage",
+   "outlet": "Sky TG24 – Homepage",
+   "region": "italy",
+   "url": "https://tg24.sky.it/rss/tg24_homepage.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://tg24.sky.it/rss/tg24_homepage.xml",
+   "feed_kind": "rss",
+   "item_count": 100,
+   "newest_item_age_days": null,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2499,
+     "long_paragraphs": 9,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://tg24.sky.it/cronaca/2026/07/01/abruzzo-morto-inseguimento-carabinieri"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 32857,
+     "long_paragraphs": 60,
+     "jsonld_body_chars": 1807,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://tg24.sky.it/mondo/2026/07/01/guerra-usa-iran-trump-news-diretta-"
+    }
+   ],
+   "initial_classification": "degraded",
+   "initial_reason": "items carry no parseable dates",
+   "final_classification": "degraded",
+   "disposition": "kept"
+  },
+  {
+   "id": "tgcom24-economia",
+   "outlet": "TGCOM24 – Economia",
+   "region": "italy",
+   "url": "https://www.tgcom24.mediaset.it/rss/economia.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.tgcom24.mediaset.it/rss/economia.xml",
+   "feed_kind": "rss",
+   "item_count": 30,
+   "newest_item_age_days": 0.2,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1525,
+     "long_paragraphs": 5,
+     "jsonld_body_chars": 891,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.tgcom24.mediaset.it/economia/conti-pubblici-fabbisogno-giugno-mef-dati_113874926-202602k.shtml"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2467,
+     "long_paragraphs": 6,
+     "jsonld_body_chars": 948,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.tgcom24.mediaset.it/economia/mercato-auto-italia-giugno-dati-stellantis-fiat_113871367-202602k.shtml"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "tgcom24-homepage",
+   "outlet": "TGCOM24 – Homepage",
+   "region": "italy",
+   "url": "https://www.tgcom24.mediaset.it/rss/homepage.xml",
+   "main": true,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.tgcom24.mediaset.it/rss/homepage.xml",
+   "feed_kind": "rss",
+   "item_count": 30,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2240,
+     "long_paragraphs": 5,
+     "jsonld_body_chars": 266,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.tgcom24.mediaset.it/mondo/terremoto-venezuela-ultime-notizie-1-luglio_113880995-202602k.shtml"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2151,
+     "long_paragraphs": 6,
+     "jsonld_body_chars": 1486,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.tgcom24.mediaset.it/cronaca/pescara-inseguimento-carabinieri-scooter-morto_113883599-202602k.shtml"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "tgcom24-politica",
+   "outlet": "TGCOM24 – Politica",
+   "region": "italy",
+   "url": "https://www.tgcom24.mediaset.it/rss/politica.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.tgcom24.mediaset.it/rss/politica.xml",
+   "feed_kind": "rss",
+   "item_count": 30,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2530,
+     "long_paragraphs": 6,
+     "jsonld_body_chars": 500,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.tgcom24.mediaset.it/politica/mafia-tutela-minori-famiglia-legge_113876525-202602k.shtml"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1202,
+     "long_paragraphs": 3,
+     "jsonld_body_chars": 548,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.tgcom24.mediaset.it/2026/video/ddl-caccia-brambilla-ho-votato-contro-e-ho-ricevuto-minacce-intimidazioni-e-insulti-sessisti-_113863126-02k.shtml"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "tgcom24-spettacolo",
+   "outlet": "TGCOM24 – Spettacolo",
+   "region": "italy",
+   "url": "https://www.tgcom24.mediaset.it/rss/spettacolo.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.tgcom24.mediaset.it/rss/spettacolo.xml",
+   "feed_kind": "rss",
+   "item_count": 30,
+   "newest_item_age_days": 0.2,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 876,
+     "long_paragraphs": 4,
+     "jsonld_body_chars": 201,
+     "paywall_hits": [],
+     "verdict": "thin",
+     "url": "https://www.tgcom24.mediaset.it/2026/video/trinita-dei-monti-palcoscenico-di-una-traviata-da-sogno_113873731-02k.shtml"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2755,
+     "long_paragraphs": 6,
+     "jsonld_body_chars": 711,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.tgcom24.mediaset.it/spettacolo/gianna-nannini-marracash-america-inc_113860030-202602k.shtml"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "tgcom24-sport",
+   "outlet": "TGCOM24 – Sport",
+   "region": "italy",
+   "url": "https://www.tgcom24.mediaset.it/rss/sport.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.tgcom24.mediaset.it/rss/sport.xml",
+   "feed_kind": "rss",
+   "item_count": 30,
+   "newest_item_age_days": 6.5,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3448,
+     "long_paragraphs": 7,
+     "jsonld_body_chars": 216,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.tgcom24.mediaset.it/sport/jannik-sinner-gilet-refrigerante-come-funziona_113588048-202602k.shtml"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 695,
+     "long_paragraphs": 3,
+     "jsonld_body_chars": 271,
+     "paywall_hits": [],
+     "verdict": "thin",
+     "url": "https://www.tgcom24.mediaset.it/sport/foto/jannik-sinner-spunta-il-gilet-rinfrescante-anti-malore-le-foto_113587866-202602k.shtml"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "tgcom24-tgtech",
+   "outlet": "TGCOM24 – TGTech",
+   "region": "italy",
+   "url": "https://www.tgcom24.mediaset.it/rss/tgtech.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.tgcom24.mediaset.it/rss/tgtech.xml",
+   "feed_kind": "rss",
+   "item_count": 30,
+   "newest_item_age_days": 0.5,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3342,
+     "long_paragraphs": 7,
+     "jsonld_body_chars": 2376,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.tgcom24.mediaset.it/tgtech/whatsapp-nome-utente-prenotazioni-come-funziona-username_113854043-202602k.shtml"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1091,
+     "long_paragraphs": 4,
+     "jsonld_body_chars": 439,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.tgcom24.mediaset.it/2026/video/intelligenza-artificiale-rapporto-osservatorio-look4ward_113770203-02k.shtml"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "the-local-italy",
+   "outlet": "The Local Italy",
+   "region": "italy",
+   "url": "https://feeds.thelocal.com/rss/it",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://feeds.thelocal.com/rss/it",
+   "feed_kind": "rss",
+   "item_count": 20,
+   "newest_item_age_days": 0.3,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 5078,
+     "long_paragraphs": 25,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.thelocal.it/20260701/how-italys-working-parents-tackle-the-long-summer-break"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4892,
+     "long_paragraphs": 19,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall",
+      "metered"
+     ],
+     "verdict": "ok",
+     "url": "https://www.thelocal.it/20260701/critical-point-europes-airports-demand-urgent-action-to-avoid-summer-border-delays"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "asahi-headlines",
+   "outlet": "Asahi Shimbun – Headlines",
+   "region": "japan",
+   "url": "https://rss.asahi.com/rss/asahi/newsheadlines.rdf",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://rss.asahi.com/rss/asahi/newsheadlines.rdf",
+   "feed_kind": "rdf",
+   "item_count": 40,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 872,
+     "long_paragraphs": 4,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "thin",
+     "url": "http://www.asahi.com/articles/ASV6Z21QLV6ZUTIL00DM.html?ref=rss"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 965,
+     "long_paragraphs": 4,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "thin",
+     "url": "http://www.asahi.com/articles/ASV6Z2668V6ZUTIL01BM.html?ref=rss"
+    }
+   ],
+   "initial_classification": "degraded",
+   "initial_reason": "sampled article bodies are thin (<1000 chars)",
+   "final_classification": "degraded",
+   "disposition": "kept"
+  },
+  {
+   "id": "japan-times-top",
+   "outlet": "Japan Times – Top Stories",
+   "region": "japan",
+   "url": "https://www.japantimes.co.jp/feed/topstories/",
+   "main": true,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.japantimes.co.jp/feed/topstories/",
+   "feed_kind": "rss",
+   "item_count": 5,
+   "newest_item_age_days": 489.7,
+   "initial_classification": "dead",
+   "initial_reason": "stale feed: newest item is 490 days old",
+   "final_classification": "dead",
+   "disposition": "removed",
+   "recheck": "feed frozen (490 days stale); live /feed/ alternate exists but article pages 403 via URLSession (bot-gated + paywall)"
+  },
+  {
+   "id": "japan-today",
+   "outlet": "Japan Today",
+   "region": "japan",
+   "url": "https://japantoday.com/feed",
+   "main": false,
+   "feed_http_code": 403,
+   "feed_final_url": "https://japantoday.com/feed",
+   "initial_classification": "dead",
+   "initial_reason": "feed HTTP 403",
+   "final_classification": "ok",
+   "disposition": "kept",
+   "recheck": "curl 403 on feed; URLSession 200, articles extract (2-6k chars)"
+  },
+  {
+   "id": "newsonjapan",
+   "outlet": "News On Japan",
+   "region": "japan",
+   "url": "https://www.newsonjapan.com/rss/top.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.newsonjapan.com/rss/top.xml",
+   "feed_kind": "rss",
+   "item_count": 50,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4102,
+     "long_paragraphs": 16,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://newsonjapan.com/article/149838.php"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3717,
+     "long_paragraphs": 16,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://newsonjapan.com/article/149836.php"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "dutchnews-en",
+   "outlet": "DutchNews.nl (EN)",
+   "region": "netherlands",
+   "url": "https://www.dutchnews.nl/feed/",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.dutchnews.nl/feed/",
+   "feed_kind": "rss",
+   "item_count": 10,
+   "newest_item_age_days": 0.3,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2300,
+     "long_paragraphs": 12,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.dutchnews.nl/2026/07/sexual-violence-support-centre-reports-rose-further-in-2025/"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1720,
+     "long_paragraphs": 11,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.dutchnews.nl/2026/07/new-home-construction-could-hit-100000-target-in-2027/"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "nos-algemeen",
+   "outlet": "NOS – Algemeen",
+   "region": "netherlands",
+   "url": "https://feeds.nos.nl/nosnieuwsalgemeen",
+   "main": true,
+   "feed_http_code": 200,
+   "feed_final_url": "https://feeds.nos.nl/nosnieuwsalgemeen",
+   "feed_kind": "rss",
+   "item_count": 20,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2676,
+     "long_paragraphs": 13,
+     "jsonld_body_chars": 2629,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://nos.nl/l/2621249"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2806,
+     "long_paragraphs": 9,
+     "jsonld_body_chars": 2698,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://nos.nl/l/2621246"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "nos-politiek",
+   "outlet": "NOS – Politiek",
+   "region": "netherlands",
+   "url": "https://feeds.nos.nl/nosnieuwspolitiek",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://feeds.nos.nl/nosnieuwspolitiek",
+   "feed_kind": "rss",
+   "item_count": 20,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4586,
+     "long_paragraphs": 17,
+     "jsonld_body_chars": 905,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://nos.nl/l/2621237"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2613,
+     "long_paragraphs": 11,
+     "jsonld_body_chars": 1033,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://nos.nl/l/2621202"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "nos-sport",
+   "outlet": "NOS – Sport",
+   "region": "netherlands",
+   "url": "https://feeds.nos.nl/nossportalgemeen",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://feeds.nos.nl/nossportalgemeen",
+   "feed_kind": "rss",
+   "item_count": 20,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1260,
+     "long_paragraphs": 5,
+     "jsonld_body_chars": 441,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://nos.nl/l/2621235"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4242,
+     "long_paragraphs": 14,
+     "jsonld_body_chars": 3207,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://nos.nl/l/2621220"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "nos-wereld",
+   "outlet": "NOS – Wereld",
+   "region": "netherlands",
+   "url": "https://feeds.nos.nl/nosnieuwsbuitenland",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://feeds.nos.nl/nosnieuwsbuitenland",
+   "feed_kind": "rss",
+   "item_count": 20,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1738,
+     "long_paragraphs": 6,
+     "jsonld_body_chars": 417,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://nos.nl/l/2621242"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1749,
+     "long_paragraphs": 7,
+     "jsonld_body_chars": 1741,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://nos.nl/l/2621239"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "nrc-voorpagina",
+   "outlet": "NRC – Voorpagina",
+   "region": "netherlands",
+   "url": "https://www.nrc.nl/rss/",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.nrc.nl/rss/",
+   "feed_kind": "rss",
+   "item_count": 155,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2102,
+     "long_paragraphs": 11,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.nrc.nl/nieuws/2026/07/01/bbb-stapt-uit-drentse-coalitie-vanwege-stikstofplannen-van-bbb-gedeputeerde-a4931588"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 5118,
+     "long_paragraphs": 16,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.nrc.nl/nieuws/2026/07/01/pro-heeft-in-stikstofdebat-troef-in-handen-tot-frustratie-van-veel-partijen-a4931524"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "volkskrant",
+   "outlet": "De Volkskrant",
+   "region": "netherlands",
+   "url": "https://www.volkskrant.nl/voorpagina/rss.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.volkskrant.nl/voorpagina/rss.xml",
+   "feed_kind": "rss",
+   "item_count": 74,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 403,
+     "error": null,
+     "verdict": "http_403",
+     "url": "https://www.volkskrant.nl/politiek/pro-kamerlid-laura-bromet-wordt-kop-van-jut-in-verhit-stikstofdebat~bca39079/"
+    },
+    {
+     "http_code": 403,
+     "error": null,
+     "verdict": "http_403",
+     "url": "https://www.volkskrant.nl/stikstof/trekkers-keren-terug-naar-den-haag-voor-stikstofdebat-waarom-wil-je-de-boeren-weghebben~bc027194/"
+    }
+   ],
+   "initial_classification": "dead",
+   "initial_reason": "no extractable article body in sampled pages (http_403; http_403)",
+   "final_classification": "dead",
+   "disposition": "removed",
+   "recheck": "DPG Media consent interstitial: article pages return an 8KB JS shell with no content (URLSession too)"
+  },
+  {
+   "id": "aftenposten-forsiden",
+   "outlet": "Aftenposten – Forsiden",
+   "region": "norway",
+   "url": "https://www.aftenposten.no/rss",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.aftenposten.no/rss",
+   "feed_kind": "rss",
+   "item_count": 25,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2485,
+     "long_paragraphs": 12,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.aftenposten.no/meninger/debatt/i/wrnmw5/man-trenger-ikke-vaere-enig-med-fri-for-aa-stoette-pride"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1935,
+     "long_paragraphs": 14,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.aftenposten.no/kultur/i/d4qVdz/tusenvis-av-nordmenn-kan-havne-midt-i-taylor-swifts-bryllupshelg"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "dagbladet",
+   "outlet": "Dagbladet",
+   "region": "norway",
+   "url": "https://www.dagbladet.no/rss/",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.dagbladet.no/?lab_viewport=rss",
+   "feed_kind": "rss",
+   "item_count": 39,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 0,
+     "long_paragraphs": 0,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "no_body",
+     "url": "https://live.dagbladet.no/fotball/2026-07-01/1/events/2534519"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 6874,
+     "long_paragraphs": 44,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.dagbladet.no/sport/ingen-vil-hjem-vi-har-vaert-utsultet/84841143"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "nrk-norge",
+   "outlet": "NRK – Norge",
+   "region": "norway",
+   "url": "https://www.nrk.no/norge/toppsaker.rss",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.nrk.no/norge/toppsaker.rss",
+   "feed_kind": "rss",
+   "item_count": 20,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2322,
+     "long_paragraphs": 12,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.nrk.no/sorlandet/_-bor-vurdere-om-torskefisket-skal-reguleres-1.17941754"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2812,
+     "long_paragraphs": 15,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.nrk.no/tromsogfinnmark/apner-skibotnvassdraget-for-forste-gang-pa-ti-ar-1.17943045"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "nrk-toppsaker",
+   "outlet": "NRK – Toppsaker",
+   "region": "norway",
+   "url": "https://www.nrk.no/toppsaker.rss",
+   "main": true,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.nrk.no/toppsaker.rss",
+   "feed_kind": "rss",
+   "item_count": 99,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4477,
+     "long_paragraphs": 25,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.nrk.no/vestland/reagerer-etter-billettkaos-til-vm-kamp-pa-fotballfestivalen-pa-festplassen-i-bergen-1.17944104"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4879,
+     "long_paragraphs": 33,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.nrk.no/fotballvm2026/fotball-vm_-verda-gjer-narr-av-usa-fans_-_-ler-dei-av-oss_-1.17939011"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "nrk-urix",
+   "outlet": "NRK – Urix (utenriks)",
+   "region": "norway",
+   "url": "https://www.nrk.no/urix/toppsaker.rss",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.nrk.no/urix/toppsaker.rss",
+   "feed_kind": "rss",
+   "item_count": 20,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 5632,
+     "long_paragraphs": 33,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.nrk.no/urix/xl/midtosten-skrives-om-pa-ny_-_-iran-har-overtaket-na-1.17935556"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 7482,
+     "long_paragraphs": 47,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.nrk.no/urix/venezuelas-leder-var-allerede-upopulaer_-_-hun-balanserer-pa-en-stram-line-1.17935691"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "vg-forsiden",
+   "outlet": "VG – Forsiden",
+   "region": "norway",
+   "url": "https://www.vg.no/rss/feed/",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.vg.no/rss/feed/",
+   "feed_kind": "rss",
+   "item_count": 10,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 0,
+     "long_paragraphs": 0,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "no_body",
+     "url": "https://www.vg.no/sport/i/6qlEkW/se-hoeydepunktene-kane-dobbel-sikret-engelsk-avansement"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 0,
+     "long_paragraphs": 0,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "no_body",
+     "url": "https://www.vg.no/sport/i/vrnqA4/tror-han-har-vunnet-lekter-n-konkurransen-jeg-er-saa-god"
+    }
+   ],
+   "initial_classification": "dead",
+   "initial_reason": "no extractable article body in sampled pages (no_body; no_body)",
+   "final_classification": "ok",
+   "disposition": "kept",
+   "recheck": "sampled links were VGTV video shells; regular news articles extract 5.7-7.6k chars via URLSession"
+  },
+  {
+   "id": "newsweek-pl",
+   "outlet": "Newsweek Polska",
+   "region": "poland",
+   "url": "https://www.newsweek.pl/rss.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.newsweek.pl/rss.xml",
+   "feed_kind": "rss",
+   "item_count": 10,
+   "newest_item_age_days": 0.3,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2808,
+     "long_paragraphs": 6,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.newsweek.pl/zielony-newsweek/okna-dachowe-nowe-zycie-poddasza/kd4zdjn"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 9876,
+     "long_paragraphs": 25,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.newsweek.pl/swiat/szwajcaria-bliskiego-wschodu-oman-jest-kluczowy-dla-wojny-w-iranie/gg6q4vf"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "rmf24",
+   "outlet": "RMF24",
+   "region": "poland",
+   "url": "https://www.rmf24.pl/feed",
+   "main": true,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.rmf24.pl/feed",
+   "feed_kind": "rss",
+   "item_count": 50,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2318,
+     "long_paragraphs": 9,
+     "jsonld_body_chars": 231,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.rmf24.pl/fakty/swiat/news-zmasowany-atak-na-ukraine-ogien-w-kijowie-zelenski-ostrzega,nIdn,1008404"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2661,
+     "long_paragraphs": 10,
+     "jsonld_body_chars": 390,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.rmf24.pl/fakty/swiat/news-przydacz-spotka-sie-z-rubio-ws-amerykanskich-baz-w-polsce,nIdn,1008403"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "observador",
+   "outlet": "Observador",
+   "region": "portugal",
+   "url": "https://observador.pt/feed/",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://observador.pt/feed/",
+   "feed_kind": "rss",
+   "item_count": 51,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 5965,
+     "long_paragraphs": 27,
+     "jsonld_body_chars": 297,
+     "paywall_hits": [
+      "paywall",
+      "metered"
+     ],
+     "verdict": "ok",
+     "url": "https://observador.pt/2026/07/01/incendios-livre-alerta-que-reforco-de-meios-pode-nao-chegar-devido-a-situacao-excecional/"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 5535,
+     "long_paragraphs": 23,
+     "jsonld_body_chars": 313,
+     "paywall_hits": [
+      "paywall",
+      "metered"
+     ],
+     "verdict": "ok",
+     "url": "https://observador.pt/2026/07/01/seguro-afirma-que-relacoes-entre-portugal-e-franca-estao-num-momento-muito-positivo/"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "publico-ultimas",
+   "outlet": "Público – Últimas",
+   "region": "portugal",
+   "url": "https://feeds.feedburner.com/PublicoUltimaHora",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://feeds.feedburner.com/PublicoUltimaHora",
+   "feed_kind": "rss",
+   "item_count": 10,
+   "newest_item_age_days": 2556.3,
+   "initial_classification": "dead",
+   "initial_reason": "stale feed: newest item is 2556 days old",
+   "final_classification": "dead",
+   "disposition": "removed",
+   "recheck": "Feedburner feed frozen at 2019-07 (2556 days stale); publico.pt/rss and feeds.publico.pt alternates return empty/202"
+  },
+  {
+   "id": "rtp-noticias",
+   "outlet": "RTP Notícias",
+   "region": "portugal",
+   "url": "https://www.rtp.pt/noticias/rss",
+   "main": true,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.rtp.pt/noticias/rss",
+   "feed_kind": "rss",
+   "item_count": 50,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 355,
+     "long_paragraphs": 1,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "no_body",
+     "url": "https://www.rtp.pt/noticias/futebol-internacional/mundial2026-selecionador-da-croacia-fala-em-batalha-e-afasta-um-portugal-debilitado_d1750765"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 502,
+     "long_paragraphs": 1,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "thin",
+     "url": "https://www.rtp.pt/noticias/politica/livre-quer-ministro-israelita-como-persona-non-grata-em-portugal-ben-gvir-nao-vem-por-bem_n1750764"
+    }
+   ],
+   "initial_classification": "degraded",
+   "initial_reason": "sampled article bodies are thin (<1000 chars)",
+   "final_classification": "degraded",
+   "disposition": "kept"
+  },
+  {
+   "id": "the-portugal-news-en",
+   "outlet": "The Portugal News (EN)",
+   "region": "portugal",
+   "url": "https://www.theportugalnews.com/rss",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.theportugalnews.com/rss",
+   "feed_kind": "rss",
+   "item_count": 63,
+   "newest_item_age_days": 0.2,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4176,
+     "long_paragraphs": 13,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.theportugalnews.com/news/2026-07-01/venomous-chilean-spider-recorded-in-portugal-for-the-first-time/1048562"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2898,
+     "long_paragraphs": 9,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.theportugalnews.com/news/2026-07-01/aima-has-30000-cases-pending-closure/1048651"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "agerpres",
+   "outlet": "Agerpres",
+   "region": "romania",
+   "url": "https://www.agerpres.ro/rss/",
+   "main": true,
+   "initial_classification": "dead",
+   "initial_reason": "feed fetch failed: curl: (28) Operation timed out after 11964 milliseconds with 0 bytes received",
+   "final_classification": "dead",
+   "disposition": "removed",
+   "recheck": "https://www.agerpres.ro/rss/ times out / 500; only alternate is an unofficial FiveFilters scrape proxy without dates"
+  },
+  {
+   "id": "digi24",
+   "outlet": "Digi24",
+   "region": "romania",
+   "url": "https://www.digi24.ro/rss",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.digi24.ro/rss",
+   "feed_kind": "rss",
+   "item_count": 299,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3632,
+     "long_paragraphs": 13,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.digi24.ro/stiri/externe/avioanele-decoleaza-pe-jumatate-goale-din-cauza-cozilor-provocate-de-noul-sistem-de-control-la-frontiera-al-ue-3843717"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2427,
+     "long_paragraphs": 10,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.digi24.ro/stiri/externe/ue/preturile-la-benzinariile-din-germania-au-crescut-dupa-expirarea-reducerii-taxei-pe-carburanti-cat-costa-acum-benzina-si-motorina-3843741"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "hotnews-ro",
+   "outlet": "HotNews.ro",
+   "region": "romania",
+   "url": "https://www.hotnews.ro/rss",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://hotnews.ro/feed",
+   "feed_kind": "rss",
+   "item_count": 20,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2703,
+     "long_paragraphs": 10,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://hotnews.ro/in-ce-cheie-interpreteaza-un-politolog-ultimele-declaratii-ale-lui-nicusor-dan-este-evident-un-om-infrant-2289964"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1794,
+     "long_paragraphs": 7,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://hotnews.ro/zelenski-pleaca-brusc-din-irlanda-dupa-un-raport-al-serviciilor-de-informatii-stim-ca-putin-pregateste-acest-atac-masiv-de-ceva-vreme-2289955"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "romania-insider-en",
+   "outlet": "Romania Insider (EN)",
+   "region": "romania",
+   "url": "https://www.romania-insider.com/feed",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.romania-insider.com/feed",
+   "feed_kind": "rss",
+   "item_count": 100,
+   "newest_item_age_days": 0.4,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 6903,
+     "long_paragraphs": 8,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.romania-insider.com/after-event-premieres-mountain-wanderers-sets-national-caravan-and-reaches-cinemas-september-11"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 7746,
+     "long_paragraphs": 29,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.romania-insider.com/romanian-president-nasset-declaration-july-2026"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "elconfidencial-espana",
+   "outlet": "El Confidencial – España",
+   "region": "spain",
+   "url": "https://rss.elconfidencial.com/espana/",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://rss.elconfidencial.com/espana/",
+   "feed_kind": "atom",
+   "item_count": 15,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1895,
+     "long_paragraphs": 6,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.elconfidencial.com/espana/2026-07-01/espinosa-de-los-monteros-expulsado-de-vox_4382004/"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2933,
+     "long_paragraphs": 7,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.elconfidencial.com/espana/2026-07-01/acusacion-caso-leire-pp-pide-imputar-guardia-civil-dao_4381920/"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "eldiario-es",
+   "outlet": "elDiario.es",
+   "region": "spain",
+   "url": "https://www.eldiario.es/rss/",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.eldiario.es/rss/",
+   "feed_kind": "rss",
+   "item_count": 113,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 10431,
+     "long_paragraphs": 53,
+     "jsonld_body_chars": 264,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.eldiario.es/madrid/ayuso-insinuaciones-pucherazo-voto-exterior-regularizaciones-intentando-nacionalizar-socialistas_1_13348613.html"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 19128,
+     "long_paragraphs": 65,
+     "jsonld_body_chars": 4151,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.eldiario.es/politica/providencia-tres-jueces-conservadores-supremo-abre-via-europea-no-pone-peligro-regularizacion_1_13345424.html"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "elpais-portada",
+   "outlet": "EL PAÍS – Portada",
+   "region": "spain",
+   "url": "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada",
+   "main": true,
+   "feed_http_code": 200,
+   "feed_final_url": "https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada",
+   "feed_kind": "rss",
+   "item_count": 166,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 6868,
+     "long_paragraphs": 12,
+     "jsonld_body_chars": 6738,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://elpais.com/espana/2026-07-01/ayuso-se-desmarca-del-giro-de-feijoo-con-junts-lo-sensato-es-alejarse-de-la-amenaza-independentista-constante.html"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 6382,
+     "long_paragraphs": 9,
+     "jsonld_body_chars": 6161,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://elpais.com/espana/2026-07-01/el-pp-modula-su-mensaje-sobre-la-ley-de-nietos-apoya-la-nacionalizacion-de-todos-los-descendientes-pero-con-otra-ley-con-criterios-tecnicos-y-rigor.html"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "elperiodico-portada",
+   "outlet": "El Periódico – Portada",
+   "region": "spain",
+   "url": "https://www.elperiodico.com/es/rss/rss_portada.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.elperiodico.com/es/rss/rss_portada.xml",
+   "feed_kind": "rss",
+   "item_count": 0,
+   "initial_classification": "dead",
+   "initial_reason": "feed parsed but has 0 items",
+   "final_classification": "ok",
+   "disposition": "replaced",
+   "replacement_url": "https://www.elperiodico.com/es/rss/internacional/rss.xml",
+   "recheck": "rss_portada.xml returns a valid channel with 0 items; section feeds are live; renamed to El Periodico - Internacional (id elperiodico-internacional)"
+  },
+  {
+   "id": "expansion-portada",
+   "outlet": "Expansión – Portada",
+   "region": "spain",
+   "url": "https://e00-expansion.uecdn.es/rss/portada.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://e00-expansion.uecdn.es/rss/portada.xml",
+   "feed_kind": "rss",
+   "item_count": 69,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 7448,
+     "long_paragraphs": 16,
+     "jsonld_body_chars": 6408,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.expansion.com/economia/2026/07/01/6a4408c5468aeba2718b45b2.html"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3745,
+     "long_paragraphs": 11,
+     "jsonld_body_chars": 2632,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.expansion.com/mercados/2026/06/30/6a43e153e5fdeaf8178b45db.html"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "huffpost-es",
+   "outlet": "HuffPost España",
+   "region": "spain",
+   "url": "https://www.huffingtonpost.es/feeds/index.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.huffingtonpost.es/feeds/index.xml",
+   "feed_kind": "rss",
+   "item_count": 86,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 5358,
+     "long_paragraphs": 22,
+     "jsonld_body_chars": 530,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.huffingtonpost.es/global/trump-asegura-cuba-esta-acercando-estados-unidos-decadas-enfrentamiento-f202607.html"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3169,
+     "long_paragraphs": 10,
+     "jsonld_body_chars": 1517,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.huffingtonpost.es/sociedad/en-ultima-islaprision-europa-muros-alambradas-presos-elaboran-vino-vende-90-euros-botella-no-toca-juzgarlos-vez-f202607.html"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "the-local-spain",
+   "outlet": "The Local Spain",
+   "region": "spain",
+   "url": "https://feeds.thelocal.com/rss/es",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://feeds.thelocal.com/rss/es",
+   "feed_kind": "rss",
+   "item_count": 20,
+   "newest_item_age_days": 0.4,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4184,
+     "long_paragraphs": 17,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.thelocal.es/20240904/can-my-landlord-stop-me-from-smoking-in-my-rental-in-spain"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3568,
+     "long_paragraphs": 18,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall",
+      "metered"
+     ],
+     "verdict": "ok",
+     "url": "https://www.thelocal.es/20260701/heat-dome-to-bring-40c-saharan-air-to-spain-this-weekend"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "dn-senaste",
+   "outlet": "Dagens Nyheter – Senaste",
+   "region": "sweden",
+   "url": "https://www.dn.se/rss/",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.dn.se/rss/",
+   "feed_kind": "rss",
+   "item_count": 108,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1747,
+     "long_paragraphs": 9,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.dn.se/kultur/underlig-konsert-med-morrissey-som-lever-pa-gamla-meriter/"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1737,
+     "long_paragraphs": 8,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.dn.se/varlden/ukrainas-militarchef-ryssarna-planerar-nya-satt-att-erovra-kiev/"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "sr-ekot",
+   "outlet": "Sveriges Radio – Ekot",
+   "region": "sweden",
+   "url": "https://api.sr.se/api/rss/program/4540",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://api.sr.se/api/rss/program/4540",
+   "feed_kind": "atom",
+   "item_count": 20,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 403,
+     "error": null,
+     "verdict": "http_403",
+     "url": "https://www.sverigesradio.se/artikel/9249926"
+    },
+    {
+     "http_code": 403,
+     "error": null,
+     "verdict": "http_403",
+     "url": "https://www.sverigesradio.se/artikel/9249842"
+    }
+   ],
+   "initial_classification": "dead",
+   "initial_reason": "no extractable article body in sampled pages (http_403; http_403)",
+   "final_classification": "ok",
+   "disposition": "replaced",
+   "replacement_url": "https://api.sr.se/api/rss/program/83",
+   "recheck": "program/4540 is the radio-broadcast feed whose article pages 404; program/83 is the Ekot text-news feed, articles extract ~2k chars"
+  },
+  {
+   "id": "svt-all",
+   "outlet": "SVT Nyheter – All",
+   "region": "sweden",
+   "url": "https://www.svt.se/nyheter/rss.xml",
+   "main": true,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.svt.se/rss.xml",
+   "feed_kind": "rss",
+   "item_count": 100,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1601,
+     "long_paragraphs": 10,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.svt.se/sport/friidrott/marcell-jacobs-superlopp-nast-snabbast-nagonsin"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1540,
+     "long_paragraphs": 7,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.svt.se/nyheter/lokalt/skane/stort-familjebrak-i-malmo-fem-till-sjukhus"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "svt-sverige",
+   "outlet": "SVT Nyheter – Sverige",
+   "region": "sweden",
+   "url": "https://www.svt.se/nyheter/sverige/rss.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.svt.se/nyheter/inrikes/rss.xml",
+   "feed_kind": "rss",
+   "item_count": 100,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2863,
+     "long_paragraphs": 18,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.svt.se/nyheter/inrikes/fra-kvinnan-lena-huovinen-talar-ut-efter-misstankarna"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2091,
+     "long_paragraphs": 11,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.svt.se/nyheter/inrikes/experten-bidrar-till-avskrackning"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "svt-varlden",
+   "outlet": "SVT Nyheter – Världen",
+   "region": "sweden",
+   "url": "https://www.svt.se/nyheter/varlden/rss.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.svt.se/nyheter/utrikes/rss.xml",
+   "feed_kind": "rss",
+   "item_count": 100,
+   "newest_item_age_days": 0.2,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1059,
+     "long_paragraphs": 5,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.svt.se/nyheter/utrikes/par-klattrade-hogst-upp-pa-empire-state-building"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2057,
+     "long_paragraphs": 11,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.svt.se/nyheter/utrikes/efter-falska-flygkapningslarmet-utanfor-cypern-det-kan-ligga-bakom"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "letemps",
+   "outlet": "Le Temps",
+   "region": "switzerland",
+   "url": "https://www.letemps.ch/articles.rss",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.letemps.ch/articles.rss",
+   "feed_kind": "rss",
+   "item_count": 21,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 9023,
+     "long_paragraphs": 35,
+     "jsonld_body_chars": 1950,
+     "paywall_hits": [
+      "paywall",
+      "réservé aux abonnés"
+     ],
+     "verdict": "ok",
+     "url": "https://www.letemps.ch/articles/en-direct-guerre-en-ukraine-kiev-signe-un-contrat-pour-16-avions-de-chasse-suedois-gripen"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 1917,
+     "long_paragraphs": 6,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "réservé aux abonnés"
+     ],
+     "verdict": "ok",
+     "url": "https://www.letemps.ch/articles/on-en-oublierait-presque-qu-elle-est-si-forte-meme-sans-record-fribourg-celebre-audrey-werro-et-sa-simplicite"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "srf-international",
+   "outlet": "SRF – International",
+   "region": "switzerland",
+   "url": "https://www.srf.ch/news/bnf/rss/1922",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.srf.ch/news/bnf/rss/1922",
+   "feed_kind": "rss",
+   "item_count": 60,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2656,
+     "long_paragraphs": 9,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.srf.ch/news/international/wird-eu-geldhahn-zugedreht-eu-parlament-stimmt-ueber-verfahren-gegen-afd-europapartei-ab"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 5198,
+     "long_paragraphs": 19,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.srf.ch/news/international/buergerkrieg-im-sudan-amnesty-bericht-zeigt-ausmass-der-graeueltaten-von-el-fascher"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "srf-schweiz",
+   "outlet": "SRF – Schweiz",
+   "region": "switzerland",
+   "url": "https://www.srf.ch/news/bnf/rss/1646",
+   "main": true,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.srf.ch/news/bnf/rss/1646",
+   "feed_kind": "rss",
+   "item_count": 85,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2771,
+     "long_paragraphs": 7,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.srf.ch/news/schweiz/untersuchung-finanzkontrolle-wenn-im-abstimmungsbuechlein-falsche-zahlen-stehen"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 5198,
+     "long_paragraphs": 19,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.srf.ch/news/international/buergerkrieg-im-sudan-amnesty-bericht-zeigt-ausmass-der-graeueltaten-von-el-fascher"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "srf-wirtschaft",
+   "outlet": "SRF – Wirtschaft",
+   "region": "switzerland",
+   "url": "https://www.srf.ch/news/bnf/rss/1926",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.srf.ch/news/bnf/rss/1926",
+   "feed_kind": "rss",
+   "item_count": 60,
+   "newest_item_age_days": 0.3,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3265,
+     "long_paragraphs": 14,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.srf.ch/news/international/einnahmen-offengelegt-trump-verdient-am-meisten-geld-mit-krypto"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4332,
+     "long_paragraphs": 15,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.srf.ch/news/wirtschaft/stromnetz-der-zukunft-in-der-schweiz-beginnt-das-zeitalter-der-grossbatterien"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "bbc-business",
+   "outlet": "BBC News – Business",
+   "region": "unitedKingdom",
+   "url": "https://feeds.bbci.co.uk/news/business/rss.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://feeds.bbci.co.uk/news/business/rss.xml",
+   "feed_kind": "rss",
+   "item_count": 52,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 6718,
+     "long_paragraphs": 33,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.bbc.co.uk/news/articles/cy9rg133lrjo?at_medium=RSS&at_campaign=rss"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 6501,
+     "long_paragraphs": 33,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.bbc.co.uk/news/articles/c24ydy4q0nzo?at_medium=RSS&at_campaign=rss"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "bbc-technology",
+   "outlet": "BBC News – Technology",
+   "region": "unitedKingdom",
+   "url": "https://feeds.bbci.co.uk/news/technology/rss.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://feeds.bbci.co.uk/news/technology/rss.xml",
+   "feed_kind": "rss",
+   "item_count": 21,
+   "newest_item_age_days": 0.3,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 5134,
+     "long_paragraphs": 26,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.bbc.co.uk/news/articles/c0ryjyvjq41o?at_medium=RSS&at_campaign=rss"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4300,
+     "long_paragraphs": 19,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.bbc.co.uk/news/articles/cdxdgpgn0zwo?at_medium=RSS&at_campaign=rss"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "bbc-uk-frontpage",
+   "outlet": "BBC News – UK Front Page",
+   "region": "unitedKingdom",
+   "url": "https://feeds.bbci.co.uk/news/rss.xml",
+   "main": true,
+   "feed_http_code": 200,
+   "feed_final_url": "https://feeds.bbci.co.uk/news/rss.xml",
+   "feed_kind": "rss",
+   "item_count": 35,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 5876,
+     "long_paragraphs": 31,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.bbc.co.uk/news/articles/c05yv34qlnlo?at_medium=RSS&at_campaign=rss"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 8683,
+     "long_paragraphs": 46,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.bbc.co.uk/news/articles/ce8k4pz91n5o?at_medium=RSS&at_campaign=rss"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "bbc-uk-politics",
+   "outlet": "BBC News – UK Politics",
+   "region": "unitedKingdom",
+   "url": "https://feeds.bbci.co.uk/news/politics/rss.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://feeds.bbci.co.uk/news/politics/rss.xml",
+   "feed_kind": "rss",
+   "item_count": 62,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 7532,
+     "long_paragraphs": 34,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.bbc.co.uk/news/articles/cy9rgg9ddw2o?at_medium=RSS&at_campaign=rss"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 8251,
+     "long_paragraphs": 41,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.bbc.co.uk/news/articles/c14ymy41v5go?at_medium=RSS&at_campaign=rss"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "dailymail-home",
+   "outlet": "Daily Mail – Home",
+   "region": "unitedKingdom",
+   "url": "https://www.dailymail.co.uk/home/index.rss",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.dailymail.com/home/index.rss",
+   "feed_kind": "rss",
+   "item_count": 150,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3072,
+     "long_paragraphs": 21,
+     "jsonld_body_chars": 229,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.dailymail.com/news/article-15945395/Pictured-son-old-fashioned-farmer-75-shot-dead-sitting-vintage-tractor.html?ns_mchannel=rss&ns_campaign=1490&ito=1490"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 9390,
+     "long_paragraphs": 58,
+     "jsonld_body_chars": 239,
+     "paywall_hits": [
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.dailymail.com/lifestyle/article-15944603/whos-royal-box-wimbledon-day-3.html?ns_mchannel=rss&ns_campaign=1490&ito=1490"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "ft-home",
+   "outlet": "Financial Times – Home",
+   "region": "unitedKingdom",
+   "url": "https://www.ft.com/?format=rss",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.ft.com/rss/home/international",
+   "feed_kind": "rss",
+   "item_count": 11,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 403,
+     "error": null,
+     "verdict": "http_403",
+     "url": "https://www.ft.com/content/000d10d6-cdfb-4110-9c6b-a5cd133b7a0f"
+    },
+    {
+     "http_code": 403,
+     "error": null,
+     "verdict": "http_403",
+     "url": "https://www.ft.com/content/f4a8e4b2-5dcf-47b4-97a5-ec6a2a8a97f5"
+    }
+   ],
+   "initial_classification": "dead",
+   "initial_reason": "no extractable article body in sampled pages (http_403; http_403)",
+   "final_classification": "ok",
+   "disposition": "kept",
+   "recheck": "curl 403 on article pages; URLSession 200, ~7.2k chars body"
+  },
+  {
+   "id": "guardian-politics-uk",
+   "outlet": "The Guardian – Politics",
+   "region": "unitedKingdom",
+   "url": "https://www.theguardian.com/politics/rss",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.theguardian.com/politics/rss",
+   "feed_kind": "rss",
+   "item_count": 21,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 6647,
+     "long_paragraphs": 26,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.theguardian.com/society/2026/jul/01/us-uk-drug-deal-could-result-in-229000-excess-deaths-in-england-analysis-suggests"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 5889,
+     "long_paragraphs": 23,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.theguardian.com/politics/2026/jul/01/andy-burnham-says-nothing-off-table-in-case-of-rochdale-grooming-gang-leader"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "guardian-uk",
+   "outlet": "The Guardian – UK",
+   "region": "unitedKingdom",
+   "url": "https://www.theguardian.com/uk/rss",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.theguardian.com/uk/rss",
+   "feed_kind": "rss",
+   "item_count": 139,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4445,
+     "long_paragraphs": 13,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.theguardian.com/football/2026/jul/01/thomas-tuchel-children-1am-bst-england-mexico-harry-kane-world-cup"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4756,
+     "long_paragraphs": 9,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.theguardian.com/artanddesign/2026/jul/01/ai-weiwei-button-up-review-manchester"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "guardian-world-uk",
+   "outlet": "The Guardian – World",
+   "region": "unitedKingdom",
+   "url": "https://www.theguardian.com/world/rss",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.theguardian.com/world/rss",
+   "feed_kind": "rss",
+   "item_count": 45,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3250,
+     "long_paragraphs": 15,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.theguardian.com/world/2026/jul/01/sudan-rsf-rapid-support-forces-crimes-against-humanity-el-fasher-amnesty-ethnic-cleansing"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 5014,
+     "long_paragraphs": 22,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.theguardian.com/world/2026/jul/01/witch-hunt-in-niger-as-military-regime-rounds-up-lgbtq-population"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "independent",
+   "outlet": "The Independent",
+   "region": "unitedKingdom",
+   "url": "https://www.independent.co.uk/news/uk/rss",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.independent.co.uk/news/uk/rss",
+   "feed_kind": "rss",
+   "item_count": 52,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4844,
+     "long_paragraphs": 23,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "tp-modal",
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.independent.co.uk/news/uk/politics/andy-burnham-rayner-devolution-b3006932.html"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 2185,
+     "long_paragraphs": 15,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [
+      "tp-modal",
+      "paywall"
+     ],
+     "verdict": "ok",
+     "url": "https://www.independent.co.uk/news/uk/home-news/duke-of-edinburgh-wales-student-death-river-wye-b3007080.html"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "sky-news-home",
+   "outlet": "Sky News – Home",
+   "region": "unitedKingdom",
+   "url": "https://feeds.skynews.com/feeds/rss/home.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://feeds.skynews.com/feeds/rss/home.xml",
+   "feed_kind": "rss",
+   "item_count": 10,
+   "newest_item_age_days": 0.2,
+   "articles": [
+    {
+     "http_code": 403,
+     "error": null,
+     "verdict": "http_403",
+     "url": "https://news.sky.com/story/boy-16-left-with-life-threatening-injuries-after-shooting-near-birmingham-mosque-13556449"
+    },
+    {
+     "http_code": 403,
+     "error": null,
+     "verdict": "http_403",
+     "url": "https://news.sky.com/story/parents-and-grandparents-charged-after-16-children-found-living-in-squalor-in-ohio-13559643"
+    }
+   ],
+   "initial_classification": "dead",
+   "initial_reason": "no extractable article body in sampled pages (http_403; http_403)",
+   "final_classification": "ok",
+   "disposition": "kept",
+   "recheck": "curl 403 intermittent; URLSession 200 with 8k chars body + JSON-LD"
+  },
+  {
+   "id": "ap-google-proxy",
+   "outlet": "AP News – Top Headlines",
+   "region": "unitedStates",
+   "url": "https://news.google.com/rss/search?q=site%3Aapnews.com+when%3A1d&hl=en-US&gl=US&ceid=US:en",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://news.google.com/rss/search?q=site%3Aapnews.com+when%3A1d&hl=en-US&gl=US&ceid=US:en",
+   "feed_kind": "rss",
+   "item_count": 100,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 0,
+     "long_paragraphs": 0,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "no_body",
+     "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxQWjNlekt0VjJhX2w5b01vaFFEaXB2LVdlc0R4dUU0UVQtZ3RxMGxvb2pZUGNnT3lvQmpkOXJjdnMzaVpTcDZNZ3ZnalNMYWZSMjFaZkxXTldKYUtRcnFvd2hBZnlGZWpPU0V0Qms0YVBsZkdCUkxZcEdXRmZ5WHJDb01SSmM4TExxMVl6UElqbmlKQ0lqRk9SZw?oc=5"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 0,
+     "long_paragraphs": 0,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "no_body",
+     "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxPVWhCd0owd29LOGZjcXNhWmpEaVRIb1lyUE5jamlUVlhLNE5aMWVPLUVvTTdDSlRUNkNIa2RjS2NUY3gyZG5VWHl1bV9IUERWVkR4NlpHYk9xZ3pzY2VOZUdpdWtZNzhYTVEtWjJ1c0xvTlJjZVZ3STlBcmFtUl96RnRoZHA2dFRxVXZSUzZCQmZCbldBT0hEZ1Zn?oc=5"
+    }
+   ],
+   "initial_classification": "dead",
+   "initial_reason": "no extractable article body in sampled pages (no_body; no_body)",
+   "final_classification": "dead",
+   "disposition": "removed",
+   "recheck": "Google News proxy items link to news.google.com JS-redirect stubs with no extractable body"
+  },
+  {
+   "id": "cnbc-top",
+   "outlet": "CNBC – US Top News",
+   "region": "unitedStates",
+   "url": "https://www.cnbc.com/id/100003114/device/rss/rss.html",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.cnbc.com/id/100003114/device/rss/rss.html",
+   "feed_kind": "rss",
+   "item_count": 30,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3209,
+     "long_paragraphs": 16,
+     "jsonld_body_chars": 204,
+     "paywall_hits": [
+      "tp-modal",
+      "paywall",
+      "metered"
+     ],
+     "verdict": "ok",
+     "url": "https://www.cnbc.com/2026/07/01/trump-usmca-canada-mexico-trade-treaty.html"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 4680,
+     "long_paragraphs": 18,
+     "jsonld_body_chars": 204,
+     "paywall_hits": [
+      "tp-modal",
+      "paywall",
+      "metered"
+     ],
+     "verdict": "ok",
+     "url": "https://www.cnbc.com/2026/07/01/trump-fifa-infantino-world-cup-financial-disclosure.html"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "fox-news-latest",
+   "outlet": "Fox News – Latest",
+   "region": "unitedStates",
+   "url": "https://moxie.foxnews.com/google-publisher/latest.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://moxie.foxnews.com/google-publisher/latest.xml",
+   "feed_kind": "rss",
+   "item_count": 25,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 5885,
+     "long_paragraphs": 25,
+     "jsonld_body_chars": 1047,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.foxnews.com/politics/ice-surges-enforcement-makes-10000-arrests-five-days-amid-supreme-court-birthright-citizenship-decision"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 5084,
+     "long_paragraphs": 25,
+     "jsonld_body_chars": 223,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.foxnews.com/media/dsa-co-chair-pushes-back-soviet-union-comparisons-wants-prisons-less-necessary"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "huffpost-world",
+   "outlet": "HuffPost – World News",
+   "region": "unitedStates",
+   "url": "https://www.huffpost.com/section/world-news/feed",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://chaski.huffpost.com/us/auto/vertical/world-news",
+   "feed_kind": "rss",
+   "item_count": 8,
+   "newest_item_age_days": 0.5,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3411,
+     "long_paragraphs": 17,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.huffpost.com/entry/us-iran-doha-talks_n_6a44ef3fe4b07b95cff2f479"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3385,
+     "long_paragraphs": 14,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.huffpost.com/entry/guterres-unrwa-funding-warning_n_6a44df75e4b07b95cff2e4d4"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "latimes-world-nation",
+   "outlet": "LA Times – World & Nation",
+   "region": "unitedStates",
+   "url": "https://www.latimes.com/world-nation/rss2.0.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://www.latimes.com/world-nation/rss2.0.xml",
+   "feed_kind": "rss",
+   "item_count": 98,
+   "newest_item_age_days": 0.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 5610,
+     "long_paragraphs": 19,
+     "jsonld_body_chars": 876,
+     "paywall_hits": [
+      "paywall",
+      "metered"
+     ],
+     "verdict": "ok",
+     "url": "https://www.latimes.com/california/story/2026-07-01/trump-administration-california-glock-ban-lawsuits"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 16432,
+     "long_paragraphs": 56,
+     "jsonld_body_chars": 750,
+     "paywall_hits": [
+      "paywall",
+      "metered"
+     ],
+     "verdict": "ok",
+     "url": "https://www.latimes.com/california/story/2026-07-01/birthright-citizenship-ruling-win-for-democracy-or-warning"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "npr-business",
+   "outlet": "NPR – Business",
+   "region": "unitedStates",
+   "url": "https://feeds.npr.org/1006/rss.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://feeds.npr.org/1006/rss.xml",
+   "feed_kind": "rss",
+   "item_count": 10,
+   "newest_item_age_days": 1.1,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 5748,
+     "long_paragraphs": 22,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.npr.org/2026/06/30/nx-s1-5875468/meta-kalshi-prediction-market-acquisition-talks"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 5132,
+     "long_paragraphs": 27,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.npr.org/2026/06/30/nx-s1-5862777/how-to-spend-less-money-restaurants-takeout"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "npr-top",
+   "outlet": "NPR – Top Stories",
+   "region": "unitedStates",
+   "url": "https://feeds.npr.org/1001/rss.xml",
+   "main": true,
+   "feed_http_code": 200,
+   "feed_final_url": "https://feeds.npr.org/1001/rss.xml",
+   "feed_kind": "rss",
+   "item_count": 10,
+   "newest_item_age_days": 0.2,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 9331,
+     "long_paragraphs": 43,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.npr.org/2026/07/01/nx-s1-5877369/venezuela-earthquakes-updates"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 643,
+     "long_paragraphs": 3,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "thin",
+     "url": "https://www.npr.org/2026/07/01/nx-s1-5877341/lone-star-ticks-are-covering-much-of-the-u-s-heres-what-you-need-to-know"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "npr-world",
+   "outlet": "NPR – World",
+   "region": "unitedStates",
+   "url": "https://feeds.npr.org/1004/rss.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://feeds.npr.org/1004/rss.xml",
+   "feed_kind": "rss",
+   "item_count": 10,
+   "newest_item_age_days": 0.2,
+   "articles": [
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 9331,
+     "long_paragraphs": 43,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.npr.org/2026/07/01/nx-s1-5877369/venezuela-earthquakes-updates"
+    },
+    {
+     "http_code": 200,
+     "error": null,
+     "p_chars": 3323,
+     "long_paragraphs": 16,
+     "jsonld_body_chars": 0,
+     "paywall_hits": [],
+     "verdict": "ok",
+     "url": "https://www.npr.org/2026/07/01/g-s1-131537/funerals-held-for-14-pakistani-children-killed-in-tutoring-center-collapse"
+    }
+   ],
+   "initial_classification": "ok",
+   "initial_reason": null,
+   "final_classification": "ok",
+   "disposition": "kept"
+  },
+  {
+   "id": "nyt-top",
+   "outlet": "NYT – Top Stories",
+   "region": "unitedStates",
+   "url": "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml",
+   "main": true,
+   "feed_http_code": 200,
+   "feed_final_url": "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml",
+   "feed_kind": "rss",
+   "item_count": 23,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 403,
+     "error": null,
+     "verdict": "http_403",
+     "url": "https://www.nytimes.com/2026/07/01/us/politics/trump-crypto-memecoin-world-liberty.html"
+    },
+    {
+     "http_code": 403,
+     "error": null,
+     "verdict": "http_403",
+     "url": "https://www.nytimes.com/2026/07/01/briefing/ukraine-war-casualties-air-force-one.html"
+    }
+   ],
+   "initial_classification": "dead",
+   "initial_reason": "no extractable article body in sampled pages (http_403; http_403)",
+   "final_classification": "dead",
+   "disposition": "removed",
+   "recheck": "feed OK but article pages return hard 403 (774-byte block page) via curl AND URLSession with Safari UA"
+  },
+  {
+   "id": "nyt-world",
+   "outlet": "NYT – World",
+   "region": "unitedStates",
+   "url": "https://rss.nytimes.com/services/xml/rss/nyt/World.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://rss.nytimes.com/services/xml/rss/nyt/World.xml",
+   "feed_kind": "rss",
+   "item_count": 55,
+   "newest_item_age_days": 0.0,
+   "articles": [
+    {
+     "http_code": 403,
+     "error": null,
+     "verdict": "http_403",
+     "url": "https://www.nytimes.com/2026/07/01/world/europe/ukraine-war-pregnant-women-hospitals.html"
+    },
+    {
+     "http_code": 403,
+     "error": null,
+     "verdict": "http_403",
+     "url": "https://www.nytimes.com/2026/07/01/world/americas/venezuela-earthquakes-bodies-morgues.html"
+    }
+   ],
+   "initial_classification": "dead",
+   "initial_reason": "no extractable article body in sampled pages (http_403; http_403)",
+   "final_classification": "dead",
+   "disposition": "removed",
+   "recheck": "feed OK but article pages return hard 403 via curl AND URLSession with Safari UA"
+  },
+  {
+   "id": "politico-playbook",
+   "outlet": "Politico – Playbook",
+   "region": "unitedStates",
+   "url": "https://rss.politico.com/playbook.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://rss.politico.com/playbook.xml",
+   "feed_kind": "rss",
+   "item_count": 30,
+   "newest_item_age_days": 0.2,
+   "articles": [
+    {
+     "http_code": 403,
+     "error": null,
+     "verdict": "http_403",
+     "url": "https://www.politico.com/newsletters/playbook/2026/07/01/the-insurgent-lefts-newest-star-00983534"
+    },
+    {
+     "http_code": 403,
+     "error": null,
+     "verdict": "http_403",
+     "url": "https://www.politico.com/newsletters/playbook/2026/06/30/the-supreme-court-justices-to-watch-today-00981451"
+    }
+   ],
+   "initial_classification": "dead",
+   "initial_reason": "no extractable article body in sampled pages (http_403; http_403)",
+   "final_classification": "ok",
+   "disposition": "kept",
+   "recheck": "curl 403 on article pages; URLSession 200, ~27-30k chars body"
+  },
+  {
+   "id": "washingtonpost-world",
+   "outlet": "Washington Post – World",
+   "region": "unitedStates",
+   "url": "https://feeds.washingtonpost.com/rss/world",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://feeds.washingtonpost.com/rss/world",
+   "feed_kind": "rss",
+   "item_count": 5,
+   "newest_item_age_days": 0.6,
+   "articles": [
+    {
+     "http_code": null,
+     "error": "curl: (92) HTTP/2 stream 1 was not closed cleanly: INTERNAL_ERROR (err 2)",
+     "verdict": "fetch_error",
+     "url": "https://www.washingtonpost.com/world/2026/07/01/after-quakes-trap-venezuelans-government-blocks-rescuers-aid/"
+    },
+    {
+     "http_code": null,
+     "error": "curl: (92) HTTP/2 stream 1 was not closed cleanly: INTERNAL_ERROR (err 2)",
+     "verdict": "fetch_error",
+     "url": "https://www.washingtonpost.com/world/2026/06/30/july-fourth-pope-leo-offer-counterpoint-trumps-america/"
+    }
+   ],
+   "initial_classification": "dead",
+   "initial_reason": "no extractable article body in sampled pages (fetch_error; fetch_error)",
+   "final_classification": "dead",
+   "disposition": "removed",
+   "recheck": "article pages are a 1MB JS shell; visible body ~900 chars teaser + subscription wall (hard paywall)"
+  },
+  {
+   "id": "wsj-world",
+   "outlet": "WSJ – World News",
+   "region": "unitedStates",
+   "url": "https://feeds.a.dj.com/rss/RSSWorldNews.xml",
+   "main": false,
+   "feed_http_code": 200,
+   "feed_final_url": "https://feeds.a.dj.com/rss/RSSWorldNews.xml",
+   "feed_kind": "rss",
+   "item_count": 20,
+   "newest_item_age_days": 520.1,
+   "initial_classification": "dead",
+   "initial_reason": "stale feed: newest item is 520 days old",
+   "final_classification": "ok",
+   "disposition": "replaced",
+   "replacement_url": "https://feeds.content.dowjones.io/public/rss/RSSWorldNews",
+   "recheck": "feeds.a.dj.com frozen 2025-01 (520 days stale); Dow Jones moved public feeds to feeds.content.dowjones.io; articles extract 50k+ chars"
+  }
+ ],
+ "method": {
+  "feed_fetch": "curl --compressed -L, 12s timeout, 1 retry, 4-way concurrency, Safari-iOS UA from ArticlePageClient.defaultUserAgent",
+  "article_check": "1-2 real article pages per outlet; body extractability scored on <p>-text volume and JSON-LD articleBody",
+  "recheck": "every curl-level failure re-verified with a Foundation URLSession probe (same UA) to rule out curl TLS-fingerprint bot blocks",
+  "classification": {
+   "ok": "feed parses, >=5 items, newest <=30 days, >=1 sampled article with extractable body (>=1000 chars)",
+   "degraded": "feed works but thin items/bodies, missing dates, or partially broken links",
+   "dead": "fetch/parse failure, empty or >30-day-stale feed, or no extractable article body (hard paywall / JS shell / consent wall)"
+  }
+ }
+}

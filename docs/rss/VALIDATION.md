@@ -1,3 +1,184 @@
+# RSS Catalog Validation Report — 2026-07-02 (issue #90, batch 1)
+
+Live end-to-end validation of every catalog outlet: feed fetch + parse +
+freshness, **plus 1–2 real article pages per outlet** scored for
+extractable body (the new requirement from issue #90 — a feed is only
+healthy if the reader can produce an article body from it).
+
+- **Raw diagnostics dump**: [`research/diagnostics-2026-07-02.json`](research/diagnostics-2026-07-02.json)
+- **Run environment**: curl + Foundation URLSession probes from macOS,
+  Safari-iOS UA (`ArticlePageClient.defaultUserAgent`), 12 s timeout,
+  1 retry, 4-way concurrency.
+
+## Method
+
+1. Fetch each of the 177 feed URLs with the app's Safari-iOS UA.
+2. Parse as RSS/Atom/RDF; count items; compute newest-item age
+   (stale cut-off: 30 days).
+3. Fetch 1–2 real article pages per outlet and score body
+   extractability on `<p>`-text volume and JSON-LD `articleBody`
+   (ok ≥ 1000 chars, thin ≥ 400, else no body).
+4. **Re-verify every curl-level failure with a Foundation URLSession
+   probe** (same UA). This matters: 17 outlets that 403 curl serve the
+   app's network stack just fine (curl TLS-fingerprint bot blocks), and
+   they are kept as ✅ — see "curl false alarms" below.
+
+## Classification
+
+| Bucket | Meaning |
+| --- | --- |
+| ✅ ok | Feed parses, ≥5 items, newest ≤30 days, ≥1 sampled article page with extractable body. |
+| 🟡 degraded | Feed works but items/bodies are thin, dates are missing, or some links are broken. Kept. |
+| ⛔ dead | Fetch/parse failure, empty or >30-day-stale feed, or **no extractable article body** (hard paywall, JS-only shell, consent interstitial). Replaced or removed. |
+
+## Summary
+
+### Pre-fix (final verdicts on the shipped 177 entries)
+
+| Region | ✅ ok | 🟡 degraded | ⛔ dead | total |
+| --- | ---: | ---: | ---: | ---: |
+| Austria | 5 | 0 | 0 | 5 |
+| Belgium | 3 | 0 | 2 | 5 |
+| Brazil | 5 | 0 | 1 | 6 |
+| Bulgaria | 3 | 0 | 0 | 3 |
+| Denmark | 4 | 0 | 0 | 4 |
+| Europe-Wide | 9 | 0 | 0 | 9 |
+| Finland | 4 | 0 | 0 | 4 |
+| France | 10 | 0 | 0 | 10 |
+| Germany | 7 | 0 | 0 | 7 |
+| Greece | 1 | 0 | 1 | 2 |
+| Hungary | 2 | 0 | 0 | 2 |
+| Ireland | 5 | 0 | 0 | 5 |
+| Italy | 36 | 4 | 8 | 48 |
+| Japan | 2 | 1 | 1 | 4 |
+| Netherlands | 6 | 0 | 1 | 7 |
+| Norway | 6 | 0 | 0 | 6 |
+| Poland | 2 | 0 | 0 | 2 |
+| Portugal | 2 | 1 | 1 | 4 |
+| Romania | 3 | 0 | 1 | 4 |
+| Spain | 6 | 0 | 1 | 7 |
+| Sweden | 4 | 0 | 1 | 5 |
+| Switzerland | 4 | 0 | 0 | 4 |
+| United Kingdom | 11 | 0 | 0 | 11 |
+| United States | 8 | 0 | 5 | 13 |
+| **Total** | **148** | **6** | **23** | **177** |
+
+### Post-fix (after this batch's catalog updates)
+
+| Region | ✅ ok | 🟡 degraded | ⛔ dead | total | Δ |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Austria | 5 | 0 | 0 | 5 | +0 |
+| Belgium | 3 | 0 | 0 | 3 | -2 |
+| Brazil | 6 | 0 | 0 | 6 | +0 |
+| Bulgaria | 3 | 0 | 0 | 3 | +0 |
+| Denmark | 4 | 0 | 0 | 4 | +0 |
+| Europe-Wide | 9 | 0 | 0 | 9 | +0 |
+| Finland | 4 | 0 | 0 | 4 | +0 |
+| France | 10 | 0 | 0 | 10 | +0 |
+| Germany | 7 | 0 | 0 | 7 | +0 |
+| Greece | 1 | 0 | 0 | 1 | -1 |
+| Hungary | 2 | 0 | 0 | 2 | +0 |
+| Ireland | 5 | 0 | 0 | 5 | +0 |
+| Italy | 37 | 5 | 0 | 42 | -6 |
+| Japan | 2 | 1 | 0 | 3 | -1 |
+| Netherlands | 6 | 0 | 0 | 6 | -1 |
+| Norway | 6 | 0 | 0 | 6 | +0 |
+| Poland | 2 | 0 | 0 | 2 | +0 |
+| Portugal | 2 | 1 | 0 | 3 | -1 |
+| Romania | 3 | 0 | 0 | 3 | -1 |
+| Spain | 7 | 0 | 0 | 7 | +0 |
+| Sweden | 5 | 0 | 0 | 5 | +0 |
+| Switzerland | 4 | 0 | 0 | 4 | +0 |
+| United Kingdom | 11 | 0 | 0 | 11 | +0 |
+| United States | 9 | 0 | 0 | 9 | -4 |
+| **Total** | **153** | **7** | **0** | **160** | **-17** |
+
+Every remaining catalog entry is ✅ or 🟡; there are no known-dead feeds
+left in the catalog after this batch.
+
+## Dispositions
+
+### Removed (17)
+
+| Outlet | Region | Reason | Original URL |
+| --- | --- | --- | --- |
+| Het Laatste Nieuws | Belgium | DPG Media consent interstitial: article pages are an 8 KB JS shell with no body | `https://www.hln.be/rss.xml` |
+| Le Soir – Une | Belgium | feed returns an empty channel (0 items); ARC alternates 403/404 | `https://www.lesoir.be/rss/section/0.xml` |
+| AMNA | Greece | feed now returns HTML; all alternates (`/rss.php`, `/en/rss`, `/feeds/rss`) return HTML/404 | `https://www.amna.gr/news/rss` |
+| Corriere della Sera – Cronaca | Italy | newest item 28 days old and all sibling feeds are frozen archives; corriere.it retired RSS | `https://www.corriere.it/rss/cronaca.xml` |
+| Corriere della Sera – Economia | Italy | frozen archive (~884 days stale) | `https://www.corriere.it/rss/economia.xml` |
+| Corriere della Sera – Esteri | Italy | frozen archive (~483 days stale) | `https://www.corriere.it/rss/esteri.xml` |
+| Corriere della Sera – Homepage | Italy | frozen at 2024-05-13 (~780 days stale) | `https://www.corriere.it/rss/homepage.xml` |
+| Corriere della Sera – Politica | Italy | frozen archive (~695 days stale) | `https://www.corriere.it/rss/politica.xml` |
+| Corriere della Sera – Sport | Italy | frozen archive (~260 days stale) | `https://www.corriere.it/rss/sport.xml` |
+| Japan Times – Top Stories | Japan | feed ~490 days stale; live `/feed/` alternate exists but article pages 403 the app UA (bot gate + paywall) | `https://www.japantimes.co.jp/feed/topstories/` |
+| De Volkskrant | Netherlands | DPG Media consent interstitial: article pages are an 8 KB JS shell with no body | `https://www.volkskrant.nl/voorpagina/rss.xml` |
+| Público – Últimas | Portugal | Feedburner feed frozen at 2019-07; `publico.pt/rss` alternates return empty/202 | `https://feeds.feedburner.com/PublicoUltimaHora` |
+| Agerpres | Romania | `/rss/` times out / answers 500; only alternate is an unofficial FiveFilters scrape proxy | `https://www.agerpres.ro/rss/` |
+| NYT – Top Stories | United States | feed healthy but nytimes.com article pages hard-403 the app UA (curl **and** URLSession) | `https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml` |
+| NYT – World | United States | same hard 403 on article pages | `https://rss.nytimes.com/services/xml/rss/nyt/World.xml` |
+| Washington Post – World | United States | article pages are a ~1 MB JS shell; visible body is a ~900-char teaser behind a hard paywall | `https://feeds.washingtonpost.com/rss/world` |
+| AP News (Google proxy) | United States | items link to news.google.com JS-redirect stubs with no extractable body | `https://news.google.com/rss/search?q=site%3Aapnews.com+when%3A1d&hl=en-US&gl=US&ceid=US:en` |
+
+### Replaced (6)
+
+| Outlet | Region | Old URL | New URL | Why |
+| --- | --- | --- | --- | --- |
+| Agência Brasil | Brazil | `https://agenciabrasil.ebc.com.br/rss.xml` | `https://agenciabrasil.ebc.com.br/rss/ultimasnoticias/feed.xml` | old feed frozen ~2023-08; new feed fresh, articles extract 9–13k chars |
+| Gazzetta dello Sport | Italy | `https://www.gazzetta.it/rss/homepage.xml` | `https://www.gazzetta.it/dynamic-feed/rss/section/last.xml` | old feed frozen 2023-12; new feed fresh (bodies shortish → 🟡) |
+| RAI News | Italy | `https://www.rai.it/dl/portale/html/PublishingBlock-…-rss.xml` | `https://www.rainews.it/rss/tutti` | old feed's links all 404 on retired `rainews24.rai.it` |
+| El Periódico (Portada → Internacional) | Spain | `https://www.elperiodico.com/es/rss/rss_portada.xml` | `https://www.elperiodico.com/es/rss/internacional/rss.xml` | portada channel is valid but permanently 0 items; section feeds live (id renamed to `elperiodico-internacional`) |
+| Sveriges Radio – Ekot | Sweden | `https://api.sr.se/api/rss/program/4540` | `https://api.sr.se/api/rss/program/83` | 4540 is the radio-broadcast rundown whose article links 404; 83 is the Ekot text-news feed |
+| WSJ – World News | United States | `https://feeds.a.dj.com/rss/RSSWorldNews.xml` | `https://feeds.content.dowjones.io/public/rss/RSSWorldNews` | old host frozen at 2025-01; Dow Jones moved public feeds; articles extract 50k+ chars |
+
+### Promotions
+
+- **ERT News** (Greece) → main outlet + country-pick after the AMNA removal.
+- **Japan Today** (Japan) → main outlet + country-pick after the Japan Times removal.
+- **Digi24** (Romania) → main outlet + country-pick after the Agerpres removal.
+- United States keeps **NPR – Top Stories** as its existing country-pick.
+
+### curl false alarms (kept ✅ after URLSession recheck)
+
+These outlets fail plain curl (403/402/fetch error) but serve complete
+article bodies to a Foundation `URLSession` probe with the same Safari
+UA — i.e. the app's real network stack works. They are classified ✅:
+
+De Standaard, EURACTIV, Fanpage, Japan Today, France 24 (EN ×2 + FR),
+franceinfo, Le Monde (Une + English), Ouest-France, Politico EU
+Playbook, Politico Playbook, Financial Times, Sky News, and VG (the
+sampled links were VGTV video shells; regular news articles extract
+fine).
+
+### Degraded (kept, 🟡)
+
+| Outlet | Region | Why |
+| --- | --- | --- |
+| Il Sole 24 Ore – Finanza | Italy | only 4 items in feed |
+| Libero Quotidiano | Italy | occasional broken `/undefined/` links in the feed; working links extract ~5.7k chars |
+| Repubblica – Politica | Italy | premium articles serve ~670-char teasers; `milano.repubblica.it` links 403 |
+| Sky TG24 – Homepage | Italy | items carry no parseable dates (bodies extract fine) |
+| Asahi Shimbun – Headlines | Japan | metered paywall truncates bodies to ~900 chars |
+| RTP Notícias | Portugal | short news briefs (350–500 chars) |
+| Gazzetta dello Sport | Italy | replaced URL is fresh but bodies run short (live blogs, pagelle) |
+
+## Known gaps
+
+- **NYT / Japan Times / Washington Post 403s and paywalls** were
+  verified with URLSession from a residential macOS connection. If a
+  future per-source header/cookie override lands, NYT could be
+  reinstated (its feeds are healthy).
+- **Greece is down to one outlet** (ERT News) after the AMNA removal;
+  a future batch should inventory replacements (in.gr, Protothema,
+  Kathimerini).
+- The `RSSCatalogValidationHarness` (feed-level, simulator) remains
+  available; this batch used an out-of-process validator so article
+  pages could be probed with both curl and URLSession fingerprints.
+  The raw per-outlet evidence (item counts, ages, per-article `<p>`
+  char counts, verdicts, recheck notes) is in the diagnostics JSON.
+
+---
+
 # RSS Catalog Validation Report — 2026-06-26 (Phase 3, issue #53)
 
 Phase 3 of the RSS overhaul executes a live-network diagnostics run
@@ -274,11 +455,11 @@ CNN was the fourth http-only entry in the catalog. We removed it instead of upgr
 ## Known gaps
 
 - **Croatia is empty** after the HRT removals; the next phase needs to inventory tportal, Index.hr or 24sata as replacements.
-- **Bot-detection failures** (RTÉ, La Stampa, Il Post, Rzeczpospolita, Livedoor) might work from a real iPhone with a system User-Agent. We treated them as dead because the production app uses the same `MercuryRSSClient/1.0` UA that the harness used. A future change could introduce a per-source UA override and reinstate them.
+- **Bot-detection failures** (RTÉ, La Stampa, Il Post, Rzeczpospolita, Livedoor) were fetched with the same Safari-iOS UA the app ships (#82) and still failed — most likely datacenter-IP throttling rather than UA fingerprinting. They might work from a real iPhone on a residential connection; treated as dead for now, reinstatable after a real-device rerun.
 - **TLS / ATS failures** (Dziennik.pl, Gazeta Prawna, Wirtualne Media, RTVE) reflect upstream cert chains and http-only redirects we cannot work around without dropping the App Transport Security guarantee.
-- **AP News via Google News proxy** still resolves and is kept; long-term that proxy should be replaced with a partner feed.
+- **AP News via Google News proxy** was removed: the feed resolves, but every item links to a news.google.com JS-redirect stub with no extractable body, so enrichment always fails. AP publishes no official RSS to swap in.
 - **Reuters legacy Feedburner** (`reuters-uk`, `reuters-top-legacy`) is permanently dead (DNS no longer resolves). Both entries were removed.
-- **De Volkskrant** appears as ✅ post-fix but `articles_with_body` is only 2/30 in the dump — the feed ships title-only items so summarization quality will suffer. Kept in catalog because the headlines are still useful.
+- **De Volkskrant** was removed: the feed ships title-only items and the article pages serve the DPG Media consent interstitial (an 8 KB JS shell with no body), so neither the feed nor enrichment can produce a readable article.
 - **The Mercury harness uses the iPhone 17 Pro simulator** and may produce different verdicts from a real device on a residential connection (some 403s are likely datacenter-IP throttling). Reruns from a real device will produce a follow-up report.
 
 ## Methodology
