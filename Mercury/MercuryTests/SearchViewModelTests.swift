@@ -97,6 +97,66 @@ struct SearchViewModelTests {
         #expect(second.first?.id == "b")
     }
 
+    // MARK: - Source preference filtering (issue #94)
+
+    @Test
+    func searchFiltersResultsFromDisabledSources() async throws {
+        let (viewModel, container) = try await Self.makeFilteredViewModel(seedArticles: [
+            Self.makeArticle(
+                id: "it-a", title: "Aurora unveils new AI chip",
+                sourceID: "it-1", sourceName: "IT 1"
+            ),
+            Self.makeArticle(
+                id: "fr-a", title: "AI chip startup raises funding",
+                sourceID: "fr-1", sourceName: "FR 1"
+            ),
+            Self.makeArticle(
+                id: "legacy-fr", title: "Legacy AI chip coverage",
+                sourceID: nil, sourceName: "FR 1"
+            )
+        ])
+        let context = ModelContext(container)
+        _ = try UserPreferencesService(modelContext: context).updatePreferences(
+            .init(
+                enabledRegionRawValues: [RSSFeedRegion.italy.rawValue],
+                hasCompletedOnboarding: true
+            )
+        )
+        viewModel.attach(modelContext: context)
+        viewModel.query = "AI chip"
+
+        await viewModel.runSearch()
+
+        guard case let .results(articles) = viewModel.state else {
+            Issue.record("Expected results state, got \(viewModel.state)")
+            return
+        }
+        #expect(articles.map(\.id) == ["it-a"])
+    }
+
+    @Test
+    func searchStaysUnfilteredWithoutAttachedModelContext() async throws {
+        let (viewModel, _) = try await Self.makeFilteredViewModel(seedArticles: [
+            Self.makeArticle(
+                id: "it-a", title: "Aurora unveils new AI chip",
+                sourceID: "it-1", sourceName: "IT 1"
+            ),
+            Self.makeArticle(
+                id: "fr-a", title: "AI chip startup raises funding",
+                sourceID: "fr-1", sourceName: "FR 1"
+            )
+        ])
+        viewModel.query = "AI chip"
+
+        await viewModel.runSearch()
+
+        guard case let .results(articles) = viewModel.state else {
+            Issue.record("Expected results state, got \(viewModel.state)")
+            return
+        }
+        #expect(Set(articles.map(\.id)) == ["it-a", "fr-a"])
+    }
+
     // MARK: - Helpers
 
     private static func makeViewModel(
@@ -117,6 +177,50 @@ struct SearchViewModelTests {
         )
     }
 
+    /// Variant that hands back the container too, so tests can attach a
+    /// preferences `ModelContext` and exercise the issue #94 source filter
+    /// against a fixture catalog (italy `it-1` + france `fr-1`).
+    private static func makeFilteredViewModel(
+        seedArticles: [ArticleEntity]
+    ) async throws -> (SearchViewModel, ModelContainer) {
+        let container = try makeInMemoryContainer()
+        let store = ArticleLocalStore(modelContainer: container)
+        let repository = SwiftDataArticleRepository(store: store)
+
+        for article in seedArticles {
+            _ = try await repository.upsert(article)
+        }
+
+        let filter = RSSSourceFilter(allSources: [
+            RSSFeedSource(
+                id: "it-1",
+                outletName: "IT 1",
+                region: .italy,
+                feedURLString: "https://example.com/it",
+                isMainOutlet: true,
+                languageCode: "it",
+                tags: [],
+                note: nil
+            ),
+            RSSFeedSource(
+                id: "fr-1",
+                outletName: "FR 1",
+                region: .france,
+                feedURLString: "https://example.com/fr",
+                isMainOutlet: true,
+                languageCode: "fr",
+                tags: [],
+                note: nil
+            )
+        ])
+        let viewModel = SearchViewModel(
+            repository: repository,
+            sourceFilter: filter,
+            debounce: .zero
+        )
+        return (viewModel, container)
+    }
+
     private static func makeInMemoryContainer() throws -> ModelContainer {
         let configuration = ModelConfiguration(isStoredInMemoryOnly: true)
         return try ModelContainer(
@@ -133,12 +237,15 @@ struct SearchViewModelTests {
         id: String,
         title: String,
         cleanedContent: String? = nil,
+        sourceID: String? = nil,
+        sourceName: String = "Test Source",
         publishedAt: Date = Date(timeIntervalSince1970: 1_700_000_000)
     ) -> ArticleEntity {
         let entity = ArticleEntity(
             id: id,
             title: title,
-            sourceName: "Test Source",
+            sourceName: sourceName,
+            sourceID: sourceID,
             sourceURL: "https://example.com/source",
             articleURL: "https://example.com/article/\(id)",
             publishedAt: publishedAt
