@@ -1,7 +1,7 @@
 page: thelocal-2
 host: www.thelocal.it lang: en
-words: 881
+words: 812
 chrome-survivors: []
 raw-paywall-markers: ["paywall", "premium"]
 head: family members only how italy’s working parents tackle the long summer break elaine allaby - elaine.allaby@thelocal.com published: 1 jul, 2026 cet. updated: wed 1 jul 2026 16:53 cet unfortunately, a three-month beach trip isn't an option for most of italy's working parents. photo by vincenzo pinto / afp. school holiday
-tail: ments section below. share your own views and experience and if you have a question or suggestion for our journalists then email us at news@thelocal.it. please keep comments civil, constructive and on topic – and make sure to read our terms of use before getting involved. please log in here to leave a comment. see also
+tail: ndly place”, she says, “the summer holiday situation is challenging.” “that being said,” she adds, “my friends in the us are waiting online in january to try to book summer camps as soon as registration opens, and the costs are insane. so it seems to be a universal problem, even if the symptoms are different.” see also

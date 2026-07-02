@@ -1,0 +1,7 @@
+page: fanpage-1
+host: www.fanpage.it lang: it
+words: 1767
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium"]
+head: attualità video suggerito video suggerito droga, denaro e protezione, come funziona lo spaccio nel carcere di torino: il racconto di un ex detenuto un ex detenuto ha raccontato a fanpage.it il sistema di droga e telefoni nel carcere di torino: bonifici, debiti, pestaggi e una rete di silenzi che protegge il mercato. ec
+tail: rebbe il vero collante del sistema: un equilibrio fragile, ma resistente, capace di sopravvivere proprio perché alimentato dal silenzio di chi ne trae vantaggio e dalla paura di chi vorrebbe denunciarlo. continua a leggere su fanpage.it più che un giornale il media che racconta il tempo in cui viviamo con occhi moderni

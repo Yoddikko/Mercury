@@ -63,6 +63,46 @@
       "stripTextPatterns": [
         "\\babbonati\\s+per\\s+leggere\\s+anche\\b"
       ]
+    },
+    {
+      "id": "tgcom24",
+      "hosts": ["tgcom24.mediaset.it"],
+      "bodySelectors": [],
+      "stripSelectors": [
+        "[data-testid=read-also-item-container]",
+        "[data-testid=item-mini-root]"
+      ],
+      "stripTextPatterns": [
+        "\\bti\\s+potrebbe\\s+interessare\\b"
+      ]
+    },
+    {
+      "id": "internazionale",
+      "hosts": ["internazionale.it"],
+      "bodySelectors": [],
+      "stripSelectors": [
+        ".cta_nl_ext_container",
+        ".cta_nl_container",
+        ".cta_art_table"
+      ],
+      "stripTextPatterns": []
+    },
+    {
+      "id": "thelocal",
+      "hosts": ["thelocal.it"],
+      "bodySelectors": [],
+      "stripSelectors": [
+        ".article-single__comments",
+        ".article-single__tags",
+        ".login-box",
+        "#articleBodyForbidden",
+        ".member-container"
+      ],
+      "stripTextPatterns": [],
+      "paywallMarkers": [
+        "articleBodyForbidden",
+        "\\bbecome\\s+a\\s+member\\s+or\\s+log\\s+in\\b"
+      ]
     }
   ]
 }

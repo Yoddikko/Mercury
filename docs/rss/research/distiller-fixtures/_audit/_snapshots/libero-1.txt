@@ -1,0 +1,7 @@
+page: libero-1
+host: www.liberoquotidiano.it lang: it
+words: 247
+chrome-survivors: []
+raw-paywall-markers: ["paywall"]
+head: 2 luglio, tam-tam impazzito all'ultimo minuto: meloni, una mossa clamorosa? giovedì 2 luglio 2026 1' di lettura la tradizionale festa del 4 luglio all’ambasciata americana di villa taverna è da decenni un termometro della politica italiana: chi c’è e chi non c’è segnala rapporti con gli stati uniti e ambizioni di poter
+tail: re il suo libro a napoli, mentre calenda bolla l’evento come "vassallaggio" e non parteciperà. sinistra radicale (bonelli, fratoianni, magi) assente. insomma, un tempo la festa misurava chi saliva, oggi misura soprattutto l’imbarazzo di un rapporto italia-usa diventato improvvisamente più freddo e difficile da gestire.

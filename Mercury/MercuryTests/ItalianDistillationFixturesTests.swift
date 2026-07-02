@@ -288,7 +288,11 @@ struct ItalianDistillationFixturesTests {
             language: "it",
             host: "www.tgcom24.mediaset.it",
             mustContainAny: ["corte", "android"],
-            bannedSubstrings: Self.commonChrome
+            bannedSubstrings: Self.commonChrome + [
+                // Next.js related-content rail — leaked on the live
+                // audit (2026-07-02) until the tgcom24 rule stripped it.
+                "ti potrebbe interessare"
+            ]
         ),
         FixtureSpec(
             name: "guardianitaly",

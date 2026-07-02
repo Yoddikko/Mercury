@@ -1,7 +1,7 @@
 page: tgcom24-1
 host: www.tgcom24.mediaset.it lang: it
-words: 997
-chrome-survivors: ["ti potrebbe interessare"]
+words: 946
+chrome-survivors: []
 raw-paywall-markers: []
 head: giovedì 2 luglio 2026 - aggiornato alle 10:50 milano 26° emergenza penitenziari toscana, due detenuti muoiono in carcere a prato e firenze | un giovane aveva presentato denuncia per violenze durante l'arresto, un 75enne in cella nonostante l'ictus "siamo di fronte a una deriva inaccettabile", il commento del garante to
-tail: llasso", denuncia fanfani. nella giornata del 2 luglio l’assessore alla sanità monia monni farà un sopralluogo nel penitenziario, dove alcune sezioni sono state poste in tempi recenti sotto sequestro per carenze sanitarie e strutturali. l’accompagnerà il dg dell’asl toscana centro, valerio mari. ti potrebbe interessare
+tail:  al collasso", denuncia fanfani. nella giornata del 2 luglio l’assessore alla sanità monia monni farà un sopralluogo nel penitenziario, dove alcune sezioni sono state poste in tempi recenti sotto sequestro per carenze sanitarie e strutturali. l’accompagnerà il dg dell’asl toscana centro, valerio mari. sullo stesso tema

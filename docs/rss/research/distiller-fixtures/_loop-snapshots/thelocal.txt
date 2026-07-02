@@ -1,7 +1,7 @@
 outlet: thelocal
-words: 458
-blocks: 30
-block-counts: heading=4 image=2 paragraph=24
-survivors: ["log in"]
+words: 386
+blocks: 23
+block-counts: heading=2 image=2 paragraph=19
+survivors: []
 head: weather members only ‘turning point’: italy's heatwave set to break as 14 regions under storm alerts elaine allaby - elaine.allaby@thelocal.com published: 1 jul, 2026 cet. updated: wed 1 jul 2026 10:35 cet fourteen italian regions have been placed under storm alerts as the countr
-tail: s and experience and if you have a question or suggestion for our journalists then email us at news@thelocal.it. please keep comments civil, constructive and on topic – and make sure to read our terms of use before getting involved. please log in here to leave a comment. see also
+tail: ly 3rd onwards, the african anticyclone will immediately attempt to reclaim its lost ground”, says gussoni. “over the following weekend, we expect a new heatwave that will rapidly raise temperatures across much of italy, bringing us back to a full-blown african climate.” see also

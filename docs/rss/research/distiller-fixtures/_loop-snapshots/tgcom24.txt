@@ -1,7 +1,7 @@
 outlet: tgcom24
 words: 175
-blocks: 18
-block-counts: heading=3 image=3 paragraph=12
+blocks: 16
+block-counts: heading=3 image=1 paragraph=12
 survivors: []
 head: giovedì 2 luglio 2026 - aggiornato alle 10:20 milano 26° mondo mondo la sentenza google, la corte ue conferma la maxi multa da 4,1 miliardi per android diventa definitiva la sanzione per abuso di posizione dominante nel mercato dei dispositivi mobili 02 lug 2026 - 10:20 02 lug 20
-tail:  ci sono le condizioni imposte da google ai produttori di smartphone android, ritenute dalla commissione europea anticoncorrenziali e tali da rafforzare in modo illecito la posizione dominante dell'azienda nel mercato dei dispositivi mobili. ti potrebbe interessare google android
+tail: icenda ci sono le condizioni imposte da google ai produttori di smartphone android, ritenute dalla commissione europea anticoncorrenziali e tali da rafforzare in modo illecito la posizione dominante dell'azienda nel mercato dei dispositivi mobili. google android sullo stesso tema
