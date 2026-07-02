@@ -83,7 +83,63 @@
       "stripSelectors": [
         ".cta_nl_ext_container",
         ".cta_nl_container",
-        ".cta_art_table"
+        ".cta_art_table",
+        ".item_note2"
+      ],
+      "stripTextPatterns": []
+    },
+    {
+      "id": "fanpage",
+      "hosts": ["fanpage.it"],
+      "bodySelectors": [],
+      "stripSelectors": [
+        ".cr",
+        ".bnr"
+      ],
+      "stripTextPatterns": [
+        "\\bcontinua\\s+a\\s+leggere\\s+su\\s+fanpage\\.it\\b"
+      ]
+    },
+    {
+      "id": "gazzetta",
+      "hosts": ["gazzetta.it"],
+      "bodySelectors": [],
+      "stripSelectors": [
+        ".bck-tile-slider",
+        ".bck-manual-read-also"
+      ],
+      "stripTextPatterns": []
+    },
+    {
+      "id": "ilfatto",
+      "hosts": ["ilfattoquotidiano.it"],
+      "bodySelectors": [],
+      "stripSelectors": [
+        ".ifq-news-comments"
+      ],
+      "stripTextPatterns": []
+    },
+    {
+      "id": "ilgiornale",
+      "hosts": ["ilgiornale.it"],
+      "bodySelectors": [],
+      "stripSelectors": [
+        "#ilg_comments",
+        ".form--comments",
+        ".comments__actions"
+      ],
+      "stripTextPatterns": [
+        "\\bscegli\\s+il\\s+giornale\\s+come\\s+fonte\\s+preferita\\b"
+      ]
+    },
+    {
+      "id": "ilsole24ore",
+      "hosts": ["ilsole24ore.com"],
+      "bodySelectors": [],
+      "stripSelectors": [
+        ".afoot",
+        ".minibio",
+        ".acor--moreon"
       ],
       "stripTextPatterns": []
     },

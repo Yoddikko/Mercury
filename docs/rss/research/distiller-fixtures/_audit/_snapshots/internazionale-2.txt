@@ -1,7 +1,7 @@
 page: internazionale-2
 host: www.internazionale.it lang: it
-words: 3603
+words: 3584
 chrome-survivors: []
 raw-paywall-markers: ["paywall"]
 head: https://intern.az/1qd1 cinema film ritrovati da non perdere più francesco boille, esperto di cinema e fumetti 2.7.2026 la proiezione di aurora di friedrich w. murnau in piazza maggiore. bologna, 20 giugno 2026 (cineteca di bologna) a bologna si è conclusa anche l’edizione extralarge del cinema ritrovato con tantissime 
-tail:  punto da sembrare nuovo, è un cinema dalle idee e dalle messinscene potentissime e soprattutto attuali che rivelano una realtà proteiforme e mai univoca. l’unica verità. internazionale pubblica ogni settimana una pagina di lettere. ci piacerebbe sapere cosa pensi di questo articolo. scrivici a: posta@internazionale.it
+tail: tile e luminosa commedia psicologica sull’oscurità latente nella moderna società borghese. il cinema del passato insomma, soprattutto se restaurato al punto da sembrare nuovo, è un cinema dalle idee e dalle messinscene potentissime e soprattutto attuali che rivelano una realtà proteiforme e mai univoca. l’unica verità.

@@ -1,7 +1,7 @@
 outlet: fanpage
-words: 697
-blocks: 16
-block-counts: heading=3 image=2 paragraph=11
+words: 676
+blocks: 14
+block-counts: heading=3 image=1 paragraph=10
 survivors: []
 head: tecnologia video suggerito video suggerito apple, un errore rivela i veri indirizzi di chi usa “nascondi la mia mail”. la denuncia: “lo sanno da un anno” la funzione a pagamento di apple pensata per proteggere l’identità attraverso indirizzi mail temporanei sembra avere una falla
-tail: pria identità. i giornalisti di 404 media hanno più volte contattato apple per un commento ma per il momento, fanno sapere, l'azienda non ha mai voluto rispondere. continua a leggere su fanpage.it più che un giornale il media che racconta il tempo in cui viviamo con occhi moderni
+tail:  dati sulle persone, il che aumenta ulteriormente i rischi per chi utilizza il servizio proprio per proteggere la propria identità. i giornalisti di 404 media hanno più volte contattato apple per un commento ma per il momento, fanno sapere, l'azienda non ha mai voluto rispondere.

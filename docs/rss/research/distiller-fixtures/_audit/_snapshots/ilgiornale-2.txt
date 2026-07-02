@@ -1,7 +1,7 @@
 page: ilgiornale-2
 host: www.ilgiornale.it lang: it
-words: 454
+words: 427
 chrome-survivors: []
 raw-paywall-markers: ["premium"]
 head: per favore utilizza un browser moderno come edge, firefox, chrome o uno qualunque degli altri a disposizione gratuitamente. lavazza moka style, il rito e il gusto della classica moka sposa la praticità delle capsule tradizione e contemporaneità si mescolano creando un mix irresistibile ottenuta con la semplicità di un 
-tail:  un ponte ideale tra due mondi, parlando direttamente a chi oggi già alterna la capsula alla moka tradizionale.” pubblica un commento non sono consentiti commenti che contengano termini violenti, discriminatori o che contravvengano alle elementari regole di netiquette. qui le norme di comportamento per esteso. ricarica
+tail: g director italy di lavazza ha dichiarato: “il consumatore moderno cerca la praticità, ma non vuole rinunciare all’esperienza di gusto della moka tradizionale. con moka style offriamo proprio questo: un ponte ideale tra due mondi, parlando direttamente a chi oggi già alterna la capsula alla moka tradizionale.” ricarica

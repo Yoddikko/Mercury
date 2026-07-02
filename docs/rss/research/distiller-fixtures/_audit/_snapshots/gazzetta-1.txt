@@ -1,7 +1,7 @@
 page: gazzetta-1
 host: www.gazzetta.it lang: it
-words: 505
+words: 482
 chrome-survivors: []
 raw-paywall-markers: ["paywall", "premium"]
 head: competizioni per nazionali milan-inter, derby di mercato per ouédraogo: i dettagli il centrocampista, tra i migliori giovani di germania, a gennaio vuole restare allo schalke ma ha una clausola da 12 milioni e la corsa è aperta. le mosse delle milanesi la vittoria sul psg è un manifesto del nuovo milan. loftus-cheek, r
-tail: arla di 12 milioni - allo schalke e offrendo un contratto livello pro a lui. a milano gli affitti costano caro ma insomma, se la caverebbe. inzaghi: "che orgoglio la qualificazione anticipata! ma quanto corre il salisburgo..." milan, sospiro di sollievo per pulisic: soltanto contrattura per l'esterno, allarme rientrato
+tail: a giugno con milan e inter in prima fila? sì, possibile, considerando anche che ouédraogo a maggio diventerà maggiorenne e sarà acquistabile semplicemente pagando la clausola - si parla di 12 milioni - allo schalke e offrendo un contratto livello pro a lui. a milano gli affitti costano caro ma insomma, se la caverebbe.

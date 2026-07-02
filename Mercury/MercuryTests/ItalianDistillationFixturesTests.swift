@@ -101,7 +101,12 @@ struct ItalianDistillationFixturesTests {
             language: "it",
             host: "www.ilfattoquotidiano.it",
             mustContainAny: ["juventus", "uefa"],
-            bannedSubstrings: Self.commonChrome
+            bannedSubstrings: Self.commonChrome + [
+                // Community CTA rail — leaked on the live audit
+                // (2026-07-02) until the ilfatto rule stripped
+                // `.ifq-news-comments`.
+                "resta in contatto con la community"
+            ]
         ),
         FixtureSpec(
             name: "ilmessaggero",
@@ -115,7 +120,14 @@ struct ItalianDistillationFixturesTests {
             language: "it",
             host: "www.ilsole24ore.com",
             mustContainAny: ["donnarumma", "dimissioni"],
-            bannedSubstrings: Self.commonChrome
+            bannedSubstrings: Self.commonChrome + [
+                // Article-footer author card + related-links block —
+                // leaked on the live audit (2026-07-02) until the
+                // ilsole24ore rule stripped `.afoot`/`.minibio`/
+                // `.acor--moreon`.
+                "per approfondire",
+                "lingue parlate"
+            ]
         ),
         FixtureSpec(
             name: "open",
@@ -171,7 +183,13 @@ struct ItalianDistillationFixturesTests {
             language: "it",
             host: "www.ilgiornale.it",
             mustContainAny: ["bastoni", "zulu"],
-            bannedSubstrings: Self.commonChrome
+            bannedSubstrings: Self.commonChrome + [
+                // Comment-form chrome — leaked on the live audit
+                // (2026-07-02) until the ilgiornale rule stripped
+                // `#ilg_comments`.
+                "pubblica un commento",
+                "scegli il giornale come fonte preferita"
+            ]
         ),
         FixtureSpec(
             name: "avvenire",
@@ -213,6 +231,10 @@ struct ItalianDistillationFixturesTests {
             language: "it",
             host: "www.gazzetta.it",
             mustContainAny: ["ouedraogo", "schalke"],
+            // "leggi anche" itself is in `commonChrome`; the gazzetta
+            // rule additionally strips the `.bck-tile-slider`
+            // related-article rail that leaked headline links on the
+            // live audit (2026-07-02).
             bannedSubstrings: Self.commonChrome
         ),
         FixtureSpec(
@@ -236,14 +258,24 @@ struct ItalianDistillationFixturesTests {
             language: "it",
             host: "www.fanpage.it",
             mustContainAny: ["nascondi la mia mail", "indirizzi"],
-            bannedSubstrings: Self.commonChrome
+            bannedSubstrings: Self.commonChrome + [
+                // Continue-read promo + autopromo banner — leaked on
+                // the live audit (2026-07-02) until the fanpage rule
+                // stripped `.cr`/`.bnr`.
+                "continua a leggere su fanpage.it",
+                "più che un giornale"
+            ]
         ),
         FixtureSpec(
             name: "internazionale",
             language: "it",
             host: "www.internazionale.it",
             mustContainAny: ["venezuela", "washington"],
-            bannedSubstrings: Self.commonChrome
+            bannedSubstrings: Self.commonChrome + [
+                // Letters-page CTA (`.item_note2`) — leaked on the
+                // live audit (2026-07-02).
+                "pagina di lettere"
+            ]
         ),
         FixtureSpec(
             name: "liberoquotidiano",

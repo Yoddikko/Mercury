@@ -1,7 +1,7 @@
 page: ilfatto-2
 host: www.ilfattoquotidiano.it lang: it
-words: 3917
+words: 3899
 chrome-survivors: []
 raw-paywall-markers: ["paywall", "premium", "metered"]
 head: il mondo fq zonaeuro ultimo aggiornamento: 10:43 corte di giustizia ue boccia il ricorso di google: confermata multa record da 4,1 miliardi per violazione della concorrenza su dispositivi android di redazione economia la sanzione più alta mai inflitta da bruxelles risale al 2018. big g si era opposta al verdetto del 20
-tail: lerta è invece gialla in abruzzo, basilicata, calabria, molise, campania, friuli venezia giulia, lazio, marche, molise, puglia, sardegna, sicilia, toscana, umbria. www.adnkronos.com resta in contatto con la community de il fatto quotidiano accedi o registrati per partecipare alla discussione registrati leggi i commenti
+tail: n veneto per rischio idrogeologico e temporali, in emilia romagna l'allerta è arancione sempre per rischio temporali. l'allerta è invece gialla in abruzzo, basilicata, calabria, molise, campania, friuli venezia giulia, lazio, marche, molise, puglia, sardegna, sicilia, toscana, umbria. www.adnkronos.com leggi i commenti

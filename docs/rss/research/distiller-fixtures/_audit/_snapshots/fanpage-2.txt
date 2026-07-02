@@ -1,7 +1,7 @@
 page: fanpage-2
 host: www.fanpage.it lang: it
-words: 720
+words: 699
 chrome-survivors: []
 raw-paywall-markers: ["paywall", "premium"]
 head: stile e trend video suggerito video suggerito il metodo della ventilazione incrociata per combattere il caldo senza usare l’aria condizionata il caldo asfissiante vi sta rendendo la vita impossibile? ecco quali sono i consigli da seguire per rinfrescare casa in modo naturale, senza utilizzare ventilatori e aria condizi
-tail: ersi su un divano o su una sedia di plastica o eco-pelle. per evitare di ritrovarsi in un bagno di sudore, l'ideale sarebbe ricoprire queste superfici con dei tessuti anti-caldo come il cotone o il lino. continua a leggere su fanpage.it più che un giornale il media che racconta il tempo in cui viviamo con occhi moderni
+tail: ie e divani con tessuti anti-caldo durante le giornate più calde dell'anno diventa praticamente impossibile anche sedersi su un divano o su una sedia di plastica o eco-pelle. per evitare di ritrovarsi in un bagno di sudore, l'ideale sarebbe ricoprire queste superfici con dei tessuti anti-caldo come il cotone o il lino.

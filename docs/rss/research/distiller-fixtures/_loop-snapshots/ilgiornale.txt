@@ -1,7 +1,7 @@
 outlet: ilgiornale
-words: 965
-blocks: 10
-block-counts: heading=1 image=1 list=1 paragraph=7
+words: 938
+blocks: 9
+block-counts: heading=1 image=1 list=1 paragraph=6
 survivors: []
 head: per favore utilizza un browser moderno come edge, firefox, chrome o uno qualunque degli altri a disposizione gratuitamente. quindi oggi la remigrazione degli zulu, la verità sul pizzaiolo ucciso e bastoni: quindi, oggi… quindi, oggi…: le proteste anti-migranti in sudafrica, la ri
-tail: ico e non solo, tra cristianesimo e islam, siamo destinati a soccombere. pubblica un commento non sono consentiti commenti che contengano termini violenti, discriminatori o che contravvengano alle elementari regole di netiquette. qui le norme di comportamento per esteso. ricarica
+tail: i, dimostrano un deciso attaccamento ai valori della propria fede, da noi chi cerca un po’ di tradizione viene trattato come un retrogrado. purtroppo, se mai si arriverà davvero a un confronto, numerico e non solo, tra cristianesimo e islam, siamo destinati a soccombere. ricarica

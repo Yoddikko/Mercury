@@ -243,7 +243,8 @@ Each rule entry:
   "hosts": ["ansa.it"],
   "bodySelectors": ["div[itemprop=articleBody]"],
   "stripSelectors": [".bt-Subscribe", ".prompt-to-accept"],
-  "stripTextPatterns": ["\\babbonamento\\s+consentless\\b"]
+  "stripTextPatterns": ["\\babbonamento\\s+consentless\\b"],
+  "paywallMarkers": ["\\bsolo\\s+per\\s+abbonati\\b"]
 }
 ```
 
