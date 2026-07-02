@@ -9,8 +9,10 @@
 //  are listed alphabetically by outlet name so review diffs stay tidy.
 //
 //  Source of truth for the URLs: `docs/rss/research/candidates-2026-06-26.json`
-//  harvested during Phase 1 (issue #50). Validation (Phase 3) is tracked as a
-//  follow-up; some entries carry `note` callouts where the upstream is fragile.
+//  harvested during Phase 1 (issue #50), validated live in Phase 3 (issue #53)
+//  and re-validated end-to-end (feed + real article pages) on 2026-07-02 for
+//  issue #90 — see `docs/rss/VALIDATION.md` and
+//  `docs/rss/research/diagnostics-2026-07-02.json` for the dispositions.
 //
 
 import Foundation
@@ -222,26 +224,14 @@ enum RSSFeedCatalog {
         ),
         // Removed in Phase 3 (#53): `detijd-nieuws` returned HTTP 404 on
         // 2026-06-26; De Tijd has no public RSS index anymore.
-        source(
-            id: "hln",
-            outlet: "Het Laatste Nieuws",
-            region: .belgium,
-            url: "https://www.hln.be/rss.xml",
-            language: "nl",
-            tags: ["general"],
-            note: "Endpoint to verify in Phase 3."
-        ),
+        // Removed in live validation (#90): `hln` article pages serve
+        // the DPG Media consent interstitial (an 8 KB JS shell with no
+        // article body), so enrichment can never extract content.
         // Removed in Phase 3 (#53): `lecho` returned HTTP 404 on
         // 2026-06-26; L'Echo's RSS endpoint is no longer published.
-        source(
-            id: "lesoir-une",
-            outlet: "Le Soir – Une",
-            region: .belgium,
-            url: "https://www.lesoir.be/rss/section/0.xml",
-            language: "fr",
-            tags: ["general"],
-            note: "Endpoint to verify in Phase 3."
-        ),
+        // Removed in live validation (#90): `lesoir-une` returns an
+        // empty channel (0 items); the ARC outbound-feed alternates
+        // answer 403/404.
         source(
             id: "rtbf-belgique",
             outlet: "RTBF Info – Belgique",
@@ -268,10 +258,12 @@ enum RSSFeedCatalog {
             id: "agencia-brasil",
             outlet: "Agência Brasil",
             region: .brazil,
-            url: "https://agenciabrasil.ebc.com.br/rss.xml",
+            // Replaced in live validation (#90): `/rss.xml` is a frozen
+            // archive (newest item ~2023-08). The `ultimasnoticias`
+            // feed is the live endpoint.
+            url: "https://agenciabrasil.ebc.com.br/rss/ultimasnoticias/feed.xml",
             language: "pt",
-            tags: ["wire"],
-            note: "Endpoint to verify in Phase 3."
+            tags: ["wire"]
         ),
         source(
             id: "brasil-wire-en",
@@ -625,27 +617,19 @@ enum RSSFeedCatalog {
     // MARK: - Greece
 
     private static let greeceSources: [RSSFeedSource] = [
-        source(
-            id: "amna-news",
-            outlet: "AMNA – Athens-Macedonian News Agency",
-            region: .greece,
-            // Replaced in Phase 3 (#53): `amna-english` at
-            // `/rss/english.xml` returned HTML (parseFailed). The
-            // canonical agency feed at `/news/rss` is live and is
-            // mixed-language (Greek + English wire copy).
-            url: "https://www.amna.gr/news/rss",
-            main: true,
-            language: "el",
-            tags: ["wire", "country-pick"]
-        ),
+        // Removed in live validation (#90): `amna-news` at `/news/rss`
+        // now returns HTML; every tested alternate (`/rss.php`,
+        // `/en/rss`, `/feeds/rss`) also answers HTML or 404. ERT News
+        // below inherits the country-pick role.
         source(
             id: "ertnews",
             outlet: "ERT News",
             region: .greece,
             url: "https://www.ertnews.gr/feed/",
+            main: true,
             language: "el",
-            tags: ["public-broadcaster"],
-            note: "Endpoint to verify in Phase 3."
+            tags: ["public-broadcaster", "country-pick"],
+            note: "Promoted to main outlet in #90 after the AMNA removal."
         )
         // Removed in Phase 3 (#53): `kathimerini-en` at
         // `feeds.feedburner.com/ekathimerini` returned HTTP 404 on
@@ -877,55 +861,10 @@ enum RSSFeedCatalog {
             language: "it",
             tags: ["general", "country-pick"]
         ),
-        source(
-            id: "corriere-cronaca",
-            outlet: "Corriere della Sera – Cronaca",
-            region: .italy,
-            url: "https://www.corriere.it/rss/cronaca.xml",
-            language: "it",
-            tags: ["general"]
-        ),
-        source(
-            id: "corriere-economia",
-            outlet: "Corriere della Sera – Economia",
-            region: .italy,
-            url: "https://www.corriere.it/rss/economia.xml",
-            language: "it",
-            tags: ["economy"]
-        ),
-        source(
-            id: "corriere-esteri",
-            outlet: "Corriere della Sera – Esteri",
-            region: .italy,
-            url: "https://www.corriere.it/rss/esteri.xml",
-            language: "it",
-            tags: ["world"]
-        ),
-        source(
-            id: "corriere-homepage",
-            outlet: "Corriere della Sera – Homepage",
-            region: .italy,
-            url: "https://www.corriere.it/rss/homepage.xml",
-            main: true,
-            language: "it",
-            tags: ["general"]
-        ),
-        source(
-            id: "corriere-politica",
-            outlet: "Corriere della Sera – Politica",
-            region: .italy,
-            url: "https://www.corriere.it/rss/politica.xml",
-            language: "it",
-            tags: ["politics"]
-        ),
-        source(
-            id: "corriere-sport",
-            outlet: "Corriere della Sera – Sport",
-            region: .italy,
-            url: "https://www.corriere.it/rss/sport.xml",
-            language: "it",
-            tags: ["sports"]
-        ),
+        // Removed in live validation (#90): every `corriere.it/rss/*`
+        // feed is a frozen archive (homepage newest item 2024-05-13,
+        // economia ~884 days stale, cronaca 28 days and dying).
+        // Corriere retired its public RSS; no working alternate found.
         source(
             id: "fanpage",
             outlet: "Fanpage",
@@ -938,10 +877,13 @@ enum RSSFeedCatalog {
             id: "gazzetta-dello-sport",
             outlet: "Gazzetta dello Sport",
             region: .italy,
-            url: "https://www.gazzetta.it/rss/homepage.xml",
+            // Replaced in live validation (#90): `/rss/homepage.xml`
+            // is a frozen 2023-12 archive; the dynamic-feed endpoint
+            // is the live one. Article bodies run short (live blogs,
+            // pagelle), so the outlet is tracked as degraded.
+            url: "https://www.gazzetta.it/dynamic-feed/rss/section/last.xml",
             language: "it",
-            tags: ["sports"],
-            note: "Endpoint pattern to verify in Phase 3."
+            tags: ["sports"]
         ),
         source(
             id: "guardian-italy",
@@ -1044,9 +986,13 @@ enum RSSFeedCatalog {
         ),
         source(
             id: "rai-portale-rss",
-            outlet: "RAI News – Portale RSS",
+            outlet: "RAI News – Tutti gli aggiornamenti",
             region: .italy,
-            url: "https://www.rai.it/dl/portale/html/PublishingBlock-15c2c340-e282-473d-b944-661e818d667b-rss.xml",
+            // Replaced in live validation (#90): the rai.it
+            // PublishingBlock feed only carries items linking to the
+            // retired `rainews24.rai.it` host (every article 404s).
+            // `rainews.it/rss/tutti` is the live RaiNews feed.
+            url: "https://www.rainews.it/rss/tutti",
             main: true,
             language: "it",
             tags: ["public-broadcaster"],
@@ -1195,22 +1141,20 @@ enum RSSFeedCatalog {
             tags: ["general"],
             note: "HTTPS endpoint may be UA-gated; revisit if it stays 4xx in prod."
         ),
-        source(
-            id: "japan-times-top",
-            outlet: "Japan Times – Top Stories",
-            region: .japan,
-            url: "https://www.japantimes.co.jp/feed/topstories/",
-            main: true,
-            language: "en",
-            tags: ["english", "country-pick"]
-        ),
+        // Removed in live validation (#90): `japan-times-top` at
+        // `/feed/topstories/` is ~490 days stale; the live `/feed/`
+        // alternate exists but article pages answer 403 to the app's
+        // Safari UA (bot gate + paywall), so no body is extractable.
+        // Japan Today below inherits the country-pick role.
         source(
             id: "japan-today",
             outlet: "Japan Today",
             region: .japan,
             url: "https://japantoday.com/feed",
+            main: true,
             language: "en",
-            tags: ["english", "digital"]
+            tags: ["english", "digital", "country-pick"],
+            note: "Promoted to main outlet in #90 after the Japan Times removal."
         ),
         // Removed in Phase 3 (#53): `kyodo-en` returned HTTP 404 on
         // 2026-06-26 (Kyodo's English RSS API retired in 2024).
@@ -1292,16 +1236,10 @@ enum RSSFeedCatalog {
             language: "nl",
             tags: ["general"],
             note: "Endpoint to verify in Phase 3."
-        ),
-        source(
-            id: "volkskrant",
-            outlet: "De Volkskrant",
-            region: .netherlands,
-            url: "https://www.volkskrant.nl/voorpagina/rss.xml",
-            language: "nl",
-            tags: ["general"],
-            note: "Endpoint to verify in Phase 3."
         )
+        // Removed in live validation (#90): `volkskrant` article pages
+        // serve the DPG Media consent interstitial (an 8 KB JS shell
+        // with no article body); the feed itself was already title-only.
     ]
 
     // MARK: - Norway
@@ -1415,15 +1353,9 @@ enum RSSFeedCatalog {
             tags: ["digital"],
             note: "Endpoint to verify in Phase 3."
         ),
-        source(
-            id: "publico-ultimas",
-            outlet: "Público – Últimas",
-            region: .portugal,
-            url: "https://feeds.feedburner.com/PublicoUltimaHora",
-            language: "pt",
-            tags: ["general"],
-            note: "Feedburner endpoint to verify in Phase 3."
-        ),
+        // Removed in live validation (#90): `publico-ultimas` on
+        // Feedburner is frozen at 2019-07; `publico.pt/rss` and
+        // `feeds.publico.pt/rss/destaques` both return empty bodies.
         source(
             id: "rtp-noticias",
             outlet: "RTP Notícias",
@@ -1450,23 +1382,19 @@ enum RSSFeedCatalog {
     // MARK: - Romania
 
     private static let romaniaSources: [RSSFeedSource] = [
-        source(
-            id: "agerpres",
-            outlet: "Agerpres",
-            region: .romania,
-            url: "https://www.agerpres.ro/rss/",
-            main: true,
-            language: "ro",
-            tags: ["wire", "country-pick"]
-        ),
+        // Removed in live validation (#90): `agerpres` at `/rss/`
+        // times out / answers 500; the only discoverable alternate is
+        // an unofficial FiveFilters scrape proxy without dates.
+        // Digi24 below inherits the country-pick role.
         source(
             id: "digi24",
             outlet: "Digi24",
             region: .romania,
             url: "https://www.digi24.ro/rss",
+            main: true,
             language: "ro",
-            tags: ["broadcast"],
-            note: "Endpoint to verify in Phase 3."
+            tags: ["broadcast", "country-pick"],
+            note: "Promoted to main outlet in #90 after the Agerpres removal."
         ),
         source(
             id: "hotnews-ro",
@@ -1522,10 +1450,14 @@ enum RSSFeedCatalog {
             tags: ["general", "country-pick"]
         ),
         source(
-            id: "elperiodico-portada",
-            outlet: "El Periódico – Portada",
+            id: "elperiodico-internacional",
+            outlet: "El Periódico – Internacional",
             region: .spain,
-            url: "https://www.elperiodico.com/es/rss/rss_portada.xml",
+            // Replaced in live validation (#90): the former
+            // `rss_portada.xml` returns a valid channel with 0 items.
+            // The per-section feeds are live; Internacional carries
+            // the general-news wire.
+            url: "https://www.elperiodico.com/es/rss/internacional/rss.xml",
             language: "es",
             tags: ["general"]
         ),
@@ -1577,10 +1509,12 @@ enum RSSFeedCatalog {
             id: "sr-ekot",
             outlet: "Sveriges Radio – Ekot",
             region: .sweden,
-            url: "https://api.sr.se/api/rss/program/4540",
+            // Replaced in live validation (#90): program/4540 is the
+            // radio-broadcast rundown whose article links 404.
+            // program/83 is the Ekot text-news feed with real articles.
+            url: "https://api.sr.se/api/rss/program/83",
             language: "sv",
-            tags: ["radio"],
-            note: "Endpoint to verify in Phase 3."
+            tags: ["radio"]
         ),
         source(
             id: "svt-all",
@@ -1762,15 +1696,10 @@ enum RSSFeedCatalog {
     // MARK: - United States
 
     private static let unitedStatesSources: [RSSFeedSource] = [
-        source(
-            id: "ap-google-proxy",
-            outlet: "AP News – Top Headlines",
-            region: .unitedStates,
-            url: "https://news.google.com/rss/search?q=site%3Aapnews.com+when%3A1d&hl=en-US&gl=US&ceid=US:en",
-            language: "en",
-            tags: ["wire"],
-            note: "AP no longer publishes official RSS; Google News proxy until Phase 3."
-        ),
+        // Removed in live validation (#90): `ap-google-proxy` items
+        // link to news.google.com JS-redirect stubs with no extractable
+        // article body, so enrichment always fails. AP publishes no
+        // official RSS to swap in.
         source(
             id: "cnbc-top",
             outlet: "CNBC – US Top News",
@@ -1834,23 +1763,11 @@ enum RSSFeedCatalog {
             language: "en",
             tags: ["world"]
         ),
-        source(
-            id: "nyt-top",
-            outlet: "NYT – Top Stories",
-            region: .unitedStates,
-            url: "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml",
-            main: true,
-            language: "en",
-            tags: ["general", "country-pick"]
-        ),
-        source(
-            id: "nyt-world",
-            outlet: "NYT – World",
-            region: .unitedStates,
-            url: "https://rss.nytimes.com/services/xml/rss/nyt/World.xml",
-            language: "en",
-            tags: ["world"]
-        ),
+        // Removed in live validation (#90): `nyt-top` and `nyt-world`
+        // feeds are healthy, but nytimes.com article pages answer a
+        // hard 403 block page to the app's Safari UA (verified with
+        // both curl and URLSession), so no body is ever extractable.
+        // NPR keeps the United States country-pick role.
         source(
             id: "politico-playbook",
             outlet: "Politico – Playbook",
@@ -1861,22 +1778,17 @@ enum RSSFeedCatalog {
         ),
         // Removed in Phase 3 (#53): `reuters-top-legacy` failed DNS on
         // 2026-06-26 — `feeds.reuters.com` no longer resolves.
-        source(
-            id: "washingtonpost-world",
-            outlet: "Washington Post – World",
-            region: .unitedStates,
-            // Upgraded to HTTPS in Phase 3 (#53). The legacy
-            // `http://feeds.washingtonpost.com/` host was rejected by
-            // `insecureTransport`; the same path responds over HTTPS.
-            url: "https://feeds.washingtonpost.com/rss/world",
-            language: "en",
-            tags: ["world"]
-        ),
+        // Removed in live validation (#90): `washingtonpost-world`
+        // article pages are a ~1 MB JS shell whose visible body is a
+        // ~900-char teaser behind a hard paywall.
         source(
             id: "wsj-world",
             outlet: "WSJ – World News",
             region: .unitedStates,
-            url: "https://feeds.a.dj.com/rss/RSSWorldNews.xml",
+            // Replaced in live validation (#90): `feeds.a.dj.com` is
+            // frozen at 2025-01. Dow Jones moved its public feeds to
+            // `feeds.content.dowjones.io`; articles extract cleanly.
+            url: "https://feeds.content.dowjones.io/public/rss/RSSWorldNews",
             language: "en",
             tags: ["economy", "world"]
         )
