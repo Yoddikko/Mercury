@@ -80,7 +80,10 @@ struct SettingsScreen: View {
         // environment. The view model is a class so reassigning its
         // service is safe.
         let liveService = UserPreferencesService(modelContext: modelContext)
-        feedSourcesViewModel.replaceService(liveService)
+        feedSourcesViewModel.replaceService(
+            liveService,
+            cacheMaintenance: ArticleCacheMaintenanceService(modelContext: modelContext)
+        )
     }
 
     // MARK: - Localized copy

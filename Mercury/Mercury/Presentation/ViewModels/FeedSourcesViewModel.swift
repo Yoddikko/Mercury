@@ -214,6 +214,7 @@ final class FeedSourcesViewModel: ObservableObject {
             let updated = try service.updatePreferences(patch)
             preference = updated
             lastErrorMessage = nil
+            purgeCacheForDisabledSources(preferences: updated)
         } catch {
             switch optimistic {
             case let .region(rawValue, _):
@@ -235,6 +236,36 @@ final class FeedSourcesViewModel: ObservableObject {
             lastErrorMessage = String(
                 localized: "feed_sources.error.save",
                 defaultValue: "We couldn't save that change. Try again."
+            )
+        }
+    }
+
+    /// Purge cached articles from sources the user just disabled (issue
+    /// #94). Best-effort: the preference write already succeeded, so a
+    /// cleanup failure is logged and swallowed — leftover rows are still
+    /// hidden by the replay filter and reclaimed by the retention sweep.
+    private func purgeCacheForDisabledSources(preferences: UserPreference) {
+        guard let cacheMaintenance else { return }
+        let requestID = "feed-sources-purge-\(UUID().uuidString.lowercased())"
+        do {
+            let purged = try cacheMaintenance.purgeDisabledSources(
+                preferences: preferences,
+                requestID: requestID
+            )
+            logger.debug(
+                "Cache purge after feed sources change completed",
+                category: .cache,
+                service: "FeedSourcesViewModel",
+                requestID: requestID,
+                metadata: ["purged_rows": "\(purged)"]
+            )
+        } catch {
+            logger.error(
+                "Cache purge after feed sources change failed",
+                category: .cache,
+                service: "FeedSourcesViewModel",
+                requestID: requestID,
+                metadata: ["error": String(describing: error)]
             )
         }
     }
