@@ -14,7 +14,9 @@ struct ArticleContentEnrichmentService: Sendable {
     /// v2: per-outlet extraction rule layer (#91).
     /// v3: paywalled-teaser classification (#95) — subscriber-only
     ///     pages keep the RSS summary instead of teaser/CTA leftovers.
-    static let distillerVersion: Int = 3
+    /// v4: JSON-LD articleBody fast path + Mozilla Readability.js
+    ///     extraction stage (#98).
+    static let distillerVersion: Int = 4
 
     /// Minimum word count required for the distilled output to be
     /// preferred over the raw extractor output. Below this threshold
@@ -32,6 +34,7 @@ struct ArticleContentEnrichmentService: Sendable {
     private let imageDeduplicator: ArticleImageDeduplicator
     private let localeStripper: ArticleLocaleBoilerplateStripper
     private let paywallClassifier: ArticlePaywallClassifier
+    private let readabilityStage: ReadabilityStage
     private let logger: AppLogger
     private let maxFetchesPerSource: Int
 
@@ -46,6 +49,7 @@ struct ArticleContentEnrichmentService: Sendable {
         imageDeduplicator: ArticleImageDeduplicator = ArticleImageDeduplicator(),
         localeStripper: ArticleLocaleBoilerplateStripper = ArticleLocaleBoilerplateStripper(),
         paywallClassifier: ArticlePaywallClassifier = ArticlePaywallClassifier(),
+        readabilityStage: ReadabilityStage = ReadabilityStage(),
         logger: AppLogger = .shared,
         maxFetchesPerSource: Int = 3
     ) {
@@ -59,6 +63,7 @@ struct ArticleContentEnrichmentService: Sendable {
         self.imageDeduplicator = imageDeduplicator
         self.localeStripper = localeStripper
         self.paywallClassifier = paywallClassifier
+        self.readabilityStage = readabilityStage
         self.logger = logger
         self.maxFetchesPerSource = max(0, maxFetchesPerSource)
     }
@@ -175,7 +180,7 @@ struct ArticleContentEnrichmentService: Sendable {
             // banner outweighs the article body. The Readability-style
             // heuristics in `ArticleBoilerplateRemover` are responsible
             // for finding the article inside the noise.
-            let distillation = distill(
+            let distillation = await distill(
                 rawHTML: html,
                 fallbackCleanedText: extraction.cleanedText,
                 heroURLString: resolvedImageURL?.absoluteString,
@@ -327,7 +332,7 @@ struct ArticleContentEnrichmentService: Sendable {
         language: String?,
         host: String?,
         requestID: String?
-    ) -> DistillationOutput {
+    ) async -> DistillationOutput {
         // JSON-LD fast path (#98): when the CMS embeds the article body
         // in a schema.org Article node, take it directly — zero page
         // chrome by construction. Substantial-body check keeps teaser
@@ -372,13 +377,33 @@ struct ArticleContentEnrichmentService: Sendable {
             )
             ruled = sanitized
         }
+        // Mozilla Readability stage (#98): the battle-tested generic
+        // extractor runs on the rule-cleaned document inside a hidden
+        // extraction-only webview. On success its content HTML feeds
+        // the post-pass below; on failure/timeout/short output the
+        // SwiftSoup pipeline continues on `ruled` unchanged, so the
+        // result is never worse than the pre-#98 pipeline.
+        let readable: String
+        if let extracted = await readabilityStage.extract(html: ruled, requestID: requestID) {
+            logger.debug(
+                "Readability stage produced content",
+                category: .business,
+                service: "ArticleContentEnrichmentService",
+                requestID: requestID,
+                metadata: ["host": host ?? "unknown"]
+            )
+            readable = extracted
+        } else {
+            readable = ruled
+        }
+
         // Truncate at the Italian article terminator (#81). Most IT
         // outlets end the body with "Riproduzione riservata" and follow
         // it with newsletter CTAs, related-article grids, subscribe
         // prompts, and share strips. Cutting there is the single
         // highest-ROI cleanup step we can take.
         let truncated = ArticleContentEnrichmentService.truncatedAtTerminator(
-            html: ruled,
+            html: readable,
             language: language
         )
         let withoutBoilerplate = boilerplateRemover.cleaning(truncated)

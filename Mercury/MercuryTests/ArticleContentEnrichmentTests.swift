@@ -67,6 +67,7 @@ struct ArticleContentEnrichmentTests {
         let service = ArticleContentEnrichmentService(
             pageClient: pageClient,
             extractor: ArticlePageContentExtractor(),
+            readabilityStage: ReadabilityStage(isEnabled: false),
             maxFetchesPerSource: 1
         )
 
@@ -124,6 +125,7 @@ struct ArticleContentEnrichmentTests {
         let service = ArticleContentEnrichmentService(
             pageClient: pageClient,
             extractor: ArticlePageContentExtractor(),
+            readabilityStage: ReadabilityStage(isEnabled: false),
             maxFetchesPerSource: 1
         )
 
@@ -180,6 +182,7 @@ struct ArticleContentEnrichmentTests {
         let service = ArticleContentEnrichmentService(
             pageClient: pageClient,
             extractor: ArticlePageContentExtractor(),
+            readabilityStage: ReadabilityStage(isEnabled: false),
             maxFetchesPerSource: 1
         )
 
@@ -204,6 +207,7 @@ struct ArticleContentEnrichmentTests {
         let service = ArticleContentEnrichmentService(
             pageClient: pageClient,
             extractor: ArticlePageContentExtractor(),
+            readabilityStage: ReadabilityStage(isEnabled: false),
             maxFetchesPerSource: 1
         )
 

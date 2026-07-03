@@ -131,6 +131,15 @@ Both `rawContent` (RSS-supplied) and the output of `ArticlePageContentExtractor`
 RSS body OR page-fetched HTML
         │
         ▼
+[JSON-LD fast path]                  (issue #98 — when the page embeds
+        │                             a schema.org Article node with a
+        │                             substantial `articleBody`, the
+        │                             distilled output is built straight
+        │                             from it: zero page chrome by
+        │                             construction. Teaser-length bodies
+        │                             fall through to the DOM pipeline
+        │                             so the paywall classifier sees them)
+        ▼
 [ArticleHTMLSanitizer]               (render-time safety strip)
         │
         ▼
@@ -145,6 +154,16 @@ RSS body OR page-fetched HTML
         │     related-link blocks)
         │   • stripTextPatterns: regex text pass with the same
         │     paragraph / short-container policy as the locale stripper
+        ▼
+[Mozilla Readability stage]          (issue #98 — vendored
+        │                             mozilla/readability run in a
+        │                             hidden, extraction-only WKWebView;
+        │                             on success its content HTML feeds
+        │                             the stages below, on failure /
+        │                             timeout / short output the
+        │                             document passes through unchanged
+        │                             and the SwiftSoup pipeline remains
+        │                             in charge)
         ▼
 [Terminator truncation]              (issue #81 — script/style-aware)
         │   • cuts the HTML at the first visible occurrence of the
@@ -332,6 +351,43 @@ Rule application is applied at distill time by
 returns the input) and logged with rule id, matched body selector and
 strip counts. Hosts with no rule skip the stage entirely, leaving the
 generic pipeline unchanged.
+
+### JSON-LD fast path and Mozilla Readability stage (issue #98)
+
+Two extraction upgrades adopted after real-device reports of chrome
+leaking through the SwiftSoup heuristics:
+
+* **JSON-LD fast path** (`ArticleJSONLDExtractor`): when the page
+  embeds a schema.org Article/NewsArticle node whose `articleBody` is
+  substantial (≥ the pipeline's minimum distilled word count), the
+  distilled output is built directly from that field — zero page
+  chrome by construction. Teaser-length bodies (Repubblica premium
+  previews) fall through to the DOM pipeline so the paywalled-teaser
+  classifier (#95) still sees them.
+* **Readability stage** (`ReadabilityExtractor` + `ReadabilityStage`):
+  the vendored `mozilla/readability` (Apache-2.0, single JS file under
+  `Resources/Readability/`) runs inside a hidden, extraction-only
+  `WKWebView` — the same approach used by reeeed, swift-readability
+  and Firefox Reader. Design points:
+  * the webview is never rendered; article rendering stays on the
+    native SwiftUI block parser, so this does **not** reintroduce the
+    WKWebView renderer removed in #85;
+  * the input is script-stripped before load and page JS never runs
+    against a network origin (string load, no `baseURL`);
+  * readiness is detected via a hidden sentinel node prepended to the
+    loaded HTML — a fresh webview's `about:blank` already reports
+    `readyState == "complete"`, so polling readyState alone would race
+    the document commit;
+  * one extraction at a time (serialized task chain), bounded at 8 s;
+    any failure, timeout or short output leaves the SwiftSoup pipeline
+    in charge, so the result is never worse than pre-#98.
+
+Pipeline placement: the per-outlet rules (#91) stay as pre-pass —
+they encode Italian-specific knowledge (Consentless CTA, paywall
+markers) Readability has no notion of — and the terminator truncation,
+boilerplate remover, image dedup and locale stripper run as post-pass
+on whichever document won. `distillerVersion` is 4 so previously
+cached bodies re-distill on next ingest.
 
 ### Realistic HTTP fetching (issue #82)
 
