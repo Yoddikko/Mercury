@@ -25,6 +25,7 @@ struct ArticleContentEnrichmentService: Sendable {
     private let pageClient: ArticlePageClient
     private let extractor: ArticlePageContentExtractor
     private let sanitizer: ArticleHTMLSanitizer
+    private let jsonLDExtractor: ArticleJSONLDExtractor
     private let outletRuleCatalog: ArticleOutletRuleCatalog
     private let outletRuleApplier: ArticleOutletRuleApplier
     private let boilerplateRemover: ArticleBoilerplateRemover
@@ -38,6 +39,7 @@ struct ArticleContentEnrichmentService: Sendable {
         pageClient: ArticlePageClient = ArticlePageClient(),
         extractor: ArticlePageContentExtractor = ArticlePageContentExtractor(),
         sanitizer: ArticleHTMLSanitizer = ArticleHTMLSanitizer(),
+        jsonLDExtractor: ArticleJSONLDExtractor = ArticleJSONLDExtractor(),
         outletRuleCatalog: ArticleOutletRuleCatalog = .bundled,
         outletRuleApplier: ArticleOutletRuleApplier = ArticleOutletRuleApplier(),
         boilerplateRemover: ArticleBoilerplateRemover = ArticleBoilerplateRemover(),
@@ -50,6 +52,7 @@ struct ArticleContentEnrichmentService: Sendable {
         self.pageClient = pageClient
         self.extractor = extractor
         self.sanitizer = sanitizer
+        self.jsonLDExtractor = jsonLDExtractor
         self.outletRuleCatalog = outletRuleCatalog
         self.outletRuleApplier = outletRuleApplier
         self.boilerplateRemover = boilerplateRemover
@@ -308,14 +311,16 @@ struct ArticleContentEnrichmentService: Sendable {
     /// `isPaywalledTeaser` (#95) is `true` when the short output is
     /// classified as a subscriber-only teaser — callers must then keep
     /// the article un-enriched instead of using the fallback text.
-    private struct DistillationOutput {
+    /// Internal (not private) so the fixture suites and the audit
+    /// harness exercise the exact production pipeline.
+    struct DistillationOutput {
         let distilledHTML: String?
         let cleanedText: String
         let wordCount: Int?
         let isPaywalledTeaser: Bool
     }
 
-    private func distill(
+    func distill(
         rawHTML: String,
         fallbackCleanedText: String,
         heroURLString: String?,
@@ -323,6 +328,19 @@ struct ArticleContentEnrichmentService: Sendable {
         host: String?,
         requestID: String?
     ) -> DistillationOutput {
+        // JSON-LD fast path (#98): when the CMS embeds the article body
+        // in a schema.org Article node, take it directly — zero page
+        // chrome by construction. Substantial-body check keeps teaser
+        // JSON-LD (Repubblica premium ships a 400-char preview) on the
+        // DOM pipeline, where the paywall classifier (#95) sees it.
+        if let fastPath = jsonLDFastPath(
+            rawHTML: rawHTML,
+            language: language,
+            requestID: requestID
+        ) {
+            return fastPath
+        }
+
         let sanitized = sanitizer.sanitize(rawHTML)
         // Per-outlet extraction rule (#91) — applied BEFORE the generic
         // Readability-style pass. When the article host has a declared
@@ -425,6 +443,118 @@ struct ArticleContentEnrichmentService: Sendable {
             wordCount: wordCount,
             isPaywalledTeaser: false
         )
+    }
+
+    // MARK: - JSON-LD fast path (issue #98)
+
+    /// Builds the distilled output straight from the page's JSON-LD
+    /// `articleBody` when one exists and is substantial (≥ the
+    /// pipeline's minimum distilled word count). Returns `nil` when
+    /// the page has no usable node — the DOM pipeline then runs
+    /// unchanged, including the paywalled-teaser classification for
+    /// pages whose JSON-LD body is only a preview.
+    private func jsonLDFastPath(
+        rawHTML: String,
+        language: String?,
+        requestID: String?
+    ) -> DistillationOutput? {
+        guard let node = jsonLDExtractor.articleNode(fromRawHTML: rawHTML, requestID: requestID) else {
+            return nil
+        }
+
+        // Cut the body at the Italian article terminator if the CMS
+        // serialized it into `articleBody` (several outlets keep the
+        // "© RIPRODUZIONE RISERVATA" line inside the field).
+        let truncatedBody = Self.truncatedTextAtTerminator(
+            text: node.articleBody,
+            language: language
+        )
+
+        let paragraphsHTML = Self.paragraphsHTML(fromPlainText: truncatedBody)
+        // Locale stripper post-pass: catches newsletter CTAs and
+        // related-content labels a CMS occasionally serializes into
+        // the body field as standalone paragraphs.
+        let final = localeStripper.stripping(html: paragraphsHTML, language: language)
+        let plainText = ArticleBoilerplateRemover.plainText(from: final)
+        let wordCount = plainText
+            .split { $0.isWhitespace || $0.isNewline }
+            .count
+
+        guard wordCount >= Self.distilledMinimumWords else {
+            logger.trace(
+                "JSON-LD articleBody too short for fast path, deferring to DOM pipeline",
+                category: .business,
+                service: "ArticleContentEnrichmentService",
+                requestID: requestID,
+                metadata: [
+                    "jsonld_word_count": "\(wordCount)",
+                    "threshold": "\(Self.distilledMinimumWords)",
+                    "is_accessible_for_free": node.isAccessibleForFree.map { "\($0)" } ?? "undeclared"
+                ]
+            )
+            return nil
+        }
+
+        logger.debug(
+            "Distilled body taken from JSON-LD articleBody fast path",
+            category: .business,
+            service: "ArticleContentEnrichmentService",
+            requestID: requestID,
+            metadata: [
+                "jsonld_word_count": "\(wordCount)",
+                "language": language ?? "unknown",
+                "distiller_version": "\(Self.distillerVersion)"
+            ]
+        )
+
+        return DistillationOutput(
+            distilledHTML: final,
+            cleanedText: plainText,
+            wordCount: wordCount,
+            isPaywalledTeaser: false
+        )
+    }
+
+    /// Converts a plain-text article body into paragraph HTML. Splits
+    /// on newline runs when the CMS preserved them; a body without
+    /// newlines becomes a single paragraph. Text is HTML-escaped, so
+    /// the output is chrome-free AND markup-safe by construction.
+    static func paragraphsHTML(fromPlainText text: String) -> String {
+        let paragraphs = text
+            .components(separatedBy: CharacterSet.newlines)
+            .map { $0.trimmingCharacters(in: .whitespaces) }
+            .filter { $0.isEmpty == false }
+        return paragraphs
+            .map { "<p>\(escapedHTMLText($0))</p>" }
+            .joined(separator: "\n")
+    }
+
+    /// Minimal HTML text escaping for text-node content.
+    static func escapedHTMLText(_ text: String) -> String {
+        text
+            .replacingOccurrences(of: "&", with: "&amp;")
+            .replacingOccurrences(of: "<", with: "&lt;")
+            .replacingOccurrences(of: ">", with: "&gt;")
+    }
+
+    /// Plain-text variant of `truncatedAtTerminator` for JSON-LD
+    /// bodies: cuts `text` at the first case-insensitive occurrence of
+    /// a per-language terminator marker. Unknown language passes
+    /// through untouched.
+    static func truncatedTextAtTerminator(text: String, language: String?) -> String {
+        guard let normalized = ArticleLocaleBoilerplateStripper.normalizedLanguage(language),
+              let terminators = terminatorMarkers[normalized] else {
+            return text
+        }
+        var earliest: Range<String.Index>?
+        for terminator in terminators {
+            guard let range = text.range(of: terminator, options: [.caseInsensitive]) else { continue }
+            if earliest == nil || range.lowerBound < earliest!.lowerBound {
+                earliest = range
+            }
+        }
+        guard let earliest else { return text }
+        return String(text[..<earliest.lowerBound]).trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
     /// Trim `html` at the first occurrence of a per-language article
