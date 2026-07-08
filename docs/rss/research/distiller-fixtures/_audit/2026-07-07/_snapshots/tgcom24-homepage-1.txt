@@ -1,0 +1,9 @@
+page: tgcom24-homepage-1
+host: www.tgcom24.mediaset.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 330
+chrome-survivors: []
+raw-paywall-markers: []
+head: marine le pen condannata a quattro anni di reclusione, due con la condizionale. questa la sentenza emessa in prima istanza dalla corte d'appello di parigi nei confronti della deputata francese, che però potrà comunque candidarsi alle prossime elezioni presidenziali avendo già scontato l'ineleggibilità. dopo la sentenza
+tail: unciato al telegiornale di tf1 di voler "ricorrere alla cassazione" contro la condanna confermata in appello. secondo la deputata francese, "due giurisdizioni possono sbagliare entrambe". e sulla possibilità di ricandidarsi alle elezioni presidenziali: "mi candido e lo farò senza indossare il braccialetto elettronico".

@@ -1,0 +1,9 @@
+page: panorama-2
+host: www.panorama.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 853
+chrome-survivors: []
+raw-paywall-markers: ["premium"]
+head: 7 luglio 2026 – lettura: 5 minuti il batterista dei deep purple presenta il nuovo album della band, e racconta l’incontro con la premier (batterista) giapponese sul tavolo del cocktail bar di un hotel milanese sono allineati i vinili e i cd di splat!, il nuovo album dei deep purple. copertine appena stampate, edizioni 
+tail: che non ci saranno. non perché manchino i talenti. è il mondo che è cambiato. le persone non crescono più insieme a una band. ascoltano una canzone di un gruppo, poi passano alla successiva di un altro artista. noi siamo nati in un’epoca in cui la musica accompagnava la tua vita. oggi accompagna il tuo prossimo click».

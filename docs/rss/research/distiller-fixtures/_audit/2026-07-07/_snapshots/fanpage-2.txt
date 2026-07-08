@@ -1,0 +1,9 @@
+page: fanpage-2
+host: www.fanpage.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 443
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium"]
+head: argentina ai quarti di finale dei mondiali nel modo più assurdo possibile, dopo una partita incredibile contro l'egitto. i campioni del mondo in carica, sotto di 2 gol fino al 79', sono riusciti poi a risollevarsi segnando 3 gol e mettendo la freccia. mattatore della rimonta il solito messi che ha vissuto emozioni cont
+tail: dal campione argentino, che sentiva sulle sue spalle il peso dell'errore dal dischetto. l'inerzia del match è cambiata completamente ed ecco che nel recupero è arrivato quasi annunciato il gol del 3-2 sudamericano: questa volta è l'argentina a realizzare un contropiede perfetto, per il gol definitivo di enzo fernandez.

@@ -1,0 +1,9 @@
+page: tgcom24-sport-1
+host: www.tgcom24.mediaset.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 908
+chrome-survivors: []
+raw-paywall-markers: []
+head: "al posto del latte materno succhiava noci di cocco, e le cose più istruite che sentiva erano i versi degli scimpanzé". la procura di parigi ha aperto un'indagine sulle dichiarazioni razziste contro il fenomeno francese kylian mbappé della senatrice paraguaiana celeste amarilla, postate sul social x durante e al termin
+tail: rappresentano né il governo paraguaiano né il popolo paraguaiano. la federazione di calcio francese ha denunciato le dichiarazioni di amarilla definendole "assolutamente ripugnanti", mentre il presidente francese emmanuel macron e la ministra dello sport marina ferrari hanno espresso il loro sostegno pubblico a mbappé.

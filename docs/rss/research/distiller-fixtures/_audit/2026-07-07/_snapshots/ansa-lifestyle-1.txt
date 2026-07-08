@@ -1,0 +1,9 @@
+page: ansa-lifestyle-1
+host: www.ansa.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 188
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium", "bt-Subscribe"]
+head: compie 90 anni e il ministero delle imprese e del made in italy le dedica un francobollo ordinario da 1,30 euro: è layla cosmetics, una leggenda milanese che rischiava di scomparire. lo storico brand nato nel 1936 in via pestagalli per intuizione del commendatore emanuele rossetti, per decenni lo smalto più popolare d'
+tail: imizzato dall’istituto poligrafico e zecca dello stato, cattura in un viaggio cromatico il leggendario smalto rosso di layla, simbolo di un'eleganza intramontabile, il laccato 112. la "new layla 2.0" punta a ripartire dal cuore pulsante della sua storia: lo smalto e la sua formula segreta al top della cosmesi italiana.

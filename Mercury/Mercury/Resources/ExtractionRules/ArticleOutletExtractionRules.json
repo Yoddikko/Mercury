@@ -70,11 +70,31 @@
       "bodySelectors": [],
       "stripSelectors": [
         "[data-testid=read-also-item-container]",
-        "[data-testid=item-mini-root]"
+        "[data-testid=item-mini-root]",
+        "[data-testid=header-container]",
+        "[data-testid=sub-header-section]",
+        "[data-testid=second-level-menu]",
+        "[data-testid=profile-menu]",
+        "[data-testid=date-time]"
       ],
       "stripTextPatterns": [
         "\\bti\\s+potrebbe\\s+interessare\\b"
       ]
+    },
+    {
+      "id": "linkiesta",
+      "hosts": ["linkiesta.it"],
+      "bodySelectors": [],
+      "stripSelectors": [
+        ".userloginNav",
+        ".navHeader",
+        ".article-datetime",
+        ".post-categories",
+        ".article-tags",
+        ".sharedaddy",
+        ".lkadv"
+      ],
+      "stripTextPatterns": []
     },
     {
       "id": "internazionale",

@@ -1,0 +1,9 @@
+page: rai-portale-rss-1
+host: www.rainews.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 276
+chrome-survivors: []
+raw-paywall-markers: ["premium"]
+head: marine le pen annuncia la sua candidatura alle elezioni presidenziali in francia nel 2027. "dato che ho la possibilità di ricorrere alla corte di cassazione, cosa che non era necessariamente prevista in altri casi, e dato che il ricorso alla corte di cassazione sospende gli effetti della sentenza, farò campagna elettor
+tail: a per il 18 aprile del 2027 , con l'eventuale ballottaggio il 2 maggio. oggi l'estrema destra del rn è in testa ai sondaggi. dopo le sconfitte al secondo turno delle presidenziali del 2017 e del 2022, e dopo un decennio di macronismo, le pen è in ascesa e conta di coronare il suo sogno conquistando finalmente l'eliseo.

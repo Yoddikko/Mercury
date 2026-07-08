@@ -1,0 +1,9 @@
+page: ansa-cronaca-1
+host: www.ansa.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 192
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium", "bt-Subscribe"]
+head: strattoni, colpi con un penna usata come coltello, schiaffi sulla testa, calci. sono alcune delle vessazioni fisiche e morali che un 47enne originario del bangladesh, insegnante di religione di un centro educativo islamico di jesi (ancona), avrebbe inflitto ad almeno una quindicina di studenti, umiliandoli e colpendoli
+tail:  sottoposti alla sua autorità, rivolgendo loro anche minacce oltre a sottoporli a vessazioni fisiche e morali. il provvedimento eseguito, costituisce misura cautelare, disposta in sede di indagini preliminari, avverso cui è ammesso mezzo di impugnazione e il destinatario è presunto innocente fino a sentenza definitiva.

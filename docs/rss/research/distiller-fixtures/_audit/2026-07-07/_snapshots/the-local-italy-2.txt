@@ -1,0 +1,9 @@
+page: the-local-italy-2
+host: www.thelocal.it lang: en
+distilled: NO (fallback)
+paywalled-teaser: true
+words: 0
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium"]
+head: 
+tail: 

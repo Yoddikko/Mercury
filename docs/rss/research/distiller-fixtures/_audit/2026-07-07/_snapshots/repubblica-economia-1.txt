@@ -1,0 +1,9 @@
+page: repubblica-economia-1
+host: www.repubblica.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 1064
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium"]
+head: * pietro galeone è ricercatore presso iep bocconi e lecturer all’università bocconi; si occupa di economia dell’istruzione e del lavoro, politiche giovanili e inclusione sociale. sylvie goulard è presidente del deutsch-französisches institut, vicepresidente di iep bocconi e professor of practice presso sda bocconi; in 
+tail: -povertà va dunque accolto come uno sviluppo importante e necessario. la commissione ha correttamente individuato la riduzione della povertà come una sfida europea centrale e ha proposto un quadro più ampio, più coerente e più ambizioso rispetto a molte iniziative precedenti. ma la parte più importante comincia adesso.

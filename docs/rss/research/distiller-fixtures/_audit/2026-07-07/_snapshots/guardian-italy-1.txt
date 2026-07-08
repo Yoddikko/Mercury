@@ -1,0 +1,9 @@
+page: guardian-italy-1
+host: www.theguardian.com lang: en
+distilled: yes
+paywalled-teaser: false
+words: 377
+chrome-survivors: []
+raw-paywall-markers: []
+head: a fishing village by lake como has imposed fines of up to €200 (£170) for people who wander around with bare chests or in swimwear, in the latest attempt by an italian holiday destination to crack down on uncouth tourists. varenna has been feeling the strain from an increasing number of visitors and so authorities were
+tail: imming gear and bare-chested as “widespread indecorous behaviour” that was tainting the town’s image and so imposed hefty fines. in liguria’s upmarket coastal town of portofino, selfies were banned in 2023 and certain areas were designated as “no-waiting zones” to deter tourists from loitering for too long in one spot.

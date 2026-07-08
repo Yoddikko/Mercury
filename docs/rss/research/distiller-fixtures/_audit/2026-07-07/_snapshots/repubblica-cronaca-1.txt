@@ -1,0 +1,9 @@
+page: repubblica-cronaca-1
+host: www.repubblica.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 278
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium"]
+head: “ma guarda questo scemo”, “ma che vergogna”. non è esattamente fra gli applausi che il cantante francesco renga ha lasciato il volo ryanair brindisi-milano orio al serio. risposte sgarbate e proteste scomposte hanno spinto il comandante a ritenerlo “in condizioni non idonee ad affrontare il volo”, fermare l’aereo che e
+tail: ial. secondo quanto riportato dal giorno, alcuni avrebbero riferito che l’artista puzzava di alcol ed era visibilmente alterato ma la circostanza non è stata confermata da fonti ufficiali. nessun commento anche dall’ufficio stampa del cantante, che si è limitato a confermare la sua presenza in puglia nei giorni scorsi.

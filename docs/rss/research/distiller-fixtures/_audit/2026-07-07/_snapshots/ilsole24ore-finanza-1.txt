@@ -1,0 +1,9 @@
+page: ilsole24ore-finanza-1
+host: www.ilsole24ore.com lang: it
+distilled: yes
+paywalled-teaser: false
+words: 643
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium"]
+head: la compagnia aerea low cost britannica easyjet ha annunciato di aver raggiunto un accordo di principio con la società di investimento statunitense castlelake sulla base di un’offerta migliorata di 6,90 sterline per azione. valutazione che il consiglio di amministrazione ritiene sufficientemente elevata da poter essere 
+tail: e tensioni geopolitiche in medio oriente, ha inciso sulla redditività dei vettori. nella prima metà dell’esercizio easyjet ha registrato una perdita e un rallentamento delle prenotazioni per la stagione estiva, elementi che hanno contribuito a mantenere il titolo sotto pressione e favorito il tentativo di acquisizione.

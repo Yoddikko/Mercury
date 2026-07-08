@@ -1,0 +1,9 @@
+page: adnkronos-prima-1
+host: www.adnkronos.com lang: it
+distilled: yes
+paywalled-teaser: false
+words: 191
+chrome-survivors: []
+raw-paywall-markers: []
+head: finale folle in argentina-egitto. oggi, martedì 7 luglio, l'albiceleste ha battuto la nazionale africana per 3-2 negli ottavi di finale dei mondiali 2026, raggiungendo i quarti al termine di una rimonta da capogiro, completata in pieno recupero e guidata da lionel messi. proprio negli ultimi minuti di partita, poco pri
+tail: sulla destra e pennella un cross al bacio per enzo fernandez, che sul secondo palo colpisce di testa e firma la rete del 3-2. immediate le proteste egiziane, che circondano l'arbitro chiedendo l'annullamento del gol e il calcio di rigore, ma il direttore di gara convalida la rete e l'argentina vola ai quarti di finale.

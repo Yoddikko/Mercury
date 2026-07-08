@@ -342,6 +342,41 @@ struct ItalianDistillationFixturesTests {
             host: "www.rainews.it",
             mustContainAny: ["kallas", "sanzioni"],
             bannedSubstrings: Self.commonChrome
+        ),
+        FixtureSpec(
+            // TGCom24 VIDEO page (live audit 2026-07-07, #98). Video
+            // pages have no article container, so the Tailwind site
+            // header (`data-testid="header-container"`: date bar,
+            // meteo.it weather chip, section menus) leaked into the
+            // distilled head until the tgcom24 rule stripped it.
+            name: "tgcom24-video-trump-meloni",
+            language: "it",
+            host: "www.tgcom24.mediaset.it",
+            mustContainAny: ["trump", "meloni"],
+            bannedSubstrings: Self.commonChrome + [
+                // header date bar copy
+                "aggiornato alle",
+                // second-level-menu / profile-menu copy
+                "area personale",
+                "ti potrebbe interessare"
+            ]
+        ),
+        FixtureSpec(
+            // Linkiesta advertorial-style article (live audit
+            // 2026-07-07, #98). The login nav ("Accedi"), the
+            // `.article-datetime` date, the `.post-categories` list
+            // and the trailing `.article-tags`/`.sharedaddy` widgets
+            // leaked around the body until the linkiesta rule
+            // stripped them.
+            name: "linkiesta-gwm-ora5",
+            language: "it",
+            host: "www.linkiesta.it",
+            mustContainAny: ["gwm", "mobilità"],
+            bannedSubstrings: Self.commonChrome + [
+                "accedi",
+                "tags:",
+                "condividi:"
+            ]
         )
     ]
 

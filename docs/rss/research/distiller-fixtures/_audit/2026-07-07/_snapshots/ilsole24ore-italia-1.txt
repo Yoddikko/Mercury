@@ -1,0 +1,9 @@
+page: ilsole24ore-italia-1
+host: www.ilsole24ore.com lang: it
+distilled: yes
+paywalled-teaser: false
+words: 572
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium"]
+head: nuova tappa nel percorso di internazionalizzazione dell’italpress. nella sede di palermo dell’agenzia è stato siglato un accordo di cooperazione con lana, la libyan news agency, agenzia di stampa nazionale libica. un’intesa che rafforza il dialogo tra italia e libia nel campo dell’informazione e che si inserisce in una
+tail: realtà sia spesso diversa da ciò che viene raccontato all’esterno”. l’intesa tra italpress e lana conferma dunque il ruolo dell’informazione come ponte tra paesi, culture e istituzioni, rafforzando un percorso di cooperazione che guarda al mediterraneo come spazio strategico di dialogo, sviluppo e conoscenza reciproca.

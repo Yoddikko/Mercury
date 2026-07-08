@@ -1,0 +1,9 @@
+page: sky-tg24-homepage-2
+host: tg24.sky.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 719
+chrome-survivors: []
+raw-paywall-markers: ["premium"]
+head: vertice nato 2026, l'arrivo dei leader mondiali ad ankara: da trump a zelensky. foto mondo fotogallery 07 lug 2026 - 19:52 15 foto ansa/ipa nella capitale turca si tiene un summit fondamentale per il futuro dell'alleanza, con gli stati membri chiamati a dimostrare come intendano raggiungere la spesa per la difesa pari 
+tail: anche il presidente del consiglio europeo antonio costa (in foto, insieme al ministro della cultura e del turismo turco mehmet nuri ersoy). 14/15 ©ansa il primo ministro canadese mark carney. 15/15 ©ansa l'arrivo del primo ministro dei paesi bassi, rob jetten. chi partecipa e quali sono i temi in agenda al vertice nato

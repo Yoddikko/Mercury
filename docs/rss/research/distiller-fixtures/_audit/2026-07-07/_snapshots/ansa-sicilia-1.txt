@@ -1,0 +1,9 @@
+page: ansa-sicilia-1
+host: www.ansa.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 391
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium", "bt-Subscribe"]
+head: una piccola lucertola sopravvive da tempo su uno scoglio vulcanico al largo di filicudi, in uno degli ambienti più isolati del mediterraneo. è la podarcis raffonei, conosciuta come lucertola delle eolie: una specie rarissima, presente solo in pochi nuclei dell'arcipelago, oggi al centro di uno studio internazionale coo
+tail: olazione può sopravvivere anche con una diversità genetica molto bassa, purché il peso delle mutazioni dannose rimanga entro limiti compatibili con la sopravvivenza", sottolinea il giorgio bertorelle, professore del dipartimento di scienze della vita e biotecnologie dell'università di ferrara e coordinatore del gruppo.

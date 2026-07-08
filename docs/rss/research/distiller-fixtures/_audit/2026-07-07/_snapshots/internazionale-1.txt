@@ -1,0 +1,9 @@
+page: internazionale-1
+host: www.internazionale.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 1253
+chrome-survivors: []
+raw-paywall-markers: ["paywall"]
+head: due giorni nella vita di due persone innamorate. il primo, quando tutto comincia, e l’ultimo, quando ci si lascia. a chi legge, la possibilità di immaginare cosa è successo in mezzo. in questa puntata: romain, 31 anni. “sono figlio di agricoltori e faccio l’insegnante nel nord della francia. ho fatto coming out a vent’
+tail: assavo ore a guardare la nostra conversazione su whatsapp, dove comparivano anche i suoi orari di accesso. quando lo vedevo online a lungo, mi chiedevo: ‘con chi sta parlando?’. e nella mia testa mi facevo mille film. questa storia mi ha davvero spaventato. ero emotivamente sopraffatto”. (traduzione di andrea de ritis)

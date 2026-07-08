@@ -1,0 +1,9 @@
+page: linkiesta-2
+host: www.linkiesta.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 1035
+chrome-survivors: []
+raw-paywall-markers: []
+head: il mercato automobilistico europeo sta vivendo una delle trasformazioni più profonde della sua storia. la transizione verso nuove forme di alimentazione, la crescente centralità del software e dell’esperienza digitale, insieme all’arrivo di nuovi costruttori globali, stanno ridisegnando un settore che per decenni è sem
+tail: carsi nel mercato europeo facendo leva su una combinazione di tecnologie differenti, una rete costruita sul territorio e un prodotto adattato alle esigenze locali. un piano di sviluppo che racconta bene come stia cambiando il mercato dell’automobile e il modo in cui i costruttori internazionali scelgono di affrontarlo.

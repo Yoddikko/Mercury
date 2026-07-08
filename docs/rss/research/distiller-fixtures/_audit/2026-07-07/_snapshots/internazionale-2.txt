@@ -1,0 +1,9 @@
+page: internazionale-2
+host: www.internazionale.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 1542
+chrome-survivors: []
+raw-paywall-markers: ["paywall"]
+head: le balene e gli altri animali marini comunicano con il suono, perché in fondo al mare non arriva la luce. ma sott’acqua c’è sempre più chiasso, per colpa dei sonar, delle trivelle e del passaggio delle grandi navi. e questo disorienta gli animali tutti gli animali dell’oceano che hanno una spina dorsale possono sentire
+tail: e. questo articolo è uscito nel numero 31 (aprile 2022) di internazionale kids. è la traduzione di un articolo pubblicato negli stati uniti su muse con il titolo “commotion in the ocean”. internazionale kids è il mensile di internazionale per bambine e bambini. lo trovi in edicola o sull’app per ios e android. oppure !

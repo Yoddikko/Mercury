@@ -1,0 +1,9 @@
+page: il-giornale-2
+host: www.ilgiornale.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 257
+chrome-survivors: []
+raw-paywall-markers: ["premium"]
+head: per favore utilizza un browser moderno come edge, firefox, chrome o uno qualunque degli altri a disposizione gratuitamente. le pen ricorre in cassazione dopo la condanna: “corro per l’eliseo senza braccialetto elettronico” la leader del rassemblement national ribadisce la propria innocenza e conferma la candidatura all
+tail: ll'esecuzione della pena. nel suo progetto per l'eliseo, le pen ha indicato anche il ruolo di jordan bardella. "io e jordan ci battiamo per la francia, non abbiamo ambizioni personali. lui, con la sua energia, sarà un eccezionale primo ministro: saremo un ticket che cambierà le cose in francia", ha dichiarato. ricarica

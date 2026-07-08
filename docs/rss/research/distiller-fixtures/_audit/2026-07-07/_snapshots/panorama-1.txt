@@ -1,0 +1,9 @@
+page: panorama-1
+host: www.panorama.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 1196
+chrome-survivors: []
+raw-paywall-markers: ["premium"]
+head: mentre la segretaria parla di femminismo e solidarietà, è fuga delle sue “amazzoni”: furlan, madia, gualmini, picierno l’hanno già mollata, tinagli frigge per la linea green. ma è in europa che i dem rischiano l’implosione «trovo che il tentativo di mettere le donne in contrapposizione sia un gioco molto diffuso nelle 
+tail: calzoni climatici di centrodestra. ma la colpa è anche un po’ del maschio che «manifesta senza remore l’ambizione tossica e voglia di potere, sia verso la donna che per l’ambiente». persino in bolletta: basta patriarcato. peccato solo per le vituperate colleghe. forse le ragazze salveranno il mondo, ma non il nazareno.

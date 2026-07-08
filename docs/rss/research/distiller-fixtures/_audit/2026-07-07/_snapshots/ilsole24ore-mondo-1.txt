@@ -1,0 +1,9 @@
+page: ilsole24ore-mondo-1
+host: www.ilsole24ore.com lang: it
+distilled: yes
+paywalled-teaser: false
+words: 446
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium"]
+head: il comitato olimpico internazionale ha aperto un altro, ampio, spiraglio verso la riammissione degli atleti russi alle competizioni che organizza. in vista dei giochi olimpici del 2028 a los angeles, l’esecutivo del cio ha infatti revocato in via provvisoria la sospensione del comitato olimpico russo, che era stata sta
+tail: eride e il pattinaggio sincronizzato, mentre non si farà più la combinata nordica, che è sempre stata inclusa fin dalla prima edizione, a chamonix 1924, riservata solo ad atleti uomini. i giochi 2030 saranno così i primi a raggiungere la parità di genere tra gli atleti con un totale di 3.046 partecipanti in 126 eventi.

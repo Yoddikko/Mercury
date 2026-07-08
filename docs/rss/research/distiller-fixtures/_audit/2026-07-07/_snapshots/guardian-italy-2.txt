@@ -1,0 +1,9 @@
+page: guardian-italy-2
+host: www.theguardian.com lang: en
+distilled: yes
+paywalled-teaser: false
+words: 443
+chrome-survivors: []
+raw-paywall-markers: []
+head: italian prosecutors have placed a businessman and former journalist under investigation for allegedly masterminding a bomb attack at the home of sigfrido ranucci, a prominent investigative reporter. valter lavitola was supposedly friends with ranucci, the host of report, an investigative programme aired by the state br
+tail: high-profile critic of alleged political interference in rai by giorgia meloni’s far-right administration. ranucci has also written a book about the italian mafia and in 2021 described how a former prisoner told him that mobsters “had given the order to kill” him after the book was published, but the hit “was stopped”.
