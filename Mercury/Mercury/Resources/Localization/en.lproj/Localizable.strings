@@ -284,3 +284,5 @@
 "settings.ai.save" = "Save configuration";
 "settings.ai.status.ready" = "Ready";
 "settings.ai.status.key_missing" = "Key missing";
+"home.topics.cluster.title" = "Story";
+"home.topics.cluster.articles_count" = "%lld articles";

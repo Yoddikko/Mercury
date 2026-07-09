@@ -306,7 +306,14 @@ actor AIService {
         let flowRequestID = requestID ?? Self.generateRequestID(prefix: "ai-topics")
         let provider = try resolveActiveProvider(requestID: flowRequestID)
         let input = headlines
-            .map { "\($0.id)\t\($0.title.replacingOccurrences(of: "\n", with: " "))" }
+            .map { headline in
+                // Truncated titles keep the prompt compact so large
+                // batches don't produce truncated JSON (issue #117).
+                let title = headline.title
+                    .replacingOccurrences(of: "\n", with: " ")
+                    .prefix(140)
+                return "\(headline.id)\t\(title)"
+            }
             .joined(separator: "\n")
         do {
             let rawGroups = try await provider.groupHeadlines(input, requestID: flowRequestID)

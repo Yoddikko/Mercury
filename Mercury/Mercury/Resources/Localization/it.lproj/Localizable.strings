@@ -284,3 +284,5 @@
 "settings.ai.save" = "Salva configurazione";
 "settings.ai.status.ready" = "Pronto";
 "settings.ai.status.key_missing" = "Manca la chiave";
+"home.topics.cluster.title" = "Storia";
+"home.topics.cluster.articles_count" = "%lld articoli";

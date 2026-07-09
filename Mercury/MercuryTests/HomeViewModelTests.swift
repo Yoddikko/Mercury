@@ -52,6 +52,61 @@ struct HomeViewModelTests {
     }
 
     @Test
+    func topicsAggregateFullDayCorpusFromCacheWhenContextAttached() async throws {
+        // The displayed feed carries ONE article, but the cache holds a
+        // same-story pair inside the 24h window (issue #117): topics
+        // must aggregate the cache corpus, not the displayed list.
+        let container = try Self.makeInMemoryContainer()
+        let context = ModelContext(container)
+        let now = Date()
+        let cachedA = ArticleEntity(
+            id: "cache-a",
+            title: "Terremoto di magnitudo 5.2 nel centro Italia, scossa avvertita a Roma",
+            sourceName: "ansa",
+            sourceID: "ansa",
+            sourceURL: "https://example.com/ansa",
+            articleURL: "https://example.com/ansa/cache-a",
+            publishedAt: now.addingTimeInterval(-4 * 3600)
+        )
+        let cachedB = ArticleEntity(
+            id: "cache-b",
+            title: "Forte scossa di terremoto magnitudo 5.2 nel centro Italia",
+            sourceName: "repubblica",
+            sourceID: "repubblica",
+            sourceURL: "https://example.com/repubblica",
+            articleURL: "https://example.com/repubblica/cache-b",
+            publishedAt: now.addingTimeInterval(-5 * 3600)
+        )
+        context.insert(cachedA)
+        context.insert(cachedB)
+        try context.save()
+
+        let displayed = [
+            Self.recentArticle(id: "live", source: "gazzetta", title: "Notizia sportiva del tutto scorrelata dal resto", publishedAt: now)
+        ]
+        let viewModel = makeViewModel(deduplicatedArticles: displayed)
+        viewModel.attach(modelContext: context)
+        await viewModel.refresh()
+        viewModel.selectDisplayMode(.topics)
+
+        var ready: [TopicCluster]?
+        for _ in 0..<100 {
+            if case let .ready(clusters, _) = viewModel.topicState {
+                ready = clusters
+                break
+            }
+            try await Task.sleep(nanoseconds: 50_000_000)
+        }
+        guard let clusters = ready else {
+            Issue.record("Expected .ready topic state, got \(viewModel.topicState)")
+            return
+        }
+        #expect(clusters.contains { cluster in
+            cluster.isAggregated && cluster.sourceCount == 2
+        })
+    }
+
+    @Test
     func topicsModeUsesAIGrouperWhenAvailable() async throws {
         let now = Date()
         let articles = [

@@ -57,6 +57,14 @@ Displays a list of articles ranked and filtered based on logic and user preferen
   aggregation explicit
 * single-article topics fall into a trailing title-only "More news"
   section
+* the topics corpus is the full last-24h window fetched from the
+  local cache (up to 300 rows, source allow-list applied) - not just
+  the articles currently displayed (issue #117); the AI grouper sees
+  the newest 80 headlines and ungrouped articles become singletons
+* tapping an aggregated story opens a dedicated list of ALL its
+  articles (lead first) so the user picks which outlet to read;
+  pull-to-refresh re-aggregates and retries the AI path (e.g. right
+  after configuring a provider)
 * aggregation runs off the main thread; the Topics tab shows a
   dedicated loading state ("grouping the news by topic…") while it
   computes
