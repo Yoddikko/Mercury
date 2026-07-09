@@ -233,13 +233,23 @@ struct HomeScreen: View {
                     .accessibilityLabel(viewModel.topicsAIAggregatedLabel)
                     .accessibilityIdentifier("home.topics.ai_badge")
                 }
-            } else if viewModel.topicAIFailureMessage != nil {
+            } else if let failure = viewModel.topicAIFailureMessage {
                 Section {
-                    Text(viewModel.topicsAIUnavailableLabel.uppercased())
-                        .font(.paperBadge)
-                        .foregroundStyle(Color.paperRule)
-                        .listRowSeparator(.hidden)
-                        .accessibilityIdentifier("home.topics.ai_unavailable")
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(viewModel.topicsAIUnavailableLabel.uppercased())
+                            .font(.paperBadge)
+                            .foregroundStyle(Color.paperRule)
+                        // The actual reason (issue #121): without it a
+                        // provider timeout is indistinguishable from a
+                        // bad key, and the user cannot report anything
+                        // actionable.
+                        Text(failure)
+                            .font(.paperMeta)
+                            .foregroundStyle(Color.paperRule)
+                            .accessibilityIdentifier("home.topics.ai_unavailable.reason")
+                    }
+                    .listRowSeparator(.hidden)
+                    .accessibilityIdentifier("home.topics.ai_unavailable")
                 }
             }
             Section {
