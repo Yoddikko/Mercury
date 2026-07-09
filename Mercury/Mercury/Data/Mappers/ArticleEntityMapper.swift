@@ -40,6 +40,8 @@ enum ArticleEntityMapper {
             isContentLikelyComplete: article.isContentLikelyComplete,
             summaryShort: article.summaryShort,
             summaryBullets: article.summaryBullets,
+            aiSummaryShort: article.aiSummaryShort,
+            aiSummaryBullets: article.aiSummaryShort == nil ? nil : article.aiSummaryBullets,
             category: article.category,
             tags: article.tags,
             language: article.language,
@@ -76,6 +78,13 @@ enum ArticleEntityMapper {
         entity.isContentLikelyComplete = article.isContentLikelyComplete
         entity.summaryShort = article.summaryShort
         entity.summaryBullets = article.summaryBullets
+        // Same preserve rule as `sourceID`: an in-memory Article that never
+        // carried the AI summary (ingest/enrichment copies) must not wipe a
+        // summary the user already generated (issue #100).
+        entity.aiSummaryShort = article.aiSummaryShort ?? entity.aiSummaryShort
+        if article.aiSummaryShort != nil {
+            entity.aiSummaryBullets = article.aiSummaryBullets
+        }
         entity.category = article.category
         entity.tags = article.tags
         entity.language = article.language
@@ -115,6 +124,8 @@ enum ArticleEntityMapper {
             isContentLikelyComplete: entity.isContentLikelyComplete,
             summaryShort: entity.summaryShort,
             summaryBullets: entity.summaryBullets,
+            aiSummaryShort: entity.aiSummaryShort,
+            aiSummaryBullets: entity.aiSummaryBullets ?? [],
             category: entity.category,
             tags: entity.tags,
             language: entity.language,

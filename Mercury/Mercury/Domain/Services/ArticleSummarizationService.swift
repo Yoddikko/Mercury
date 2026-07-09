@@ -59,8 +59,8 @@ struct ArticleSummarizationService: Sendable {
 
     /// Generate (or reuse the cached) summary for `article`.
     ///
-    /// * Reuses any non-empty `summaryShort` already attached to the article
-    ///   and returns it without contacting the provider.
+    /// * Reuses any non-empty `aiSummaryShort` already attached to the
+    ///   article and returns it without contacting the provider.
     /// * Otherwise calls the active provider, persists the result, and
     ///   returns the structured `AISummaryResult`.
     ///
@@ -166,14 +166,17 @@ struct ArticleSummarizationService: Sendable {
 
     // MARK: - Helpers
 
-    /// Returns the cached summary already attached to `article`, when the
-    /// `summaryShort` field is populated.
+    /// Returns the cached AI summary already attached to `article`, when
+    /// the dedicated `aiSummaryShort` field is populated. `summaryShort`
+    /// deliberately does NOT count: it holds the RSS excerpt written at
+    /// ingest/enrichment, so reading it here made every fetched article
+    /// look like it had a cached AI summary (issue #100).
     static func cachedSummary(for article: Article) -> AISummaryResult? {
-        guard let short = article.summaryShort?.trimmingCharacters(in: .whitespacesAndNewlines),
+        guard let short = article.aiSummaryShort?.trimmingCharacters(in: .whitespacesAndNewlines),
               short.isEmpty == false else {
             return nil
         }
-        return AISummaryResult(shortSummary: short, bullets: article.summaryBullets)
+        return AISummaryResult(shortSummary: short, bullets: article.aiSummaryBullets)
     }
 
     /// Returns the best body text available for summarization, preferring

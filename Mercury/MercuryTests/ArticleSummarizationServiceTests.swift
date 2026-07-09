@@ -50,6 +50,37 @@ struct ArticleSummarizationServiceTests {
         #expect(persistCalls.first?.requestID == "req-success")
     }
 
+    // MARK: - RSS excerpt is not an AI cache (issue #100)
+
+    @Test
+    func summarizeIfNeededIgnoresRSSExcerptAndCallsProvider() async throws {
+        let captured = Captures()
+        let providerSummary = AISummaryResult(
+            shortSummary: "Real AI summary.",
+            bullets: ["Bullet"]
+        )
+
+        let service = ArticleSummarizationService(
+            summarize: { content, requestID in
+                await captured.recordSummarize(content: content, requestID: requestID)
+                return providerSummary
+            },
+            persist: { articleID, summary, requestID in
+                await captured.recordPersist(articleID: articleID, summary: summary, requestID: requestID)
+            }
+        )
+
+        // Ingest/enrichment populate `summaryShort` on every article; that
+        // must never masquerade as a cached AI summary.
+        let article = Self.sampleArticle(summaryShort: "RSS feed excerpt text.")
+
+        let result = try await service.summarizeIfNeeded(article)
+
+        #expect(result == providerSummary)
+        let summarizeCalls = await captured.summarizeCalls
+        #expect(summarizeCalls.count == 1)
+    }
+
     // MARK: - Cached reuse
 
     @Test
@@ -69,8 +100,8 @@ struct ArticleSummarizationServiceTests {
         )
 
         let article = Self.sampleArticle(
-            summaryShort: cachedShort,
-            summaryBullets: cachedBullets
+            aiSummaryShort: cachedShort,
+            aiSummaryBullets: cachedBullets
         )
 
         let result = try await service.summarizeIfNeeded(article)
@@ -203,9 +234,45 @@ struct ArticleSummarizationServiceTests {
         )
 
         let result = try await store.fetchArticle(id: "summary-smoke")
-        #expect(result?.summaryShort == "Persisted short summary.")
-        #expect(result?.summaryBullets == ["Persisted bullet 1", "Persisted bullet 2"])
+        #expect(result?.aiSummaryShort == "Persisted short summary.")
+        #expect(result?.aiSummaryBullets == ["Persisted bullet 1", "Persisted bullet 2"])
+        // The RSS/excerpt field must stay untouched (issue #100).
+        #expect(result?.summaryShort == nil)
         #expect((result?.updatedAt ?? .distantPast) > (originalUpdatedAt ?? .distantFuture))
+    }
+
+    @Test
+    func upsertFromRSSRefreshPreservesAISummary() async throws {
+        let container = try Self.makeContainer()
+        let store = ArticleLocalStore(modelContainer: container)
+        _ = try await store.upsert(ArticleEntity(
+            id: "preserve-ai",
+            title: "Original",
+            sourceName: "Mercury Source",
+            sourceURL: "https://example.com/source",
+            articleURL: "https://example.com/article/preserve-ai"
+        ))
+        try await store.applySummary(
+            articleID: "preserve-ai",
+            summary: AISummaryResult(shortSummary: "AI text.", bullets: ["B1"])
+        )
+
+        // A refreshed ingest row never carries AI fields — it must not
+        // wipe the user-generated summary (issue #100).
+        _ = try await store.upsert(ArticleEntity(
+            id: "preserve-ai",
+            title: "Refreshed",
+            sourceName: "Mercury Source",
+            sourceURL: "https://example.com/source",
+            articleURL: "https://example.com/article/preserve-ai",
+            summaryShort: "Fresh RSS excerpt"
+        ))
+
+        let result = try await store.fetchArticle(id: "preserve-ai")
+        #expect(result?.title == "Refreshed")
+        #expect(result?.summaryShort == "Fresh RSS excerpt")
+        #expect(result?.aiSummaryShort == "AI text.")
+        #expect(result?.aiSummaryBullets == ["B1"])
     }
 
     @Test
@@ -238,7 +305,9 @@ struct ArticleSummarizationServiceTests {
         cleanedContent: String? = "Cleaned article body used as summarization input.",
         rawContent: String? = nil,
         summaryShort: String? = nil,
-        summaryBullets: [String] = []
+        summaryBullets: [String] = [],
+        aiSummaryShort: String? = nil,
+        aiSummaryBullets: [String] = []
     ) -> Article {
         Article(
             id: id,
@@ -257,6 +326,8 @@ struct ArticleSummarizationServiceTests {
             isContentLikelyComplete: false,
             summaryShort: summaryShort,
             summaryBullets: summaryBullets,
+            aiSummaryShort: aiSummaryShort,
+            aiSummaryBullets: aiSummaryBullets,
             category: "Technology",
             tags: ["test"],
             language: "en",

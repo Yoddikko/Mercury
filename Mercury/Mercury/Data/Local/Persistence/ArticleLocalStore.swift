@@ -55,6 +55,10 @@ actor ArticleLocalStore {
             existing.cleanedContent = article.cleanedContent
             existing.summaryShort = article.summaryShort
             existing.summaryBullets = article.summaryBullets
+            // Keep the user-generated AI summary across RSS refreshes: the
+            // incoming ingest row never carries one (issue #100).
+            existing.aiSummaryShort = article.aiSummaryShort ?? existing.aiSummaryShort
+            existing.aiSummaryBullets = article.aiSummaryBullets ?? existing.aiSummaryBullets
             existing.category = article.category
             existing.tags = article.tags
             existing.language = article.language
@@ -168,8 +172,8 @@ actor ArticleLocalStore {
     /// `articleID`, refreshing `updatedAt` accordingly.
     ///
     /// This is the persistence seam used by
-    /// `ArticleSummarizationService` so the cached `summaryShort`/
-    /// `summaryBullets` survive subsequent app launches and avoid extra
+    /// `ArticleSummarizationService` so the cached `aiSummaryShort`/
+    /// `aiSummaryBullets` survive subsequent app launches and avoid extra
     /// provider calls (see `docs/features/SUMMARIZATION.md`).
     func applySummary(
         articleID: String,
@@ -177,8 +181,11 @@ actor ArticleLocalStore {
         requestID: String? = nil
     ) throws {
         let article = try requireArticle(id: articleID, requestID: requestID, op: "applySummary")
-        article.summaryShort = summary.shortSummary
-        article.summaryBullets = summary.bullets
+        // Dedicated AI fields only (issue #100): `summaryShort` stays the
+        // RSS/excerpt text shown on the feed card and must not be replaced,
+        // or every fetched article would look like it has a cached summary.
+        article.aiSummaryShort = summary.shortSummary
+        article.aiSummaryBullets = summary.bullets
         article.updatedAt = .now
         try save(requestID: requestID, op: "applySummary", articleID: articleID)
 

@@ -41,6 +41,13 @@ final class ArticleEntity {
     var isContentLikelyComplete: Bool
     var summaryShort: String?
     var summaryBullets: [String]
+    /// AI-generated summary, persisted ONLY by the user-triggered
+    /// summarization flow (issue #100). Distinct from `summaryShort`,
+    /// which holds the RSS excerpt: a populated `summaryShort` must never
+    /// count as "an AI summary is cached". Nullable so SwiftData
+    /// lightweight migration stays additive (precedent: `sourceID`, #94).
+    var aiSummaryShort: String?
+    var aiSummaryBullets: [String]?
     var category: String?
     var tags: [String]
     var language: String?
@@ -70,6 +77,8 @@ final class ArticleEntity {
         isContentLikelyComplete: Bool = false,
         summaryShort: String? = nil,
         summaryBullets: [String] = [],
+        aiSummaryShort: String? = nil,
+        aiSummaryBullets: [String]? = nil,
         category: String? = nil,
         tags: [String] = [],
         language: String? = nil,
@@ -98,6 +107,8 @@ final class ArticleEntity {
         self.isContentLikelyComplete = isContentLikelyComplete
         self.summaryShort = summaryShort
         self.summaryBullets = summaryBullets
+        self.aiSummaryShort = aiSummaryShort
+        self.aiSummaryBullets = aiSummaryBullets
         self.category = category
         self.tags = tags
         self.language = language

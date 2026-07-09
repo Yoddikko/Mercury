@@ -291,8 +291,8 @@ struct ArticleDetailViewModelTests {
         // Article already carries a cached summary — VM init must NOT
         // transition to `.ready`; user must tap to display.
         let article = Self.sampleArticle(
-            summaryShort: "Cached short summary",
-            summaryBullets: ["Cached bullet"]
+            aiSummaryShort: "Cached short summary",
+            aiSummaryBullets: ["Cached bullet"]
         )
         let viewModel = Self.makeViewModel(
             article: article,
@@ -310,8 +310,8 @@ struct ArticleDetailViewModelTests {
     @Test
     func requestSummaryWithCacheShowsInstantlyWithoutCallingSummarize() async {
         let article = Self.sampleArticle(
-            summaryShort: "Cached short summary",
-            summaryBullets: ["Cached bullet one", "Cached bullet two"]
+            aiSummaryShort: "Cached short summary",
+            aiSummaryBullets: ["Cached bullet one", "Cached bullet two"]
         )
         let summarizeCalls = Recorder<String>()
         let viewModel = Self.makeViewModel(
@@ -358,8 +358,8 @@ struct ArticleDetailViewModelTests {
     @Test
     func primaryButtonLabelSwitchesByCachePresence() {
         let cached = Self.sampleArticle(
-            summaryShort: "Cached",
-            summaryBullets: ["A"]
+            aiSummaryShort: "Cached",
+            aiSummaryBullets: ["A"]
         )
         let cachedVM = Self.makeViewModel(article: cached, summarize: { _ in
             AISummaryResult(shortSummary: "x", bullets: [])
@@ -371,6 +371,15 @@ struct ArticleDetailViewModelTests {
             AISummaryResult(shortSummary: "x", bullets: [])
         })
         #expect(emptyVM.aiSummaryPrimaryButtonLabel == emptyVM.aiSummaryGenerateLabel)
+
+        // An RSS excerpt in `summaryShort` is NOT a cached AI summary: the
+        // button must read "Generate", not "Show" (issue #100).
+        let rssOnly = Self.sampleArticle(summaryShort: "RSS excerpt", summaryBullets: [])
+        let rssOnlyVM = Self.makeViewModel(article: rssOnly, summarize: { _ in
+            AISummaryResult(shortSummary: "x", bullets: [])
+        })
+        #expect(rssOnlyVM.hasCachedSummary == false)
+        #expect(rssOnlyVM.aiSummaryPrimaryButtonLabel == rssOnlyVM.aiSummaryGenerateLabel)
     }
 
     // MARK: - Deinit
@@ -433,7 +442,9 @@ struct ArticleDetailViewModelTests {
         contentWordCount: Int = 2,
         isContentLikelyComplete: Bool = false,
         summaryShort: String? = "Summary",
-        summaryBullets: [String] = []
+        summaryBullets: [String] = [],
+        aiSummaryShort: String? = nil,
+        aiSummaryBullets: [String] = []
     ) -> Article {
         Article(
             id: id,
@@ -452,6 +463,8 @@ struct ArticleDetailViewModelTests {
             isContentLikelyComplete: isContentLikelyComplete,
             summaryShort: summaryShort,
             summaryBullets: summaryBullets,
+            aiSummaryShort: aiSummaryShort,
+            aiSummaryBullets: aiSummaryBullets,
             category: "Technology",
             tags: ["test"],
             language: "en",
