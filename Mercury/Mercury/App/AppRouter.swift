@@ -51,6 +51,8 @@ struct AppRouter: View {
             ProgressView()
                 .accessibilityLabel(Self.loadingLabel)
                 .accessibilityIdentifier("router.loading")
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .paperScreen()
         case .some(false):
             OnboardingScreen(onCompleted: {
                 hasCompletedOnboarding = true

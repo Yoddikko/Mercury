@@ -52,6 +52,7 @@ struct HomeScreen: View {
     var body: some View {
         NavigationStack {
             content
+                .paperScreen()
                 .navigationTitle(viewModel.navigationTitle)
                 .refreshable {
                     await viewModel.refresh()
@@ -213,12 +214,13 @@ struct HomeScreen: View {
             } header: {
                 HStack(alignment: .firstTextBaseline) {
                     Text(viewModel.articlesSectionTitle)
-                        .font(.headline)
+                        .font(.paperHeadline)
+                        .foregroundStyle(Color.paperInk)
                     Spacer()
                     if let lastUpdatedAt = viewModel.lastUpdatedAt {
                         Text(viewModel.lastUpdatedLabel(for: lastUpdatedAt))
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .font(.paperMeta)
+                            .foregroundStyle(Color.paperRule)
                             .accessibilityIdentifier("home.last_updated")
                     }
                 }
@@ -236,32 +238,33 @@ private struct ArticleCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(article.title)
-                .font(.headline)
+                .font(.paperHeadline)
+                .foregroundStyle(Color.paperInk)
                 .accessibilityIdentifier("home.article.title")
 
             Text(viewModel.articleMetadataLine(
                 sourceName: article.sourceName,
                 publishedAt: article.publishedAt
             ))
-            .font(.subheadline)
-            .foregroundStyle(.secondary)
+            .font(.paperMeta)
+            .foregroundStyle(Color.paperRule)
             .accessibilityIdentifier("home.article.metadata")
 
             if let summary = article.summaryShort, summary.isEmpty == false {
                 Text(summary)
-                    .font(.body)
+                    .font(.paperCallout)
+                    .foregroundStyle(Color.paperInk)
                     .lineLimit(3)
                     .accessibilityIdentifier("home.article.summary")
             }
 
             if let category = article.category, category.isEmpty == false {
-                Text(category)
-                    .font(.caption.weight(.semibold))
-                    .padding(.vertical, 2)
-                    .padding(.horizontal, 6)
-                    .background(Color.accentColor.opacity(0.15), in: Capsule())
+                PaperBadge(text: category)
                     .accessibilityIdentifier("home.article.category")
             }
+
+            PaperRule()
+                .padding(.top, 8)
         }
         .padding(.vertical, 6)
     }
@@ -270,17 +273,17 @@ private struct ArticleCard: View {
 private struct ArticleCardSkeleton: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            RoundedRectangle(cornerRadius: 6)
-                .fill(Color.secondary.opacity(0.2))
+            Rectangle()
+                .fill(Color.paperRule.opacity(0.2))
                 .frame(height: 18)
-            RoundedRectangle(cornerRadius: 6)
-                .fill(Color.secondary.opacity(0.15))
+            Rectangle()
+                .fill(Color.paperRule.opacity(0.15))
                 .frame(width: 160, height: 12)
-            RoundedRectangle(cornerRadius: 6)
-                .fill(Color.secondary.opacity(0.1))
+            Rectangle()
+                .fill(Color.paperRule.opacity(0.1))
                 .frame(height: 12)
-            RoundedRectangle(cornerRadius: 6)
-                .fill(Color.secondary.opacity(0.1))
+            Rectangle()
+                .fill(Color.paperRule.opacity(0.1))
                 .frame(height: 12)
         }
         .padding(.vertical, 6)

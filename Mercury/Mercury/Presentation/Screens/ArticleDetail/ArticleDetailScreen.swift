@@ -27,6 +27,7 @@ struct ArticleDetailScreen: View {
 
     var body: some View {
         content
+            .paperScreen()
             .navigationTitle(viewModel.navigationTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { toolbarContent }
@@ -55,8 +56,8 @@ struct ArticleDetailScreen: View {
         VStack(spacing: 12) {
             ProgressView()
             Text(viewModel.loadingLabel)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .font(.paperCallout)
+                .foregroundStyle(Color.paperRule)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .accessibilityIdentifier("article.detail.state.loading")
@@ -86,8 +87,8 @@ struct ArticleDetailScreen: View {
                 titleBlock(for: article)
                 if let label = viewModel.readingTimeLabel {
                     Text(label)
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
+                        .font(.paperMeta)
+                        .foregroundStyle(Color.paperRule)
                         .accessibilityIdentifier("article.detail.reading_time")
                 }
                 aiSummarySection
@@ -108,27 +109,27 @@ struct ArticleDetailScreen: View {
                 switch phase {
                 case .empty:
                     Rectangle()
-                        .fill(Color.secondary.opacity(0.12))
+                        .fill(Color.paperRule.opacity(0.12))
                 case let .success(image):
                     image
                         .resizable()
                         .scaledToFill()
                 case .failure:
                     Rectangle()
-                        .fill(Color.secondary.opacity(0.12))
+                        .fill(Color.paperRule.opacity(0.12))
                         .overlay(
                             Image(systemName: "photo")
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(Color.paperRule)
                         )
                 @unknown default:
                     Rectangle()
-                        .fill(Color.secondary.opacity(0.12))
+                        .fill(Color.paperRule.opacity(0.12))
                 }
             }
             .frame(height: 220)
             .frame(maxWidth: .infinity)
             .clipped()
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .overlay(Rectangle().stroke(Color.paperRule.opacity(0.35), lineWidth: 0.8))
             .accessibilityLabel(viewModel.heroImageAccessibilityLabel)
             .accessibilityIdentifier("article.detail.hero")
         }
@@ -137,30 +138,30 @@ struct ArticleDetailScreen: View {
     private func titleBlock(for article: Article) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(article.title)
-                .font(.title2.weight(.semibold))
+                .font(.paperTitle)
+                .foregroundStyle(Color.paperInk)
                 .accessibilityAddTraits(.isHeader)
                 .accessibilityIdentifier("article.detail.title")
 
             Text(viewModel.metadataLine(for: article))
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+                .font(.paperMeta)
+                .foregroundStyle(Color.paperRule)
                 .accessibilityIdentifier("article.detail.metadata")
 
             if let authorLine = viewModel.authorLine(for: article) {
                 Text(authorLine)
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
+                    .font(.paperMeta)
+                    .foregroundStyle(Color.paperRule)
                     .accessibilityIdentifier("article.detail.author")
             }
 
             if let category = article.category, category.isEmpty == false {
-                Text(category)
-                    .font(.caption.weight(.semibold))
-                    .padding(.vertical, 2)
-                    .padding(.horizontal, 6)
-                    .background(Color.accentColor.opacity(0.15), in: Capsule())
+                PaperBadge(text: category)
                     .accessibilityIdentifier("article.detail.category")
             }
+
+            PaperRule()
+                .padding(.top, 4)
         }
     }
 
@@ -180,8 +181,9 @@ struct ArticleDetailScreen: View {
     @ViewBuilder
     private var aiSummarySection: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(viewModel.aiSummarySectionTitle)
-                .font(.headline)
+            Text(viewModel.aiSummarySectionTitle.uppercased())
+                .font(.paperBadge)
+                .foregroundStyle(Color.paperRule)
                 .accessibilityAddTraits(.isHeader)
 
             switch viewModel.summaryState {
@@ -189,8 +191,8 @@ struct ArticleDetailScreen: View {
                 HStack(spacing: 8) {
                     ProgressView()
                     Text(viewModel.aiSummaryLoadingLabel)
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
+                        .font(.paperCallout)
+                        .foregroundStyle(Color.paperRule)
                 }
                 .accessibilityIdentifier("article.detail.ai_summary.loading")
 
@@ -212,8 +214,8 @@ struct ArticleDetailScreen: View {
 
             case .failed:
                 Text(viewModel.aiSummaryFailedLabel)
-                    .font(.callout)
-                    .foregroundStyle(.secondary)
+                    .font(.paperCallout)
+                    .foregroundStyle(Color.paperError)
                     .accessibilityIdentifier("article.detail.ai_summary.failed")
                 if viewModel.canRegenerateAISummary {
                     Button {
@@ -240,16 +242,16 @@ struct ArticleDetailScreen: View {
                     .accessibilityIdentifier("article.detail.ai_summary.generate")
                 } else if viewModel.shouldShowAISummaryUnavailable {
                     Text(viewModel.aiSummaryUnavailableLabel)
-                        .font(.callout)
-                        .foregroundStyle(.secondary)
+                        .font(.paperCallout)
+                        .foregroundStyle(Color.paperRule)
                         .accessibilityIdentifier("article.detail.ai_summary.unavailable")
                 }
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.vertical, 8)
+        .padding(.vertical, 10)
         .padding(.horizontal, 12)
-        .background(Color.secondary.opacity(0.08), in: RoundedRectangle(cornerRadius: 12))
+        .overlay(Rectangle().stroke(Color.paperRule.opacity(0.35), lineWidth: 0.8))
         .accessibilityIdentifier("article.detail.ai_summary")
     }
 
@@ -258,7 +260,8 @@ struct ArticleDetailScreen: View {
         let trimmedShort = summary.shortSummary.trimmingCharacters(in: .whitespacesAndNewlines)
         if trimmedShort.isEmpty == false {
             Text(trimmedShort)
-                .font(.body)
+                .font(.paperBody)
+                .foregroundStyle(Color.paperInk)
                 .fixedSize(horizontal: false, vertical: true)
                 .accessibilityIdentifier("article.detail.ai_summary.short")
         }
@@ -272,10 +275,12 @@ struct ArticleDetailScreen: View {
                 ForEach(Array(bullets.enumerated()), id: \.offset) { _, bullet in
                     HStack(alignment: .firstTextBaseline, spacing: 8) {
                         Text("•")
-                            .font(.body.weight(.semibold))
+                            .font(.paperBody.weight(.semibold))
+                            .foregroundStyle(Color.paperRule)
                             .accessibilityHidden(true)
                         Text(bullet)
-                            .font(.callout)
+                            .font(.paperCallout)
+                            .foregroundStyle(Color.paperInk)
                             .fixedSize(horizontal: false, vertical: true)
                     }
                 }
@@ -288,23 +293,24 @@ struct ArticleDetailScreen: View {
 
     private func bodySection(for _: Article) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(viewModel.bodySectionTitle)
-                .font(.headline)
+            Text(viewModel.bodySectionTitle.uppercased())
+                .font(.paperBadge)
+                .foregroundStyle(Color.paperRule)
 
             if viewModel.enrichmentState == .enriching {
                 HStack(spacing: 8) {
                     ProgressView()
                     Text(viewModel.enrichingLabel)
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
+                        .font(.paperCallout)
+                        .foregroundStyle(Color.paperRule)
                 }
                 .accessibilityIdentifier("article.detail.body.enriching")
             }
 
             if viewModel.enrichmentState == .failed {
                 Text(viewModel.enrichmentFailedLabel)
-                    .font(.footnote)
-                    .foregroundStyle(.orange)
+                    .font(.paperCallout)
+                    .foregroundStyle(Color.paperError)
                     .accessibilityIdentifier("article.detail.body.enrichment_failed")
             }
 
@@ -313,13 +319,14 @@ struct ArticleDetailScreen: View {
                 ArticleBlockListView(blocks: blocks)
             } else if let body = viewModel.displayBody {
                 Text(body)
-                    .font(.body)
+                    .font(.paperBody)
+                    .foregroundStyle(Color.paperInk)
                     .fixedSize(horizontal: false, vertical: true)
                     .accessibilityIdentifier("article.detail.body")
             } else if viewModel.shouldShowBodyPlaceholder {
                 Text(viewModel.bodyPlaceholderLabel)
-                    .font(.callout)
-                    .foregroundStyle(.secondary)
+                    .font(.paperCallout)
+                    .foregroundStyle(Color.paperRule)
                     .accessibilityIdentifier("article.detail.body.placeholder")
             }
         }
