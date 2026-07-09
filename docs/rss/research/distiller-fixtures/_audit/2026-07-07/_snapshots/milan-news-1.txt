@@ -2,8 +2,8 @@ page: milan-news-1
 host: www.milannews.it lang: it
 distilled: yes
 paywalled-teaser: false
-words: 188
+words: 210
 chrome-survivors: []
 raw-paywall-markers: []
-head: su tmw radio, stefano impallomeni ha parlato così di rafa leao: "io ci farei un pensierino dopo averlo visto al mondiale" © foto di www.imagephotoagency.it dopo essere arrivato a milano nel primo pomeriggio di ieri e aver visitato casa milan e lo stadio di san siro, ruben amorim ha iniziato ufficialmente la sua nuova a
-tail: dinale ha aperto la presentazione con poche parole: "lui è il nostro nuovo allenatore". intanto su tmw radio, stefano impallomeni ha parlato così di rafa leao: "io ci farei un pensierino dopo averlo visto al mondiale. con quegli strappi potrebbe dare una mano alla juventus o alla roma se messo nelle giuste condizioni".
+head: impallomeni sul futuro di leao: "potrebbe dare una mano alla juve o alla roma" 07.07.2026 20:36 di federico calabrese vedi letture su tmw radio, stefano impallomeni ha parlato così di rafa leao: "io ci farei un pensierino dopo averlo visto al mondiale" © foto di www.imagephotoagency.it dopo essere arrivato a milano nel
+tail:  aperto la presentazione con poche parole: "lui è il nostro nuovo allenatore". intanto su tmw radio, stefano impallomeni ha parlato così di rafa leao: "io ci farei un pensierino dopo averlo visto al mondiale. con quegli strappi potrebbe dare una mano alla juventus o alla roma se messo nelle giuste condizioni". indietro

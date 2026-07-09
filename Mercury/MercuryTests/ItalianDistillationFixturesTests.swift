@@ -274,7 +274,11 @@ struct ItalianDistillationFixturesTests {
             bannedSubstrings: Self.commonChrome + [
                 // Letters-page CTA (`.item_note2`) — leaked on the
                 // live audit (2026-07-02).
-                "pagina di lettere"
+                "pagina di lettere",
+                // Print-header shortlink (`.print_header`) — leaked at
+                // the head of the distilled text on the live audit
+                // (2026-07-07).
+                "intern.az/"
             ]
         ),
         FixtureSpec(

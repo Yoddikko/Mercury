@@ -1,0 +1,7 @@
+outlet: tgcom24-video-trump-meloni
+words: 99
+blocks: 9
+block-counts: heading=1 image=2 paragraph=6
+survivors: []
+head: il post ironico su truth trump, nuovo attacco social a giorgia meloni alla vigilia del vertice nato, il presidente"posta un fotomontaggio con la scritta "ci vuole un ordine restrittivo", come se la premier italiana fosse una stalker" di alessandro tallarida 06 lug 2026 - 13:22 06
+tail: ne restrittivo": con questo post pubblicato nella notte italiana, donald trump torna ad attaccare giorgia meloni. lo fa alla vigilia del vertice nato di ankara in programma. certo non il miglior modo di avvicinarsi ad un summit nel quale si discuterà di investimenti sulla difesa.
