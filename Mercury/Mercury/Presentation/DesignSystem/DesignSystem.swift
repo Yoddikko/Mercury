@@ -136,6 +136,40 @@ extension ButtonStyle where Self == PaperSecondaryButtonStyle {
     static var paperSecondary: PaperSecondaryButtonStyle { PaperSecondaryButtonStyle() }
 }
 
+/// Paper loading animation (issue #111): a soft highlight sweeps across
+/// the modified view, masked to its own shape — the print-shop take on
+/// the shimmer skeleton. Purely decorative, hidden from accessibility.
+private struct PaperShimmerModifier: ViewModifier {
+    @State private var phase: CGFloat = -0.8
+
+    func body(content: Content) -> some View {
+        content
+            .overlay {
+                GeometryReader { geometry in
+                    LinearGradient(
+                        colors: [
+                            .clear,
+                            Color.paperBackground.opacity(0.9),
+                            .clear
+                        ],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                    .frame(width: geometry.size.width * 0.55)
+                    .offset(x: geometry.size.width * phase)
+                }
+                .mask(content)
+                .allowsHitTesting(false)
+            }
+            .onAppear {
+                withAnimation(.linear(duration: 1.3).repeatForever(autoreverses: false)) {
+                    phase = 1.3
+                }
+            }
+            .accessibilityHidden(true)
+    }
+}
+
 extension View {
     /// Standard screen recipe: paper background behind everything, ink
     /// tint on controls, list chrome hidden so the paper shows through.
@@ -144,6 +178,11 @@ extension View {
             .scrollContentBackground(.hidden)
             .background(Color.paperBackground.ignoresSafeArea())
             .tint(Color.paperInk)
+    }
+
+    /// Animated loading highlight for skeleton placeholders.
+    func paperShimmer() -> some View {
+        modifier(PaperShimmerModifier())
     }
 }
 

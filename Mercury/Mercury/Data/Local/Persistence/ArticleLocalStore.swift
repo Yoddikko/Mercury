@@ -147,6 +147,27 @@ actor ArticleLocalStore {
 
     /// Fetch the single article with the supplied identifier, or `nil` if
     /// no match exists.
+    /// Feed replay fetch (issue #111): newest-first rows mapped to the
+    /// value-type `Article` INSIDE the actor, so the main thread never
+    /// touches SwiftData for the launch cache replay (`@Model` entities
+    /// are not Sendable and must not cross the actor boundary).
+    func fetchRecentFeedArticles(limit: Int, requestID: String? = nil) throws -> [Article] {
+        var descriptor = FetchDescriptor<ArticleEntity>(
+            sortBy: [SortDescriptor(\.publishedAt, order: .reverse)]
+        )
+        descriptor.fetchLimit = max(1, limit)
+        let entities = try modelContext.fetch(descriptor)
+        let articles = entities.compactMap(ArticleEntityMapper.makeArticle(from:))
+        AppLogger.shared.debug(
+            "Fetched recent feed articles off-main",
+            category: .database,
+            service: Self.serviceName,
+            requestID: requestID,
+            metadata: ["entities": "\(entities.count)", "articles": "\(articles.count)"]
+        )
+        return articles
+    }
+
     func fetchArticle(id: String, requestID: String? = nil) throws -> ArticleEntity? {
         AppLogger.shared.trace(
             "Fetching article by id",
