@@ -14,8 +14,14 @@ Generates concise summaries of articles using AI.
 
 ## Outputs
 
-* summaryShort (string)
-* summaryBullets (array of strings)
+* aiSummaryShort (string)
+* aiSummaryBullets (array of strings)
+
+AI results persist to these **dedicated** article fields. They are never
+written to `Article.summaryShort`/`summaryBullets`: those hold the RSS
+`<summary>`/excerpt populated at ingest and enrichment for the feed
+preview card, and populating them does NOT mean an AI summary exists.
+The cached-summary check reads `aiSummaryShort` only.
 
 ---
 

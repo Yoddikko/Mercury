@@ -33,6 +33,11 @@ struct Article: Identifiable, Equatable, Sendable {
     let isContentLikelyComplete: Bool
     let summaryShort: String?
     let summaryBullets: [String]
+    /// AI-generated summary written only by the user-triggered
+    /// summarization flow (issue #100); `summaryShort` is the RSS/excerpt
+    /// text for the feed card and never implies an AI summary exists.
+    let aiSummaryShort: String?
+    let aiSummaryBullets: [String]
     let category: String?
     let tags: [String]
     let language: String?
@@ -62,6 +67,8 @@ struct Article: Identifiable, Equatable, Sendable {
         isContentLikelyComplete: Bool,
         summaryShort: String?,
         summaryBullets: [String],
+        aiSummaryShort: String? = nil,
+        aiSummaryBullets: [String] = [],
         category: String?,
         tags: [String],
         language: String?,
@@ -90,6 +97,8 @@ struct Article: Identifiable, Equatable, Sendable {
         self.isContentLikelyComplete = isContentLikelyComplete
         self.summaryShort = summaryShort
         self.summaryBullets = summaryBullets
+        self.aiSummaryShort = aiSummaryShort
+        self.aiSummaryBullets = aiSummaryBullets
         self.category = category
         self.tags = tags
         self.language = language
@@ -134,6 +143,8 @@ extension Article {
             isContentLikelyComplete: isContentLikelyComplete,
             summaryShort: summaryShort,
             summaryBullets: summaryBullets,
+            aiSummaryShort: aiSummaryShort,
+            aiSummaryBullets: aiSummaryBullets,
             category: category,
             tags: tags,
             language: language,
