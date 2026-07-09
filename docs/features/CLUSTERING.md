@@ -8,6 +8,27 @@ This feature reduces redundancy and improves readability.
 
 ---
 
+## Shipped v1 — lexical topic aggregation (issue #109)
+
+The embedding-based design below remains the target. The shipped v1
+(`FeedTopicAggregationService`) powers the Home "Topics" feed with a
+cheaper, fully on-device approximation:
+
+* corpus: articles published in the **last 24 hours**
+* features: TF-IDF vectors over diacritics-folded, stopword-filtered
+  tokens (Italian + English stopwords) of `title + summaryShort`
+* similarity: cosine; greedy agglomeration — an article joins the
+  first cluster whose best member similarity ≥ **0.30**, else it
+  starts a new cluster (prefer new cluster over wrong merge)
+* lead selection: prefers hero image, then main outlet, then recency
+* cluster ordering (importance, no personalization): distinct-outlet
+  count desc → main-outlet lead → recency
+* deterministic and unit-tested with fixture titles; no network, no
+  provider dependency. Embeddings can replace the vectorizer without
+  touching the pipeline shape.
+
+---
+
 ## Inputs
 
 * article embeddings

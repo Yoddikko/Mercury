@@ -39,10 +39,27 @@ Displays a list of articles ranked and filtered based on logic and user preferen
 
 ---
 
-### 3. Clustered Feed (optional)
+### 3. Topic Feed (shipped v1, issue #109)
 
-* group articles by event
-* show one representative item per cluster
+* second Home feed, selectable via a paper-styled segmented control at
+  the top of the Home screen (`Latest` / `Topics`)
+* groups the articles of the **last 24 hours** by story/topic using
+  on-device lexical clustering (see `docs/features/CLUSTERING.md`
+  § Shipped v1) — no user preferences, no provider calls
+* importance without personalization: clusters are ordered by the
+  number of **distinct outlets** covering the story (many outlets ⇒
+  important world/local news), with a main-outlet boost and recency as
+  tie-breaks
+* aggregated cluster card: the **lead article** shows headline,
+  metadata and a small thumbnail (only the lead gets an image); the
+  other covering articles are listed **title-only**, each tappable,
+  with an uppercase mono coverage badge ("N testate") making the
+  aggregation explicit
+* single-article topics fall into a trailing title-only "More news"
+  section
+* aggregation runs off the main thread; the Topics tab shows a
+  dedicated loading state ("grouping the news by topic…") while it
+  computes
 
 ---
 

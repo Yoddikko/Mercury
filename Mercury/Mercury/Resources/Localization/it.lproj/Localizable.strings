@@ -254,3 +254,12 @@
 
 "router.loading" = "Caricamento";
 "feed_sources.single_region.outlets_section" = "Testate italiane";
+"home.feed_mode.chronological" = "Ultime";
+"home.feed_mode.topics" = "Argomenti";
+"home.feed_mode.accessibility" = "Modalità di visualizzazione del feed";
+"home.topics.aggregating" = "Stiamo raggruppando le notizie per argomento…";
+"home.topics.aggregating.hint" = "Storie delle ultime 24 ore";
+"home.topics.empty" = "Nessuna storia nelle ultime 24 ore.";
+"home.topics.others" = "Altre notizie";
+"home.topics.coverage" = "%lld testate su questa storia";
+"home.topics.more_articles" = "+ altri %lld articoli";

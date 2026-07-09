@@ -13,6 +13,76 @@ import Testing
 @MainActor
 struct HomeViewModelTests {
     @Test
+    func topicsModeAggregatesLoadedArticles() async throws {
+        // Two same-story titles from different outlets published now
+        // (inside the 24h window) plus one unrelated: switching to
+        // topics must pass through .aggregating and land on .ready.
+        let now = Date()
+        let articles = [
+            Self.recentArticle(id: "a", source: "ansa", title: "Terremoto di magnitudo 5.2 nel centro Italia, scossa avvertita a Roma", publishedAt: now),
+            Self.recentArticle(id: "b", source: "repubblica", title: "Forte scossa di terremoto magnitudo 5.2 nel centro Italia", publishedAt: now.addingTimeInterval(-600)),
+            Self.recentArticle(id: "c", source: "gazzetta", title: "Calciomercato, rinnovo di contratto per il difensore argentino", publishedAt: now.addingTimeInterval(-1200))
+        ]
+        let viewModel = makeViewModel(deduplicatedArticles: articles)
+        await viewModel.refresh()
+
+        #expect(viewModel.displayMode == .chronological)
+        viewModel.selectDisplayMode(.topics)
+        #expect(viewModel.displayMode == .topics)
+
+        var ready: [TopicCluster]?
+        for _ in 0..<100 {
+            if case let .ready(clusters) = viewModel.topicState {
+                ready = clusters
+                break
+            }
+            try await Task.sleep(nanoseconds: 50_000_000)
+        }
+        guard let clusters = ready else {
+            Issue.record("Expected .ready topic state, got \(viewModel.topicState)")
+            return
+        }
+        #expect(clusters.count == 2)
+        #expect(clusters[0].sourceCount == 2)
+        #expect(clusters[0].isAggregated)
+    }
+
+    private static func recentArticle(
+        id: String,
+        source: String,
+        title: String,
+        publishedAt: Date
+    ) -> Article {
+        Article(
+            id: id,
+            externalID: nil,
+            title: title,
+            sourceName: source,
+            sourceID: source,
+            sourceURL: URL(string: "https://example.com/\(source)")!,
+            articleURL: URL(string: "https://example.com/\(source)/\(id)")!,
+            publishedAt: publishedAt,
+            authorName: nil,
+            heroImageURL: nil,
+            rawContent: nil,
+            cleanedContent: nil,
+            contentSource: "test",
+            contentWordCount: 0,
+            isContentLikelyComplete: false,
+            summaryShort: nil,
+            summaryBullets: [],
+            category: nil,
+            tags: [],
+            language: "it",
+            isBookmarked: false,
+            isRead: false,
+            clusterID: nil,
+            createdAt: publishedAt,
+            updatedAt: publishedAt
+        )
+    }
+
+    @Test
     func refreshTransitionsFromIdleToLoaded() async {
         let articles = Self.sampleArticles(count: 3)
         let viewModel = makeViewModel(deduplicatedArticles: articles)
