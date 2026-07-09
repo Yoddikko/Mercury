@@ -74,7 +74,7 @@ struct ArticleDetailScreen: View {
             } label: {
                 Text(viewModel.errorRetryLabel)
             }
-            .buttonStyle(.borderedProminent)
+            .buttonStyle(.paperPrimary)
             .accessibilityIdentifier("article.detail.state.error.retry")
         }
         .accessibilityIdentifier("article.detail.state.error")
@@ -96,7 +96,12 @@ struct ArticleDetailScreen: View {
                 openOriginalButton(for: article)
                 Spacer(minLength: 24)
             }
-            .padding(.horizontal)
+            // Pin the reader column to the container width so no child
+            // can inflate it past the screen and eat the gutter
+            // (issue #107); the constant padding keeps the gutter
+            // identical on every article.
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 20)
             .padding(.bottom, 24)
         }
         .accessibilityIdentifier("article.detail.state.loaded")
@@ -105,33 +110,36 @@ struct ArticleDetailScreen: View {
     @ViewBuilder
     private func heroImage(for article: Article) -> some View {
         if let url = article.heroImageURL {
-            AsyncImage(url: url) { phase in
-                switch phase {
-                case .empty:
-                    Rectangle()
-                        .fill(Color.paperRule.opacity(0.12))
-                case let .success(image):
-                    image
-                        .resizable()
-                        .scaledToFill()
-                case .failure:
-                    Rectangle()
-                        .fill(Color.paperRule.opacity(0.12))
-                        .overlay(
+            // Background-defines-layout: the placeholder rectangle owns
+            // the layout size and the image lives in an overlay, so a
+            // wide-aspect hero can never propose its intrinsic width and
+            // inflate the reader column (issue #107 — `frame(maxWidth:)`
+            // does not shrink an oversized `scaledToFill` child).
+            Rectangle()
+                .fill(Color.paperRule.opacity(0.12))
+                .frame(height: 220)
+                .frame(maxWidth: .infinity)
+                .overlay {
+                    AsyncImage(url: url) { phase in
+                        switch phase {
+                        case .empty:
+                            Color.clear
+                        case let .success(image):
+                            image
+                                .resizable()
+                                .scaledToFill()
+                        case .failure:
                             Image(systemName: "photo")
                                 .foregroundStyle(Color.paperRule)
-                        )
-                @unknown default:
-                    Rectangle()
-                        .fill(Color.paperRule.opacity(0.12))
+                        @unknown default:
+                            Color.clear
+                        }
+                    }
                 }
-            }
-            .frame(height: 220)
-            .frame(maxWidth: .infinity)
-            .clipped()
-            .overlay(Rectangle().stroke(Color.paperRule.opacity(0.35), lineWidth: 0.8))
-            .accessibilityLabel(viewModel.heroImageAccessibilityLabel)
-            .accessibilityIdentifier("article.detail.hero")
+                .clipped()
+                .overlay(Rectangle().stroke(Color.paperRule.opacity(0.35), lineWidth: 0.8))
+                .accessibilityLabel(viewModel.heroImageAccessibilityLabel)
+                .accessibilityIdentifier("article.detail.hero")
         }
     }
 
@@ -171,9 +179,8 @@ struct ArticleDetailScreen: View {
                 Image(systemName: "arrow.up.right.square")
                 Text(viewModel.openOriginalLabel)
             }
-            .font(.footnote.weight(.semibold))
         }
-        .buttonStyle(.bordered)
+        .buttonStyle(.paperSecondary)
         .accessibilityIdentifier("article.detail.actions.open_original")
         .padding(.top, 8)
     }
@@ -207,7 +214,7 @@ struct ArticleDetailScreen: View {
                             systemImage: "arrow.clockwise"
                         )
                     }
-                    .buttonStyle(.bordered)
+                    .buttonStyle(.paperSecondary)
                     .accessibilityHint(viewModel.aiSummaryRegenerateAffordanceAccessibilityHint)
                     .accessibilityIdentifier("article.detail.ai_summary.regenerate_affordance")
                 }
@@ -223,7 +230,7 @@ struct ArticleDetailScreen: View {
                     } label: {
                         Text(viewModel.aiSummaryRegenerateLabel)
                     }
-                    .buttonStyle(.bordered)
+                    .buttonStyle(.paperSecondary)
                     .accessibilityIdentifier("article.detail.ai_summary.regenerate")
                 }
 
@@ -237,7 +244,7 @@ struct ArticleDetailScreen: View {
                             systemImage: "sparkles"
                         )
                     }
-                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(.paperPrimary)
                     .accessibilityHint(viewModel.aiSummaryGenerateAccessibilityHint)
                     .accessibilityIdentifier("article.detail.ai_summary.generate")
                 } else if viewModel.shouldShowAISummaryUnavailable {
