@@ -270,6 +270,11 @@ struct HomeScreen: View {
             }
         }
         .listStyle(.plain)
+        .refreshable {
+            // Re-aggregates from scratch (issue #117): also retries the
+            // AI path after the user configures a provider.
+            await viewModel.forceRefreshTopics()
+        }
         .accessibilityIdentifier("home.topics.loaded")
     }
 
@@ -391,10 +396,10 @@ struct HomeScreen: View {
     }
 }
 
-/// One aggregated story (issue #109): coverage badge, tappable lead
-/// with the only thumbnail of the card, then the other covering
-/// articles as tappable title-only rows. Aggregation is made explicit
-/// by the badge and the indented member rows.
+/// One aggregated story (issue #109/#117): coverage badge, lead with
+/// the only thumbnail, member titles as a preview. The whole card is a
+/// single tap target opening `TopicClusterScreen`, where the user picks
+/// which outlet's article to read.
 private struct TopicClusterCard: View {
     let cluster: TopicCluster
     let viewModel: HomeViewModel
@@ -404,51 +409,53 @@ private struct TopicClusterCard: View {
     private static let maxVisibleMembers = 3
 
     var body: some View {
+        NavigationLink {
+            TopicClusterScreen(
+                cluster: cluster,
+                viewModel: viewModel,
+                destination: destination
+            )
+        } label: {
+            cardBody
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier("home.topics.cluster.\(cluster.id)")
+    }
+
+    private var cardBody: some View {
         VStack(alignment: .leading, spacing: 8) {
             PaperBadge(text: viewModel.topicsCoverageLabel(sourceCount: cluster.sourceCount))
                 .accessibilityIdentifier("home.topics.coverage")
 
-            NavigationLink {
-                destination(cluster.lead)
-            } label: {
-                HStack(alignment: .top, spacing: 12) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(cluster.lead.title)
-                            .font(.paperHeadline)
-                            .foregroundStyle(Color.paperInk)
-                        Text(viewModel.articleMetadataLine(
-                            sourceName: cluster.lead.sourceName,
-                            publishedAt: cluster.lead.publishedAt
-                        ))
-                        .font(.paperMeta)
-                        .foregroundStyle(Color.paperRule)
-                    }
-                    Spacer(minLength: 0)
-                    leadThumbnail
+            HStack(alignment: .top, spacing: 12) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(cluster.lead.title)
+                        .font(.paperHeadline)
+                        .foregroundStyle(Color.paperInk)
+                    Text(viewModel.articleMetadataLine(
+                        sourceName: cluster.lead.sourceName,
+                        publishedAt: cluster.lead.publishedAt
+                    ))
+                    .font(.paperMeta)
+                    .foregroundStyle(Color.paperRule)
                 }
+                Spacer(minLength: 0)
+                leadThumbnail
             }
-            .buttonStyle(.plain)
-            .accessibilityIdentifier("home.topics.lead")
 
             ForEach(cluster.members.prefix(Self.maxVisibleMembers)) { member in
-                NavigationLink {
-                    destination(member)
-                } label: {
-                    HStack(alignment: .firstTextBaseline, spacing: 8) {
-                        Text(member.sourceName.uppercased())
-                            .font(.paperBadge)
-                            .foregroundStyle(Color.paperRule)
-                            .lineLimit(1)
-                            .layoutPriority(1)
-                        Text(member.title)
-                            .font(.paperCallout)
-                            .foregroundStyle(Color.paperInk)
-                            .lineLimit(2)
-                    }
-                    .padding(.leading, 12)
+                HStack(alignment: .firstTextBaseline, spacing: 8) {
+                    Text(member.sourceName.uppercased())
+                        .font(.paperBadge)
+                        .foregroundStyle(Color.paperRule)
+                        .lineLimit(1)
+                        .layoutPriority(1)
+                    Text(member.title)
+                        .font(.paperCallout)
+                        .foregroundStyle(Color.paperInk)
+                        .lineLimit(2)
                 }
-                .buttonStyle(.plain)
-                .accessibilityIdentifier("home.topics.member.\(member.id)")
+                .padding(.leading, 12)
             }
 
             if cluster.members.count > Self.maxVisibleMembers {

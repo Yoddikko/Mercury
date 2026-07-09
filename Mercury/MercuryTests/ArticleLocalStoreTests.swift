@@ -44,6 +44,25 @@ struct ArticleLocalStoreTests {
         )
     }
 
+    // MARK: - Recent feed fetch (issues #111, #117)
+
+    @Test
+    func fetchRecentFeedArticlesHonorsSinceWindow() async throws {
+        let store = try Self.makeStore()
+        let now = Date()
+        _ = try await store.upsert(Self.makeArticle(id: "fresh", publishedAt: now.addingTimeInterval(-3600)))
+        _ = try await store.upsert(Self.makeArticle(id: "stale", publishedAt: now.addingTimeInterval(-3 * 86_400)))
+
+        let all = try await store.fetchRecentFeedArticles(limit: 10)
+        #expect(Set(all.map(\.id)) == ["fresh", "stale"])
+
+        let window = try await store.fetchRecentFeedArticles(
+            limit: 10,
+            since: now.addingTimeInterval(-86_400)
+        )
+        #expect(window.map(\.id) == ["fresh"])
+    }
+
     // MARK: - Upsert
 
     @Test

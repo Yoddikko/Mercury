@@ -541,6 +541,14 @@ final class HomeViewModel: ObservableObject {
 
     // MARK: - Topic aggregation (issue #109)
 
+    /// Cap on the last-24h corpus fetched from the cache for topics.
+    /// ponytail: 300 rows keeps the O(n²) lexical pass in the tens of
+    /// milliseconds — raise with evidence.
+    static let topicsCorpusLimit = 300
+    /// Cap on the headlines sent to the AI grouper (issue #117): keeps
+    /// the prompt small enough to avoid truncated JSON and timeouts.
+    static let topicsAIHeadlineLimit = 80
+
     /// Switches the Home feed between chronological and topics; the
     /// first switch to topics (or after a refresh) kicks aggregation.
     func selectDisplayMode(_ mode: FeedDisplayMode) {
@@ -553,8 +561,27 @@ final class HomeViewModel: ObservableObject {
             metadata: ["mode": mode.rawValue]
         )
         if mode == .topics {
+            // Retry the AI path when the last aggregation fell back to
+            // lexical and a grouper is wired (issue #117): the user may
+            // have just configured a provider in Settings.
+            if case let .ready(_, method) = topicState, method == .lexical, topicAIGrouper != nil {
+                topicInputIDs = []
+            }
             refreshTopicsIfNeeded()
         }
+    }
+
+    /// Pull-to-refresh on the Topics list: drops the aggregation cache
+    /// and recomputes, awaiting completion so the spinner is honest.
+    func forceRefreshTopics() async {
+        logger.info(
+            "Topics force refresh requested",
+            category: .ui,
+            service: "HomeViewModel"
+        )
+        topicInputIDs = []
+        refreshTopicsIfNeeded()
+        await topicTask?.value
     }
 
     /// Aggregates the loaded articles into topic clusters off the main
@@ -577,29 +604,58 @@ final class HomeViewModel: ObservableObject {
             service: "HomeViewModel",
             requestID: requestID,
             metadata: [
-                "articles": "\(articles.count)",
+                "displayed_articles": "\(articles.count)",
                 "ai_grouper": "\(topicAIGrouper != nil)"
             ]
         )
         topicTask?.cancel()
         let aggregator = topicAggregator
         let aiGrouper = topicAIGrouper
+        // Corpus inputs resolved on the main actor: the cache container
+        // for the last-24h fetch and the source allow-list. Without a
+        // context (unit tests) the displayed articles stay the corpus.
+        let container = modelContext?.container
+        let allowList = sourceFilter.makeArticleAllowList(for: currentPreferences())
         topicTask = Task { [weak self, logger] in
+            // The topics corpus is the full last-24h cache window
+            // (issue #117), not just the articles displayed in the
+            // chronological list — coverage-based importance needs the
+            // whole day.
+            let cutoff = Date().addingTimeInterval(-FeedTopicAggregationService.recencyWindow)
+            var corpus = articles
+            if let container {
+                let store = ArticleLocalStore(modelContainer: container)
+                if let fetched = try? await store.fetchRecentFeedArticles(
+                    limit: Self.topicsCorpusLimit,
+                    since: cutoff,
+                    requestID: requestID
+                ), fetched.isEmpty == false {
+                    corpus = fetched
+                }
+            }
+            if let allowList {
+                corpus = corpus.filter { article in
+                    allowList.allows(sourceID: article.sourceID, sourceName: article.sourceName)
+                }
+            }
+
             // AI first when wired (issue #113): the grouper throws when
             // no provider is configured or the call fails, and the flow
             // falls back to the on-device lexical clustering — the feed
-            // never degrades because of the provider.
+            // never degrades because of the provider. The provider sees
+            // only the newest headlines (capped) to keep the prompt
+            // reliable; ungrouped corpus articles become singletons.
             var clusters: [TopicCluster]?
             var method = TopicAggregationMethod.lexical
             if let aiGrouper {
                 do {
-                    let cutoff = Date().addingTimeInterval(-FeedTopicAggregationService.recencyWindow)
-                    let recent = articles.filter { $0.publishedAt >= cutoff }
-                    if recent.count >= 2 {
-                        let groups = try await aiGrouper(recent, requestID)
+                    let recent = corpus.filter { $0.publishedAt >= cutoff }
+                    let candidates = Array(recent.prefix(Self.topicsAIHeadlineLimit))
+                    if candidates.count >= 2 {
+                        let groups = try await aiGrouper(candidates, requestID)
                         clusters = aggregator.clusters(
                             fromGroups: groups,
-                            articles: articles,
+                            articles: corpus,
                             requestID: requestID
                         )
                         method = .ai
@@ -615,8 +671,9 @@ final class HomeViewModel: ObservableObject {
                 }
             }
             if clusters == nil {
+                let lexicalCorpus = corpus
                 clusters = await Task.detached(priority: .userInitiated) {
-                    aggregator.aggregate(articles: articles, requestID: requestID)
+                    aggregator.aggregate(articles: lexicalCorpus, requestID: requestID)
                 }.value
                 method = .lexical
             }

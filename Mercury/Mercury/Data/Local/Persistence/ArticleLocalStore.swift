@@ -151,10 +151,22 @@ actor ArticleLocalStore {
     /// value-type `Article` INSIDE the actor, so the main thread never
     /// touches SwiftData for the launch cache replay (`@Model` entities
     /// are not Sendable and must not cross the actor boundary).
-    func fetchRecentFeedArticles(limit: Int, requestID: String? = nil) throws -> [Article] {
+    /// `since` restricts the window on `publishedAt` — the topics feed
+    /// uses it to aggregate the full last-24h corpus from the cache
+    /// instead of only the articles currently displayed (issue #117).
+    func fetchRecentFeedArticles(
+        limit: Int,
+        since: Date? = nil,
+        requestID: String? = nil
+    ) throws -> [Article] {
         var descriptor = FetchDescriptor<ArticleEntity>(
             sortBy: [SortDescriptor(\.publishedAt, order: .reverse)]
         )
+        if let since {
+            descriptor.predicate = #Predicate<ArticleEntity> { entity in
+                entity.publishedAt >= since
+            }
+        }
         descriptor.fetchLimit = max(1, limit)
         let entities = try modelContext.fetch(descriptor)
         let articles = entities.compactMap(ArticleEntityMapper.makeArticle(from:))
