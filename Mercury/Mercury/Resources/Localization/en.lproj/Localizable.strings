@@ -286,3 +286,5 @@
 "settings.ai.status.key_missing" = "Key missing";
 "home.topics.cluster.title" = "Story";
 "home.topics.cluster.articles_count" = "%lld articles";
+"home.topics.ai_unavailable" = "AI grouping unavailable — grouped on device";
+"home.topics.articles_count" = "%lld articles";

@@ -58,9 +58,16 @@ Displays a list of articles ranked and filtered based on logic and user preferen
 * single-article topics fall into a trailing title-only "More news"
   section
 * the topics corpus is the full last-24h window fetched from the
-  local cache (up to 300 rows, source allow-list applied) - not just
-  the articles currently displayed (issue #117); the AI grouper sees
-  the newest 80 headlines and ungrouped articles become singletons
+  local cache (up to 800 rows, source allow-list applied, then capped
+  at 20 rows per outlet so one wire cannot crowd the window) - not
+  just the articles currently displayed (issues #117, #119); the AI
+  grouper sees a source-balanced sample of up to 100 headlines and
+  ungrouped articles become singletons
+* a saved API key with no model picked uses the provider default
+  model (AIProviderID.defaultModel, issue #119); the aggregated card
+  is lean (coverage badge with sparkles when AI-grouped, lead
+  headline, thumbnail, article count) and the AI-unavailable state is
+  surfaced as a mono line instead of failing silently
 * tapping an aggregated story opens a dedicated list of ALL its
   articles (lead first) so the user picks which outlet to read;
   pull-to-refresh re-aggregates and retries the AI path (e.g. right

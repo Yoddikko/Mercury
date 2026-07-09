@@ -286,3 +286,5 @@
 "settings.ai.status.key_missing" = "Manca la chiave";
 "home.topics.cluster.title" = "Storia";
 "home.topics.cluster.articles_count" = "%lld articoli";
+"home.topics.ai_unavailable" = "AI non disponibile — raggruppate sul dispositivo";
+"home.topics.articles_count" = "%lld articoli";

@@ -39,6 +39,25 @@ enum AIProviderID: String, CaseIterable, Codable, Sendable, Identifiable {
             return false
         }
     }
+
+    /// Cost-safe default model used when the user saved a key but never
+    /// picked a model (issue #119) — previously that combination failed
+    /// provider resolution forever and the AI features silently never
+    /// engaged. Overridable from Settings → AI provider.
+    nonisolated var defaultModel: String {
+        switch self {
+        case .openAI:
+            return "gpt-4o-mini"
+        case .claude:
+            return "claude-haiku-4-5"
+        case .gemini:
+            return "gemini-2.0-flash"
+        case .ollama:
+            return "llama3.2"
+        case .deepSeek:
+            return "deepseek-chat"
+        }
+    }
 }
 
 struct AISummaryResult: Sendable, Equatable {

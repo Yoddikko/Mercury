@@ -82,7 +82,6 @@ actor AIService {
     func setActiveProvider(_ providerID: AIProviderID) throws -> AIProviderConfiguration {
         var configuration = configurationStore.loadConfiguration()
         configuration.activeProviderID = providerID
-        try validateModelPresence(for: providerID, configuration: configuration)
         try validateTimeout(configuration.timeoutSeconds)
         if providerID == .ollama {
             _ = try AIProviderSupport.validatedURL(from: configuration.ollamaEndpoint, allowHTTP: true)
@@ -447,12 +446,24 @@ actor AIService {
         let configuration = configurationStore.loadConfiguration()
         let providerID = configuration.activeProviderID
         try validateTimeout(configuration.timeoutSeconds)
-        try validateModelPresence(for: providerID, configuration: configuration)
         if providerID == .ollama {
             _ = try AIProviderSupport.validatedURL(from: configuration.ollamaEndpoint, allowHTTP: true)
         }
 
-        let model = configuration.model(for: providerID)
+        // Empty model falls back to the provider default (issue #119):
+        // a saved key with no model previously failed resolution forever
+        // and the AI features silently never engaged.
+        let configuredModel = configuration.model(for: providerID)
+        let model = configuredModel.isEmpty ? providerID.defaultModel : configuredModel
+        if configuredModel.isEmpty {
+            logger.info(
+                "No model configured, using provider default",
+                category: .business,
+                service: "AIService",
+                requestID: requestID,
+                metadata: ["provider": providerID.rawValue, "default_model": model]
+            )
+        }
         let token: String?
         do {
             token = Self.normalizedToken(try credentialStore.loadToken(for: providerID))
@@ -500,20 +511,12 @@ actor AIService {
         }
     }
 
+    /// A missing model is no longer a validation error (issue #119):
+    /// resolution falls back to `AIProviderID.defaultModel` at call time,
+    /// so a key-only configuration is complete enough to save and use.
     private func validateCompleteConfiguration(_ configuration: AIProviderConfiguration) throws {
         try validateTimeout(configuration.timeoutSeconds)
         _ = try AIProviderSupport.validatedURL(from: configuration.ollamaEndpoint, allowHTTP: true)
-        try validateModelPresence(for: configuration.activeProviderID, configuration: configuration)
-    }
-
-    private func validateModelPresence(
-        for providerID: AIProviderID,
-        configuration: AIProviderConfiguration
-    ) throws {
-        let model = configuration.model(for: providerID)
-        guard model.isEmpty == false else {
-            throw AIServiceError.invalidConfiguration("Model is required for provider \(providerID.displayName).")
-        }
     }
 
     private func validateTimeout(_ timeoutSeconds: Double) throws {
