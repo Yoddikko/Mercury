@@ -125,8 +125,132 @@ struct HomeScreen: View {
         case let .failed(message):
             errorView(message: message)
         case let .loaded(articles):
-            loadedList(articles: articles)
+            VStack(spacing: 0) {
+                feedModePicker
+                switch viewModel.displayMode {
+                case .chronological:
+                    loadedList(articles: articles)
+                case .topics:
+                    topicsContent
+                }
+            }
         }
+    }
+
+    /// Paper-styled two-way segmented control (issue #109): the
+    /// selected mode is an ink-filled block, the other a hairline box —
+    /// printed tabs, per the design system.
+    private var feedModePicker: some View {
+        HStack(spacing: 0) {
+            feedModeButton(.chronological, label: viewModel.displayModeChronologicalLabel)
+            feedModeButton(.topics, label: viewModel.displayModeTopicsLabel)
+        }
+        .overlay(Rectangle().stroke(Color.paperInk, lineWidth: 0.8))
+        .padding(.horizontal, 20)
+        .padding(.vertical, 8)
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel(viewModel.feedModePickerAccessibilityLabel)
+    }
+
+    private func feedModeButton(
+        _ mode: HomeViewModel.FeedDisplayMode,
+        label: String
+    ) -> some View {
+        let isSelected = viewModel.displayMode == mode
+        return Button {
+            viewModel.selectDisplayMode(mode)
+        } label: {
+            Text(label)
+                .font(.paperBadge)
+                .textCase(.uppercase)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 8)
+                .foregroundStyle(isSelected ? Color.paperBackground : Color.paperInk)
+                .background(isSelected ? Color.paperInk : Color.clear)
+        }
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(isSelected ? [.isSelected] : [])
+        .accessibilityIdentifier("home.feed_mode.\(mode.rawValue)")
+    }
+
+    @ViewBuilder
+    private var topicsContent: some View {
+        switch viewModel.topicState {
+        case .idle, .aggregating:
+            topicsAggregatingView
+        case .empty:
+            ContentUnavailableView {
+                Label(viewModel.topicsEmptyLabel, systemImage: "newspaper")
+            }
+            .accessibilityIdentifier("home.topics.empty")
+        case let .ready(clusters):
+            topicsList(clusters: clusters)
+        }
+    }
+
+    /// Dedicated "grouping…" state: aggregation runs off-main and the
+    /// user asked to see clearly that the news are being grouped.
+    private var topicsAggregatingView: some View {
+        VStack(spacing: 12) {
+            ProgressView()
+                .tint(Color.paperInk)
+            Text(viewModel.topicsAggregatingLabel)
+                .font(.paperHeadline)
+                .foregroundStyle(Color.paperInk)
+                .multilineTextAlignment(.center)
+            Text(viewModel.topicsAggregatingHint.uppercased())
+                .font(.paperBadge)
+                .foregroundStyle(Color.paperRule)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(.horizontal, 32)
+        .accessibilityIdentifier("home.topics.aggregating")
+        .task { viewModel.refreshTopicsIfNeeded() }
+    }
+
+    private func topicsList(clusters: [TopicCluster]) -> some View {
+        let aggregated = clusters.filter(\.isAggregated)
+        let singles = clusters.filter { $0.isAggregated == false }
+        return List {
+            Section {
+                ForEach(aggregated) { cluster in
+                    TopicClusterCard(
+                        cluster: cluster,
+                        viewModel: viewModel,
+                        destination: { article in articleDestination(article) }
+                    )
+                    .listRowSeparator(.hidden)
+                }
+            }
+            if singles.isEmpty == false {
+                Section {
+                    ForEach(singles) { cluster in
+                        articleLink(cluster.lead) {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(cluster.lead.title)
+                                    .font(.paperCallout)
+                                    .foregroundStyle(Color.paperInk)
+                                    .lineLimit(2)
+                                Text(viewModel.articleMetadataLine(
+                                    sourceName: cluster.lead.sourceName,
+                                    publishedAt: cluster.lead.publishedAt
+                                ))
+                                .font(.paperMeta)
+                                .foregroundStyle(Color.paperRule)
+                            }
+                            .padding(.vertical, 2)
+                        }
+                        .listRowSeparator(.hidden)
+                    }
+                } header: {
+                    Text(viewModel.topicsOthersSectionTitle.uppercased())
+                        .font(.paperBadge)
+                        .foregroundStyle(Color.paperRule)
+                }
+            }
+        }
+        .listStyle(.plain)
+        .accessibilityIdentifier("home.topics.loaded")
     }
 
     @ViewBuilder
@@ -186,29 +310,45 @@ struct HomeScreen: View {
         .accessibilityIdentifier("home.state.error")
     }
 
+    /// Shared destination for every article tap in Home — the
+    /// chronological list, topic cluster leads and member rows all
+    /// route to the same detail stack.
+    private func articleDestination(_ article: Article) -> ArticleDetailScreen {
+        ArticleDetailScreen(
+            viewModel: ArticleDetailViewModel(
+                article: article,
+                bookmarkToggle: { [modelContext] id in
+                    let store = ArticleLocalStore(modelContainer: modelContext.container)
+                    return try await store.toggleFavorite(articleID: id)
+                },
+                recordOpen: { [modelContext] id in
+                    let store = ArticleLocalStore(modelContainer: modelContext.container)
+                    try await store.recordOpen(articleID: id, markAsRead: true)
+                },
+                summarize: articleSummarize
+            )
+        )
+    }
+
+    private func articleLink<Label: View>(
+        _ article: Article,
+        @ViewBuilder label: () -> Label
+    ) -> some View {
+        NavigationLink {
+            articleDestination(article)
+        } label: {
+            label()
+        }
+        .buttonStyle(.plain)
+    }
+
     private func loadedList(articles: [Article]) -> some View {
         List {
             Section {
                 ForEach(articles) { article in
-                    NavigationLink {
-                        ArticleDetailScreen(
-                            viewModel: ArticleDetailViewModel(
-                                article: article,
-                                bookmarkToggle: { [modelContext] id in
-                                    let store = ArticleLocalStore(modelContainer: modelContext.container)
-                                    return try await store.toggleFavorite(articleID: id)
-                                },
-                                recordOpen: { [modelContext] id in
-                                    let store = ArticleLocalStore(modelContainer: modelContext.container)
-                                    try await store.recordOpen(articleID: id, markAsRead: true)
-                                },
-                                summarize: articleSummarize
-                            )
-                        )
-                    } label: {
+                    articleLink(article) {
                         ArticleCard(article: article, viewModel: viewModel)
                     }
-                    .buttonStyle(.plain)
                     .listRowSeparator(.hidden)
                 }
             } header: {
@@ -228,6 +368,105 @@ struct HomeScreen: View {
         }
         .listStyle(.plain)
         .accessibilityIdentifier("home.state.loaded")
+    }
+}
+
+/// One aggregated story (issue #109): coverage badge, tappable lead
+/// with the only thumbnail of the card, then the other covering
+/// articles as tappable title-only rows. Aggregation is made explicit
+/// by the badge and the indented member rows.
+private struct TopicClusterCard: View {
+    let cluster: TopicCluster
+    let viewModel: HomeViewModel
+    let destination: (Article) -> ArticleDetailScreen
+
+    /// Space management: at most this many member titles per card.
+    private static let maxVisibleMembers = 3
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            PaperBadge(text: viewModel.topicsCoverageLabel(sourceCount: cluster.sourceCount))
+                .accessibilityIdentifier("home.topics.coverage")
+
+            NavigationLink {
+                destination(cluster.lead)
+            } label: {
+                HStack(alignment: .top, spacing: 12) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(cluster.lead.title)
+                            .font(.paperHeadline)
+                            .foregroundStyle(Color.paperInk)
+                        Text(viewModel.articleMetadataLine(
+                            sourceName: cluster.lead.sourceName,
+                            publishedAt: cluster.lead.publishedAt
+                        ))
+                        .font(.paperMeta)
+                        .foregroundStyle(Color.paperRule)
+                    }
+                    Spacer(minLength: 0)
+                    leadThumbnail
+                }
+            }
+            .buttonStyle(.plain)
+            .accessibilityIdentifier("home.topics.lead")
+
+            ForEach(cluster.members.prefix(Self.maxVisibleMembers)) { member in
+                NavigationLink {
+                    destination(member)
+                } label: {
+                    HStack(alignment: .firstTextBaseline, spacing: 8) {
+                        Text(member.sourceName.uppercased())
+                            .font(.paperBadge)
+                            .foregroundStyle(Color.paperRule)
+                            .lineLimit(1)
+                            .layoutPriority(1)
+                        Text(member.title)
+                            .font(.paperCallout)
+                            .foregroundStyle(Color.paperInk)
+                            .lineLimit(2)
+                    }
+                    .padding(.leading, 12)
+                }
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("home.topics.member.\(member.id)")
+            }
+
+            if cluster.members.count > Self.maxVisibleMembers {
+                Text(viewModel.topicsMoreArticlesLabel(
+                    count: cluster.members.count - Self.maxVisibleMembers
+                ))
+                .font(.paperMeta)
+                .foregroundStyle(Color.paperRule)
+                .padding(.leading, 12)
+            }
+
+            PaperRule()
+                .padding(.top, 8)
+        }
+        .padding(.vertical, 6)
+    }
+
+    /// Thumbnail for the lead only — background-defines-layout so the
+    /// image can never inflate the row (design system rule, #107).
+    @ViewBuilder
+    private var leadThumbnail: some View {
+        if let url = cluster.lead.heroImageURL {
+            Rectangle()
+                .fill(Color.paperRule.opacity(0.12))
+                .frame(width: 64, height: 64)
+                .overlay {
+                    AsyncImage(url: url) { phase in
+                        if case let .success(image) = phase {
+                            image.resizable().scaledToFill()
+                        } else {
+                            Color.clear
+                        }
+                    }
+                }
+                .clipped()
+                .overlay(Rectangle().stroke(Color.paperRule.opacity(0.35), lineWidth: 0.8))
+                .accessibilityHidden(true)
+        }
     }
 }
 

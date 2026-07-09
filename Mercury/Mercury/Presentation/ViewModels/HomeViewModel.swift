@@ -33,6 +33,22 @@ final class HomeViewModel: ObservableObject {
         case failed(message: String)
     }
 
+    /// Home shows two feeds behind a segmented control (issue #109):
+    /// the chronological stream and the last-24h topic aggregation.
+    enum FeedDisplayMode: String, CaseIterable {
+        case chronological
+        case topics
+    }
+
+    /// Dedicated state machine for the Topics tab: aggregation runs off
+    /// the main actor and the tab shows a "grouping…" state meanwhile.
+    enum TopicFeedState: Equatable {
+        case idle
+        case aggregating
+        case ready(clusters: [TopicCluster])
+        case empty
+    }
+
     /// Feed refresh seam. Callers pass the pre-resolved source list they
     /// want the pipeline to hit. Production wraps `FetchHomeFeedUseCase`;
     /// tests inject a stub. `nil` means "use the built-in catalog default"
@@ -42,6 +58,8 @@ final class HomeViewModel: ObservableObject {
     @Published private(set) var state: FeedState = .idle
     @Published private(set) var isRefreshing: Bool = false
     @Published private(set) var lastUpdatedAt: Date?
+    @Published private(set) var displayMode: FeedDisplayMode = .chronological
+    @Published private(set) var topicState: TopicFeedState = .idle
 
     let isDeveloperModeEnabled: Bool
 
@@ -50,6 +68,11 @@ final class HomeViewModel: ObservableObject {
     private let logger: AppLogger
     private let maxDisplayedArticles: Int
     private let ranker = FeedRankingService()
+    private let topicAggregator = FeedTopicAggregationService()
+    private var topicTask: Task<Void, Never>?
+    /// Article ids the current `topicState` was computed from — skips
+    /// pointless re-aggregation when switching tabs back and forth.
+    private var topicInputIDs: [String] = []
     private var modelContext: ModelContext?
     private var activeTask: Task<RSSFeedBatchResult, Never>?
     private var activeRequestID: String?
@@ -108,6 +131,7 @@ final class HomeViewModel: ObservableObject {
 
     deinit {
         activeTask?.cancel()
+        topicTask?.cancel()
         logger.debug(
             "Deinitializing Home view model",
             category: .ui,
@@ -130,6 +154,62 @@ final class HomeViewModel: ObservableObject {
 
     var navigationTitle: String {
         String(localized: "home.navigation.title", defaultValue: "Mercurio")
+    }
+
+    var displayModeChronologicalLabel: String {
+        String(localized: "home.feed_mode.chronological", defaultValue: "Latest")
+    }
+
+    var displayModeTopicsLabel: String {
+        String(localized: "home.feed_mode.topics", defaultValue: "Topics")
+    }
+
+    var feedModePickerAccessibilityLabel: String {
+        String(
+            localized: "home.feed_mode.accessibility",
+            defaultValue: "Feed display mode"
+        )
+    }
+
+    var topicsAggregatingLabel: String {
+        String(
+            localized: "home.topics.aggregating",
+            defaultValue: "Grouping the news by topic…"
+        )
+    }
+
+    var topicsAggregatingHint: String {
+        String(
+            localized: "home.topics.aggregating.hint",
+            defaultValue: "Stories from the last 24 hours"
+        )
+    }
+
+    var topicsEmptyLabel: String {
+        String(
+            localized: "home.topics.empty",
+            defaultValue: "No stories in the last 24 hours."
+        )
+    }
+
+    var topicsOthersSectionTitle: String {
+        String(localized: "home.topics.others", defaultValue: "More news")
+    }
+
+    func topicsCoverageLabel(sourceCount: Int) -> String {
+        let format = String(
+            localized: "home.topics.coverage",
+            defaultValue: "%lld outlets on this story"
+        )
+        return String(format: format, locale: .current, sourceCount)
+    }
+
+    func topicsMoreArticlesLabel(count: Int) -> String {
+        let format = String(
+            localized: "home.topics.more_articles",
+            defaultValue: "+ %lld more articles"
+        )
+        return String(format: format, locale: .current, count)
     }
 
     var articlesSectionTitle: String {
@@ -413,6 +493,15 @@ final class HomeViewModel: ObservableObject {
         } else {
             state = .loaded(articles: articles)
         }
+        // New articles invalidate the topic aggregation; recompute
+        // immediately only if the user is looking at the Topics tab.
+        if topicInputIDs != articles.map(\.id) {
+            topicState = .idle
+            topicInputIDs = []
+            if displayMode == .topics {
+                refreshTopicsIfNeeded()
+            }
+        }
         logger.debug(
             "Applied articles to Home state",
             category: .ui,
@@ -422,6 +511,57 @@ final class HomeViewModel: ObservableObject {
                 "origin": source
             ]
         )
+    }
+
+    // MARK: - Topic aggregation (issue #109)
+
+    /// Switches the Home feed between chronological and topics; the
+    /// first switch to topics (or after a refresh) kicks aggregation.
+    func selectDisplayMode(_ mode: FeedDisplayMode) {
+        guard displayMode != mode else { return }
+        displayMode = mode
+        logger.info(
+            "Home feed display mode changed",
+            category: .ui,
+            service: "HomeViewModel",
+            metadata: ["mode": mode.rawValue]
+        )
+        if mode == .topics {
+            refreshTopicsIfNeeded()
+        }
+    }
+
+    /// Aggregates the loaded articles into topic clusters off the main
+    /// actor. Idempotent for an unchanged article set.
+    func refreshTopicsIfNeeded() {
+        guard case let .loaded(articles) = state else {
+            topicState = .empty
+            return
+        }
+        let inputIDs = articles.map(\.id)
+        if topicInputIDs == inputIDs, case .ready = topicState { return }
+        if case .aggregating = topicState, topicInputIDs == inputIDs { return }
+
+        topicInputIDs = inputIDs
+        topicState = .aggregating
+        let requestID = "home-topics-\(UUID().uuidString.lowercased())"
+        logger.info(
+            "Topic aggregation started",
+            category: .ui,
+            service: "HomeViewModel",
+            requestID: requestID,
+            metadata: ["articles": "\(articles.count)"]
+        )
+        topicTask?.cancel()
+        let aggregator = topicAggregator
+        topicTask = Task { [weak self] in
+            let clusters = await Task.detached(priority: .userInitiated) {
+                aggregator.aggregate(articles: articles, requestID: requestID)
+            }.value
+            guard let self, Task.isCancelled == false else { return }
+            guard self.topicInputIDs == inputIDs else { return }
+            self.topicState = clusters.isEmpty ? .empty : .ready(clusters: clusters)
+        }
     }
 
     private func currentPreferences() -> UserPreference? {
