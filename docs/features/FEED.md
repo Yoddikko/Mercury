@@ -60,6 +60,10 @@ Displays a list of articles ranked and filtered based on logic and user preferen
 * aggregation runs off the main thread; the Topics tab shows a
   dedicated loading state ("grouping the news by topic…") while it
   computes
+* when an AI provider is configured, grouping goes through the
+  provider first (issue #113, see `CLUSTERING.md` § AI-first path) and
+  the list shows a small sparkles "Grouped with AI" indicator; any
+  provider failure falls back silently to the lexical clustering
 
 ---
 
