@@ -294,6 +294,68 @@ actor AIService {
         }
     }
 
+    /// Groups article headlines by story via the active provider
+    /// (issue #113). Throws when no provider is configured — callers
+    /// (Home topics feed) fall back to the lexical aggregation. Returned
+    /// ids are validated against the input; unknown ids are dropped and
+    /// each id is used at most once.
+    func groupArticleHeadlines(
+        _ headlines: [(id: String, title: String)],
+        requestID: String? = nil
+    ) async throws -> [[String]] {
+        let flowRequestID = requestID ?? Self.generateRequestID(prefix: "ai-topics")
+        let provider = try resolveActiveProvider(requestID: flowRequestID)
+        let input = headlines
+            .map { "\($0.id)\t\($0.title.replacingOccurrences(of: "\n", with: " "))" }
+            .joined(separator: "\n")
+        do {
+            let rawGroups = try await provider.groupHeadlines(input, requestID: flowRequestID)
+            let knownIDs = Set(headlines.map(\.id))
+            var seen: Set<String> = []
+            let groups = rawGroups.compactMap { group -> [String]? in
+                let valid = group.filter { knownIDs.contains($0) && seen.contains($0) == false }
+                seen.formUnion(valid)
+                return valid.count >= 2 ? valid : nil
+            }
+            logger.info(
+                "Headline grouping completed",
+                category: .business,
+                service: "AIService",
+                requestID: flowRequestID,
+                metadata: [
+                    "provider": provider.id.rawValue,
+                    "headlines": "\(headlines.count)",
+                    "groups": "\(groups.count)"
+                ]
+            )
+            return groups
+        } catch let error as AIProviderError {
+            logger.warn(
+                "Headline grouping failed",
+                category: .business,
+                service: "AIService",
+                requestID: flowRequestID,
+                metadata: [
+                    "provider": provider.id.rawValue,
+                    "error": error.localizedDescription
+                ]
+            )
+            throw AIServiceError.providerFailure(provider.id, error)
+        } catch {
+            logger.error(
+                "Headline grouping failed with unexpected error",
+                category: .business,
+                service: "AIService",
+                requestID: flowRequestID,
+                metadata: [
+                    "provider": provider.id.rawValue,
+                    "error": error.localizedDescription
+                ]
+            )
+            throw AIServiceError.unknown(error.localizedDescription)
+        }
+    }
+
     func fetchAvailableModels(
         for providerID: AIProviderID,
         tokenOverride: String? = nil,

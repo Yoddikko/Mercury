@@ -31,9 +31,11 @@ struct HomeViewModelTests {
         #expect(viewModel.displayMode == .topics)
 
         var ready: [TopicCluster]?
+        var readyMethod: HomeViewModel.TopicAggregationMethod?
         for _ in 0..<100 {
-            if case let .ready(clusters) = viewModel.topicState {
+            if case let .ready(clusters, method) = viewModel.topicState {
                 ready = clusters
+                readyMethod = method
                 break
             }
             try await Task.sleep(nanoseconds: 50_000_000)
@@ -45,6 +47,91 @@ struct HomeViewModelTests {
         #expect(clusters.count == 2)
         #expect(clusters[0].sourceCount == 2)
         #expect(clusters[0].isAggregated)
+        // No AI grouper injected: the method must be lexical.
+        #expect(readyMethod == .lexical)
+    }
+
+    @Test
+    func topicsModeUsesAIGrouperWhenAvailable() async throws {
+        let now = Date()
+        let articles = [
+            Self.recentArticle(id: "a", source: "ansa", title: "Prima notizia sul vertice europeo", publishedAt: now),
+            Self.recentArticle(id: "b", source: "repubblica", title: "Seconda notizia completamente diversa sul campionato", publishedAt: now.addingTimeInterval(-300)),
+            Self.recentArticle(id: "c", source: "tgcom24", title: "Terza notizia su tutt'altro argomento di cronaca", publishedAt: now.addingTimeInterval(-600))
+        ]
+        let result = RSSFeedBatchResult(
+            checkedAt: .now,
+            groupMode: .mainOutlets,
+            selectedRegion: nil,
+            checks: [],
+            deduplicatedArticles: articles
+        )
+        // The AI grouper pairs two lexically-unrelated titles: only the
+        // provider path can produce this cluster, proving it was used.
+        let viewModel = HomeViewModel(
+            feedRefreshAction: { _ in result },
+            isDeveloperModeEnabled: false,
+            topicAIGrouper: { _, _ in [["a", "b"]] }
+        )
+        await viewModel.refresh()
+        viewModel.selectDisplayMode(.topics)
+
+        var outcome: (clusters: [TopicCluster], method: HomeViewModel.TopicAggregationMethod)?
+        for _ in 0..<100 {
+            if case let .ready(clusters, method) = viewModel.topicState {
+                outcome = (clusters, method)
+                break
+            }
+            try await Task.sleep(nanoseconds: 50_000_000)
+        }
+        guard let outcome else {
+            Issue.record("Expected .ready topic state, got \(viewModel.topicState)")
+            return
+        }
+        #expect(outcome.method == .ai)
+        #expect(outcome.clusters.count == 2)
+        #expect(outcome.clusters[0].isAggregated)
+        #expect(Set([outcome.clusters[0].lead.id] + outcome.clusters[0].members.map(\.id)) == ["a", "b"])
+    }
+
+    @Test
+    func topicsModeFallsBackToLexicalWhenAIGrouperThrows() async throws {
+        let now = Date()
+        let articles = [
+            Self.recentArticle(id: "a", source: "ansa", title: "Terremoto di magnitudo 5.2 nel centro Italia, scossa avvertita a Roma", publishedAt: now),
+            Self.recentArticle(id: "b", source: "repubblica", title: "Forte scossa di terremoto magnitudo 5.2 nel centro Italia", publishedAt: now.addingTimeInterval(-300))
+        ]
+        let result = RSSFeedBatchResult(
+            checkedAt: .now,
+            groupMode: .mainOutlets,
+            selectedRegion: nil,
+            checks: [],
+            deduplicatedArticles: articles
+        )
+        struct NotConfigured: Error {}
+        let viewModel = HomeViewModel(
+            feedRefreshAction: { _ in result },
+            isDeveloperModeEnabled: false,
+            topicAIGrouper: { _, _ in throw NotConfigured() }
+        )
+        await viewModel.refresh()
+        viewModel.selectDisplayMode(.topics)
+
+        var outcome: (clusters: [TopicCluster], method: HomeViewModel.TopicAggregationMethod)?
+        for _ in 0..<100 {
+            if case let .ready(clusters, method) = viewModel.topicState {
+                outcome = (clusters, method)
+                break
+            }
+            try await Task.sleep(nanoseconds: 50_000_000)
+        }
+        guard let outcome else {
+            Issue.record("Expected .ready topic state, got \(viewModel.topicState)")
+            return
+        }
+        #expect(outcome.method == .lexical)
+        #expect(outcome.clusters.count == 1)
+        #expect(outcome.clusters[0].sourceCount == 2)
     }
 
     private static func recentArticle(

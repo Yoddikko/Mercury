@@ -27,6 +27,17 @@ cheaper, fully on-device approximation:
   provider dependency. Embeddings can replace the vectorizer without
   touching the pipeline shape.
 
+### AI-first path (issue #113)
+
+When an AI provider is configured, the Topics feed asks it first:
+`AIProvider.groupHeadlines` receives `id<TAB>title` lines and answers
+JSON-only groups of ids (validated: unknown ids dropped, each id used
+once); `FeedTopicAggregationService.clusters(fromGroups:)` maps the
+groups back to articles reusing the same lead selection and
+coverage-based ordering. Any failure (no provider, no key, network,
+malformed output) falls back silently to the lexical clustering above.
+The UI marks AI-made groupings with a sparkles indicator.
+
 ---
 
 ## Inputs

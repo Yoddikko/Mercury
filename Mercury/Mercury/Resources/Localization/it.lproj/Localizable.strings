@@ -263,3 +263,4 @@
 "home.topics.others" = "Altre notizie";
 "home.topics.coverage" = "%lld testate su questa storia";
 "home.topics.more_articles" = "+ altri %lld articoli";
+"home.topics.ai_aggregated" = "Raggruppate con AI";

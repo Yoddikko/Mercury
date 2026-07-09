@@ -29,6 +29,33 @@ enum AIPromptBuilder {
         """
     }
 
+    /// Groups news headlines by story/topic (issue #113). Input lines
+    /// are `id<TAB>title`; the model must answer JSON-only with groups
+    /// of ids so the app can map them back to articles.
+    static func headlineGroupingPrompt(for headlines: String) -> String {
+        """
+        You are a newswire editor. Group the headlines below by story: \
+        two headlines belong to the same group ONLY if they clearly \
+        report the same fact or topic. Do not force groups - when in \
+        doubt, leave a headline alone.
+
+        Rules:
+        - Each input line is: id<TAB>headline.
+        - Use each id at most once.
+        - Only include groups with 2 or more ids (singletons are implied).
+        - Use only ids from the input. Do not invent ids.
+        - Return JSON only.
+
+        JSON schema:
+        {
+          "groups": [["id", "id"], ["id", "id", "id"]]
+        }
+
+        Headlines:
+        \(headlines)
+        """
+    }
+
     static func categoryPrompt(for content: String) -> String {
         """
         Classify the article into one category using only the text provided below.

@@ -201,6 +201,22 @@ enum AIProviderSupport {
         return AICategoryResult(category: category)
     }
 
+    /// Parses the headline-grouping response (issue #113): `groups` as
+    /// an array of arrays of ids, dropping empties and one-element
+    /// groups (singletons are implied by omission).
+    nonisolated static func normalizedHeadlineGroups(from object: [String: Any]) throws -> [[String]] {
+        guard let rawGroups = object["groups"] as? [Any] else {
+            throw AIProviderError.parsingFailure("Missing groups array.")
+        }
+        return rawGroups.compactMap { rawGroup -> [String]? in
+            guard let ids = rawGroup as? [Any] else { return nil }
+            let cleaned = ids
+                .compactMap { sanitizeText($0 as? String) }
+                .filter { $0.isEmpty == false }
+            return cleaned.count >= 2 ? cleaned : nil
+        }
+    }
+
     nonisolated static func normalizedTags(from object: [String: Any]) throws -> [String] {
         let tags = deduplicatedList(
             (object["tags"] as? [Any] ?? []).compactMap { element in
