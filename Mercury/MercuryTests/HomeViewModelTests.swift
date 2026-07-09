@@ -346,7 +346,7 @@ struct HomeViewModelTests {
         )
         viewModel.attach(modelContext: context)
 
-        let replayed = viewModel.loadCachedArticles()
+        let replayed = await viewModel.loadCachedArticles()
 
         #expect(Set(replayed.map(\.id)) == ["it-a", "legacy-it"])
     }
@@ -376,7 +376,7 @@ struct HomeViewModelTests {
         )
         viewModel.attach(modelContext: context)
 
-        let replayed = viewModel.loadCachedArticles()
+        let replayed = await viewModel.loadCachedArticles()
 
         #expect(Set(replayed.map(\.id)) == ["it-a", "fr-a"])
     }
@@ -401,8 +401,17 @@ struct HomeViewModelTests {
 
         await viewModel.refresh()
 
-        let remaining = try context.fetch(FetchDescriptor<ArticleEntity>())
-        #expect(remaining.map(\.id) == ["stale-fav"])
+        // The sweep is fire-and-forget on a background context
+        // (issue #111): poll a fresh context until it lands.
+        var remainingIDs: [String] = []
+        for _ in 0..<100 {
+            remainingIDs = try ModelContext(container)
+                .fetch(FetchDescriptor<ArticleEntity>())
+                .map(\.id)
+            if remainingIDs == ["stale-fav"] { break }
+            try await Task.sleep(nanoseconds: 50_000_000)
+        }
+        #expect(remainingIDs == ["stale-fav"])
     }
 
     private static func makeCachedEntity(

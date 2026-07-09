@@ -318,11 +318,10 @@ final class HomeViewModel: ObservableObject {
 
         hasLoadedOnce = true
 
-        let cached = loadCachedArticles(requestID: "home-cache-\(UUID().uuidString.lowercased())")
+        state = .loading
+        let cached = await loadCachedArticles(requestID: "home-cache-\(UUID().uuidString.lowercased())")
         if cached.isEmpty == false {
             applyArticles(cached, source: "cache")
-        } else {
-            state = .loading
         }
 
         await refresh()
@@ -577,7 +576,7 @@ final class HomeViewModel: ObservableObject {
     ///
     /// Internal (not private) so unit tests can drive the replay path
     /// directly without racing the network refresh.
-    func loadCachedArticles(requestID: String? = nil) -> [Article] {
+    func loadCachedArticles(requestID: String? = nil) async -> [Article] {
         guard let modelContext else {
             logger.debug(
                 "No model context attached when loading cached articles",
@@ -588,18 +587,20 @@ final class HomeViewModel: ObservableObject {
             return []
         }
 
-        var descriptor = FetchDescriptor<ArticleEntity>(
-            sortBy: [SortDescriptor(\.publishedAt, order: .reverse)]
-        )
-        // ponytail: fetch 3× the display cap so the ranker has room to reorder;
-        // upgrade to a SwiftData-side ranking query when the table grows past
-        // a few thousand rows.
-        descriptor.fetchLimit = maxDisplayedArticles * 3
-
         do {
-            let entities = try modelContext.fetch(descriptor)
+            // Fetch + entity mapping run on the store's @ModelActor
+            // (issue #111): the main thread only does the cheap in-memory
+            // filter + rank on the returned value types.
+            // ponytail: fetch 3× the display cap so the ranker has room
+            // to reorder; upgrade to a SwiftData-side ranking query when
+            // the table grows past a few thousand rows.
+            let store = ArticleLocalStore(modelContainer: modelContext.container)
+            var articles = try await store.fetchRecentFeedArticles(
+                limit: maxDisplayedArticles * 3,
+                requestID: requestID
+            )
+            let fetchedCount = articles.count
             let preferences = currentPreferences()
-            var articles = entities.compactMap { ArticleEntityMapper.makeArticle(from: $0) }
             var filteredOut = 0
             if let allowList = sourceFilter.makeArticleAllowList(for: preferences) {
                 let unfilteredCount = articles.count
@@ -616,7 +617,7 @@ final class HomeViewModel: ObservableObject {
                 service: "HomeViewModel",
                 requestID: requestID,
                 metadata: [
-                    "entities_in": "\(entities.count)",
+                    "entities_in": "\(fetchedCount)",
                     "filtered_out": "\(filteredOut)",
                     "articles_out": "\(trimmed.count)"
                 ]
@@ -637,30 +638,38 @@ final class HomeViewModel: ObservableObject {
     /// Run the time-based cache retention sweep (issue #94). Failures are
     /// logged and swallowed: cleanup must never block the refresh flow.
     private func runRetentionSweep(requestID: String) {
-        guard let modelContext else { return }
-        do {
-            let purged = try ArticleCacheMaintenanceService(
-                modelContext: modelContext,
-                sourceFilter: sourceFilter,
-                logger: logger
-            ).enforceRetention(requestID: requestID)
-            if purged > 0 {
-                logger.debug(
-                    "Cache retention sweep completed",
+        guard let container = modelContext?.container else { return }
+        // Fire-and-forget on a fresh background context (issue #111):
+        // the sweep scans and deletes rows and must never stall the main
+        // thread or gate the refresh flow.
+        let sourceFilter = sourceFilter
+        let logger = logger
+        Task.detached(priority: .utility) {
+            do {
+                let context = ModelContext(container)
+                let purged = try ArticleCacheMaintenanceService(
+                    modelContext: context,
+                    sourceFilter: sourceFilter,
+                    logger: logger
+                ).enforceRetention(requestID: requestID)
+                if purged > 0 {
+                    logger.debug(
+                        "Cache retention sweep completed",
+                        category: .cache,
+                        service: "HomeViewModel",
+                        requestID: requestID,
+                        metadata: ["purged_rows": "\(purged)"]
+                    )
+                }
+            } catch {
+                logger.error(
+                    "Cache retention sweep failed",
                     category: .cache,
                     service: "HomeViewModel",
                     requestID: requestID,
-                    metadata: ["purged_rows": "\(purged)"]
+                    metadata: ["error": String(describing: error)]
                 )
             }
-        } catch {
-            logger.error(
-                "Cache retention sweep failed",
-                category: .cache,
-                service: "HomeViewModel",
-                requestID: requestID,
-                metadata: ["error": String(describing: error)]
-            )
         }
     }
 

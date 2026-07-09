@@ -9,7 +9,7 @@ import Foundation
 
 /// A story: one lead article plus the other articles covering the same
 /// topic, produced by `FeedTopicAggregationService` (issue #109).
-struct TopicCluster: Identifiable, Equatable, Sendable {
+nonisolated struct TopicCluster: Identifiable, Equatable, Sendable {
     /// Stable identity: the lead article's id.
     var id: String { lead.id }
     let lead: Article
@@ -30,7 +30,7 @@ struct TopicCluster: Identifiable, Equatable, Sendable {
 /// See `docs/features/CLUSTERING.md` § Shipped v1. The embedding-based
 /// clustering spec remains the upgrade path: only the vectorizer
 /// changes, the pipeline shape stays.
-struct FeedTopicAggregationService: Sendable {
+nonisolated struct FeedTopicAggregationService: Sendable {
     /// An article joins the first cluster whose best member similarity
     /// reaches this value; otherwise it starts a new cluster ("prefer
     /// new cluster over incorrect merge", CLUSTERING.md § Rules).

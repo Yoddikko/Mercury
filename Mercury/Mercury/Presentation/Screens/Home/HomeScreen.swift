@@ -526,7 +526,7 @@ private struct ArticleCardSkeleton: View {
                 .frame(height: 12)
         }
         .padding(.vertical, 6)
-        .redacted(reason: .placeholder)
+        .paperShimmer()
         .accessibilityHidden(true)
     }
 }

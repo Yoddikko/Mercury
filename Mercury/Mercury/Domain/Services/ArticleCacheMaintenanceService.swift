@@ -23,10 +23,12 @@ import SwiftData
 /// (`ArticleLocalStore.toggleFavorite`), so favorites survive source
 /// disabling and retention alike.
 ///
-/// The service is `@MainActor` because it works on the SwiftUI-provided
-/// `ModelContext`, matching the `UserPreferencesService` pattern.
-@MainActor
-final class ArticleCacheMaintenanceService {
+/// The service is isolation-agnostic (issue #111): it works on whatever
+/// `ModelContext` it is constructed with — the SwiftUI main context for
+/// the purge-on-toggle path, or a fresh background context for the
+/// launch retention sweep. Construct and use it within one isolation
+/// domain; it is deliberately not `Sendable`.
+nonisolated final class ArticleCacheMaintenanceService {
     private static let serviceName = "ArticleCacheMaintenanceService"
 
     /// Retention policy: non-favorite cached articles older than this many
@@ -39,13 +41,13 @@ final class ArticleCacheMaintenanceService {
     private let modelContext: ModelContext
     private let sourceFilter: RSSSourceFilter
     private let logger: AppLogger
-    private let now: @MainActor () -> Date
+    private let now: () -> Date
 
     init(
         modelContext: ModelContext,
         sourceFilter: RSSSourceFilter = RSSSourceFilter(),
         logger: AppLogger = .shared,
-        now: @escaping @MainActor () -> Date = { Date() }
+        now: @escaping () -> Date = { Date() }
     ) {
         self.modelContext = modelContext
         self.sourceFilter = sourceFilter
