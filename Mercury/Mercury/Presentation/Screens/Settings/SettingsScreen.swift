@@ -109,7 +109,7 @@ struct SettingsScreen: View {
     private static var feedSourcesSectionFooter: String {
         String(
             localized: "settings.section.feed_sources.footer",
-            defaultValue: "Choose the regions and outlets that feed the Home stream."
+            defaultValue: "Choose the Italian outlets that feed the Home stream."
         )
     }
 

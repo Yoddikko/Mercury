@@ -18,8 +18,13 @@
 import Foundation
 
 enum RSSFeedCatalog {
+    /// Italy-only scope (issue #102): the thesis demo ships Italian
+    /// outlets only. The other regions' entries stay in this file but are
+    /// compiled out behind `MERCURY_MULTI_REGION` (never defined); define
+    /// the flag in build settings to bring them back.
     static let allSources: [RSSFeedSource] = {
         var sources: [RSSFeedSource] = []
+#if MERCURY_MULTI_REGION
         sources.append(contentsOf: europeWideSources)
         sources.append(contentsOf: austriaSources)
         sources.append(contentsOf: belgiumSources)
@@ -33,7 +38,9 @@ enum RSSFeedCatalog {
         sources.append(contentsOf: greeceSources)
         sources.append(contentsOf: hungarySources)
         sources.append(contentsOf: irelandSources)
+#endif
         sources.append(contentsOf: italySources)
+#if MERCURY_MULTI_REGION
         sources.append(contentsOf: japanSources)
         sources.append(contentsOf: netherlandsSources)
         sources.append(contentsOf: norwaySources)
@@ -45,6 +52,7 @@ enum RSSFeedCatalog {
         sources.append(contentsOf: switzerlandSources)
         sources.append(contentsOf: unitedKingdomSources)
         sources.append(contentsOf: unitedStatesSources)
+#endif
         return sources
     }()
 
@@ -77,6 +85,7 @@ enum RSSFeedCatalog {
         }
     }
 
+#if MERCURY_MULTI_REGION
     // MARK: - Europe-Wide
 
     private static let europeWideSources: [RSSFeedSource] = [
@@ -722,6 +731,8 @@ enum RSSFeedCatalog {
         )
     ]
 
+#endif
+
     // MARK: - Italy
 
     private static let italySources: [RSSFeedSource] = [
@@ -1125,6 +1136,7 @@ enum RSSFeedCatalog {
         )
     ]
 
+#if MERCURY_MULTI_REGION
     // MARK: - Japan
 
     private static let japanSources: [RSSFeedSource] = [
@@ -1793,6 +1805,8 @@ enum RSSFeedCatalog {
             tags: ["economy", "world"]
         )
     ]
+
+#endif
 
     // MARK: - Factory
 

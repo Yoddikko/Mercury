@@ -25,7 +25,7 @@ struct MercuryTests {
             isDeveloperModeEnabled: false
         )
 
-        #expect(viewModel.title == "Mercury")
+        #expect(viewModel.title == "Mercurio")
         #expect(viewModel.state == .idle)
         #expect(viewModel.isRefreshing == false)
         #expect(viewModel.hasArticles == false)
