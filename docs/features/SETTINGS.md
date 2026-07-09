@@ -12,12 +12,28 @@ In scope (this iteration):
 
 * feed sources — region selection + per-outlet on/off (shared with the
   onboarding flow described in `docs/product/ONBOARDING.md`)
+* **AI provider (issue #115)** — consumer-grade configuration, promoted
+  out of Developer Tools:
+  * pick the active provider (OpenAI, Claude, Gemini, Ollama, DeepSeek);
+    each row shows a mono "READY / KEY MISSING" status badge, the active
+    one is check-marked; tapping a row activates it and persists the
+    configuration immediately
+  * enter/replace the API key of the selected provider (SecureField;
+    key presence shown, never the key itself; Ollama needs endpoint,
+    not key)
+  * model: load the provider's available models and pick one, or type a
+    model id directly (mono font — technical voice)
+  * the screen reuses the existing `DeveloperAIProviderSettingsViewModel`
+    (single source of provider-settings behavior; the Developer
+    Playground keeps its advanced diagnostics surface)
+  * everything is Paper design system compliant: serif rows, mono
+    badges/status, paper buttons, no default iOS styling
+* app version row (mono) in a trailing About section
 
 Reserved for future iterations (out of scope here, listed so the screen can grow without re-litigating):
 
 * theme (system / light / dark)
 * refresh cadence
-* AI provider selection (already lives under Developer Tools today)
 * iCloud sync toggle
 
 Removed (issue #83): the article renderer picker. The reader is now

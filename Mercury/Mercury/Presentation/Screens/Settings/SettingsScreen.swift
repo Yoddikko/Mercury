@@ -18,6 +18,7 @@ import SwiftData
 struct SettingsScreen: View {
     @Environment(\.modelContext) private var modelContext
     @StateObject private var feedSourcesViewModel: FeedSourcesViewModel
+    @StateObject private var aiProviderViewModel = DeveloperAIProviderSettingsViewModel()
     private let usesInjectedViewModel: Bool
 
     init() {
@@ -44,6 +45,8 @@ struct SettingsScreen: View {
     var body: some View {
         Form {
             feedSourcesSection
+            aiSection
+            aboutSection
         }
         .paperScreen()
         .navigationTitle(Self.title)
@@ -53,8 +56,58 @@ struct SettingsScreen: View {
                 rebindToLiveContext()
             }
             feedSourcesViewModel.load()
+            await aiProviderViewModel.load()
         }
         .accessibilityIdentifier("settings.screen")
+    }
+
+    /// Entry point for the consumer AI provider setup (issue #115): the
+    /// row shows the current provider and its readiness inline so the
+    /// user knows the AI state without drilling in.
+    private var aiSection: some View {
+        Section {
+            NavigationLink {
+                AIProviderSettingsScreen(viewModel: aiProviderViewModel)
+            } label: {
+                HStack(spacing: 8) {
+                    Text(AIProviderSettingsScreen.title)
+                        .font(.paperCallout)
+                        .foregroundStyle(Color.paperInk)
+                    Spacer()
+                    Text(aiProviderViewModel.activeProviderID.displayName)
+                        .font(.paperMeta)
+                        .foregroundStyle(Color.paperRule)
+                }
+            }
+            .accessibilityIdentifier("settings.ai")
+        } header: {
+            Text(Self.aiSectionHeader.uppercased())
+                .font(.paperBadge)
+                .foregroundStyle(Color.paperRule)
+        } footer: {
+            Text(Self.aiSectionFooter)
+                .font(.paperMeta)
+                .foregroundStyle(Color.paperRule)
+        }
+    }
+
+    private var aboutSection: some View {
+        Section {
+            HStack {
+                Text(Self.versionLabel)
+                    .font(.paperCallout)
+                    .foregroundStyle(Color.paperInk)
+                Spacer()
+                Text(Self.appVersion)
+                    .font(.paperMeta)
+                    .foregroundStyle(Color.paperRule)
+                    .accessibilityIdentifier("settings.about.version")
+            }
+        } header: {
+            Text(Self.aboutSectionHeader.uppercased())
+                .font(.paperBadge)
+                .foregroundStyle(Color.paperRule)
+        }
     }
 
     private var feedSourcesSection: some View {
@@ -119,6 +172,31 @@ struct SettingsScreen: View {
             localized: "settings.section.feed_sources.footer",
             defaultValue: "Choose the Italian outlets that feed the Home stream."
         )
+    }
+
+    private static var aiSectionHeader: String {
+        String(localized: "settings.section.ai.header", defaultValue: "Artificial intelligence")
+    }
+
+    private static var aiSectionFooter: String {
+        String(
+            localized: "settings.section.ai.footer",
+            defaultValue: "Summaries and topic grouping use the configured provider."
+        )
+    }
+
+    private static var aboutSectionHeader: String {
+        String(localized: "settings.section.about.header", defaultValue: "About")
+    }
+
+    private static var versionLabel: String {
+        String(localized: "settings.about.version", defaultValue: "Version")
+    }
+
+    private static var appVersion: String {
+        let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "—"
+        let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "—"
+        return "\(version) (\(build))"
     }
 
     // MARK: - Placeholder container
