@@ -45,6 +45,7 @@ struct SettingsScreen: View {
         Form {
             feedSourcesSection
         }
+        .paperScreen()
         .navigationTitle(Self.title)
         .navigationBarTitleDisplayMode(.inline)
         .task {
@@ -62,16 +63,23 @@ struct SettingsScreen: View {
                 Form {
                     FeedSourcesPicker(viewModel: feedSourcesViewModel)
                 }
+                .paperScreen()
                 .navigationTitle(Self.feedSourcesTitle)
                 .navigationBarTitleDisplayMode(.inline)
             } label: {
                 Text(Self.feedSourcesTitle)
+                    .font(.paperCallout)
+                    .foregroundStyle(Color.paperInk)
                     .accessibilityIdentifier("settings.feed_sources")
             }
         } header: {
             Text(Self.feedSourcesSectionHeader)
+                .font(.paperBadge)
+                .foregroundStyle(Color.paperRule)
         } footer: {
             Text(Self.feedSourcesSectionFooter)
+                .font(.paperMeta)
+                .foregroundStyle(Color.paperRule)
         }
     }
 

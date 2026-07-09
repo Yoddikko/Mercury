@@ -8,8 +8,9 @@ Start with:
 4. `docs/guidelines/TESTING.md`
 5. `docs/guidelines/LOCALIZATION.md`
 6. `docs/guidelines/LOGGING.md`
-7. `docs/architecture/ARCHITECTURE.md`
-8. the relevant feature, AI, and product docs
+7. `docs/guidelines/DESIGN_SYSTEM.md`
+8. `docs/architecture/ARCHITECTURE.md`
+9. the relevant feature, AI, and product docs
 
 ## Repo Rules
 
@@ -17,6 +18,7 @@ Start with:
 * implementation may refine the docs only when the change is necessary, minimal, and documented
 * keep architecture and documentation aligned
 * avoid unrelated redesign
+* ALL UI work MUST follow `docs/guidelines/DESIGN_SYSTEM.md` (Paper design system) — no default iOS styling on consumer screens
 * add or update tests for behavior changes
 * if user-facing copy or accessibility text changes, update localization resources
 * for new or modified functions, add or update logs using `AppLogger`

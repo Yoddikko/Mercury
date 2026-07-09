@@ -26,7 +26,8 @@ struct ArticleBlockListView: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .tint(.accentColor)
+        .tint(Color.paperInk)
+        .foregroundStyle(Color.paperInk)
         .textSelection(.enabled)
         .accessibilityIdentifier("article.detail.body.native")
     }
@@ -36,8 +37,8 @@ struct ArticleBlockListView: View {
         switch block {
         case .paragraph(let text):
             Text(text)
-                .font(.body)
-                .lineSpacing(4)
+                .font(.paperBody)
+                .lineSpacing(5)
                 .fixedSize(horizontal: false, vertical: true)
         case .heading(let level, let text):
             Text(text)
@@ -52,7 +53,7 @@ struct ArticleBlockListView: View {
                     switch phase {
                     case .empty:
                         Rectangle()
-                            .fill(Color.secondary.opacity(0.12))
+                            .fill(Color.paperRule.opacity(0.12))
                             .frame(height: 220)
                     case .success(let image):
                         image
@@ -60,23 +61,20 @@ struct ArticleBlockListView: View {
                             .scaledToFit()
                     case .failure:
                         Rectangle()
-                            .fill(Color.secondary.opacity(0.12))
-                            .overlay(Image(systemName: "photo").foregroundStyle(.secondary))
+                            .fill(Color.paperRule.opacity(0.12))
+                            .overlay(Image(systemName: "photo").foregroundStyle(Color.paperRule))
                             .frame(height: 180)
                     @unknown default:
-                        Rectangle().fill(Color.secondary.opacity(0.12))
+                        Rectangle().fill(Color.paperRule.opacity(0.12))
                     }
                 }
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color.secondary.opacity(0.15), lineWidth: 0.5)
-                )
+                .overlay(Rectangle().stroke(Color.paperRule.opacity(0.35), lineWidth: 0.8))
                 .accessibilityLabel(alt ?? "")
                 if let alt, alt.isEmpty == false {
+                    // Print-style caption: mono, like a photo credit line.
                     Text(alt)
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
+                        .font(.paperMeta)
+                        .foregroundStyle(Color.paperRule)
                         .fixedSize(horizontal: false, vertical: true)
                 }
             }
@@ -85,12 +83,12 @@ struct ArticleBlockListView: View {
                 ForEach(Array(items.enumerated()), id: \.offset) { index, item in
                     HStack(alignment: .firstTextBaseline, spacing: 10) {
                         Text(ordered ? "\(index + 1)." : "•")
-                            .font(.body.weight(.semibold))
-                            .foregroundStyle(.secondary)
+                            .font(.paperBody.weight(.semibold))
+                            .foregroundStyle(Color.paperRule)
                             .accessibilityHidden(true)
                         Text(item)
-                            .font(.body)
-                            .lineSpacing(2)
+                            .font(.paperBody)
+                            .lineSpacing(3)
                             .fixedSize(horizontal: false, vertical: true)
                     }
                 }
@@ -98,12 +96,12 @@ struct ArticleBlockListView: View {
             .padding(.leading, 4)
         case .quote(let text):
             HStack(alignment: .top, spacing: 12) {
-                RoundedRectangle(cornerRadius: 2)
-                    .fill(Color.accentColor.opacity(0.7))
-                    .frame(width: 4)
+                Rectangle()
+                    .fill(Color.paperInk)
+                    .frame(width: 2)
                 Text(text)
-                    .font(.title3.italic())
-                    .foregroundStyle(.primary)
+                    .font(.system(.title3, design: .serif).italic())
+                    .foregroundStyle(Color.paperInk)
                     .lineSpacing(4)
                     .fixedSize(horizontal: false, vertical: true)
             }
@@ -116,17 +114,18 @@ struct ArticleBlockListView: View {
                     .textSelection(.enabled)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color.secondary.opacity(0.12), in: RoundedRectangle(cornerRadius: 8))
+            .background(Color.paperRule.opacity(0.12))
+            .overlay(Rectangle().stroke(Color.paperRule.opacity(0.35), lineWidth: 0.8))
         }
     }
 
     private static func headingFont(level: Int) -> Font {
         switch level {
-        case 1: return .title
-        case 2: return .title2
-        case 3: return .title3
-        case 4: return .headline
-        default: return .subheadline
+        case 1: return .system(.title, design: .serif)
+        case 2: return .system(.title2, design: .serif)
+        case 3: return .system(.title3, design: .serif)
+        case 4: return .system(.headline, design: .serif)
+        default: return .system(.subheadline, design: .serif)
         }
     }
 

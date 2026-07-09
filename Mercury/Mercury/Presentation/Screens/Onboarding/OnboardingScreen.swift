@@ -46,10 +46,11 @@ struct OnboardingScreen: View {
                 Section {
                     VStack(alignment: .leading, spacing: 8) {
                         Text(Self.title)
-                            .font(.title2.weight(.semibold))
+                            .font(.paperTitle)
+                            .foregroundStyle(Color.paperInk)
                         Text(Self.subtitle)
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
+                            .font(.paperCallout)
+                            .foregroundStyle(Color.paperRule)
                     }
                     .padding(.vertical, 8)
                 }
@@ -66,10 +67,11 @@ struct OnboardingScreen: View {
                     .accessibilityIdentifier("onboarding.continue")
                 } footer: {
                     Text(Self.footerLabel)
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
+                        .font(.paperMeta)
+                        .foregroundStyle(Color.paperRule)
                 }
             }
+            .paperScreen()
             .navigationTitle(Self.navigationTitle)
             .navigationBarTitleDisplayMode(.inline)
             .task {

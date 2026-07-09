@@ -29,12 +29,15 @@ struct FeedSourcesPicker: View {
                         set: { _ in viewModel.toggleSource(outlet.source) }
                     )) {
                         Text(outlet.source.outletName)
-                            .font(.callout)
+                            .font(.paperCallout)
+                            .foregroundStyle(Color.paperInk)
                     }
                     .accessibilityIdentifier("feed_sources.source.\(outlet.source.id)")
                 }
             } header: {
-                Text(Self.singleRegionSectionLabel)
+                Text(Self.singleRegionSectionLabel.uppercased())
+                    .font(.paperBadge)
+                    .foregroundStyle(Color.paperRule)
             }
         } else {
             multiRegionBody

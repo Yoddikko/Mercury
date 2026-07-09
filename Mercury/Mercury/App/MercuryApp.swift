@@ -14,6 +14,9 @@ struct MercuryApp: App {
     private let logger = AppLogger.shared
 
     init() {
+        // Paper design system (issue #105): serif navigation titles are
+        // only reachable through UIKit appearance.
+        PaperAppearance.applyNavigationTitleFonts()
         logger.info(
             "Application initialized",
             category: .system,
