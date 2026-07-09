@@ -102,17 +102,9 @@ nonisolated struct FeedTopicAggregationService: Sendable {
             }
         }
 
-        let result = clusters
-            .map { memberIndexes in build(from: memberIndexes.map { recent[$0] }) }
-            .sorted { lhs, rhs in
-                if lhs.sourceCount != rhs.sourceCount {
-                    return lhs.sourceCount > rhs.sourceCount
-                }
-                let lhsMain = isMainOutlet(lhs.lead)
-                let rhsMain = isMainOutlet(rhs.lead)
-                if lhsMain != rhsMain { return lhsMain }
-                return lhs.lead.publishedAt > rhs.lead.publishedAt
-            }
+        let result = sort(
+            clusters.map { memberIndexes in build(from: memberIndexes.map { recent[$0] }) }
+        )
 
         logger.info(
             "Topic aggregation completed",
@@ -130,7 +122,60 @@ nonisolated struct FeedTopicAggregationService: Sendable {
         return result
     }
 
+    /// Builds clusters from provider-made id groups (issue #113),
+    /// reusing the same lead selection and coverage ordering as the
+    /// lexical path. Articles outside the 24h window are ignored;
+    /// in-window articles not mentioned in any group become singletons.
+    func clusters(
+        fromGroups groups: [[String]],
+        articles: [Article],
+        now: Date = .now,
+        requestID: String? = nil
+    ) -> [TopicCluster] {
+        let cutoff = now.addingTimeInterval(-Self.recencyWindow)
+        let recent = articles.filter { $0.publishedAt >= cutoff }
+        let byID = Dictionary(uniqueKeysWithValues: recent.map { ($0.id, $0) })
+
+        var grouped: Set<String> = []
+        var result: [TopicCluster] = []
+        for group in groups {
+            let members = group.compactMap { byID[$0] }
+            guard members.count >= 2 else { continue }
+            grouped.formUnion(members.map(\.id))
+            result.append(build(from: members))
+        }
+        for article in recent where grouped.contains(article.id) == false {
+            result.append(build(from: [article]))
+        }
+
+        let sorted = sort(result)
+        logger.info(
+            "AI topic groups applied",
+            category: .business,
+            service: "FeedTopicAggregationService",
+            requestID: requestID,
+            metadata: [
+                "groups_in": "\(groups.count)",
+                "clusters": "\(sorted.count)",
+                "aggregated": "\(sorted.filter(\.isAggregated).count)"
+            ]
+        )
+        return sorted
+    }
+
     // MARK: - Cluster assembly
+
+    private func sort(_ clusters: [TopicCluster]) -> [TopicCluster] {
+        clusters.sorted { lhs, rhs in
+            if lhs.sourceCount != rhs.sourceCount {
+                return lhs.sourceCount > rhs.sourceCount
+            }
+            let lhsMain = isMainOutlet(lhs.lead)
+            let rhsMain = isMainOutlet(rhs.lead)
+            if lhsMain != rhsMain { return lhsMain }
+            return lhs.lead.publishedAt > rhs.lead.publishedAt
+        }
+    }
 
     private func build(from articles: [Article]) -> TopicCluster {
         // Lead: image first (the card shows a thumbnail only for the

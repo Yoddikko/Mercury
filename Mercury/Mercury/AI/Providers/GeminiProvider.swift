@@ -87,6 +87,25 @@ struct GeminiProvider: AIProvider {
         return try AIProviderSupport.normalizedTags(from: output)
     }
 
+    nonisolated func groupHeadlines(_ headlines: String, requestID: String?) async throws -> [[String]] {
+        logger.debug(
+            "Running headline grouping operation",
+            category: .business,
+            service: "GeminiProvider",
+            requestID: requestID,
+            metadata: [
+                "provider": id.rawValue,
+                "model": model
+            ]
+        )
+
+        let output = try await runPrompt(
+            prompt: AIPromptBuilder.headlineGroupingPrompt(for: headlines),
+            requestID: requestID
+        )
+        return try AIProviderSupport.normalizedHeadlineGroups(from: output)
+    }
+
     nonisolated private func runPrompt(
         prompt: String,
         requestID: String?

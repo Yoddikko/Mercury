@@ -183,8 +183,8 @@ struct HomeScreen: View {
                 Label(viewModel.topicsEmptyLabel, systemImage: "newspaper")
             }
             .accessibilityIdentifier("home.topics.empty")
-        case let .ready(clusters):
-            topicsList(clusters: clusters)
+        case let .ready(clusters, method):
+            topicsList(clusters: clusters, method: method)
         }
     }
 
@@ -208,10 +208,30 @@ struct HomeScreen: View {
         .task { viewModel.refreshTopicsIfNeeded() }
     }
 
-    private func topicsList(clusters: [TopicCluster]) -> some View {
+    private func topicsList(
+        clusters: [TopicCluster],
+        method: HomeViewModel.TopicAggregationMethod
+    ) -> some View {
         let aggregated = clusters.filter(\.isAggregated)
         let singles = clusters.filter { $0.isAggregated == false }
         return List {
+            // Small AI indicator (issue #113): tells the user the
+            // grouping came from the configured provider.
+            if method == .ai {
+                Section {
+                    HStack(spacing: 6) {
+                        Image(systemName: "sparkles")
+                            .font(.caption2)
+                        Text(viewModel.topicsAIAggregatedLabel.uppercased())
+                            .font(.paperBadge)
+                    }
+                    .foregroundStyle(Color.paperRule)
+                    .listRowSeparator(.hidden)
+                    .accessibilityElement(children: .combine)
+                    .accessibilityLabel(viewModel.topicsAIAggregatedLabel)
+                    .accessibilityIdentifier("home.topics.ai_badge")
+                }
+            }
             Section {
                 ForEach(aggregated) { cluster in
                     TopicClusterCard(

@@ -45,9 +45,24 @@ final class HomeViewModel: ObservableObject {
     enum TopicFeedState: Equatable {
         case idle
         case aggregating
-        case ready(clusters: [TopicCluster])
+        case ready(clusters: [TopicCluster], method: TopicAggregationMethod)
         case empty
     }
+
+    /// How the current topic clusters were produced (issue #113): the
+    /// configured AI provider, or the on-device lexical fallback. The UI
+    /// shows a sparkles indicator for AI-made groupings.
+    enum TopicAggregationMethod: Equatable {
+        case lexical
+        case ai
+    }
+
+    /// Seam for provider-made grouping (issue #113): takes the last-24h
+    /// articles and returns groups of article ids. `nil` or a throw
+    /// means "use the lexical aggregation". Production wires
+    /// `AIService.groupArticleHeadlines`, which throws when no provider
+    /// is configured.
+    typealias TopicAIGrouper = @Sendable (_ articles: [Article], _ requestID: String) async throws -> [[String]]
 
     /// Feed refresh seam. Callers pass the pre-resolved source list they
     /// want the pipeline to hit. Production wraps `FetchHomeFeedUseCase`;
@@ -69,6 +84,7 @@ final class HomeViewModel: ObservableObject {
     private let maxDisplayedArticles: Int
     private let ranker = FeedRankingService()
     private let topicAggregator = FeedTopicAggregationService()
+    private let topicAIGrouper: TopicAIGrouper?
     private var topicTask: Task<Void, Never>?
     /// Article ids the current `topicState` was computed from — skips
     /// pointless re-aggregation when switching tabs back and forth.
@@ -87,7 +103,8 @@ final class HomeViewModel: ObservableObject {
     convenience init(
         fetchHomeFeedUseCase: FetchHomeFeedUseCase,
         sourceFilter: RSSSourceFilter = RSSSourceFilter(),
-        isDeveloperModeEnabled: Bool = DeveloperMode.isEnabled
+        isDeveloperModeEnabled: Bool = DeveloperMode.isEnabled,
+        topicAIGrouper: TopicAIGrouper? = nil
     ) {
         self.init(
             feedRefreshAction: { sources in
@@ -99,7 +116,8 @@ final class HomeViewModel: ObservableObject {
                 )
             },
             sourceFilter: sourceFilter,
-            isDeveloperModeEnabled: isDeveloperModeEnabled
+            isDeveloperModeEnabled: isDeveloperModeEnabled,
+            topicAIGrouper: topicAIGrouper
         )
     }
 
@@ -111,11 +129,13 @@ final class HomeViewModel: ObservableObject {
         sourceFilter: RSSSourceFilter = RSSSourceFilter(),
         isDeveloperModeEnabled: Bool = DeveloperMode.isEnabled,
         logger: AppLogger = .shared,
-        maxDisplayedArticles: Int = 50
+        maxDisplayedArticles: Int = 50,
+        topicAIGrouper: TopicAIGrouper? = nil
     ) {
         self.feedRefreshAction = feedRefreshAction
         self.sourceFilter = sourceFilter
         self.isDeveloperModeEnabled = isDeveloperModeEnabled
+        self.topicAIGrouper = topicAIGrouper
         self.logger = logger
         self.maxDisplayedArticles = max(1, maxDisplayedArticles)
         logger.debug(
@@ -194,6 +214,13 @@ final class HomeViewModel: ObservableObject {
 
     var topicsOthersSectionTitle: String {
         String(localized: "home.topics.others", defaultValue: "More news")
+    }
+
+    var topicsAIAggregatedLabel: String {
+        String(
+            localized: "home.topics.ai_aggregated",
+            defaultValue: "Grouped with AI"
+        )
     }
 
     func topicsCoverageLabel(sourceCount: Int) -> String {
@@ -549,17 +576,56 @@ final class HomeViewModel: ObservableObject {
             category: .ui,
             service: "HomeViewModel",
             requestID: requestID,
-            metadata: ["articles": "\(articles.count)"]
+            metadata: [
+                "articles": "\(articles.count)",
+                "ai_grouper": "\(topicAIGrouper != nil)"
+            ]
         )
         topicTask?.cancel()
         let aggregator = topicAggregator
-        topicTask = Task { [weak self] in
-            let clusters = await Task.detached(priority: .userInitiated) {
-                aggregator.aggregate(articles: articles, requestID: requestID)
-            }.value
+        let aiGrouper = topicAIGrouper
+        topicTask = Task { [weak self, logger] in
+            // AI first when wired (issue #113): the grouper throws when
+            // no provider is configured or the call fails, and the flow
+            // falls back to the on-device lexical clustering — the feed
+            // never degrades because of the provider.
+            var clusters: [TopicCluster]?
+            var method = TopicAggregationMethod.lexical
+            if let aiGrouper {
+                do {
+                    let cutoff = Date().addingTimeInterval(-FeedTopicAggregationService.recencyWindow)
+                    let recent = articles.filter { $0.publishedAt >= cutoff }
+                    if recent.count >= 2 {
+                        let groups = try await aiGrouper(recent, requestID)
+                        clusters = aggregator.clusters(
+                            fromGroups: groups,
+                            articles: articles,
+                            requestID: requestID
+                        )
+                        method = .ai
+                    }
+                } catch {
+                    logger.info(
+                        "AI topic grouping unavailable, falling back to lexical",
+                        category: .business,
+                        service: "HomeViewModel",
+                        requestID: requestID,
+                        metadata: ["error": String(describing: error)]
+                    )
+                }
+            }
+            if clusters == nil {
+                clusters = await Task.detached(priority: .userInitiated) {
+                    aggregator.aggregate(articles: articles, requestID: requestID)
+                }.value
+                method = .lexical
+            }
             guard let self, Task.isCancelled == false else { return }
             guard self.topicInputIDs == inputIDs else { return }
-            self.topicState = clusters.isEmpty ? .empty : .ready(clusters: clusters)
+            let resolved = clusters ?? []
+            self.topicState = resolved.isEmpty
+                ? .empty
+                : .ready(clusters: resolved, method: method)
         }
     }
 

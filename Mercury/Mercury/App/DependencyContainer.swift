@@ -46,7 +46,19 @@ struct DependencyContainer {
             feedRefreshService: FeedRefreshService(),
             articleRepository: repository
         )
-        return HomeViewModel(fetchHomeFeedUseCase: useCase)
+        // Topic grouping via the configured AI provider (issue #113):
+        // AIService throws when unconfigured and the view model falls
+        // back to the lexical aggregation.
+        let aiService = AIService()
+        return HomeViewModel(
+            fetchHomeFeedUseCase: useCase,
+            topicAIGrouper: { articles, requestID in
+                try await aiService.groupArticleHeadlines(
+                    articles.map { (id: $0.id, title: $0.title) },
+                    requestID: requestID
+                )
+            }
+        )
     }
 
     /// Build the summarize closure consumed by `ArticleDetailViewModel`.

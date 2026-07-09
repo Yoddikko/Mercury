@@ -125,6 +125,32 @@ struct FeedTopicAggregationServiceTests {
         #expect(clusters[0].sourceCount == 2)
     }
 
+    @Test
+    func aiGroupsAreAppliedAndUnmentionedArticlesBecomeSingletons() {
+        let service = Self.makeService()
+        let articles = [
+            Self.article(id: "a", source: "ansa", title: "Titolo uno", minutesAgo: 10),
+            Self.article(id: "b", source: "repubblica", title: "Titolo due", minutesAgo: 20, hasImage: true),
+            Self.article(id: "c", source: "corriere", title: "Titolo tre", minutesAgo: 30),
+            Self.article(id: "stale", source: "ansa", title: "Vecchio titolo", minutesAgo: 60 * 30)
+        ]
+        let clusters = service.clusters(
+            fromGroups: [["a", "b"], ["stale", "c"], ["ghost", "c"]],
+            articles: articles,
+            now: Self.now
+        )
+
+        // ["a","b"] applies; ["stale","c"] and ["ghost","c"] collapse
+        // below 2 in-window members, so "c" falls out as a singleton;
+        // "stale" is outside the 24h window entirely.
+        #expect(clusters.count == 2)
+        #expect(clusters[0].isAggregated)
+        #expect(clusters[0].sourceCount == 2)
+        #expect(clusters[0].lead.id == "b")
+        #expect(clusters[1].lead.id == "c")
+        #expect(clusters[1].isAggregated == false)
+    }
+
     // MARK: - Helpers
 
     private static func article(
