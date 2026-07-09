@@ -303,7 +303,10 @@ actor AIService {
         requestID: String? = nil
     ) async throws -> [[String]] {
         let flowRequestID = requestID ?? Self.generateRequestID(prefix: "ai-topics")
-        let provider = try resolveActiveProvider(requestID: flowRequestID)
+        let provider = try resolveActiveProvider(
+            requestID: flowRequestID,
+            minimumTimeoutSeconds: 60
+        )
         let input = headlines
             .map { headline in
                 // Truncated titles keep the prompt compact so large
@@ -442,7 +445,10 @@ actor AIService {
         }
     }
 
-    private func resolveActiveProvider(requestID: String?) throws -> any AIProvider {
+    private func resolveActiveProvider(
+        requestID: String?,
+        minimumTimeoutSeconds: Double? = nil
+    ) throws -> any AIProvider {
         let configuration = configurationStore.loadConfiguration()
         let providerID = configuration.activeProviderID
         try validateTimeout(configuration.timeoutSeconds)
@@ -482,12 +488,16 @@ actor AIService {
             throw AIServiceError.missingToken(providerID)
         }
 
+        // Long batch operations (headline grouping) pass a minimum:
+        // slow-first-token models routinely exceed the 20s default and
+        // the silent timeout looked like "AI never works" (issue #121).
+        let timeoutSeconds = max(configuration.timeoutSeconds, minimumTimeoutSeconds ?? 0)
         let context = AIProviderRuntimeContext(
             providerID: providerID,
             model: model,
             token: token,
             ollamaEndpoint: configuration.ollamaEndpoint,
-            timeoutSeconds: configuration.timeoutSeconds,
+            timeoutSeconds: timeoutSeconds,
             logger: logger
         )
 
