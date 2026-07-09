@@ -166,7 +166,9 @@ struct AIServiceTests {
     }
 
     @Test
-    func updateConfigurationFailsWhenActiveProviderModelIsMissing() async {
+    func updateConfigurationAllowsMissingModelForActiveProvider() async throws {
+        // Issue #119: a key-only configuration (no model picked) is valid;
+        // resolution falls back to the provider default at call time.
         var configuration = completeConfiguration(active: .openAI)
         configuration.setModel("", for: .openAI)
 
@@ -178,17 +180,48 @@ struct AIServiceTests {
             }
         )
 
-        do {
-            _ = try await service.updateProviderConfiguration(configuration)
-            Issue.record("Expected invalid configuration error.")
-        } catch let error as AIServiceError {
-            guard case .invalidConfiguration = error else {
-                Issue.record("Expected .invalidConfiguration, got \(error)")
-                return
+        _ = try await service.updateProviderConfiguration(configuration)
+    }
+
+    @Test
+    func emptyModelResolvesToProviderDefault() async throws {
+        var configuration = completeConfiguration(active: .openAI)
+        configuration.setModel("", for: .openAI)
+
+        let configurationStore = InMemoryAIProviderConfigurationStore(
+            initialConfiguration: configuration
+        )
+        let credentialStore = InMemoryAIProviderCredentialStore(
+            initialTokens: [.openAI: "token-openai"]
+        )
+        // The factory is synchronous — capture with a locked box.
+        final class ModelCapture: @unchecked Sendable {
+            private let lock = NSLock()
+            private var models: [String] = []
+            func record(_ model: String) {
+                lock.lock()
+                defer { lock.unlock() }
+                models.append(model)
             }
-        } catch {
-            Issue.record("Unexpected error type: \(error)")
+            var snapshot: [String] {
+                lock.lock()
+                defer { lock.unlock() }
+                return models
+            }
         }
+        let capturedModel = ModelCapture()
+
+        let service = AIService(
+            configurationStore: configurationStore,
+            credentialStore: credentialStore,
+            providerFactory: { context in
+                capturedModel.record(context.model)
+                return FixedAIProvider(id: context.providerID)
+            }
+        )
+
+        _ = try await service.summarizeArticle("Body")
+        #expect(capturedModel.snapshot == [AIProviderID.openAI.defaultModel])
     }
 
     @Test

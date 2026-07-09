@@ -75,6 +75,10 @@ final class HomeViewModel: ObservableObject {
     @Published private(set) var lastUpdatedAt: Date?
     @Published private(set) var displayMode: FeedDisplayMode = .chronological
     @Published private(set) var topicState: TopicFeedState = .idle
+    /// Why the AI grouping path fell back to lexical, when it did — the
+    /// Topics UI surfaces it so the user isn't left guessing why the AI
+    /// indicator never appears (issue #119).
+    @Published private(set) var topicAIFailureMessage: String?
 
     let isDeveloperModeEnabled: Bool
 
@@ -223,6 +227,21 @@ final class HomeViewModel: ObservableObject {
         )
     }
 
+    var topicsAIUnavailableLabel: String {
+        String(
+            localized: "home.topics.ai_unavailable",
+            defaultValue: "AI grouping unavailable — grouped on device"
+        )
+    }
+
+    func topicsArticlesCountLabel(count: Int) -> String {
+        let format = String(
+            localized: "home.topics.articles_count",
+            defaultValue: "%lld articles"
+        )
+        return String(format: format, locale: .current, count)
+    }
+
     func topicsCoverageLabel(sourceCount: Int) -> String {
         let format = String(
             localized: "home.topics.coverage",
@@ -231,13 +250,6 @@ final class HomeViewModel: ObservableObject {
         return String(format: format, locale: .current, sourceCount)
     }
 
-    func topicsMoreArticlesLabel(count: Int) -> String {
-        let format = String(
-            localized: "home.topics.more_articles",
-            defaultValue: "+ %lld more articles"
-        )
-        return String(format: format, locale: .current, count)
-    }
 
     var articlesSectionTitle: String {
         String(localized: "home.section.articles", defaultValue: "Latest Articles")
@@ -541,13 +553,18 @@ final class HomeViewModel: ObservableObject {
 
     // MARK: - Topic aggregation (issue #109)
 
-    /// Cap on the last-24h corpus fetched from the cache for topics.
-    /// ponytail: 300 rows keeps the O(n²) lexical pass in the tens of
-    /// milliseconds — raise with evidence.
-    static let topicsCorpusLimit = 300
-    /// Cap on the headlines sent to the AI grouper (issue #117): keeps
-    /// the prompt small enough to avoid truncated JSON and timeouts.
-    static let topicsAIHeadlineLimit = 80
+    /// Rows fetched from the cache for the topics corpus. 42 feeds
+    /// produce hundreds of articles per hour, so a small newest-first
+    /// fetch silently truncated the 24h window to ~2 hours (issue #119).
+    static let topicsCorpusFetchLimit = 800
+    /// Per-outlet cap applied after the fetch: prevents a single prolific
+    /// wire (ANSA alone can flood 100+ rows) from crowding the window and
+    /// keeps the O(n²) lexical pass bounded.
+    static let topicsPerSourceCap = 20
+    /// Cap on the headlines sent to the AI grouper: keeps the prompt
+    /// small enough to avoid truncated JSON and timeouts (issue #117).
+    /// The sample is source-balanced, not "newest N" (issue #119).
+    static let topicsAIHeadlineLimit = 100
 
     /// Switches the Home feed between chronological and topics; the
     /// first switch to topics (or after a refresh) kicks aggregation.
@@ -597,6 +614,7 @@ final class HomeViewModel: ObservableObject {
 
         topicInputIDs = inputIDs
         topicState = .aggregating
+        topicAIFailureMessage = nil
         let requestID = "home-topics-\(UUID().uuidString.lowercased())"
         logger.info(
             "Topic aggregation started",
@@ -626,7 +644,7 @@ final class HomeViewModel: ObservableObject {
             if let container {
                 let store = ArticleLocalStore(modelContainer: container)
                 if let fetched = try? await store.fetchRecentFeedArticles(
-                    limit: Self.topicsCorpusLimit,
+                    limit: Self.topicsCorpusFetchLimit,
                     since: cutoff,
                     requestID: requestID
                 ), fetched.isEmpty == false {
@@ -638,6 +656,9 @@ final class HomeViewModel: ObservableObject {
                     allowList.allows(sourceID: article.sourceID, sourceName: article.sourceName)
                 }
             }
+            // Per-outlet cap so one prolific wire cannot crowd the 24h
+            // window out of the corpus (issue #119).
+            corpus = Self.cappingPerSource(corpus, cap: Self.topicsPerSourceCap)
 
             // AI first when wired (issue #113): the grouper throws when
             // no provider is configured or the call fails, and the flow
@@ -647,10 +668,14 @@ final class HomeViewModel: ObservableObject {
             // reliable; ungrouped corpus articles become singletons.
             var clusters: [TopicCluster]?
             var method = TopicAggregationMethod.lexical
+            var aiFailure: String?
             if let aiGrouper {
                 do {
                     let recent = corpus.filter { $0.publishedAt >= cutoff }
-                    let candidates = Array(recent.prefix(Self.topicsAIHeadlineLimit))
+                    // Source-balanced sample: "newest N" collapsed the
+                    // AI's view to minutes; round-robin by outlet spans
+                    // the whole day (issue #119).
+                    let candidates = Self.balancedSample(recent, limit: Self.topicsAIHeadlineLimit)
                     if candidates.count >= 2 {
                         let groups = try await aiGrouper(candidates, requestID)
                         clusters = aggregator.clusters(
@@ -661,6 +686,7 @@ final class HomeViewModel: ObservableObject {
                         method = .ai
                     }
                 } catch {
+                    aiFailure = error.localizedDescription
                     logger.info(
                         "AI topic grouping unavailable, falling back to lexical",
                         category: .business,
@@ -679,11 +705,52 @@ final class HomeViewModel: ObservableObject {
             }
             guard let self, Task.isCancelled == false else { return }
             guard self.topicInputIDs == inputIDs else { return }
+            self.topicAIFailureMessage = aiFailure
             let resolved = clusters ?? []
             self.topicState = resolved.isEmpty
                 ? .empty
                 : .ready(clusters: resolved, method: method)
         }
+    }
+
+    /// Keeps at most `cap` articles per outlet, preserving order.
+    nonisolated private static func cappingPerSource(_ articles: [Article], cap: Int) -> [Article] {
+        var counts: [String: Int] = [:]
+        return articles.filter { article in
+            let key = article.sourceID ?? article.sourceName
+            let count = counts[key, default: 0]
+            guard count < cap else { return false }
+            counts[key] = count + 1
+            return true
+        }
+    }
+
+    /// Round-robin sample across outlets up to `limit`: every source
+    /// contributes its newest article before any source contributes its
+    /// second, so the sample spans the whole window.
+    nonisolated private static func balancedSample(_ articles: [Article], limit: Int) -> [Article] {
+        guard articles.count > limit else { return articles }
+        var bySource: [String: [Article]] = [:]
+        var sourceOrder: [String] = []
+        for article in articles {
+            let key = article.sourceID ?? article.sourceName
+            if bySource[key] == nil { sourceOrder.append(key) }
+            bySource[key, default: []].append(article)
+        }
+        var sample: [Article] = []
+        var round = 0
+        while sample.count < limit {
+            var added = false
+            for key in sourceOrder where sample.count < limit {
+                if let sourceArticles = bySource[key], round < sourceArticles.count {
+                    sample.append(sourceArticles[round])
+                    added = true
+                }
+            }
+            if added == false { break }
+            round += 1
+        }
+        return sample
     }
 
     private func currentPreferences() -> UserPreference? {

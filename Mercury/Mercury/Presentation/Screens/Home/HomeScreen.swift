@@ -216,7 +216,9 @@ struct HomeScreen: View {
         let singles = clusters.filter { $0.isAggregated == false }
         return List {
             // Small AI indicator (issue #113): tells the user the
-            // grouping came from the configured provider.
+            // grouping came from the configured provider. When the AI
+            // path failed, say so instead of leaving the user guessing
+            // (issue #119).
             if method == .ai {
                 Section {
                     HStack(spacing: 6) {
@@ -231,12 +233,21 @@ struct HomeScreen: View {
                     .accessibilityLabel(viewModel.topicsAIAggregatedLabel)
                     .accessibilityIdentifier("home.topics.ai_badge")
                 }
+            } else if viewModel.topicAIFailureMessage != nil {
+                Section {
+                    Text(viewModel.topicsAIUnavailableLabel.uppercased())
+                        .font(.paperBadge)
+                        .foregroundStyle(Color.paperRule)
+                        .listRowSeparator(.hidden)
+                        .accessibilityIdentifier("home.topics.ai_unavailable")
+                }
             }
             Section {
                 ForEach(aggregated) { cluster in
                     TopicClusterCard(
                         cluster: cluster,
                         viewModel: viewModel,
+                        isAIGrouped: method == .ai,
                         destination: { article in articleDestination(article) }
                     )
                     .listRowSeparator(.hidden)
@@ -396,17 +407,16 @@ struct HomeScreen: View {
     }
 }
 
-/// One aggregated story (issue #109/#117): coverage badge, lead with
-/// the only thumbnail, member titles as a preview. The whole card is a
-/// single tap target opening `TopicClusterScreen`, where the user picks
-/// which outlet's article to read.
+/// One aggregated story (issues #109/#117/#119): kept deliberately
+/// lean — coverage badge (with a sparkles mark when the grouping came
+/// from the AI provider), the lead headline with the card's only
+/// thumbnail, and one meta line. The full article list lives in
+/// `TopicClusterScreen`; the whole card is a single tap target.
 private struct TopicClusterCard: View {
     let cluster: TopicCluster
     let viewModel: HomeViewModel
+    let isAIGrouped: Bool
     let destination: (Article) -> ArticleDetailScreen
-
-    /// Space management: at most this many member titles per card.
-    private static let maxVisibleMembers = 3
 
     var body: some View {
         NavigationLink {
@@ -424,47 +434,35 @@ private struct TopicClusterCard: View {
 
     private var cardBody: some View {
         VStack(alignment: .leading, spacing: 8) {
-            PaperBadge(text: viewModel.topicsCoverageLabel(sourceCount: cluster.sourceCount))
-                .accessibilityIdentifier("home.topics.coverage")
+            HStack(spacing: 6) {
+                PaperBadge(text: viewModel.topicsCoverageLabel(sourceCount: cluster.sourceCount))
+                    .accessibilityIdentifier("home.topics.coverage")
+                if isAIGrouped {
+                    Image(systemName: "sparkles")
+                        .font(.caption2)
+                        .foregroundStyle(Color.paperRule)
+                        .accessibilityLabel(viewModel.topicsAIAggregatedLabel)
+                }
+            }
 
             HStack(alignment: .top, spacing: 12) {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(cluster.lead.title)
                         .font(.paperHeadline)
                         .foregroundStyle(Color.paperInk)
-                    Text(viewModel.articleMetadataLine(
-                        sourceName: cluster.lead.sourceName,
-                        publishedAt: cluster.lead.publishedAt
-                    ))
+                    Text(
+                        viewModel.topicsArticlesCountLabel(count: cluster.members.count + 1)
+                            + " · "
+                            + viewModel.articleMetadataLine(
+                                sourceName: cluster.lead.sourceName,
+                                publishedAt: cluster.lead.publishedAt
+                            )
+                    )
                     .font(.paperMeta)
                     .foregroundStyle(Color.paperRule)
                 }
                 Spacer(minLength: 0)
                 leadThumbnail
-            }
-
-            ForEach(cluster.members.prefix(Self.maxVisibleMembers)) { member in
-                HStack(alignment: .firstTextBaseline, spacing: 8) {
-                    Text(member.sourceName.uppercased())
-                        .font(.paperBadge)
-                        .foregroundStyle(Color.paperRule)
-                        .lineLimit(1)
-                        .layoutPriority(1)
-                    Text(member.title)
-                        .font(.paperCallout)
-                        .foregroundStyle(Color.paperInk)
-                        .lineLimit(2)
-                }
-                .padding(.leading, 12)
-            }
-
-            if cluster.members.count > Self.maxVisibleMembers {
-                Text(viewModel.topicsMoreArticlesLabel(
-                    count: cluster.members.count - Self.maxVisibleMembers
-                ))
-                .font(.paperMeta)
-                .foregroundStyle(Color.paperRule)
-                .padding(.leading, 12)
             }
 
             PaperRule()

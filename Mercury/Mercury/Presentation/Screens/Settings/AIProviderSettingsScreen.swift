@@ -117,7 +117,9 @@ struct AIProviderSettingsScreen: View {
 
     private var modelSection: some View {
         Section {
-            TextField(Self.modelPlaceholder, text: activeModelBinding)
+            // Placeholder shows the default that will be used when the
+            // field stays empty (issue #119) — a key-only setup works.
+            TextField(viewModel.activeProviderID.defaultModel, text: activeModelBinding)
                 .font(.system(.callout, design: .monospaced))
                 .autocorrectionDisabled()
                 .textInputAutocapitalization(.never)
@@ -296,10 +298,6 @@ struct AIProviderSettingsScreen: View {
 
     private static var modelHeader: String {
         String(localized: "settings.ai.section.model", defaultValue: "Model")
-    }
-
-    private static var modelPlaceholder: String {
-        String(localized: "settings.ai.model.placeholder", defaultValue: "Model id")
     }
 
     private static var loadModelsLabel: String {
