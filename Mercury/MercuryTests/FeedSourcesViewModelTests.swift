@@ -10,49 +10,42 @@ import SwiftData
 import Testing
 @testable import Mercury
 
-/// Regression coverage for issue #78 — the picker is opt-in, so a fresh
-/// install must NOT surface every region as pre-selected, and the
-/// persisted `enabledRegionRawValues` must be exactly the user's picks.
+/// Regression coverage for issues #78 and #102 — the persisted
+/// `enabledRegionRawValues` must be exactly the explicit opt-in list.
+/// With the Italy-only catalog (#102) the picker hides the region row,
+/// so `load()` auto-enables the lone region.
 @MainActor
 @Suite("FeedSourcesViewModel")
 struct FeedSourcesViewModelTests {
     @Test
-    func freshInstallStartsWithEveryRegionDisabled() throws {
-        let (viewModel, _) = try makeViewModel()
-
-        viewModel.load()
-
-        #expect(viewModel.regions.isEmpty == false)
-        #expect(viewModel.regions.allSatisfy { $0.isEnabled == false })
-        #expect(viewModel.hasAtLeastOneRegionEnabled == false)
-    }
-
-    @Test
-    func toggleRegionPersistsExplicitOptInAndFlipsRowOptimistically() throws {
+    func singleRegionCatalogAutoEnablesItalyOnLoad() throws {
+        // Italy-only scope (issue #102): the catalog exposes one region
+        // and the picker hides the region row, so `load()` must enable
+        // it automatically and persist the explicit opt-in.
         let (viewModel, service) = try makeViewModel()
+
         viewModel.load()
 
-        viewModel.toggleRegion(.italy)
-
-        let italian = viewModel.regions.first(where: { $0.region == .italy })
-        #expect(italian?.isEnabled == true)
-        // Only italy is written — no lingering "all regions" magic.
+        #expect(viewModel.isSingleRegionCatalog == true)
+        #expect(viewModel.regions.count == 1)
+        #expect(viewModel.regions.first?.region == .italy)
+        #expect(viewModel.regions.first?.isEnabled == true)
+        #expect(viewModel.hasAtLeastOneRegionEnabled == true)
         let stored = try service.loadPreferences()
         #expect(stored.enabledRegionRawValues == [RSSFeedRegion.italy.rawValue])
-        #expect(viewModel.hasAtLeastOneRegionEnabled == true)
     }
 
     @Test
     func toggleRegionOffRemovesItFromExplicitList() throws {
         let (viewModel, service) = try makeViewModel()
         viewModel.load()
-        viewModel.toggleRegion(.italy)
-        viewModel.toggleRegion(.france)
 
+        // Auto-enabled on load; an explicit toggle still removes it from
+        // the persisted opt-in list (no "empty = all" magic).
         viewModel.toggleRegion(.italy)
 
         let stored = try service.loadPreferences()
-        #expect(stored.enabledRegionRawValues == [RSSFeedRegion.france.rawValue])
+        #expect(stored.enabledRegionRawValues.isEmpty)
         let italian = viewModel.regions.first(where: { $0.region == .italy })
         #expect(italian?.isEnabled == false)
     }

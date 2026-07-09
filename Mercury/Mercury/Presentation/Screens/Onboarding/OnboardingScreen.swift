@@ -123,7 +123,7 @@ struct OnboardingScreen: View {
     private static var subtitle: String {
         String(
             localized: "onboarding.subtitle",
-            defaultValue: "Pick the regions and outlets you want in your Home feed. You can change this later in Settings."
+            defaultValue: "Pick the Italian outlets you want in your Home feed. You can change this later in Settings."
         )
     }
 

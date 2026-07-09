@@ -118,6 +118,7 @@ final class FeedSourcesViewModel: ObservableObject {
                 )
             }
             lastErrorMessage = nil
+            autoEnableSingleRegionIfNeeded()
         } catch {
             logger.error(
                 "Failed to load feed source preferences",
@@ -189,6 +190,29 @@ final class FeedSourcesViewModel: ObservableObject {
     /// by the onboarding "Continue" button gate.
     var hasAtLeastOneRegionEnabled: Bool {
         regions.contains(where: \.isEnabled)
+    }
+
+    /// Italy-only scope (issue #102): when the catalog exposes a single
+    /// region there is nothing to pick at region level, so the picker
+    /// renders outlets directly and the region is enabled automatically.
+    var isSingleRegionCatalog: Bool {
+        availableRegions.count == 1
+    }
+
+    /// Enables the lone region on load when the catalog is
+    /// single-region and the user has no way to toggle it (the region
+    /// row is not rendered). Idempotent: does nothing once enabled.
+    private func autoEnableSingleRegionIfNeeded() {
+        guard isSingleRegionCatalog,
+              let only = regions.first,
+              only.isEnabled == false else { return }
+        logger.info(
+            "Auto-enabling the only catalog region",
+            category: .ui,
+            service: "FeedSourcesViewModel",
+            metadata: ["region": only.region.rawValue]
+        )
+        toggleRegion(only.region)
     }
 
     // MARK: - Private

@@ -85,12 +85,15 @@ Let the user define which source pools are relevant.
 
 ### Rules
 
-* user can select multiple countries
-* user can include both local and global sources
-* at least one source region should be selected
-* **Opt-in** (issue #78): the picker starts with every region toggled OFF;
-  the persisted list holds only what the user picked. The Continue button
-  stays disabled until at least one region is enabled. See
+* **Italy-only scope (issue #102)**: the shipping catalog exposes a single
+  region (Italy). The region layer stays in the model and the multi-region
+  catalog entries stay in the source behind the `MERCURY_MULTI_REGION`
+  compile flag, but the UI never shows region selection: onboarding lists
+  the Italian outlets directly and the single region is auto-enabled.
+  Re-enabling other regions is future work, out of thesis scope.
+* user can enable/disable individual outlets
+* **Opt-in per outlet** (issue #78): all outlets of the auto-enabled region
+  start ON; the user can hide individual outlets. See
   `docs/features/SETTINGS.md` § Feed sources.
 
 ---

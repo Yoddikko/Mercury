@@ -1,6 +1,6 @@
-"home.title" = "Mercury";
-"home.subtitle" = "Mercury trasforma gli RSS in un'esperienza news strutturata e supportata dall'AI.";
-"home.navigation.title" = "Mercury";
+"home.title" = "Mercurio";
+"home.subtitle" = "Mercurio trasforma gli RSS italiani in un'esperienza news strutturata e supportata dall'AI.";
+"home.navigation.title" = "Mercurio";
 "home.section.feed_modes" = "Modalita feed";
 "home.section.sample_articles" = "Articoli di esempio";
 "home.section.articles" = "Ultimi articoli";
@@ -241,15 +241,16 @@
 "settings.error.save" = "Non siamo riusciti a salvare la modifica. Riprova.";
 "settings.section.feed_sources.title" = "Fonti del feed";
 "settings.section.feed_sources.header" = "Fonti del feed";
-"settings.section.feed_sources.footer" = "Scegli le regioni e le testate che alimentano il feed Home.";
+"settings.section.feed_sources.footer" = "Scegli le testate italiane che alimentano il feed Home.";
 "feed_sources.region.outlets_count" = "%lld testate";
 "feed_sources.region.outlets_section" = "Testate in questa regione";
 "feed_sources.error.load" = "Non siamo riusciti a leggere le tue fonti del feed.";
 "feed_sources.error.save" = "Non siamo riusciti a salvare la modifica. Riprova.";
 "onboarding.navigation.title" = "Benvenuto";
 "onboarding.title" = "Scegli il tuo feed";
-"onboarding.subtitle" = "Seleziona le regioni e le testate che vuoi nel feed Home. Potrai modificare in seguito dalle Impostazioni.";
+"onboarding.subtitle" = "Seleziona le testate italiane che vuoi nel feed Home. Potrai modificare in seguito dalle Impostazioni.";
 "onboarding.continue" = "Continua";
 "onboarding.footer" = "Puoi rivedere queste scelte da Impostazioni → Fonti del feed.";
 
 "router.loading" = "Caricamento";
+"feed_sources.single_region.outlets_section" = "Testate italiane";

@@ -1,6 +1,6 @@
-"home.title" = "Mercury";
-"home.subtitle" = "Mercury turns RSS into a structured AI-assisted news experience.";
-"home.navigation.title" = "Mercury";
+"home.title" = "Mercurio";
+"home.subtitle" = "Mercurio turns Italian RSS into a structured AI-assisted news experience.";
+"home.navigation.title" = "Mercurio";
 "home.section.feed_modes" = "Feed Modes";
 "home.section.sample_articles" = "Sample Articles";
 "home.section.articles" = "Latest Articles";
@@ -241,15 +241,16 @@
 "settings.error.save" = "We couldn't save that change. Try again.";
 "settings.section.feed_sources.title" = "Feed sources";
 "settings.section.feed_sources.header" = "Feed sources";
-"settings.section.feed_sources.footer" = "Choose the regions and outlets that feed the Home stream.";
+"settings.section.feed_sources.footer" = "Choose the Italian outlets that feed the Home stream.";
 "feed_sources.region.outlets_count" = "%lld outlets";
 "feed_sources.region.outlets_section" = "Outlets in this region";
 "feed_sources.error.load" = "We couldn't read your feed source preferences.";
 "feed_sources.error.save" = "We couldn't save that change. Try again.";
 "onboarding.navigation.title" = "Welcome";
 "onboarding.title" = "Choose your feed";
-"onboarding.subtitle" = "Pick the regions and outlets you want in your Home feed. You can change this later in Settings.";
+"onboarding.subtitle" = "Pick the Italian outlets you want in your Home feed. You can change this later in Settings.";
 "onboarding.continue" = "Continue";
 "onboarding.footer" = "You can revisit these choices from Settings → Feed sources.";
 
 "router.loading" = "Loading";
+"feed_sources.single_region.outlets_section" = "Italian outlets";

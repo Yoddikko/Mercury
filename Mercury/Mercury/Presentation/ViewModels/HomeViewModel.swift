@@ -118,18 +118,18 @@ final class HomeViewModel: ObservableObject {
     // MARK: - Public localized copy
 
     var title: String {
-        String(localized: "home.title", defaultValue: "Mercury")
+        String(localized: "home.title", defaultValue: "Mercurio")
     }
 
     var subtitle: String {
         String(
             localized: "home.subtitle",
-            defaultValue: "Mercury turns RSS into a structured AI-assisted news experience."
+            defaultValue: "Mercurio turns Italian RSS into a structured AI-assisted news experience."
         )
     }
 
     var navigationTitle: String {
-        String(localized: "home.navigation.title", defaultValue: "Mercury")
+        String(localized: "home.navigation.title", defaultValue: "Mercurio")
     }
 
     var articlesSectionTitle: String {

@@ -17,6 +17,40 @@ struct FeedSourcesPicker: View {
     @State private var expandedRegions: Set<String> = []
 
     var body: some View {
+        if viewModel.isSingleRegionCatalog, let only = viewModel.regions.first {
+            // Italy-only scope (issue #102): with a single region there is
+            // nothing to choose at region level — list the outlets
+            // directly. The region itself is auto-enabled by the view
+            // model on load.
+            Section {
+                ForEach(viewModel.outlets(for: only.region)) { outlet in
+                    Toggle(isOn: Binding(
+                        get: { outlet.isEnabled },
+                        set: { _ in viewModel.toggleSource(outlet.source) }
+                    )) {
+                        Text(outlet.source.outletName)
+                            .font(.callout)
+                    }
+                    .accessibilityIdentifier("feed_sources.source.\(outlet.source.id)")
+                }
+            } header: {
+                Text(Self.singleRegionSectionLabel)
+            }
+        } else {
+            multiRegionBody
+        }
+
+        if let message = viewModel.lastErrorMessage {
+            Section {
+                Label(message, systemImage: "exclamationmark.triangle")
+                    .foregroundStyle(.orange)
+                    .accessibilityIdentifier("feed_sources.error")
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var multiRegionBody: some View {
         ForEach(viewModel.regions) { selection in
             Section {
                 Toggle(isOn: Binding(
@@ -65,14 +99,6 @@ struct FeedSourcesPicker: View {
                 }
             }
         }
-
-        if let message = viewModel.lastErrorMessage {
-            Section {
-                Label(message, systemImage: "exclamationmark.triangle")
-                    .foregroundStyle(.orange)
-                    .accessibilityIdentifier("feed_sources.error")
-            }
-        }
     }
 
     private static func outletCountLabel(_ count: Int) -> String {
@@ -87,6 +113,13 @@ struct FeedSourcesPicker: View {
         String(
             localized: "feed_sources.region.outlets_section",
             defaultValue: "Outlets in this region"
+        )
+    }
+
+    private static var singleRegionSectionLabel: String {
+        String(
+            localized: "feed_sources.single_region.outlets_section",
+            defaultValue: "Italian outlets"
         )
     }
 }

@@ -73,6 +73,12 @@ choices captured during onboarding.
 
 ### Rules
 
+* **Single-region catalog (issue #102)**: the shipping catalog contains
+  only Italy, so the picker renders the outlet list directly with no
+  region rows; the lone region is auto-enabled on load. The rules below
+  about region toggling apply only when the catalog exposes more than
+  one region (multi-region entries are parked behind the
+  `MERCURY_MULTI_REGION` compile flag).
 * The picker is **opt-in**. A fresh install shows every region toggled
   OFF; the persisted `enabledRegionRawValues` is exactly the set the
   user opted in to (not "everyone minus the ones they turned off").
