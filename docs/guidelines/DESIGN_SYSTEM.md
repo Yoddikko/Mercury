@@ -64,9 +64,19 @@ Labels and badges are `UPPERCASED` (use `.textCase(.uppercase)` or
   separation comes from typography and hairline rules.
 * Dividers: `Rectangle().fill(Color.paperRule.opacity(0.35)).frame(height: 1)`
   or `Divider().overlay(Color.paperRule.opacity(0.35))`.
-* Buttons and badges: rectangular, `overlay(Rectangle().stroke(Color.paperInk, lineWidth: 0.8))`
-  — hairline ink boxes, like printed coupons. Filled variant:
-  `Color.paperInk` background with `paperBackground` text.
+* Buttons: use the named styles, never `.bordered`/`.borderedProminent`
+  (prominent + ink tint renders light-on-light in dark mode, #107):
+  * `.paperPrimary` — ink-filled rectangle, paper serif label, full
+    width. One per screen at most (the main action).
+  * `.paperSecondary` — hairline ink box, ink serif label. Everything
+    else (retry, regenerate, open-original).
+* Badges: `PaperBadge` — uppercased mono text in a hairline ink box.
+* Reader/content columns: pin width with
+  `.frame(maxWidth: .infinity, alignment: .leading)` + constant
+  horizontal padding, and never let media define layout width — images
+  with `scaledToFill` go in an `.overlay` of a fixed-size placeholder
+  (`frame(maxWidth:)` does not shrink an oversized child; a wide hero
+  otherwise inflates the whole column past the screen edge, #107).
 * Spacing scale: 4 / 8 / 12 / 16 / 24. Generous whitespace over boxes.
 
 ## 4. Screen recipe

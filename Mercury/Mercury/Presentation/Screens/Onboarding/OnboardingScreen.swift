@@ -62,7 +62,7 @@ struct OnboardingScreen: View {
                         Text(Self.continueLabel)
                             .frame(maxWidth: .infinity)
                     }
-                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(.paperPrimary)
                     .disabled(viewModel.hasAtLeastOneRegionEnabled == false)
                     .accessibilityIdentifier("onboarding.continue")
                 } footer: {

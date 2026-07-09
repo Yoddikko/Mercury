@@ -97,6 +97,45 @@ struct PaperBadge: View {
     }
 }
 
+/// Primary action: ink-filled rectangle with paper-colored serif label.
+/// Adaptive by construction (ink and paper swap in dark mode), unlike
+/// `.borderedProminent` + tint which rendered light-on-light in dark
+/// mode (issue #107).
+struct PaperPrimaryButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.paperHeadline)
+            .foregroundStyle(Color.paperBackground)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 10)
+            .frame(maxWidth: .infinity)
+            .background(Color.paperInk)
+            .opacity(configuration.isPressed ? 0.75 : 1)
+    }
+}
+
+/// Secondary action: hairline ink box with ink serif label, like a
+/// printed coupon.
+struct PaperSecondaryButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.paperCallout)
+            .foregroundStyle(Color.paperInk)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 7)
+            .overlay(Rectangle().stroke(Color.paperInk, lineWidth: 0.8))
+            .opacity(configuration.isPressed ? 0.6 : 1)
+    }
+}
+
+extension ButtonStyle where Self == PaperPrimaryButtonStyle {
+    static var paperPrimary: PaperPrimaryButtonStyle { PaperPrimaryButtonStyle() }
+}
+
+extension ButtonStyle where Self == PaperSecondaryButtonStyle {
+    static var paperSecondary: PaperSecondaryButtonStyle { PaperSecondaryButtonStyle() }
+}
+
 extension View {
     /// Standard screen recipe: paper background behind everything, ink
     /// tint on controls, list chrome hidden so the paper shows through.

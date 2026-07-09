@@ -180,7 +180,7 @@ struct HomeScreen: View {
             } label: {
                 Text(viewModel.errorRetryLabel)
             }
-            .buttonStyle(.borderedProminent)
+            .buttonStyle(.paperPrimary)
             .accessibilityIdentifier("home.state.error.retry")
         }
         .accessibilityIdentifier("home.state.error")
