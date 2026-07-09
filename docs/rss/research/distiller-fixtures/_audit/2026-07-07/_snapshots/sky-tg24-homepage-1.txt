@@ -1,0 +1,9 @@
+page: sky-tg24-homepage-1
+host: tg24.sky.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 5261
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium"]
+head: kiev annuncia accordi per fornire droni a diversi paesi europei l'ucraina ha annunciato la firma di accordi di cooperazione nel settore dei droni militari con diversi paesi europei, nell'ambito di un nuovo meccanismo che consentirà ai partner occidentali di acquistare armamenti e tecnologie sviluppate dall'industria de
+tail: a trump parteciperà ad una cena con gli altri leader della nato. domani, mercoledì, la foto di famiglia alle 10.50 ora locale, mentre alle 11.15 è previsto l'inizio del summit dell'alleanza atlantica. alle 14.30 ora locale il bilaterale con volodymyr zelensky. alle 16.15 il tycoon dovrebbe tenere una conferenza stampa.

@@ -1,0 +1,9 @@
+page: ansa-scienza-1
+host: www.ansa.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 373
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium", "bt-Subscribe"]
+head: a tre mesi i bambini rispondono alla musica ma solo intorno al primo compleanno iniziano a muoversi a ritmo. e' quanto emerge da uno studio coordinato dall’istituto italiano di tecnologia (iit) che suggerisce che il cervello dei bambini è in grado di riconoscere la musica già dai tre mesi, mentre i movimenti spontanei 
+tail: t) di roma e senior research fellow dell'università di vienna - che il controllo motorio si affina gradualmente: dapprima il sistema nervoso acquisisce la capacità di controllare singoli gruppi muscolari, mentre la capacità di coordinare movimenti complessi dell'intero corpo si sviluppa solo dopo il primo anno di età".

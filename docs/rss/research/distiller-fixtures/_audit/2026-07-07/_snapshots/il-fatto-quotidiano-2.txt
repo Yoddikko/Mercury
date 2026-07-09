@@ -1,0 +1,9 @@
+page: il-fatto-quotidiano-2
+host: www.ilfattoquotidiano.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 264
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium", "metered"]
+head: l'argentina campione del mondo rischia il baratro, va sotto 0-2, poi rimonta, vince 3-2 e accede ai quarti di finale. grande delusione in casa egitto, che sopra di due gol fino al 79esimo, stava assaporando un'impresa che avrebbe avuto del clamoroso. la selezione egiziana era passata in vantaggio con ibrahim, poi messi
+tail:  ai nostri tifosi", ha dichiarato il match-winner enzo fernández al termine della vittoria dell'argentina sull'egitto. "siamo qui a goderci un altro mondiale. abbiamo fatto un altro passo in avanti". ora affronta una tra svizzera e colombia ai quarti di finale. l'egitto esce tra gli applausi, ma non basta: è eliminato.

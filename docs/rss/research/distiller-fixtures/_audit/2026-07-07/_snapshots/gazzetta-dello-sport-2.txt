@@ -1,0 +1,9 @@
+page: gazzetta-dello-sport-2
+host: www.gazzetta.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 366
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium"]
+head: sorridente, ottimista e con la voglia “di essere protagonista nella prossima stagione”. gian piero gasperini, ospite alla presentazione del palinsesto sky a milano, attende i rinforzi sul mercato ma non sembra affatto preoccupato: “la roma è una società ambiziosa e siamo solo all’inizio del mercato. la prossima settima
+tail:  lì vuol dire che ha fatto cose buone qui. koeman dice che il mondiale ha un livello diverso e che malen doveva fare di più, ma spero che le sue parole siano state travisate. quello che posso dire è che malen alla roma ha fatto molto bene”. infine su greenwood sorride: “un commento su di lui? ma non gioca nella roma…”.

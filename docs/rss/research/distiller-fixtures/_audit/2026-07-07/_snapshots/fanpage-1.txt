@@ -1,0 +1,9 @@
+page: fanpage-1
+host: www.fanpage.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 283
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium"]
+head: il colonnello dei carabinieri, ora in pensione, gennaro cassese è indagato dalla procura di pavia per false dichiarazioni a pubblico ministero in relazione al delitto di garlasco. l'indiscrezione era circolata circa qualche settimana fa, ma l'ex colonnello in diverse interviste aveva riferito di non aver ricevuto l'avv
+tail: o di vigevano. mentre rispondeva alle domande degli investigatori il giovane, all'epoca 20enne, si sentì male tanto da dover far intervenire un’ambulanza. eppure, nel verbale non ci sarebbe traccia dell'accaduto. alle domande dei pm, dai quali cassese è stato sentito tempo fa, avrebbe risposto più volte: "non ricordo".

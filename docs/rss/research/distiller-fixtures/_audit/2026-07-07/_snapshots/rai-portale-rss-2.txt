@@ -1,0 +1,9 @@
+page: rai-portale-rss-2
+host: www.rainews.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 8507
+chrome-survivors: []
+raw-paywall-markers: ["premium"]
+head: al forum della difesa contratti per almeno 50 miliardi. sul tavolo intese per missili e droni. trump ha in previsione incontri bilaterali con erdogan, zelensky e con il presidente siriano al-sharaa. meloni, tajani e crosetto sono ad ankara nato, fuoriprogramma ad ankara: meloni arriva in ritardo alla cena dei leader la
+tail: le saranno affrontati i principali dossier dell'alleanza, dalla spesa per la difesa al sostegno all'ucraina. la chiusura dei lavori è prevista alle 15 con la conferenza stampa finale del segretario generale della nato. a partire dalle 15:30, alcuni capi di stato e di governo potranno tenere conferenze stampa nazionali.

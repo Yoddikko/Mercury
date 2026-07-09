@@ -1,0 +1,9 @@
+page: libero-quotidiano-3
+host: www.liberoquotidiano.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 816
+chrome-survivors: []
+raw-paywall-markers: ["paywall"]
+head: daniela mastromatteidaniela mastromattei è caposervizio di libero dove si occupa di attualità, moda e costume, adesso anche "in prestito" alla politica. ha cominciato a fare la giornalista al quotidiano il messaggero, dopo un periodo a mediaset ha preferito tornare alla carta stampata c’è un paradosso che sta attravers
+tail:  nascere dalle mani che lo realizzano, dalla memoria che custodisce e dalla storia che porta con sé. ed è forse questa la sfida più importante del prossimo secolo del made in italy: usare la tecnologia per guardare avanti, senza dimenticare ciò che rende davvero unico un prodotto italiano. https://petronius1926.com/it/

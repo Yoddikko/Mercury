@@ -1,0 +1,9 @@
+page: ansa-economia-1
+host: www.ansa.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 263
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium", "bt-Subscribe"]
+head: "se io abbandono un'area, poi c'è tutto il degrado, per questo raccontare il paesaggio agrario italiano significa anche proteggerlo, riconoscerne il valore e contribuire a invertire la rotta rispetto all'abbandono e alla perdita di biodiversità". ne è convinto davide rampello, curatore, direttore artistico e consulente
+tail: io". con rampello racconteranno l'italia rurale anche william gray, autore e copywriter italo-americano, e alessandro spinelli, professionista del digital marketing e delle strategie di crescita aziendale. i materiali prodotti saranno poi raccolti e confluiranno nell'evento annuale della pac previsto a novembre a roma.

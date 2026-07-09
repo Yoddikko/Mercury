@@ -14,7 +14,9 @@ struct ArticleContentEnrichmentService: Sendable {
     /// v2: per-outlet extraction rule layer (#91).
     /// v3: paywalled-teaser classification (#95) — subscriber-only
     ///     pages keep the RSS summary instead of teaser/CTA leftovers.
-    static let distillerVersion: Int = 3
+    /// v4: JSON-LD articleBody fast path + Mozilla Readability.js
+    ///     extraction stage (#98).
+    static let distillerVersion: Int = 4
 
     /// Minimum word count required for the distilled output to be
     /// preferred over the raw extractor output. Below this threshold
@@ -25,12 +27,14 @@ struct ArticleContentEnrichmentService: Sendable {
     private let pageClient: ArticlePageClient
     private let extractor: ArticlePageContentExtractor
     private let sanitizer: ArticleHTMLSanitizer
+    private let jsonLDExtractor: ArticleJSONLDExtractor
     private let outletRuleCatalog: ArticleOutletRuleCatalog
     private let outletRuleApplier: ArticleOutletRuleApplier
     private let boilerplateRemover: ArticleBoilerplateRemover
     private let imageDeduplicator: ArticleImageDeduplicator
     private let localeStripper: ArticleLocaleBoilerplateStripper
     private let paywallClassifier: ArticlePaywallClassifier
+    private let readabilityStage: ReadabilityStage
     private let logger: AppLogger
     private let maxFetchesPerSource: Int
 
@@ -38,24 +42,28 @@ struct ArticleContentEnrichmentService: Sendable {
         pageClient: ArticlePageClient = ArticlePageClient(),
         extractor: ArticlePageContentExtractor = ArticlePageContentExtractor(),
         sanitizer: ArticleHTMLSanitizer = ArticleHTMLSanitizer(),
+        jsonLDExtractor: ArticleJSONLDExtractor = ArticleJSONLDExtractor(),
         outletRuleCatalog: ArticleOutletRuleCatalog = .bundled,
         outletRuleApplier: ArticleOutletRuleApplier = ArticleOutletRuleApplier(),
         boilerplateRemover: ArticleBoilerplateRemover = ArticleBoilerplateRemover(),
         imageDeduplicator: ArticleImageDeduplicator = ArticleImageDeduplicator(),
         localeStripper: ArticleLocaleBoilerplateStripper = ArticleLocaleBoilerplateStripper(),
         paywallClassifier: ArticlePaywallClassifier = ArticlePaywallClassifier(),
+        readabilityStage: ReadabilityStage = ReadabilityStage(),
         logger: AppLogger = .shared,
         maxFetchesPerSource: Int = 3
     ) {
         self.pageClient = pageClient
         self.extractor = extractor
         self.sanitizer = sanitizer
+        self.jsonLDExtractor = jsonLDExtractor
         self.outletRuleCatalog = outletRuleCatalog
         self.outletRuleApplier = outletRuleApplier
         self.boilerplateRemover = boilerplateRemover
         self.imageDeduplicator = imageDeduplicator
         self.localeStripper = localeStripper
         self.paywallClassifier = paywallClassifier
+        self.readabilityStage = readabilityStage
         self.logger = logger
         self.maxFetchesPerSource = max(0, maxFetchesPerSource)
     }
@@ -172,7 +180,7 @@ struct ArticleContentEnrichmentService: Sendable {
             // banner outweighs the article body. The Readability-style
             // heuristics in `ArticleBoilerplateRemover` are responsible
             // for finding the article inside the noise.
-            let distillation = distill(
+            let distillation = await distill(
                 rawHTML: html,
                 fallbackCleanedText: extraction.cleanedText,
                 heroURLString: resolvedImageURL?.absoluteString,
@@ -308,21 +316,36 @@ struct ArticleContentEnrichmentService: Sendable {
     /// `isPaywalledTeaser` (#95) is `true` when the short output is
     /// classified as a subscriber-only teaser — callers must then keep
     /// the article un-enriched instead of using the fallback text.
-    private struct DistillationOutput {
+    /// Internal (not private) so the fixture suites and the audit
+    /// harness exercise the exact production pipeline.
+    struct DistillationOutput {
         let distilledHTML: String?
         let cleanedText: String
         let wordCount: Int?
         let isPaywalledTeaser: Bool
     }
 
-    private func distill(
+    func distill(
         rawHTML: String,
         fallbackCleanedText: String,
         heroURLString: String?,
         language: String?,
         host: String?,
         requestID: String?
-    ) -> DistillationOutput {
+    ) async -> DistillationOutput {
+        // JSON-LD fast path (#98): when the CMS embeds the article body
+        // in a schema.org Article node, take it directly — zero page
+        // chrome by construction. Substantial-body check keeps teaser
+        // JSON-LD (Repubblica premium ships a 400-char preview) on the
+        // DOM pipeline, where the paywall classifier (#95) sees it.
+        if let fastPath = jsonLDFastPath(
+            rawHTML: rawHTML,
+            language: language,
+            requestID: requestID
+        ) {
+            return fastPath
+        }
+
         let sanitized = sanitizer.sanitize(rawHTML)
         // Per-outlet extraction rule (#91) — applied BEFORE the generic
         // Readability-style pass. When the article host has a declared
@@ -354,13 +377,33 @@ struct ArticleContentEnrichmentService: Sendable {
             )
             ruled = sanitized
         }
+        // Mozilla Readability stage (#98): the battle-tested generic
+        // extractor runs on the rule-cleaned document inside a hidden
+        // extraction-only webview. On success its content HTML feeds
+        // the post-pass below; on failure/timeout/short output the
+        // SwiftSoup pipeline continues on `ruled` unchanged, so the
+        // result is never worse than the pre-#98 pipeline.
+        let readable: String
+        if let extracted = await readabilityStage.extract(html: ruled, requestID: requestID) {
+            logger.debug(
+                "Readability stage produced content",
+                category: .business,
+                service: "ArticleContentEnrichmentService",
+                requestID: requestID,
+                metadata: ["host": host ?? "unknown"]
+            )
+            readable = extracted
+        } else {
+            readable = ruled
+        }
+
         // Truncate at the Italian article terminator (#81). Most IT
         // outlets end the body with "Riproduzione riservata" and follow
         // it with newsletter CTAs, related-article grids, subscribe
         // prompts, and share strips. Cutting there is the single
         // highest-ROI cleanup step we can take.
         let truncated = ArticleContentEnrichmentService.truncatedAtTerminator(
-            html: ruled,
+            html: readable,
             language: language
         )
         let withoutBoilerplate = boilerplateRemover.cleaning(truncated)
@@ -425,6 +468,118 @@ struct ArticleContentEnrichmentService: Sendable {
             wordCount: wordCount,
             isPaywalledTeaser: false
         )
+    }
+
+    // MARK: - JSON-LD fast path (issue #98)
+
+    /// Builds the distilled output straight from the page's JSON-LD
+    /// `articleBody` when one exists and is substantial (≥ the
+    /// pipeline's minimum distilled word count). Returns `nil` when
+    /// the page has no usable node — the DOM pipeline then runs
+    /// unchanged, including the paywalled-teaser classification for
+    /// pages whose JSON-LD body is only a preview.
+    private func jsonLDFastPath(
+        rawHTML: String,
+        language: String?,
+        requestID: String?
+    ) -> DistillationOutput? {
+        guard let node = jsonLDExtractor.articleNode(fromRawHTML: rawHTML, requestID: requestID) else {
+            return nil
+        }
+
+        // Cut the body at the Italian article terminator if the CMS
+        // serialized it into `articleBody` (several outlets keep the
+        // "© RIPRODUZIONE RISERVATA" line inside the field).
+        let truncatedBody = Self.truncatedTextAtTerminator(
+            text: node.articleBody,
+            language: language
+        )
+
+        let paragraphsHTML = Self.paragraphsHTML(fromPlainText: truncatedBody)
+        // Locale stripper post-pass: catches newsletter CTAs and
+        // related-content labels a CMS occasionally serializes into
+        // the body field as standalone paragraphs.
+        let final = localeStripper.stripping(html: paragraphsHTML, language: language)
+        let plainText = ArticleBoilerplateRemover.plainText(from: final)
+        let wordCount = plainText
+            .split { $0.isWhitespace || $0.isNewline }
+            .count
+
+        guard wordCount >= Self.distilledMinimumWords else {
+            logger.trace(
+                "JSON-LD articleBody too short for fast path, deferring to DOM pipeline",
+                category: .business,
+                service: "ArticleContentEnrichmentService",
+                requestID: requestID,
+                metadata: [
+                    "jsonld_word_count": "\(wordCount)",
+                    "threshold": "\(Self.distilledMinimumWords)",
+                    "is_accessible_for_free": node.isAccessibleForFree.map { "\($0)" } ?? "undeclared"
+                ]
+            )
+            return nil
+        }
+
+        logger.debug(
+            "Distilled body taken from JSON-LD articleBody fast path",
+            category: .business,
+            service: "ArticleContentEnrichmentService",
+            requestID: requestID,
+            metadata: [
+                "jsonld_word_count": "\(wordCount)",
+                "language": language ?? "unknown",
+                "distiller_version": "\(Self.distillerVersion)"
+            ]
+        )
+
+        return DistillationOutput(
+            distilledHTML: final,
+            cleanedText: plainText,
+            wordCount: wordCount,
+            isPaywalledTeaser: false
+        )
+    }
+
+    /// Converts a plain-text article body into paragraph HTML. Splits
+    /// on newline runs when the CMS preserved them; a body without
+    /// newlines becomes a single paragraph. Text is HTML-escaped, so
+    /// the output is chrome-free AND markup-safe by construction.
+    static func paragraphsHTML(fromPlainText text: String) -> String {
+        let paragraphs = text
+            .components(separatedBy: CharacterSet.newlines)
+            .map { $0.trimmingCharacters(in: .whitespaces) }
+            .filter { $0.isEmpty == false }
+        return paragraphs
+            .map { "<p>\(escapedHTMLText($0))</p>" }
+            .joined(separator: "\n")
+    }
+
+    /// Minimal HTML text escaping for text-node content.
+    static func escapedHTMLText(_ text: String) -> String {
+        text
+            .replacingOccurrences(of: "&", with: "&amp;")
+            .replacingOccurrences(of: "<", with: "&lt;")
+            .replacingOccurrences(of: ">", with: "&gt;")
+    }
+
+    /// Plain-text variant of `truncatedAtTerminator` for JSON-LD
+    /// bodies: cuts `text` at the first case-insensitive occurrence of
+    /// a per-language terminator marker. Unknown language passes
+    /// through untouched.
+    static func truncatedTextAtTerminator(text: String, language: String?) -> String {
+        guard let normalized = ArticleLocaleBoilerplateStripper.normalizedLanguage(language),
+              let terminators = terminatorMarkers[normalized] else {
+            return text
+        }
+        var earliest: Range<String.Index>?
+        for terminator in terminators {
+            guard let range = text.range(of: terminator, options: [.caseInsensitive]) else { continue }
+            if earliest == nil || range.lowerBound < earliest!.lowerBound {
+                earliest = range
+            }
+        }
+        guard let earliest else { return text }
+        return String(text[..<earliest.lowerBound]).trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
     /// Trim `html` at the first occurrence of a per-language article

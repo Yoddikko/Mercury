@@ -70,11 +70,31 @@
       "bodySelectors": [],
       "stripSelectors": [
         "[data-testid=read-also-item-container]",
-        "[data-testid=item-mini-root]"
+        "[data-testid=item-mini-root]",
+        "[data-testid=header-container]",
+        "[data-testid=sub-header-section]",
+        "[data-testid=second-level-menu]",
+        "[data-testid=profile-menu]",
+        "[data-testid=date-time]"
       ],
       "stripTextPatterns": [
         "\\bti\\s+potrebbe\\s+interessare\\b"
       ]
+    },
+    {
+      "id": "linkiesta",
+      "hosts": ["linkiesta.it"],
+      "bodySelectors": [],
+      "stripSelectors": [
+        ".userloginNav",
+        ".navHeader",
+        ".article-datetime",
+        ".post-categories",
+        ".article-tags",
+        ".sharedaddy",
+        ".lkadv"
+      ],
+      "stripTextPatterns": []
     },
     {
       "id": "internazionale",
@@ -84,7 +104,8 @@
         ".cta_nl_ext_container",
         ".cta_nl_container",
         ".cta_art_table",
-        ".item_note2"
+        ".item_note2",
+        ".print_header"
       ],
       "stripTextPatterns": []
     },
@@ -126,7 +147,9 @@
       "stripSelectors": [
         "#ilg_comments",
         ".form--comments",
-        ".comments__actions"
+        ".comments__actions",
+        ".article__toolbar",
+        "#audio-player-container"
       ],
       "stripTextPatterns": [
         "\\bscegli\\s+il\\s+giornale\\s+come\\s+fonte\\s+preferita\\b"

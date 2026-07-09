@@ -1,0 +1,9 @@
+page: adnkronos-prima-2
+host: www.adnkronos.com lang: it
+distilled: yes
+paywalled-teaser: false
+words: 214
+chrome-survivors: []
+raw-paywall-markers: []
+head: argentina, messi guida rimonta con egitto e... scoppia a piangere - video l'albiceleste ha battuto la nazionale africana agli ottavi dei mondiali le lacrime di lionel messi - ipa/fotogramma 07 luglio 2026 | 20.18 simone cesarei lettura: 1 minuti lionel messi piange ai mondiali 2026. oggi, martedì 7 luglio, l'argentina 
+tail: adra e iniziare la festa. l'argentina, grazie al suo capitano, torna così ai quarti di finale del mondiale, dopo il trionfo in qatar del 2022. il pianto di messi è andato avanti per diversi minuti oltre il fischio finale, con scaloni che è entrato in campo per abbracciare, e ringraziare, l'ex attaccante del barcellona.

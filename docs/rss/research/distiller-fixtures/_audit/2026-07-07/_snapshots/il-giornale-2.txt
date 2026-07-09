@@ -1,0 +1,9 @@
+page: il-giornale-2
+host: www.ilgiornale.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 220
+chrome-survivors: []
+raw-paywall-markers: ["premium"]
+head: la leader del rassemblement national ribadisce la propria innocenza e conferma la candidatura alle presidenziali del 2027, con bardella nel ruolo di premier 7 luglio 2026 - 20:31 marine le pen ha annunciato la sua intenzione di ricorrere in cassazione contro la condanna confermata oggi in appello e ha ribadito che sarà
+tail: ensivo sull'esecuzione della pena. nel suo progetto per l'eliseo, le pen ha indicato anche il ruolo di jordan bardella. "io e jordan ci battiamo per la francia, non abbiamo ambizioni personali. lui, con la sua energia, sarà un eccezionale primo ministro: saremo un ticket che cambierà le cose in francia", ha dichiarato.

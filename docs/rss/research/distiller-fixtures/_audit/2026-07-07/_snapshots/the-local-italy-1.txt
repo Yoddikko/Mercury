@@ -1,0 +1,9 @@
+page: the-local-italy-1
+host: www.thelocal.it lang: en
+distilled: yes
+paywalled-teaser: false
+words: 287
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium", "metered"]
+head: us president donald trump appeared to have turned the page on a diplomatic row with italy's prime minister giorgia meloni tuesday as he landed in ankara for a key nato summit. the pair fell out late last month after trump claimed in remarks to an italian tv channel that meloni had "begged" him for a photo together at t
+tail:  her, i think she's a nice person actually, but i think she made a mistake.. she just wasn't there for us and i wasn't happy about that," he said. trump has been highly critical of european nato countries ahead of the ankara meeting, with allies seeking to showcase growing defence spending in the hope of placating him.

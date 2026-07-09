@@ -1,0 +1,9 @@
+page: ansa-tecnologia-1
+host: www.ansa.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 208
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium", "bt-Subscribe"]
+head: la commissione europea non intende proporre nuove norme sulla sicurezza informatica e sull'intelligenza artificiale, ma punta ad accelerare l'attuazione della legislazione già adottata. lo ha affermato la vicepresidente della commissione henna virkkunen in conferenza stampa, presentando il piano d'azione per l'ia e la 
+tail: a sicurezza. il costo di non sviluppare modelli europei sarebbe ancora più alto". una sfida che per la vicepresidente richiede "investimenti su scala molto ampia, ben oltre quanto possano garantire i soli finanziamenti pubblici". "abbiamo bisogno - ha detto - di mobilitare capitali privati e, in particolare, l'equity".

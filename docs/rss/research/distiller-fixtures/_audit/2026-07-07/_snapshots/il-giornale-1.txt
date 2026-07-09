@@ -1,0 +1,9 @@
+page: il-giornale-1
+host: www.ilgiornale.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 1491
+chrome-survivors: []
+raw-paywall-markers: ["premium"]
+head: i campioni del mondo soffrono tantissimo contro i faraoni e vanno sotto 0-2. proprio quando tutto sembra perduto, la rete di romero dà il via ad una rimonta pazzesca. gol di messi, assist dell’interista 7 luglio 2026 - 20:36 quando in campo si hanno campioni come lionel messi, la speranza è l’ultima a morire. l’undici 
+tail: a, hafez; lasheen (90+5’ zizo), attia; hassan (73’ trezeguet), salah, ashour (46’ fathy); ziko (80’ marmoush). ct: hossam hassan marcatori: 15’ ibrahim (e). 67’ ziko (e), 79’ romero (a), 83’ messi (a), 99+2’ fernandez (a) ammoniti: 90+3’ shobeir (e), 90+3’ fathy (e), 90+8’ attia (e) arbitro: françois letexier (francia)

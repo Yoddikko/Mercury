@@ -1,0 +1,9 @@
+page: gazzetta-dello-sport-1
+host: www.gazzetta.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 401
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium"]
+head: ci sono quattro candidature italiane tra le oltre venti arrivate all’eurolega per le otto licenze permanenti che saranno assegnate a partire dalla stagione 2027-28: si tratta della virtus bologna, di napoli e delle due nuove società nate questa estate a roma, bc roma spqr e roma maxima. l’assegnazione è legata al proge
+tail: tiamo compiendo", dice chus bueno, ceo di euroleague basketball. "il basket europeo sta vivendo un momento straordinario. l'interesse degli investitori continua ad aumentare di settimana in settimana, a conferma dell'enorme opportunità che abbiamo di accelerare la crescita del nostro sport e delle nostre competizioni".

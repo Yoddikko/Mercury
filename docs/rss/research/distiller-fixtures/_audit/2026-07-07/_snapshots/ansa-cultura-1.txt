@@ -1,0 +1,9 @@
+page: ansa-cultura-1
+host: www.ansa.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 129
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium", "bt-Subscribe"]
+head: "accolgo con favore la decisione di revocare qualsiasi forma di 'patentino antifascista' per la manifestazione "più libri più liberi". come già testimoniato pubblicamente da intellettuali e editori di varia estrazione e comune buon senso, la cultura deve rimanere uno spazio di libertà, aperto al pluralismo e al confron
+tail: dro giuli, commentando la decisione della fiera nazionale della piccola e media editoria, in programma dal 4 all'8 dicembre alla nuvola a roma, di accogliere anche le domande di partecipazione degli editori che non hanno sottoscritto la dichiarazione di adesione ai principi costituzionali e ai valori dell'antifascismo.

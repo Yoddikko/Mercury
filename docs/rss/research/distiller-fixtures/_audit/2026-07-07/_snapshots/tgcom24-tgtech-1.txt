@@ -1,0 +1,9 @@
+page: tgcom24-tgtech-1
+host: www.tgcom24.mediaset.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 102
+chrome-survivors: []
+raw-paywall-markers: []
+head: niente pù recensioni fake o frutto dell'intelligenza artificiale. dal 15 luglio scattano le nuove regole dell'antitrust. in pratica scrivere online la propria valutazione su alberghi ristoranti e attività sarà più complesso perché occorrerà una prova di acquisto, come uno scontrino, o di una prenotazione effettiva. i n
+tail:  dall’autorità garante «le recensioni genuine, veritiere e rilevanti possono orientare le scelte economiche dei consumatori, accrescendone la fiducia nel corretto funzionamento del mercato e stimolando al contempo una concorrenza efficace tra le imprese». allo stesso tempo, quelle false, possono cambiare gli equilibri.

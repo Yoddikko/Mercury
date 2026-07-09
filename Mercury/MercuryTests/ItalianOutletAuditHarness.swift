@@ -10,48 +10,55 @@ import Testing
 @testable import Mercury
 
 /// Diagnostic harness for the full-catalog Italian outlet audit
-/// (issues #89 / #95 / meta #80).
+/// (issues #89 / #95 / #98, meta #80).
 ///
 /// Unlike `ItalianDistillationFixturesTests` (committed fixtures,
-/// pinned assertions) this harness runs the distillation pipeline over
-/// **ad-hoc downloaded pages** dropped under
-/// `docs/rss/research/distiller-fixtures/_audit/` and dumps a
-/// per-page profile (word count, chrome survivors, paywall-marker
-/// hits, head/tail excerpt) to `_audit/_snapshots/`. The 2026-07-02
-/// full-catalog corpus and its results are committed under `_audit/`
-/// (see `_audit/AUDIT-2026-07-02.md`); the harness passes trivially
-/// when the directory is absent. It never fails the build: it is an
-/// inspection tool, not a gate.
+/// pinned assertions) this harness runs the **production
+/// `ArticleContentEnrichmentService.distill` pipeline** — including
+/// the JSON-LD articleBody fast path and the hidden-WKWebView Mozilla
+/// Readability stage (#98) — over ad-hoc downloaded pages dropped
+/// under `docs/rss/research/distiller-fixtures/_audit/` and dumps a
+/// per-page profile (word count, chrome survivors, paywall verdict,
+/// head/tail excerpt) to a `_snapshots/` folder next to the pages.
+///
+/// Corpora are dated: pages for a new audit go in a
+/// `_audit/YYYY-MM-DD/` subdirectory and the harness picks the most
+/// recent dated corpus (falling back to loose pages in `_audit/`
+/// itself, the 2026-07-02 layout). It passes trivially when no pages
+/// are present. It never fails the build: it is an inspection tool,
+/// not a gate.
 ///
 /// Naming convention for audit pages: `<slug>__<host>__<lang>.html`
-/// (host and language drive the per-outlet rule lookup and the locale
-/// stripper, mirroring production).
+/// (host and language drive the per-outlet rule lookup, the JSON-LD /
+/// terminator locale handling and the locale stripper, mirroring
+/// production).
 @Suite("Italian outlet distillation audit harness")
 struct ItalianOutletAuditHarness {
-    @Test func auditDownloadedPages() throws {
-        let auditDirectory = ItalianDistillationFixturesTests.fixturesDirectory
+    @Test func auditDownloadedPages() async throws {
+        let auditRoot = ItalianDistillationFixturesTests.fixturesDirectory
             .appendingPathComponent("_audit")
-        guard FileManager.default.fileExists(atPath: auditDirectory.path) else {
+        guard let corpusDirectory = Self.latestCorpusDirectory(under: auditRoot) else {
             // No audit drop present — nothing to do.
             return
         }
 
         let pages = (try? FileManager.default.contentsOfDirectory(
-            at: auditDirectory,
+            at: corpusDirectory,
             includingPropertiesForKeys: nil
         ))?.filter { $0.pathExtension == "html" }.sorted { $0.lastPathComponent < $1.lastPathComponent } ?? []
         guard pages.isEmpty == false else { return }
 
-        let snapshotsDirectory = auditDirectory.appendingPathComponent("_snapshots")
+        let snapshotsDirectory = corpusDirectory.appendingPathComponent("_snapshots")
         try? FileManager.default.createDirectory(
             at: snapshotsDirectory,
             withIntermediateDirectories: true
         )
 
-        let sanitizer = ArticleHTMLSanitizer()
-        let remover = ArticleBoilerplateRemover()
-        let imageDedup = ArticleImageDeduplicator()
-        let localeStripper = ArticleLocaleBoilerplateStripper()
+        // The real production pipeline (#98): JSON-LD fast path,
+        // sanitizer, per-outlet rule, Readability webview stage,
+        // terminator truncation, boilerplate remover, hero dedup,
+        // locale stripper, paywalled-teaser classifier.
+        let service = ArticleContentEnrichmentService()
 
         for page in pages {
             let parts = page.deletingPathExtension().lastPathComponent
@@ -64,22 +71,18 @@ struct ItalianOutletAuditHarness {
                 ?? String(data: data, encoding: .isoLatin1)
                 ?? ""
 
-            let sanitized = sanitizer.sanitize(html)
-            let ruled: String
-            if let rule = ArticleOutletRuleCatalog.bundled.rule(forHost: host) {
-                ruled = ArticleOutletRuleApplier().applying(rule, to: sanitized)
-            } else {
-                ruled = sanitized
-            }
-            let truncated = ArticleContentEnrichmentService.truncatedAtTerminator(
-                html: ruled,
-                language: language
+            let output = await service.distill(
+                rawHTML: html,
+                fallbackCleanedText: "",
+                heroURLString: nil,
+                language: language,
+                host: host,
+                requestID: "audit-\(slug)"
             )
-            let withoutBoilerplate = remover.cleaning(truncated)
-            let withoutHero = imageDedup.dedupingHero(in: withoutBoilerplate, heroImageURLString: nil)
-            let final = localeStripper.stripping(html: withoutHero, language: language)
 
-            let plain = ArticleBoilerplateRemover.plainText(from: final)
+            let plain = output.distilledHTML.map {
+                ArticleBoilerplateRemover.plainText(from: $0)
+            } ?? output.cleanedText
             let lowered = plain.lowercased()
             let words = plain.split { $0.isWhitespace || $0.isNewline }.count
 
@@ -90,6 +93,8 @@ struct ItalianOutletAuditHarness {
             let snapshot = """
             page: \(slug)
             host: \(host) lang: \(language)
+            distilled: \(output.distilledHTML == nil ? "NO (fallback)" : "yes")
+            paywalled-teaser: \(output.isPaywalledTeaser)
             words: \(words)
             chrome-survivors: \(survivors)
             raw-paywall-markers: \(markers)
@@ -99,6 +104,29 @@ struct ItalianOutletAuditHarness {
             let out = snapshotsDirectory.appendingPathComponent("\(slug).txt")
             try? snapshot.write(to: out, atomically: true, encoding: .utf8)
         }
+    }
+
+    /// Picks the corpus to audit: the lexicographically greatest
+    /// `YYYY-MM-DD`-named subdirectory of `_audit/`, or `_audit/`
+    /// itself when no dated corpus exists (legacy 2026-07-02 layout).
+    /// Returns `nil` when `_audit/` is absent.
+    private static func latestCorpusDirectory(under root: URL) -> URL? {
+        var isDirectory: ObjCBool = false
+        guard FileManager.default.fileExists(atPath: root.path, isDirectory: &isDirectory),
+              isDirectory.boolValue else {
+            return nil
+        }
+        let dated = (try? FileManager.default.contentsOfDirectory(
+            at: root,
+            includingPropertiesForKeys: [.isDirectoryKey]
+        ))?.filter { url in
+            guard (try? url.resourceValues(forKeys: [.isDirectoryKey]))?.isDirectory == true else {
+                return false
+            }
+            let name = url.lastPathComponent
+            return name.count == 10 && name.wholeMatch(of: /\d{4}-\d{2}-\d{2}/) != nil
+        }.sorted { $0.lastPathComponent < $1.lastPathComponent }
+        return dated?.last ?? root
     }
 
     /// Chrome phrases the audit scans for in the distilled output —

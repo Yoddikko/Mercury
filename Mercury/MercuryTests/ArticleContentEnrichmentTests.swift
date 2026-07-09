@@ -67,6 +67,7 @@ struct ArticleContentEnrichmentTests {
         let service = ArticleContentEnrichmentService(
             pageClient: pageClient,
             extractor: ArticlePageContentExtractor(),
+            readabilityStage: ReadabilityStage(isEnabled: false),
             maxFetchesPerSource: 1
         )
 
@@ -82,6 +83,66 @@ struct ArticleContentEnrichmentTests {
         #expect(enriched[0].contentWordCount > input.contentWordCount)
         #expect(enriched[0].cleanedContent?.contains("significantly more detail") == true)
         #expect(enriched[0].heroImageURL?.absoluteString == "https://cdn.example.com/fetched.jpg")
+    }
+
+    @Test
+    func enrichmentServiceUsesJSONLDFastPathWhenBodyIsSubstantial() async {
+        // JSON-LD fast path (#98): the schema.org articleBody is taken
+        // directly, so the DOM chrome on the page (cookie banner,
+        // related widget) can never leak into the distilled body.
+        let sentence = "Questa frase appartiene al corpo serializzato dal CMS dentro il nodo JSON-LD."
+        let body = Array(repeating: sentence, count: 12).joined(separator: " ")
+        let html = """
+        <html>
+          <head>
+            <script type="application/ld+json">
+            {"@type": "NewsArticle", "isAccessibleForFree": true,
+             "articleBody": "\(body)"}
+            </script>
+          </head>
+          <body>
+            <div class="page">
+              <article>
+                <p>\(body)</p>
+                <div>Accetta tutti i cookie per continuare la navigazione sul nostro sito.</div>
+                <div>Ti potrebbe interessare: altri articoli scelti dalla redazione per te.</div>
+              </article>
+            </div>
+          </body>
+        </html>
+        """
+
+        let pageClient = ArticlePageClient { request in
+            let responseURL = request.url ?? URL(string: "https://example.invalid/article")!
+            let response = HTTPURLResponse(
+                url: responseURL,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: ["Content-Type": "text/html; charset=utf-8"]
+            )!
+            return (Data(html.utf8), response)
+        }
+        let service = ArticleContentEnrichmentService(
+            pageClient: pageClient,
+            extractor: ArticlePageContentExtractor(),
+            readabilityStage: ReadabilityStage(isEnabled: false),
+            maxFetchesPerSource: 1
+        )
+
+        let input = makeArticle(
+            contentSource: "feed_summary",
+            contentWordCount: 5,
+            cleanedContent: "Sommario RSS breve."
+        )
+
+        let enriched = await service.enrichArticlesIfNeeded([input])
+        #expect(enriched.count == 1)
+        #expect(enriched[0].contentSource == "article_page")
+        let distilled = enriched[0].distilledBodyHTML ?? ""
+        #expect(distilled.contains("corpo serializzato dal CMS"))
+        #expect(distilled.lowercased().contains("cookie") == false)
+        #expect(distilled.lowercased().contains("ti potrebbe interessare") == false)
+        #expect(enriched[0].distillerVersion == ArticleContentEnrichmentService.distillerVersion)
     }
 
     @Test
@@ -121,6 +182,7 @@ struct ArticleContentEnrichmentTests {
         let service = ArticleContentEnrichmentService(
             pageClient: pageClient,
             extractor: ArticlePageContentExtractor(),
+            readabilityStage: ReadabilityStage(isEnabled: false),
             maxFetchesPerSource: 1
         )
 
@@ -145,6 +207,7 @@ struct ArticleContentEnrichmentTests {
         let service = ArticleContentEnrichmentService(
             pageClient: pageClient,
             extractor: ArticlePageContentExtractor(),
+            readabilityStage: ReadabilityStage(isEnabled: false),
             maxFetchesPerSource: 1
         )
 

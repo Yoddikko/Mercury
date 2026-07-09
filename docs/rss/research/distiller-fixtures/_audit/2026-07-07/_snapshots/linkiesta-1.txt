@@ -1,0 +1,9 @@
+page: linkiesta-1
+host: www.linkiesta.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 419
+chrome-survivors: []
+raw-paywall-markers: []
+head: il comitato olimpico internazionale ha revocato la sospensione del comitato olimpico russo, in vigore dall’ottobre 2023. in questo modo apre di fatto la strada al ritorno degli atleti russi nelle competizioni internazionali, comprese le qualificazioni ai giochi olimpici di los angeles 2028. la decisione segna una svolt
+tail: dovrebbe essere limitata dal coinvolgimento del suo governo in una guerra o in un conflitto», richiamando il principio della neutralità dello sport. ma con una guerra abbondantemente entrata nel suo quinto anno consecutivo risulta difficile trovare motivazioni solide per giustificare la riammissione degli atleti russi.

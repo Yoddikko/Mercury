@@ -1,0 +1,9 @@
+page: il-fatto-quotidiano-1
+host: www.ilfattoquotidiano.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 244
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium", "metered"]
+head: braccia tese dell'ex generale e dito medio della moglie. così roberto vannacci e consorte hanno risposto a un gruppo musicale, il complesso d'inferiorità, che vedendo passare l'eurodeputato di futuro nazionale davanti al posto in cui si stava esibendo a viareggio, ha deciso di intonare bella ciao. a diffondere le immag
+tail: e cacciato al grido di bella ciao", denuncia viareggio antifascista. la propaganda, continuano, "vuol far vedere sempre l’accoglienza a suo favore che riceve nei suoi tour, noi invece vogliamo far vedere come proprio nella città che lo ospita non è il ben venuto e questa è l’accoglienza che gli riservano i viareggini".

@@ -1,0 +1,9 @@
+page: milan-news-2
+host: www.milannews.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 193
+chrome-survivors: []
+raw-paywall-markers: []
+head: mn - le cifre finali degli affari gila e calvani con la lazio calciomercato 07.07.2026 20:33 di redazione milannews vedi letture il milan chiude per mario gila con lazio, ma non solo: dai biancocelesti arriva anche il 2008 calvani. queste le cifre finali delle due operazioni © foto di www.imagephotoagency.it dopo che l
+tail:  contestualmente i rossoneri hanno chiuso, e va sottilineato che si tratta di operazioni disgiunte e separate anche nei tempi, per lorenzo calvani, terzino sinistro della lazio primavera: il classe 2008 costerà al milan 2,5 milioni di euro e farà parte inizialmente del progetto milan futuro. di pietro mazzara. indietro

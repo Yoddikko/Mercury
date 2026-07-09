@@ -1,0 +1,9 @@
+page: adnkronos-prima-1
+host: www.adnkronos.com lang: it
+distilled: yes
+paywalled-teaser: false
+words: 226
+chrome-survivors: []
+raw-paywall-markers: []
+head: argentina-egitto, finale folle: salah chiede un rigore e fernandez segna episodio arbitrale in pieno recupero agli ottavi dei mondiali le proteste di salah - afp 07 luglio 2026 | 20.40 simone cesarei lettura: 1 minuti finale folle in argentina-egitto. oggi, martedì 7 luglio, l'albiceleste ha battuto la nazionale africa
+tail: sulla destra e pennella un cross al bacio per enzo fernandez, che sul secondo palo colpisce di testa e firma la rete del 3-2. immediate le proteste egiziane, che circondano l'arbitro chiedendo l'annullamento del gol e il calcio di rigore, ma il direttore di gara convalida la rete e l'argentina vola ai quarti di finale.

@@ -1,0 +1,9 @@
+page: repubblica-politica-1
+host: www.repubblica.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 239
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium"]
+head: “salvini sarebbe dovuto diventare ministro dell'interno all'inizio della legislatura; non gli è stato concesso perché era sotto processo, ma una volta assolto sarebbe dovuto istantaneamente andare al viminale. era stato chiesto dal congresso della lega unanimemente, senza alcuna discussione interna a riguardo”, rivela 
+tail: ero dell’interno, in autunno, potrebbe tornare proprio salvini. è solo una ipotesi che però giorgia meloni sta valutando. piantedosi, per il momento, frena: «salvini? nessuno più di me può essere contento di un suo ritorno al viminale nella prossima legislatura», le parole dette ieri in tv intervistato a sky tg24 live.

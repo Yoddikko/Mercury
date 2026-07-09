@@ -1,0 +1,9 @@
+page: linkiesta-2
+host: www.linkiesta.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 1078
+chrome-survivors: []
+raw-paywall-markers: []
+head: è oragwm porta in italia un’idea diversa di mobilità linkiesta ora 5 è il modello con cui il gruppo automobilistico cinese inaugura la propria presenza diretta nel nostro paese, puntando su tecnologia, sicurezza e un’offerta costruita intorno alle esigenze del mercato gwm il mercato automobilistico europeo sta vivendo 
+tail: rsi nel mercato europeo facendo leva su una combinazione di tecnologie differenti, una rete costruita sul territorio e un prodotto adattato alle esigenze locali. un piano di sviluppo che racconta bene come stia cambiando il mercato dell’automobile e il modo in cui i costruttori internazionali scelgono di affrontarlo. x

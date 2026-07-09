@@ -1,0 +1,9 @@
+page: tgcom24-economia-1
+host: www.tgcom24.mediaset.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 315
+chrome-survivors: []
+raw-paywall-markers: []
+head: il parlamento europeo ha approvato la nuova normativa sui diritti dei passeggerei aerei: risarcimenti più rapidi, bagaglio a mano gratuito e posti garantiti vicino ai bambini, queste le principali novità del provvedimento che aggiorna il regolamento del 2004., viene rafforzata la protezione contro ritardi, cancellazion
+tail: n caso di perdita del volo dovuta a ritardi da parte dei servizi aeroportuali nell'accompagnamento ai gate., l'accordo, una volta confermato dal consiglio, entrerà in vigore 20 giorni dopo la pubblicazione in gazzetta ufficiale, con un periodo di transizione di un anno per l'adeguamento operativo delle compagnie aeree.

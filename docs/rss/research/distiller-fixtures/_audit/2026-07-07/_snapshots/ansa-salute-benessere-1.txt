@@ -1,0 +1,9 @@
+page: ansa-salute-benessere-1
+host: www.ansa.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 484
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium", "bt-Subscribe"]
+head: (di lorenzo attianese) si annuncia una stretta sulla custodia di farmaci stupefacenti come il fentanyl. dopo un vertice a palazzo chigi, il secondo dopo l'episodio del furto di ottanta fiale dello stesso medicinale all'ospedale israelitico di roma nei giorni scorsi, emerge l'ipotesi di un aggiornamento delle norme. ma 
+tail: o un'indagine, nel fascicolo si procede per furto e detenzione ai fini di spaccio di sostanze stupefacenti e i militari hanno anche ascoltato alcune persone all'interno dell'ospedale. non essendoci videosorveglianza nell'area della cassaforte, i carabinieri stanno comunque visionando le immagini delle altre telecamere.

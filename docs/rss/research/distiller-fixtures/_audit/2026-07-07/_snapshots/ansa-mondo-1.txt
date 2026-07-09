@@ -1,0 +1,9 @@
+page: ansa-mondo-1
+host: www.ansa.it lang: it
+distilled: yes
+paywalled-teaser: false
+words: 108
+chrome-survivors: []
+raw-paywall-markers: ["paywall", "premium", "bt-Subscribe"]
+head: marine le pen ha annunciato stasera al telegiornale di tf1 di voler ricorrere alla cassazione contro la condanna confermata in appello, che si candiderà per la quarta volta alle presidenziali e che lo farà "senza indossare il braccialetto elettronico", come prescritto oggi dalla corte d'appello che ha confermato la sua
+tail: ione di ricorrere in cassazione contro la sentenza e considerando che il ricorso è sospensivo della pena. e poi ha aggiunto: "jordan bardella ed io ci battiamo per la francia, non abbiamo ambizioni personali. lui, con la sua energia, sarà un eccezionale primo ministro, saremo un ticket che cambierà le cose in francia".
