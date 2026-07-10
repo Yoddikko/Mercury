@@ -1,6 +1,6 @@
 # Feature: Personalization
 
-## Shipped v1 — "Per te" (For You), AI-only (issue #133)
+## Shipped v1 â "Per te" (For You), AI-only (issue #133)
 
 The embedding/behavioral design below remains the long-term target.
 The shipped v1 is a dedicated **"Per te" feed** in Home (third segment
@@ -9,17 +9,21 @@ the configured AI provider. It is deliberately **AI-only**: interests
 are free-form ("vela oceanica", "fusione nucleare"), and matching an
 arbitrary interest against headlines is a semantic task the provider
 does well and lexical matching does poorly. Without a configured
-provider the tab shows a paper-styled prompt to set one up — it never
+provider the tab shows a paper-styled prompt to set one up â it never
 degrades to a fake personalization.
 
 ### Signals (v1)
 
-* `UserPreferenceEntity.preferredTopics` — the interests, collected in
+* `UserPreferenceEntity.preferredTopics` â the interests, collected in
   onboarding (suggested chips: Italia, Politica, Ambiente, Economia,
-  Sport, Tecnologia, Cronaca, Esteri, Salute, Cultura, Scienza — plus
-  free-text custom entries) and editable later.
+  Sport, Tecnologia, Cronaca, Esteri, Salute, Cultura, Scienza â plus
+  free-text custom entries) and editable at any time from
+  Settings → Interests (same chips + free-text editor, shared
+  component). Saving a change invalidates the persisted Per te picks
+  cache so the next recompute (pull or expiry) re-ranks against the
+  new interests.
 * Interaction history (clicks, reading time, bookmarks) is modeled but
-  NOT consumed in v1 — behavioral personalization stays future work.
+  NOT consumed in v1 â behavioral personalization stays future work.
 
 ### Single fetch, two algorithms
 
@@ -32,9 +36,9 @@ Per te ranks it against the interests:
    the same sampling used for AI grouping.
 2. One provider call (`AIProvider.pickHeadlines`): the prompt carries
    the interest list and the headlines; the model answers JSON-only
-   `{"picks": [{"id", "interest", "relevance"}]}` — at most 30 picks,
+   `{"picks": [{"id", "interest", "relevance"}]}` â at most 30 picks,
    only input ids, `interest` naming which user interest matched,
-   `relevance` 1–100.
+   `relevance` 1â100.
 3. Validation mirrors the grouping path: unknown ids dropped, each id
    used once, picks below a minimum relevance (25) discarded.
 4. Rendering: articles ordered by relevance, each row carrying an
@@ -49,9 +53,9 @@ countdown, and recomputes only on pull-to-refresh or expiry.
 
 ### Rules (v1 addenda)
 
-* No provider → dedicated "configure AI" state, never a silent
+* No provider â dedicated "configure AI" state, never a silent
   lexical imitation.
-* Empty picks (nothing matches the interests) → honest empty state,
+* Empty picks (nothing matches the interests) â honest empty state,
   never padding with unrelated articles.
 * Hidden sources are excluded before the sample (same allow-list).
 
@@ -189,10 +193,10 @@ score =
 
 ## Edge Cases
 
-* no user preferences → fallback to default feed
-* new user → use basic personalization only
-* no interaction history → ignore behavioral signals
-* conflicting signals → prioritize recency
+* no user preferences â fallback to default feed
+* new user â use basic personalization only
+* no interaction history â ignore behavioral signals
+* conflicting signals â prioritize recency
 
 ---
 
@@ -225,8 +229,8 @@ score =
 
 ### Time-Based Personalization
 
-* short session → high-impact articles
-* long session → broader content
+* short session â high-impact articles
+* long session â broader content
 
 ---
 

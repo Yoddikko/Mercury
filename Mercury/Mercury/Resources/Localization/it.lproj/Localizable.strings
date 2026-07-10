@@ -275,6 +275,10 @@
 "home.topics.coverage" = "%lld testate su questa storia";
 "home.topics.more_articles" = "+ altri %lld articoli";
 "home.topics.ai_aggregated" = "Raggruppate con AI";
+"settings.interests.title" = "Interessi";
+"settings.section.interests.header" = "Personalizzazione";
+"settings.section.interests.footer" = "Il feed \"Per te\" ordina le notizie in base a questi interessi.";
+"settings.interests.footer" = "Le modifiche si applicano al prossimo aggiornamento del feed \"Per te\" (trascina verso il basso o attendi il conto alla rovescia).";
 "settings.section.ai.header" = "Intelligenza artificiale";
 "settings.section.ai.footer" = "Le sintesi e il raggruppamento per argomenti usano il provider configurato.";
 "settings.section.about.header" = "Informazioni";

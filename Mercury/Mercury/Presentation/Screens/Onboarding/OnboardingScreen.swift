@@ -158,75 +158,13 @@ struct OnboardingScreen: View {
                 }
                 .padding(.vertical, 8)
             }
-            Section {
-                interestChips(InterestsViewModel.suggestions)
-            }
-            Section {
-                HStack(spacing: 8) {
-                    TextField(
-                        InterestsViewModel.customPlaceholder,
-                        text: $interestsViewModel.customInput
-                    )
-                    .font(.paperCallout)
-                    .onSubmit { interestsViewModel.addCustomInterest() }
-                    .accessibilityIdentifier("onboarding.interests.custom_field")
-                    Button {
-                        interestsViewModel.addCustomInterest()
-                    } label: {
-                        Image(systemName: "plus")
-                    }
-                    .buttonStyle(.paperSecondary)
-                    .accessibilityIdentifier("onboarding.interests.add")
-                }
-                if interestsViewModel.customInterests.isEmpty == false {
-                    interestChips(interestsViewModel.customInterests)
-                }
-            } footer: {
-                Text(InterestsViewModel.aiNote)
-                    .font(.paperMeta)
-                    .foregroundStyle(Color.paperRule)
-            }
-            if let message = interestsViewModel.lastErrorMessage {
-                Section {
-                    Text(message)
-                        .font(.paperMeta)
-                        .foregroundStyle(Color.paperError)
-                }
-            }
+            InterestsEditor(
+                viewModel: interestsViewModel,
+                footerText: InterestsViewModel.aiNote
+            )
         }
         .scrollContentBackground(.hidden)
         .accessibilityIdentifier("onboarding.step.interests")
-    }
-
-    /// Chip grid: selected = ink block, unselected = hairline box.
-    private func interestChips(_ interests: [String]) -> some View {
-        LazyVGrid(
-            columns: [GridItem(.adaptive(minimum: 110), spacing: 8)],
-            alignment: .leading,
-            spacing: 8
-        ) {
-            ForEach(interests, id: \.self) { interest in
-                let isOn = interestsViewModel.isSelected(interest)
-                Button {
-                    interestsViewModel.toggle(interest)
-                } label: {
-                    Text(interest)
-                        .font(.paperBadge)
-                        .textCase(.uppercase)
-                        .lineLimit(1)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 7)
-                        .frame(maxWidth: .infinity)
-                        .foregroundStyle(isOn ? Color.paperBackground : Color.paperInk)
-                        .background(isOn ? Color.paperInk : Color.clear)
-                        .overlay(Rectangle().stroke(Color.paperInk, lineWidth: 0.8))
-                }
-                .buttonStyle(.plain)
-                .accessibilityAddTraits(isOn ? [.isSelected] : [])
-                .accessibilityIdentifier("onboarding.interest.\(interest)")
-            }
-        }
-        .padding(.vertical, 4)
     }
 
     /// Step 4 — compact AI provider setup, skippable. Reuses the

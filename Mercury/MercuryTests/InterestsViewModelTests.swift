@@ -54,12 +54,33 @@ struct InterestsViewModelTests {
         #expect(second.isSelected("Scienza"))
     }
 
+    @Test
+    func persistingAnInterestChangeInvalidatesForYouCache() throws {
+        // Issue #136: the persisted Per te picks were ranked against the
+        // OLD interests — any edit must drop them.
+        let defaults = UserDefaults(suiteName: "test-interests-\(UUID().uuidString)")!
+        let cache = ForYouPicksCache(defaults: defaults)
+        cache.save(ForYouPicksCacheEntry(
+            savedAt: .now,
+            picks: [AIHeadlinePick(id: "a", interest: "Sport", relevance: 70)]
+        ))
+        #expect(cache.loadFresh() != nil)
+
+        let (viewModel, _) = try Self.make(cacheDefaults: defaults)
+        viewModel.load()
+        viewModel.toggle("Politica")
+
+        #expect(cache.loadFresh() == nil)
+    }
+
     // MARK: - Helpers
 
-    private static func make() throws -> (InterestsViewModel, UserPreferencesService) {
+    private static func make(
+        cacheDefaults: UserDefaults = UserDefaults(suiteName: "test-interests-\(UUID().uuidString)")!
+    ) throws -> (InterestsViewModel, UserPreferencesService) {
         let configuration = ModelConfiguration(isStoredInMemoryOnly: true)
         let container = try ModelContainer(for: UserPreferenceEntity.self, configurations: configuration)
         let service = UserPreferencesService(modelContext: ModelContext(container))
-        return (InterestsViewModel(service: service), service)
+        return (InterestsViewModel(service: service, cacheDefaults: cacheDefaults), service)
     }
 }
