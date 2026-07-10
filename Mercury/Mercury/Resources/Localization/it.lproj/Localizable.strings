@@ -288,3 +288,10 @@
 "home.topics.cluster.articles_count" = "%lld articoli";
 "home.topics.ai_unavailable" = "AI non disponibile — raggruppate sul dispositivo";
 "home.topics.articles_count" = "%lld articoli";
+"topics.story_summary.button" = "Sintesi AI della storia";
+"settings.ai.section.summaries" = "Sintesi";
+"settings.ai.summary_language.label" = "Lingua delle sintesi";
+"settings.ai.section.summaries.footer" = "Le sintesi degli articoli e delle storie vengono scritte in questa lingua.";
+"settings.ai.summary_language.system" = "Lingua di sistema";
+"settings.ai.summary_language.italian" = "Italiano";
+"settings.ai.summary_language.english" = "English";

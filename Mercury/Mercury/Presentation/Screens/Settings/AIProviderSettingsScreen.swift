@@ -15,12 +15,14 @@ import SwiftUI
 /// type. Paper design system throughout.
 struct AIProviderSettingsScreen: View {
     @ObservedObject var viewModel: DeveloperAIProviderSettingsViewModel
+    @State private var summaryLanguage = SummaryLanguagePreference.load()
 
     var body: some View {
         Form {
             providerSection
             credentialSection
             modelSection
+            summariesSection
             feedbackSection
         }
         .paperScreen()
@@ -179,6 +181,36 @@ struct AIProviderSettingsScreen: View {
         }
     }
 
+    // MARK: - Summaries
+
+    /// Language of every AI summary (issue #129): defaults to the
+    /// device language, user-overridable.
+    private var summariesSection: some View {
+        Section {
+            Picker(Self.summaryLanguageLabel, selection: $summaryLanguage) {
+                ForEach(SummaryLanguagePreference.allCases) { preference in
+                    Text(preference.displayName)
+                        .font(.paperCallout)
+                        .tag(preference)
+                }
+            }
+            .font(.paperCallout)
+            .tint(Color.paperInk)
+            .onChange(of: summaryLanguage) { _, newValue in
+                newValue.save()
+            }
+            .accessibilityIdentifier("settings.ai.summary_language")
+        } header: {
+            Text(Self.summariesHeader.uppercased())
+                .font(.paperBadge)
+                .foregroundStyle(Color.paperRule)
+        } footer: {
+            Text(Self.summariesFooter)
+                .font(.paperMeta)
+                .foregroundStyle(Color.paperRule)
+        }
+    }
+
     // MARK: - Feedback
 
     @ViewBuilder
@@ -306,6 +338,21 @@ struct AIProviderSettingsScreen: View {
 
     private static var saveConfigurationLabel: String {
         String(localized: "settings.ai.save", defaultValue: "Save configuration")
+    }
+
+    private static var summariesHeader: String {
+        String(localized: "settings.ai.section.summaries", defaultValue: "Summaries")
+    }
+
+    private static var summaryLanguageLabel: String {
+        String(localized: "settings.ai.summary_language.label", defaultValue: "Summary language")
+    }
+
+    private static var summariesFooter: String {
+        String(
+            localized: "settings.ai.section.summaries.footer",
+            defaultValue: "Article and story summaries are written in this language."
+        )
     }
 
     private static var statusReady: String {

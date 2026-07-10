@@ -16,6 +16,12 @@ enum AIPromptBuilder {
         - Do not invent facts.
         - Keep short summary <= 3 sentences.
         - Generate 3 to 5 concise bullets.
+        - If the text begins with a "LANGUAGE:" line, write shortSummary \
+        and bullets in that language and ignore the line itself; \
+        otherwise use the article's own language.
+        - The text may contain multiple articles from different outlets \
+        about the same story: in that case summarize the STORY as a \
+        whole, merging the facts.
         - Return JSON only.
 
         JSON schema:
