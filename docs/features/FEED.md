@@ -68,6 +68,11 @@ Displays a list of articles ranked and filtered based on logic and user preferen
   is lean (coverage badge with sparkles when AI-grouped, lead
   headline, thumbnail, article count) and the AI-unavailable state is
   surfaced as a mono line instead of failing silently
+* the aggregation persists for 12 hours (issue #127): the grouping
+  structure (method + article-id groups) is saved and rehydrated from
+  the article cache on re-entry and relaunch; only pull-to-refresh
+  recomputes (AI-first), and the chronological refresh never touches
+  the topics state
 * tapping an aggregated story opens a dedicated list of ALL its
   articles (lead first) so the user picks which outlet to read;
   pull-to-refresh re-aggregates and retries the AI path (e.g. right

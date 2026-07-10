@@ -89,10 +89,11 @@ final class HomeViewModel: ObservableObject {
     private let ranker = FeedRankingService()
     private let topicAggregator = FeedTopicAggregationService()
     private let topicAIGrouper: TopicAIGrouper?
+    private let topicsCache: TopicGroupsCache
     private var topicTask: Task<Void, Never>?
-    /// Article ids the current `topicState` was computed from — skips
-    /// pointless re-aggregation when switching tabs back and forth.
-    private var topicInputIDs: [String] = []
+    /// Identity of the in-flight aggregation run: a superseded run must
+    /// not publish over its successor's state.
+    private var topicRunToken: UUID?
     private var modelContext: ModelContext?
     private var activeTask: Task<RSSFeedBatchResult, Never>?
     private var activeRequestID: String?
@@ -134,12 +135,14 @@ final class HomeViewModel: ObservableObject {
         isDeveloperModeEnabled: Bool = DeveloperMode.isEnabled,
         logger: AppLogger = .shared,
         maxDisplayedArticles: Int = 50,
-        topicAIGrouper: TopicAIGrouper? = nil
+        topicAIGrouper: TopicAIGrouper? = nil,
+        topicsCacheDefaults: UserDefaults = .standard
     ) {
         self.feedRefreshAction = feedRefreshAction
         self.sourceFilter = sourceFilter
         self.isDeveloperModeEnabled = isDeveloperModeEnabled
         self.topicAIGrouper = topicAIGrouper
+        self.topicsCache = TopicGroupsCache(defaults: topicsCacheDefaults, logger: logger)
         self.logger = logger
         self.maxDisplayedArticles = max(1, maxDisplayedArticles)
         logger.debug(
@@ -531,23 +534,10 @@ final class HomeViewModel: ObservableObject {
         } else {
             state = .loaded(articles: articles)
         }
-        // New articles invalidate the topic aggregation; recompute
-        // immediately only if the user is looking at the Topics tab.
-        // While a run is in flight, let it finish (issue #125): the
-        // restart cancelled the 30-60s AI call every time the
-        // chronological refresh landed, so slow providers could never
-        // complete. Fresh articles are picked up on the next refresh.
-        if topicInputIDs != articles.map(\.id) {
-            if case .aggregating = topicState {
-                // in-flight run keeps ownership of the state
-            } else {
-                topicState = .idle
-                topicInputIDs = []
-                if displayMode == .topics {
-                    refreshTopicsIfNeeded()
-                }
-            }
-        }
+        // The topics state is deliberately decoupled from the
+        // chronological feed (issues #125, #127): its corpus comes from
+        // the cache store, the aggregation persists for 12h, and only
+        // pull-to-refresh recomputes it.
         logger.debug(
             "Applied articles to Home state",
             category: .ui,
@@ -586,44 +576,47 @@ final class HomeViewModel: ObservableObject {
             metadata: ["mode": mode.rawValue]
         )
         if mode == .topics {
-            // Retry the AI path when the last aggregation fell back to
-            // lexical and a grouper is wired (issue #117): the user may
-            // have just configured a provider in Settings.
-            if case let .ready(_, method) = topicState, method == .lexical, topicAIGrouper != nil {
-                topicInputIDs = []
-            }
             refreshTopicsIfNeeded()
         }
     }
 
-    /// Pull-to-refresh on the Topics list: drops the aggregation cache
-    /// and recomputes, awaiting completion so the spinner is honest.
+    /// Pull-to-refresh on the Topics list: bypasses the 12h cache and
+    /// recomputes AI-first, awaiting completion so the spinner is honest.
     func forceRefreshTopics() async {
         logger.info(
             "Topics force refresh requested",
             category: .ui,
             service: "HomeViewModel"
         )
-        topicInputIDs = []
-        refreshTopicsIfNeeded()
+        refreshTopicsIfNeeded(force: true)
         await topicTask?.value
     }
 
-    /// Aggregates the loaded articles into topic clusters off the main
-    /// actor. Idempotent for an unchanged article set.
-    func refreshTopicsIfNeeded() {
+    /// Shows the topics: reuses the in-memory state when present, then
+    /// the persisted 12h cache (issue #127), and only computes from
+    /// scratch when both miss or `force` is set (pull-to-refresh).
+    func refreshTopicsIfNeeded(force: Bool = false) {
         guard case let .loaded(articles) = state else {
             topicState = .empty
             return
         }
-        let inputIDs = articles.map(\.id)
-        if topicInputIDs == inputIDs, case .ready = topicState { return }
-        if case .aggregating = topicState, topicInputIDs == inputIDs { return }
+        if force == false {
+            if case .ready = topicState { return }
+            if case .aggregating = topicState { return }
+        }
 
-        topicInputIDs = inputIDs
+        let runToken = UUID()
+        topicRunToken = runToken
         topicState = .aggregating
         topicAIFailureMessage = nil
         let requestID = "home-topics-\(UUID().uuidString.lowercased())"
+
+        // Fresh persisted aggregation: rehydrate the saved groups from
+        // the article cache instead of recomputing (issue #127).
+        if force == false, let cached = topicsCache.loadFresh(requestID: requestID) {
+            rehydrateTopics(from: cached, runToken: runToken, requestID: requestID)
+            return
+        }
         logger.info(
             "Topic aggregation started",
             category: .ui,
@@ -716,12 +709,81 @@ final class HomeViewModel: ObservableObject {
                 method = .lexical
             }
             guard let self, Task.isCancelled == false else { return }
-            guard self.topicInputIDs == inputIDs else { return }
+            guard self.topicRunToken == runToken else { return }
             self.topicAIFailureMessage = aiFailure
             let resolved = clusters ?? []
             self.topicState = resolved.isEmpty
                 ? .empty
                 : .ready(clusters: resolved, method: method)
+            // Persist the grouping structure for 12h (issue #127): only
+            // multi-article groups; singletons rebuild from the corpus.
+            if resolved.isEmpty == false {
+                self.topicsCache.save(
+                    TopicGroupsCacheEntry(
+                        savedAt: .now,
+                        method: method == .ai ? .ai : .lexical,
+                        groups: resolved
+                            .filter(\.isAggregated)
+                            .map { [$0.lead.id] + $0.members.map(\.id) }
+                    ),
+                    requestID: requestID
+                )
+            }
+        }
+    }
+
+    /// Rebuilds the topics state from a persisted aggregation
+    /// (issue #127): fetches the corpus around the entry's save time and
+    /// reapplies the saved groups — same lead selection and coverage
+    /// ordering, no provider call, no lexical pass.
+    private func rehydrateTopics(
+        from entry: TopicGroupsCacheEntry,
+        runToken: UUID,
+        requestID: String
+    ) {
+        guard let container = modelContext?.container else {
+            // No store attached (tests / placeholder context): treat the
+            // cache as unusable and recompute from scratch.
+            refreshTopicsIfNeeded(force: true)
+            return
+        }
+        let allowList = sourceFilter.makeArticleAllowList(for: currentPreferences())
+        let aggregator = topicAggregator
+        topicTask?.cancel()
+        topicTask = Task { [weak self] in
+            // The window is anchored to the SAVE time, not to now:
+            // otherwise a 10-hour-old aggregation would lose most of its
+            // grouped articles to the 24h filter.
+            let windowAnchor = entry.savedAt
+            let cutoff = windowAnchor.addingTimeInterval(-FeedTopicAggregationService.recencyWindow)
+            let store = ArticleLocalStore(modelContainer: container)
+            var corpus = (try? await store.fetchRecentFeedArticles(
+                limit: Self.topicsCorpusFetchLimit,
+                since: cutoff,
+                requestID: requestID
+            )) ?? []
+            if let allowList {
+                corpus = corpus.filter { article in
+                    allowList.allows(sourceID: article.sourceID, sourceName: article.sourceName)
+                }
+            }
+            let clusters = aggregator.clusters(
+                fromGroups: entry.groups,
+                articles: corpus,
+                now: windowAnchor,
+                requestID: requestID
+            )
+            guard let self, Task.isCancelled == false else { return }
+            guard self.topicRunToken == runToken else { return }
+            if clusters.isEmpty {
+                // Cache no longer maps to stored articles — recompute.
+                self.refreshTopicsIfNeeded(force: true)
+            } else {
+                self.topicState = .ready(
+                    clusters: clusters,
+                    method: entry.method == .ai ? .ai : .lexical
+                )
+            }
         }
     }
 
