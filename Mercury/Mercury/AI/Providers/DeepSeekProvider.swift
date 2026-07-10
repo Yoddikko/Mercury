@@ -189,6 +189,18 @@ struct DeepSeekProvider: AIProvider {
             throw AIProviderError.unsupportedResponse("Missing choices in DeepSeek response.")
         }
 
+        // Truncation diagnostics (issue #138): "length" means the token
+        // budget ran out mid-answer — the most likely source of invalid
+        // JSON even in json_object mode.
+        if let finishReason = first["finish_reason"] as? String, finishReason != "stop" {
+            logger.warn(
+                "DeepSeek response finished abnormally",
+                category: .business,
+                service: "DeepSeekProvider",
+                metadata: ["finish_reason": finishReason]
+            )
+        }
+
         guard let message = first["message"] as? [String: Any] else {
             throw AIProviderError.unsupportedResponse("Missing message object in DeepSeek response.")
         }

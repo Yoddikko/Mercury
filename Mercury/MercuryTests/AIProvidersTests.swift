@@ -30,6 +30,56 @@ struct AIProvidersTests {
         ])
     }
 
+    // MARK: - Model-output JSON hardening (issue #138)
+
+    @Test
+    func parseJSONObjectStringRecoversJSONAfterProseWithStrayBrace() throws {
+        // Reasoning fallbacks return prose that CONTAINS the JSON; a
+        // stray unbalanced brace in the prose must not poison the
+        // extraction.
+        let text = """
+        Let me think about {this problem carefully.
+        The answer is:
+        {"picks": [{"id": "a", "interest": "Sport", "relevance": 80}]}
+        """
+        let object = try AIProviderSupport.parseJSONObjectString(from: text)
+        let picks = try AIProviderSupport.normalizedPicks(from: object)
+        #expect(picks == [AIHeadlinePick(id: "a", interest: "Sport", relevance: 80)])
+    }
+
+    @Test
+    func parseJSONObjectStringToleratesTrailingCommas() throws {
+        let text = #"{"picks": [{"id": "a", "interest": "Sport", "relevance": 80},]}"#
+        let object = try AIProviderSupport.parseJSONObjectString(from: text)
+        let picks = try AIProviderSupport.normalizedPicks(from: object)
+        #expect(picks.count == 1)
+    }
+
+    @Test
+    func parseJSONObjectStringRepairsOutputTruncatedByTokenBudget() throws {
+        // Token budget ran out mid-array: the incomplete trailing pick
+        // is dropped and the brackets are closed.
+        let text = #"{"picks": [{"id": "a", "interest": "Sport", "relevance": 80}, {"id": "b", "inte"#
+        let object = try AIProviderSupport.parseJSONObjectString(from: text)
+        let picks = try AIProviderSupport.normalizedPicks(from: object)
+        #expect(picks == [AIHeadlinePick(id: "a", interest: "Sport", relevance: 80)])
+    }
+
+    @Test
+    func parseJSONObjectStringStillParsesFencedAndPlainJSON() throws {
+        let fenced = """
+        ```json
+        {"groups": [["a", "b"]]}
+        ```
+        """
+        #expect(try AIProviderSupport.normalizedHeadlineGroups(
+            from: AIProviderSupport.parseJSONObjectString(from: fenced)
+        ) == [["a", "b"]])
+        #expect(try AIProviderSupport.parseJSONObjectString(
+            from: #"{"category": "Sports"}"#
+        )["category"] as? String == "Sports")
+    }
+
     @Test
     func openAIProviderExecutorReceivesStableRequestSnapshot() async throws {
         let responseData = Data(
