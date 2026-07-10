@@ -79,6 +79,10 @@ final class HomeViewModel: ObservableObject {
     /// Topics UI surfaces it so the user isn't left guessing why the AI
     /// indicator never appears (issue #119).
     @Published private(set) var topicAIFailureMessage: String?
+    /// When the persisted aggregation expires (issue #131): the Topics
+    /// footer shows a live countdown and the section recomputes when it
+    /// passes. Pull-to-refresh saves a new cache and resets it.
+    @Published private(set) var topicsCacheExpiresAt: Date?
 
     let isDeveloperModeEnabled: Bool
 
@@ -718,9 +722,10 @@ final class HomeViewModel: ObservableObject {
             // Persist the grouping structure for 12h (issue #127): only
             // multi-article groups; singletons rebuild from the corpus.
             if resolved.isEmpty == false {
+                let savedAt = Date.now
                 self.topicsCache.save(
                     TopicGroupsCacheEntry(
-                        savedAt: .now,
+                        savedAt: savedAt,
                         method: method == .ai ? .ai : .lexical,
                         groups: resolved
                             .filter(\.isAggregated)
@@ -728,6 +733,7 @@ final class HomeViewModel: ObservableObject {
                     ),
                     requestID: requestID
                 )
+                self.topicsCacheExpiresAt = savedAt.addingTimeInterval(TopicGroupsCache.ttl)
             }
         }
     }
@@ -783,8 +789,17 @@ final class HomeViewModel: ObservableObject {
                     clusters: clusters,
                     method: entry.method == .ai ? .ai : .lexical
                 )
+                self.topicsCacheExpiresAt = entry.savedAt.addingTimeInterval(TopicGroupsCache.ttl)
             }
         }
+    }
+
+    /// Countdown copy for the Topics footer (issue #131).
+    var topicsAutoRefreshLabel: String {
+        String(
+            localized: "home.topics.auto_refresh",
+            defaultValue: "Refreshes automatically in"
+        )
     }
 
     /// Keeps at most `cap` articles per outlet, preserving order.
