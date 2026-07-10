@@ -346,6 +346,57 @@ struct AIServiceTests {
     }
 
     @Test
+    func personalizePicksValidatesDeduplicatesAndOrders() async throws {
+        // Issue #133: unknown ids, duplicates and weak matches
+        // (relevance < 25) from the provider must never reach the feed;
+        // survivors come back ordered by relevance.
+        struct PickingProvider: AIProvider {
+            let id: AIProviderID
+            func summarizeArticle(_ content: String, requestID: String?) async throws -> AISummaryResult {
+                throw AIProviderError.invalidResponse
+            }
+            func categorizeArticle(_ content: String, requestID: String?) async throws -> AICategoryResult {
+                throw AIProviderError.invalidResponse
+            }
+            func generateTags(_ content: String, requestID: String?) async throws -> [String] {
+                throw AIProviderError.invalidResponse
+            }
+            func pickHeadlines(_ prompt: String, requestID: String?) async throws -> [AIHeadlinePick] {
+                [
+                    AIHeadlinePick(id: "a", interest: "Sport", relevance: 40),
+                    AIHeadlinePick(id: "ghost", interest: "Sport", relevance: 99),
+                    AIHeadlinePick(id: "b", interest: "Politica", relevance: 90),
+                    AIHeadlinePick(id: "a", interest: "Sport", relevance: 80),
+                    AIHeadlinePick(id: "c", interest: "Sport", relevance: 10)
+                ]
+            }
+        }
+
+        let service = AIService(
+            configurationStore: InMemoryAIProviderConfigurationStore(
+                initialConfiguration: completeConfiguration(active: .deepSeek)
+            ),
+            credentialStore: InMemoryAIProviderCredentialStore(
+                initialTokens: [.deepSeek: "token-deepseek"]
+            ),
+            providerFactory: { context in
+                PickingProvider(id: context.providerID)
+            }
+        )
+
+        let picks = try await service.personalizePicks(
+            interests: ["Sport", "Politica"],
+            headlines: [
+                (id: "a", title: "Titolo uno"),
+                (id: "b", title: "Titolo due"),
+                (id: "c", title: "Titolo tre")
+            ]
+        )
+        #expect(picks.map(\.id) == ["b", "a"])
+        #expect(picks.first?.interest == "Politica")
+    }
+
+    @Test
     func propagatesRequestIDToProvider() async throws {
         let configurationStore = InMemoryAIProviderConfigurationStore(
             initialConfiguration: completeConfiguration(active: .openAI)

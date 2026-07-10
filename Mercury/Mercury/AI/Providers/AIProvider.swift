@@ -16,6 +16,9 @@ protocol AIProvider: Sendable {
     /// Groups `id<TAB>title` headline lines by story; returns groups of
     /// article ids, singletons implied by omission (issue #113).
     nonisolated func groupHeadlines(_ headlines: String, requestID: String?) async throws -> [[String]]
+    /// Ranks `id<TAB>title` headline lines against the reader's
+    /// interests; returns validated picks (issue #133).
+    nonisolated func pickHeadlines(_ prompt: String, requestID: String?) async throws -> [AIHeadlinePick]
 }
 
 extension AIProvider {
@@ -25,5 +28,11 @@ extension AIProvider {
     /// providers compiling with graceful degradation.
     nonisolated func groupHeadlines(_ headlines: String, requestID: String?) async throws -> [[String]] {
         throw AIProviderError.parsingFailure("Headline grouping not supported by \(id.rawValue).")
+    }
+
+    /// Default: personal picks unsupported — the "Per te" feed surfaces
+    /// the failure honestly. All five shipping providers override this.
+    nonisolated func pickHeadlines(_ prompt: String, requestID: String?) async throws -> [AIHeadlinePick] {
+        throw AIProviderError.parsingFailure("Personal picks not supported by \(id.rawValue).")
     }
 }

@@ -379,6 +379,100 @@ actor AIService {
         }
     }
 
+    /// Ranks article headlines against the user's interests via the
+    /// active provider (issue #133). Throws when no provider is
+    /// configured — the "Per te" feed has no non-AI fallback by design.
+    /// Picks are validated against the input ids, deduplicated, and
+    /// filtered to relevance >= 25, then sorted by relevance.
+    func personalizePicks(
+        interests: [String],
+        headlines: [(id: String, title: String)],
+        requestID: String? = nil
+    ) async throws -> [AIHeadlinePick] {
+        let flowRequestID = requestID ?? Self.generateRequestID(prefix: "ai-foryou")
+        let provider = try resolveActiveProvider(
+            requestID: flowRequestID,
+            minimumTimeoutSeconds: 60
+        )
+        let input = headlines
+            .map { headline in
+                let title = headline.title
+                    .replacingOccurrences(of: "\n", with: " ")
+                    .prefix(140)
+                return "\(headline.id)\t\(title)"
+            }
+            .joined(separator: "\n")
+        let prompt = AIPromptBuilder.personalPicksPrompt(
+            interests: interests,
+            headlines: input
+        )
+        do {
+            let rawPicks = try await Self.retryingOnceOnTransientFailure(
+                requestID: flowRequestID,
+                logger: logger
+            ) {
+                try await provider.pickHeadlines(prompt, requestID: flowRequestID)
+            }
+            let knownIDs = Set(headlines.map(\.id))
+            var seen: Set<String> = []
+            let picks = rawPicks
+                .filter { pick in
+                    guard knownIDs.contains(pick.id), seen.contains(pick.id) == false else {
+                        return false
+                    }
+                    seen.insert(pick.id)
+                    return pick.relevance >= Self.minimumPickRelevance
+                }
+                .sorted { $0.relevance > $1.relevance }
+            let limited = Array(picks.prefix(Self.maximumPickCount))
+            logger.info(
+                "Personal picks completed",
+                category: .business,
+                service: "AIService",
+                requestID: flowRequestID,
+                metadata: [
+                    "provider": provider.id.rawValue,
+                    "headlines": "\(headlines.count)",
+                    "interests": "\(interests.count)",
+                    "picks": "\(limited.count)"
+                ]
+            )
+            return limited
+        } catch let error as AIProviderError {
+            logger.warn(
+                "Personal picks failed",
+                category: .business,
+                service: "AIService",
+                requestID: flowRequestID,
+                metadata: [
+                    "provider": provider.id.rawValue,
+                    "error": error.localizedDescription
+                ]
+            )
+            throw AIServiceError.providerFailure(provider.id, error)
+        } catch is CancellationError {
+            // Superseded run: propagate untouched (issue #125 semantics).
+            throw CancellationError()
+        } catch {
+            logger.error(
+                "Personal picks failed with unexpected error",
+                category: .business,
+                service: "AIService",
+                requestID: flowRequestID,
+                metadata: [
+                    "provider": provider.id.rawValue,
+                    "error": error.localizedDescription
+                ]
+            )
+            throw AIServiceError.unknown(error.localizedDescription)
+        }
+    }
+
+    /// Picks below this relevance are weak matches the prompt already
+    /// discourages; the floor keeps the feed honest (issue #133).
+    private static let minimumPickRelevance = 25
+    private static let maximumPickCount = 30
+
     func fetchAvailableModels(
         for providerID: AIProviderID,
         tokenOverride: String? = nil,

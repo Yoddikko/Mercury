@@ -84,3 +84,74 @@ nonisolated struct TopicGroupsCache: Sendable {
         )
     }
 }
+
+/// Persisted result of a "Per te" AI ranking (issue #133): only the
+/// pick structure (article id, matched interest, relevance) is stored;
+/// articles rehydrate from the SwiftData cache like the topics do.
+nonisolated struct ForYouPicksCacheEntry: Codable, Sendable {
+    let savedAt: Date
+    let picks: [AIHeadlinePick]
+}
+
+/// UserDefaults-backed store for the last personalized ranking, same
+/// 12h lifecycle as `TopicGroupsCache`: recompute only on expiry or
+/// pull-to-refresh.
+nonisolated struct ForYouPicksCache: Sendable {
+    static let ttl: TimeInterval = TopicGroupsCache.ttl
+
+    private static let key = "mercury.foryou.picks.cache.v1"
+    private let defaults: UserDefaults
+    private let logger: AppLogger
+
+    init(defaults: UserDefaults = .standard, logger: AppLogger = .shared) {
+        self.defaults = defaults
+        self.logger = logger
+    }
+
+    func loadFresh(now: Date = .now, requestID: String? = nil) -> ForYouPicksCacheEntry? {
+        guard let data = defaults.data(forKey: Self.key) else { return nil }
+        guard let entry = try? JSONDecoder().decode(ForYouPicksCacheEntry.self, from: data) else {
+            defaults.removeObject(forKey: Self.key)
+            return nil
+        }
+        let age = now.timeIntervalSince(entry.savedAt)
+        guard age >= 0, age < Self.ttl else {
+            logger.debug(
+                "For You cache expired",
+                category: .cache,
+                service: "ForYouPicksCache",
+                requestID: requestID,
+                metadata: ["age_hours": String(format: "%.1f", age / 3600)]
+            )
+            return nil
+        }
+        logger.info(
+            "For You cache hit",
+            category: .cache,
+            service: "ForYouPicksCache",
+            requestID: requestID,
+            metadata: [
+                "picks": "\(entry.picks.count)",
+                "age_hours": String(format: "%.1f", age / 3600)
+            ]
+        )
+        return entry
+    }
+
+    func save(_ entry: ForYouPicksCacheEntry, requestID: String? = nil) {
+        guard let data = try? JSONEncoder().encode(entry) else { return }
+        defaults.set(data, forKey: Self.key)
+        logger.debug(
+            "For You cache saved",
+            category: .cache,
+            service: "ForYouPicksCache",
+            requestID: requestID,
+            metadata: ["picks": "\(entry.picks.count)"]
+        )
+    }
+
+    /// Pull-to-refresh and interest changes invalidate the ranking.
+    func clear() {
+        defaults.removeObject(forKey: Self.key)
+    }
+}

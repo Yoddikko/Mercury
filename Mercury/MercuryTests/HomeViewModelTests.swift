@@ -275,6 +275,161 @@ struct HomeViewModelTests {
         #expect(outcome.clusters[0].sourceCount == 2)
     }
 
+    // MARK: - For You personalization (issue #133)
+
+    @Test
+    func forYouModeRanksWithAIPickerOrderedByRelevance() async throws {
+        let container = try Self.makeInMemoryContainer()
+        let context = ModelContext(container)
+        _ = try UserPreferencesService(modelContext: context).updatePreferences(
+            UserPreferencePatch(preferredTopics: ["Sport", "Politica"])
+        )
+        let now = Date()
+        let articles = [
+            Self.recentArticle(id: "a", source: "ansa", title: "Notizia sportiva sul campionato", publishedAt: now),
+            Self.recentArticle(id: "b", source: "repubblica", title: "Notizia politica sul governo", publishedAt: now.addingTimeInterval(-300)),
+            Self.recentArticle(id: "c", source: "tgcom24", title: "Notizia di cronaca scorrelata", publishedAt: now.addingTimeInterval(-600))
+        ]
+        let viewModel = makeViewModel(
+            deduplicatedArticles: articles,
+            forYouAIPicker: { interests, _, _ in
+                #expect(Set(interests) == ["Sport", "Politica"])
+                return [
+                    AIHeadlinePick(id: "a", interest: "Sport", relevance: 40),
+                    AIHeadlinePick(id: "b", interest: "Politica", relevance: 90)
+                ]
+            }
+        )
+        viewModel.attach(modelContext: context)
+        await viewModel.refresh()
+        viewModel.selectDisplayMode(.forYou)
+        #expect(viewModel.displayMode == .forYou)
+
+        var picks: [HomeViewModel.ForYouPick]?
+        for _ in 0..<100 {
+            if case let .ready(ready) = viewModel.forYouState {
+                picks = ready
+                break
+            }
+            try await Task.sleep(nanoseconds: 50_000_000)
+        }
+        guard let picks else {
+            Issue.record("Expected .ready For You state, got \(viewModel.forYouState)")
+            return
+        }
+        // Ordered by relevance, unpicked articles excluded.
+        #expect(picks.map(\.id) == ["b", "a"])
+        #expect(picks.first?.interest == "Politica")
+        #expect(viewModel.forYouCacheExpiresAt != nil)
+    }
+
+    @Test
+    func forYouModeAsksForInterestsWhenNoneSaved() async throws {
+        let articles = [
+            Self.recentArticle(id: "a", source: "ansa", title: "Una notizia qualsiasi", publishedAt: Date())
+        ]
+        let viewModel = makeViewModel(
+            deduplicatedArticles: articles,
+            forYouAIPicker: { _, _, _ in
+                Issue.record("Picker called without interests")
+                return []
+            }
+        )
+        await viewModel.refresh()
+        viewModel.selectDisplayMode(.forYou)
+        #expect(viewModel.forYouState == .needsInterests)
+    }
+
+    @Test
+    func forYouModeAsksForProviderWhenPickerMissing() async throws {
+        let container = try Self.makeInMemoryContainer()
+        let context = ModelContext(container)
+        _ = try UserPreferencesService(modelContext: context).updatePreferences(
+            UserPreferencePatch(preferredTopics: ["Sport"])
+        )
+        let articles = [
+            Self.recentArticle(id: "a", source: "ansa", title: "Una notizia qualsiasi", publishedAt: Date())
+        ]
+        let viewModel = makeViewModel(deduplicatedArticles: articles)
+        viewModel.attach(modelContext: context)
+        await viewModel.refresh()
+        viewModel.selectDisplayMode(.forYou)
+        #expect(viewModel.forYouState == .needsProvider)
+    }
+
+    @Test
+    func forYouRehydratesFromPersistedCacheWithoutCallingPicker() async throws {
+        // Issue #133: a second view model with the same cache defaults
+        // and article store must rehydrate the saved picks instantly.
+        let container = try Self.makeInMemoryContainer()
+        let context = ModelContext(container)
+        _ = try UserPreferencesService(modelContext: context).updatePreferences(
+            UserPreferencePatch(preferredTopics: ["Sport"])
+        )
+        let now = Date()
+        context.insert(ArticleEntity(
+            id: "a",
+            title: "Notizia sportiva sul campionato",
+            sourceName: "ansa",
+            sourceID: "ansa",
+            sourceURL: "https://example.com/ansa",
+            articleURL: "https://example.com/ansa/a",
+            publishedAt: now.addingTimeInterval(-3600)
+        ))
+        try context.save()
+
+        let sharedDefaults = Self.ephemeralDefaults()
+        let articles = [
+            Self.recentArticle(id: "a", source: "ansa", title: "Notizia sportiva sul campionato", publishedAt: now.addingTimeInterval(-3600))
+        ]
+
+        let first = makeViewModel(
+            deduplicatedArticles: articles,
+            forYouAIPicker: { _, _, _ in
+                [AIHeadlinePick(id: "a", interest: "Sport", relevance: 70)]
+            },
+            topicsCacheDefaults: sharedDefaults
+        )
+        first.attach(modelContext: context)
+        await first.refresh()
+        first.selectDisplayMode(.forYou)
+        for _ in 0..<100 {
+            if case .ready = first.forYouState { break }
+            try await Task.sleep(nanoseconds: 50_000_000)
+        }
+        guard case .ready = first.forYouState else {
+            Issue.record("First personalization never became ready")
+            return
+        }
+
+        let second = makeViewModel(
+            deduplicatedArticles: articles,
+            forYouAIPicker: { _, _, _ in
+                Issue.record("Picker called despite fresh cache")
+                return []
+            },
+            topicsCacheDefaults: sharedDefaults
+        )
+        second.attach(modelContext: context)
+        await second.refresh()
+        second.selectDisplayMode(.forYou)
+
+        var picks: [HomeViewModel.ForYouPick]?
+        for _ in 0..<100 {
+            if case let .ready(ready) = second.forYouState {
+                picks = ready
+                break
+            }
+            try await Task.sleep(nanoseconds: 50_000_000)
+        }
+        guard let picks else {
+            Issue.record("Expected rehydrated .ready state, got \(second.forYouState)")
+            return
+        }
+        #expect(picks.map(\.id) == ["a"])
+        #expect(picks.first?.interest == "Sport")
+    }
+
     private static func recentArticle(
         id: String,
         source: String,
@@ -721,6 +876,7 @@ struct HomeViewModelTests {
         deduplicatedArticles: [Article],
         checks: [RSSFeedCheckResult] = [],
         topicAIGrouper: HomeViewModel.TopicAIGrouper? = nil,
+        forYouAIPicker: HomeViewModel.ForYouAIPicker? = nil,
         topicsCacheDefaults: UserDefaults = Self.ephemeralDefaults()
     ) -> HomeViewModel {
         let result = RSSFeedBatchResult(
@@ -734,6 +890,7 @@ struct HomeViewModelTests {
             feedRefreshAction: { _ in result },
             isDeveloperModeEnabled: false,
             topicAIGrouper: topicAIGrouper,
+            forYouAIPicker: forYouAIPicker,
             topicsCacheDefaults: topicsCacheDefaults
         )
     }
