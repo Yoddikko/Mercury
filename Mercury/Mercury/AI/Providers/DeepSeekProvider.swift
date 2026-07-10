@@ -135,6 +135,10 @@ struct DeepSeekProvider: AIProvider {
         let body: [String: Any] = [
             "model": model,
             "temperature": 0,
+            // Reasoning models spend the default output budget thinking
+            // and can return an empty `content` (issue #125): give the
+            // final answer explicit room.
+            "max_tokens": 8_192,
             "response_format": ["type": "json_object"],
             "messages": [
                 [
@@ -171,6 +175,14 @@ struct DeepSeekProvider: AIProvider {
         }
 
         if let content = message["content"] as? String {
+            // Reasoning models (deepseek-reasoner, v4-pro) may leave
+            // `content` empty and put the text in `reasoning_content`
+            // (issue #125) — fall back before giving up.
+            if content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+               let reasoning = message["reasoning_content"] as? String,
+               reasoning.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false {
+                return reasoning
+            }
             return content
         }
 

@@ -355,6 +355,10 @@ actor AIService {
                 ]
             )
             throw AIServiceError.providerFailure(provider.id, error)
+        } catch is CancellationError {
+            // Superseded run: propagate untouched so callers can ignore
+            // it (issue #125) instead of logging a phantom failure.
+            throw CancellationError()
         } catch {
             logger.error(
                 "Headline grouping failed with unexpected error",
@@ -462,6 +466,13 @@ actor AIService {
         do {
             return try await operation()
         } catch let error as AIProviderError {
+            // A superseded run cancels the in-flight URLSession task,
+            // which surfaces as -999 mapped to networkFailure
+            // (issue #125): cancellation is not a failure — rethrow as
+            // CancellationError and never retry it.
+            if Task.isCancelled {
+                throw CancellationError()
+            }
             switch error {
             case .networkFailure, .timeout:
                 logger.info(

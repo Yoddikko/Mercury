@@ -533,11 +533,19 @@ final class HomeViewModel: ObservableObject {
         }
         // New articles invalidate the topic aggregation; recompute
         // immediately only if the user is looking at the Topics tab.
+        // While a run is in flight, let it finish (issue #125): the
+        // restart cancelled the 30-60s AI call every time the
+        // chronological refresh landed, so slow providers could never
+        // complete. Fresh articles are picked up on the next refresh.
         if topicInputIDs != articles.map(\.id) {
-            topicState = .idle
-            topicInputIDs = []
-            if displayMode == .topics {
-                refreshTopicsIfNeeded()
+            if case .aggregating = topicState {
+                // in-flight run keeps ownership of the state
+            } else {
+                topicState = .idle
+                topicInputIDs = []
+                if displayMode == .topics {
+                    refreshTopicsIfNeeded()
+                }
             }
         }
         logger.debug(
@@ -685,6 +693,10 @@ final class HomeViewModel: ObservableObject {
                         )
                         method = .ai
                     }
+                } catch is CancellationError {
+                    // Superseded by a newer run (issue #125): exit
+                    // silently, the new run owns the state.
+                    return
                 } catch {
                     aiFailure = error.localizedDescription
                     logger.info(
