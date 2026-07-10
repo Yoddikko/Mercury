@@ -150,27 +150,148 @@ enum AIProviderSupport {
         }
     }
 
+    /// Extracts the first parseable JSON object from model output.
+    /// Hardened for real-world model behavior (issue #138): prose
+    /// around/before the JSON (reasoning fallbacks), stray braces in
+    /// that prose, trailing commas, and output truncated mid-array by
+    /// the token budget are all tolerated. On final failure a bounded
+    /// prefix of the raw output is logged so an attached-console
+    /// session shows exactly what the model sent.
     nonisolated static func parseJSONObjectString(from text: String) throws -> [String: Any] {
         let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
         guard trimmed.isEmpty == false else {
             throw AIProviderError.emptyResponse
         }
 
-        let candidate = firstJSONObjectCandidate(in: trimmed) ?? trimmed
-        guard let data = candidate.data(using: .utf8) else {
-            throw AIProviderError.parsingFailure("Failed to encode model output as UTF-8.")
+        var candidates: [String] = []
+        candidates.append(contentsOf: balancedJSONObjectCandidates(in: trimmed))
+        if let legacy = firstJSONObjectCandidate(in: trimmed) {
+            candidates.append(legacy)
+        }
+        candidates.append(trimmed)
+        if let repaired = repairedTruncatedJSON(in: trimmed) {
+            candidates.append(repaired)
         }
 
-        let value: Any
-        do {
-            value = try JSONSerialization.jsonObject(with: data)
-        } catch {
-            throw AIProviderError.parsingFailure("Invalid JSON in model output: \(error.localizedDescription)")
+        for candidate in candidates {
+            if let object = decodedObject(from: candidate) {
+                return object
+            }
+            if let object = decodedObject(from: strippingTrailingCommas(candidate)) {
+                return object
+            }
         }
-        guard let object = value as? [String: Any] else {
-            throw AIProviderError.parsingFailure("Model output JSON root is not an object.")
+
+        AppLogger.shared.warn(
+            "Model output is not parseable JSON",
+            category: .business,
+            service: "AIProviderSupport",
+            metadata: [
+                "output_length": "\(trimmed.count)",
+                "output_prefix": String(trimmed.prefix(300))
+            ]
+        )
+        throw AIProviderError.parsingFailure("Invalid JSON in model output.")
+    }
+
+    nonisolated private static func decodedObject(from candidate: String) -> [String: Any]? {
+        guard let data = candidate.data(using: .utf8) else { return nil }
+        guard let value = try? JSONSerialization.jsonObject(with: data) else { return nil }
+        return value as? [String: Any]
+    }
+
+    /// Top-level `{…}` blocks found with a string/escape-aware depth
+    /// scan, in order of appearance.
+    nonisolated private static func balancedJSONObjectCandidates(
+        in text: String,
+        limit: Int = 5
+    ) -> [String] {
+        var candidates: [String] = []
+        var depth = 0
+        var inString = false
+        var escaped = false
+        var start: String.Index?
+        var index = text.startIndex
+        while index < text.endIndex, candidates.count < limit {
+            let character = text[index]
+            if inString {
+                if escaped {
+                    escaped = false
+                } else if character == "\\" {
+                    escaped = true
+                } else if character == "\"" {
+                    inString = false
+                }
+            } else {
+                switch character {
+                case "\"":
+                    inString = true
+                case "{":
+                    if depth == 0 { start = index }
+                    depth += 1
+                case "}":
+                    if depth > 0 {
+                        depth -= 1
+                        if depth == 0, let startIndex = start {
+                            candidates.append(String(text[startIndex...index]))
+                            start = nil
+                        }
+                    }
+                default:
+                    break
+                }
+            }
+            index = text.index(after: index)
         }
-        return object
+        return candidates
+    }
+
+    /// Recovers the object anchored at the first `{"` (a stray
+    /// unbalanced prose brace before it poisons the depth scan above,
+    /// but prose braces are almost never followed by a quote): cuts the
+    /// incomplete trailing token at the last closed bracket, then closes
+    /// whatever brackets the token budget left open.
+    nonisolated private static func repairedTruncatedJSON(in text: String) -> String? {
+        guard let start = text.range(of: "{\"")?.lowerBound ?? text.firstIndex(of: "{") else {
+            return nil
+        }
+        var candidate = String(text[start...])
+        if let lastClosed = candidate.lastIndex(where: { $0 == "}" || $0 == "]" }) {
+            candidate = String(candidate[...lastClosed])
+        }
+        var stack: [Character] = []
+        var inString = false
+        var escaped = false
+        for character in candidate {
+            if inString {
+                if escaped {
+                    escaped = false
+                } else if character == "\\" {
+                    escaped = true
+                } else if character == "\"" {
+                    inString = false
+                }
+            } else {
+                switch character {
+                case "\"": inString = true
+                case "{", "[": stack.append(character)
+                case "}", "]": _ = stack.popLast()
+                default: break
+                }
+            }
+        }
+        let closers = stack.reversed().map { $0 == "{" ? "}" : "]" }.joined()
+        return candidate + closers
+    }
+
+    /// Removes trailing commas before `}` / `]` — a common model slip
+    /// that strict JSON parsing rejects.
+    nonisolated private static func strippingTrailingCommas(_ text: String) -> String {
+        text.replacingOccurrences(
+            of: ",\\s*([}\\]])",
+            with: "$1",
+            options: .regularExpression
+        )
     }
 
     nonisolated static func normalizedSummary(from object: [String: Any]) throws -> AISummaryResult {
