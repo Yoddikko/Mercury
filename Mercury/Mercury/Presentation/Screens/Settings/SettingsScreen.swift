@@ -18,19 +18,22 @@ import SwiftData
 struct SettingsScreen: View {
     @Environment(\.modelContext) private var modelContext
     @StateObject private var feedSourcesViewModel: FeedSourcesViewModel
+    @StateObject private var interestsViewModel: InterestsViewModel
     @StateObject private var aiProviderViewModel = DeveloperAIProviderSettingsViewModel()
     private let usesInjectedViewModel: Bool
 
     init() {
-        // The "real" view model is built in `onAppear` because the
-        // environment is not available during `init`. The placeholder
-        // here is replaced before the user can interact with anything.
+        // The "real" view models are built in `onAppear` because the
+        // environment is not available during `init`. The placeholders
+        // here are replaced before the user can interact with anything.
+        let placeholderService = UserPreferencesService(
+            modelContext: ModelContext(SettingsScreen.placeholderContainer)
+        )
         _feedSourcesViewModel = StateObject(
-            wrappedValue: FeedSourcesViewModel(
-                service: UserPreferencesService(
-                    modelContext: ModelContext(SettingsScreen.placeholderContainer)
-                )
-            )
+            wrappedValue: FeedSourcesViewModel(service: placeholderService)
+        )
+        _interestsViewModel = StateObject(
+            wrappedValue: InterestsViewModel(service: placeholderService)
         )
         self.usesInjectedViewModel = false
     }
@@ -39,12 +42,20 @@ struct SettingsScreen: View {
     /// screen can be exercised without a SwiftData stack.
     init(feedSourcesViewModel: FeedSourcesViewModel) {
         _feedSourcesViewModel = StateObject(wrappedValue: feedSourcesViewModel)
+        _interestsViewModel = StateObject(
+            wrappedValue: InterestsViewModel(
+                service: UserPreferencesService(
+                    modelContext: ModelContext(SettingsScreen.placeholderContainer)
+                )
+            )
+        )
         self.usesInjectedViewModel = true
     }
 
     var body: some View {
         Form {
             feedSourcesSection
+            interestsSection
             aiSection
             aboutSection
         }
@@ -56,9 +67,47 @@ struct SettingsScreen: View {
                 rebindToLiveContext()
             }
             feedSourcesViewModel.load()
+            interestsViewModel.load()
             await aiProviderViewModel.load()
         }
         .accessibilityIdentifier("settings.screen")
+    }
+
+    /// Interests behind the "Per te" feed (issue #136): same shared
+    /// editor as the onboarding step, reachable at any time.
+    private var interestsSection: some View {
+        Section {
+            NavigationLink {
+                Form {
+                    InterestsEditor(
+                        viewModel: interestsViewModel,
+                        footerText: Self.interestsFooter
+                    )
+                }
+                .paperScreen()
+                .navigationTitle(Self.interestsTitle)
+                .navigationBarTitleDisplayMode(.inline)
+            } label: {
+                HStack(spacing: 8) {
+                    Text(Self.interestsTitle)
+                        .font(.paperCallout)
+                        .foregroundStyle(Color.paperInk)
+                    Spacer()
+                    Text("\(interestsViewModel.selected.count)")
+                        .font(.paperMeta)
+                        .foregroundStyle(Color.paperRule)
+                }
+            }
+            .accessibilityIdentifier("settings.interests")
+        } header: {
+            Text(Self.interestsSectionHeader.uppercased())
+                .font(.paperBadge)
+                .foregroundStyle(Color.paperRule)
+        } footer: {
+            Text(Self.interestsSectionFooter)
+                .font(.paperMeta)
+                .foregroundStyle(Color.paperRule)
+        }
     }
 
     /// Entry point for the consumer AI provider setup (issue #115): the
@@ -145,6 +194,7 @@ struct SettingsScreen: View {
             liveService,
             cacheMaintenance: ArticleCacheMaintenanceService(modelContext: modelContext)
         )
+        interestsViewModel.replaceService(liveService)
     }
 
     // MARK: - Localized copy
@@ -171,6 +221,31 @@ struct SettingsScreen: View {
         String(
             localized: "settings.section.feed_sources.footer",
             defaultValue: "Choose the Italian outlets that feed the Home stream."
+        )
+    }
+
+    private static var interestsTitle: String {
+        String(localized: "settings.interests.title", defaultValue: "Interests")
+    }
+
+    private static var interestsSectionHeader: String {
+        String(
+            localized: "settings.section.interests.header",
+            defaultValue: "Personalization"
+        )
+    }
+
+    private static var interestsSectionFooter: String {
+        String(
+            localized: "settings.section.interests.footer",
+            defaultValue: "The \"For You\" feed ranks the news against these interests."
+        )
+    }
+
+    private static var interestsFooter: String {
+        String(
+            localized: "settings.interests.footer",
+            defaultValue: "Changes apply the next time the \"For You\" feed refreshes (pull down or wait for the countdown)."
         )
     }
 

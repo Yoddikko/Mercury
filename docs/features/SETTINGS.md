@@ -2,7 +2,7 @@
 
 ## Description
 
-The Settings screen exposes app-level toggles the user can change at any time. It is distinct from the Preferences screen (which captures content-personalization signals — preferred categories, topics, favorite/hidden sources, preferred language) in that Settings configures **how the app behaves and presents content**, not **what content to surface**.
+The Settings screen exposes app-level toggles the user can change at any time. It is distinct from the Preferences screen (which captures content-personalization signals â preferred categories, topics, favorite/hidden sources, preferred language) in that Settings configures **how the app behaves and presents content**, not **what content to surface**.
 
 ---
 
@@ -10,9 +10,9 @@ The Settings screen exposes app-level toggles the user can change at any time. I
 
 In scope (this iteration):
 
-* feed sources — region selection + per-outlet on/off (shared with the
+* feed sources â region selection + per-outlet on/off (shared with the
   onboarding flow described in `docs/product/ONBOARDING.md`)
-* **AI provider (issue #115)** — consumer-grade configuration, promoted
+* **AI provider (issue #115)** â consumer-grade configuration, promoted
   out of Developer Tools:
   * pick the active provider (OpenAI, Claude, Gemini, Ollama, DeepSeek);
     each row shows a mono "READY / KEY MISSING" status badge, the active
@@ -22,12 +22,16 @@ In scope (this iteration):
     key presence shown, never the key itself; Ollama needs endpoint,
     not key)
   * model: load the provider's available models and pick one, or type a
-    model id directly (mono font — technical voice)
+    model id directly (mono font â technical voice)
   * the screen reuses the existing `DeveloperAIProviderSettingsViewModel`
     (single source of provider-settings behavior; the Developer
     Playground keeps its advanced diagnostics surface)
   * everything is Paper design system compliant: serif rows, mono
     badges/status, paper buttons, no default iOS styling
+* **interests** — manage the "Per te" interests outside onboarding:
+  same suggested-chips + free-text editor (shared component, see
+  `docs/features/PERSONALIZATION.md`); edits persist immediately to
+  `preferredTopics` and invalidate the Per te picks cache
 * app version row (mono) in a trailing About section
 
 Reserved for future iterations (out of scope here, listed so the screen can grow without re-litigating):
@@ -66,7 +70,7 @@ native-only.
 
 ## Rules
 
-* The Settings screen is **stateless across launches** — every read goes through `UserPreferencesService`. No `@AppStorage`-only fields.
+* The Settings screen is **stateless across launches** â every read goes through `UserPreferencesService`. No `@AppStorage`-only fields.
 * Changes take effect on the next render (no app restart required).
 
 ---
@@ -78,12 +82,12 @@ choices captured during onboarding.
 
 ### Fields
 
-* `enabledRegionRawValues: [String]` — raw values of `RSSFeedRegion` the
+* `enabledRegionRawValues: [String]` â raw values of `RSSFeedRegion` the
   user opted in to. **Opt-in semantics**: the persisted list holds
   exactly the regions the user picked. Empty is only the pre-onboarding
   state and triggers the `RSSSourceFilter` fallback to
   `RSSFeedCatalog.mainOutlets`.
-* `hiddenSources: [String]` — outlet IDs the user has toggled off. Reused
+* `hiddenSources: [String]` â outlet IDs the user has toggled off. Reused
   from the existing preferences field so per-outlet opt-outs stay in one
   place.
 
@@ -99,13 +103,13 @@ choices captured during onboarding.
   OFF; the persisted `enabledRegionRawValues` is exactly the set the
   user opted in to (not "everyone minus the ones they turned off").
 * Toggling a region on/off updates `enabledRegionRawValues` via
-  `UserPreferencePatch`. Toggles are optimistic — the row flips
-  immediately and only rolls back on persistence failure — so rapid
+  `UserPreferencePatch`. Toggles are optimistic â the row flips
+  immediately and only rolls back on persistence failure â so rapid
   taps stay snappy.
 * Toggling an outlet on/off updates `hiddenSources` via the same patch,
   mirrored into a published `Set<String>` so the disclosure rows
   re-render without a full picker rebuild.
-* The region → outlets projection is memoized in the view model
+* The region â outlets projection is memoized in the view model
   (`outletsByRegion`) at first load. Toggles never rescan
   `RSSFeedCatalog`.
 * `RSSSourceFilter` still treats an empty `enabledRegionRawValues` as
@@ -120,13 +124,13 @@ choices captured during onboarding.
   best-effort: if it fails, the cache replay filter still hides the
   rows and the retention sweep reclaims them later.
 * The same preferences gate the SwiftData cache replay and search (see
-  `docs/features/FEED.md` § Cache Replay & Retention), so previously
+  `docs/features/FEED.md` Â§ Cache Replay & Retention), so previously
   cached articles from disabled sources disappear from the feed
-  immediately — not just from the next network fetch.
+  immediately â not just from the next network fetch.
 
 ### Flow
 
-1. User opens Settings → Feed sources.
+1. User opens Settings â Feed sources.
 2. Screen reads `UserPreference` and renders regions grouped from
    `RSSFeedCatalog.availableRegions`, each row showing an on/off toggle
    plus an expandable list of outlets.
@@ -150,4 +154,4 @@ regions/outlets just picked.
 ## Notes
 
 * The Personalization (`PERSONALIZATION.md`) and Settings features both write into the same `UserPreference` model; their separation is **semantic only** (Personalization = ranking signals, Settings = display behavior).
-* Future cloud sync (per `ARCHITECTURE.md` §2.3 / §13.3) naturally covers both because they share the same entity.
+* Future cloud sync (per `ARCHITECTURE.md` Â§2.3 / Â§13.3) naturally covers both because they share the same entity.

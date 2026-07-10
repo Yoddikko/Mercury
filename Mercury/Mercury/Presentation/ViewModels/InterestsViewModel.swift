@@ -27,10 +27,16 @@ final class InterestsViewModel: ObservableObject {
 
     private var service: UserPreferencesService
     private let logger: AppLogger
+    private let forYouCache: ForYouPicksCache
 
-    init(service: UserPreferencesService, logger: AppLogger = .shared) {
+    init(
+        service: UserPreferencesService,
+        logger: AppLogger = .shared,
+        cacheDefaults: UserDefaults = .standard
+    ) {
         self.service = service
         self.logger = logger
+        self.forYouCache = ForYouPicksCache(defaults: cacheDefaults, logger: logger)
     }
 
     func replaceService(_ service: UserPreferencesService) {
@@ -87,6 +93,10 @@ final class InterestsViewModel: ObservableObject {
     private func persist() {
         do {
             _ = try service.updatePreferences(UserPreferencePatch(preferredTopics: selected))
+            // Stale ranking guard (issue #136): the persisted Per te
+            // picks were computed against the old interests — drop them
+            // so the next recompute uses the new ones.
+            forYouCache.clear()
             lastErrorMessage = nil
             logger.debug(
                 "Interests persisted",
