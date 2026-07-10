@@ -288,3 +288,10 @@
 "home.topics.cluster.articles_count" = "%lld articles";
 "home.topics.ai_unavailable" = "AI grouping unavailable — grouped on device";
 "home.topics.articles_count" = "%lld articles";
+"topics.story_summary.button" = "AI story summary";
+"settings.ai.section.summaries" = "Summaries";
+"settings.ai.summary_language.label" = "Summary language";
+"settings.ai.section.summaries.footer" = "Article and story summaries are written in this language.";
+"settings.ai.summary_language.system" = "System language";
+"settings.ai.summary_language.italian" = "Italiano";
+"settings.ai.summary_language.english" = "English";

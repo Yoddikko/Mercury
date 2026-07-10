@@ -167,8 +167,13 @@ actor AIService {
     func summarizeArticle(_ content: String, requestID: String? = nil) async throws -> AISummaryResult {
         let flowRequestID = requestID ?? Self.generateRequestID(prefix: "ai-summary")
         let provider = try resolveActiveProvider(requestID: flowRequestID)
+        // Summaries are written in the user's chosen language
+        // (issue #129): the LANGUAGE line is consumed by the shared
+        // summary prompt, so no provider-protocol change is needed.
+        let languageName = SummaryLanguagePreference.load().promptLanguageName()
+        let localizedContent = "LANGUAGE: \(languageName)\n\n" + content
         do {
-            let result = try await provider.summarizeArticle(content, requestID: flowRequestID)
+            let result = try await provider.summarizeArticle(localizedContent, requestID: flowRequestID)
             logger.info(
                 "Summary operation completed",
                 category: .business,

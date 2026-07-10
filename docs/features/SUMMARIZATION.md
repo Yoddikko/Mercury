@@ -41,6 +41,22 @@ The cached-summary check reads `aiSummaryShort` only.
 
 ---
 
+## Language (issue #129)
+
+Summaries (article AND story) are written in the language the user
+picked in Settings -> AI provider -> Summaries; the default is the
+device language. `AIService.summarizeArticle` prefixes the content
+with a `LANGUAGE: <name>` line consumed by the shared summary prompt
+(no provider-protocol change).
+
+## Story summary (issue #129)
+
+The topic cluster screen offers an on-demand "AI story summary": the
+cluster articles (source + title + truncated best text, global cap)
+are combined into one input and summarized as a single story. Same
+states as the article summary (generate -> loading -> ready +
+regenerate, failure with reason). Result is in-memory per screen.
+
 ## Trigger
 
 * **On-demand only.** The summary is generated when the user taps the summary button on the article detail screen.
