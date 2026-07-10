@@ -57,6 +57,13 @@ struct DependencyContainer {
                     articles.map { (id: $0.id, title: $0.title) },
                     requestID: requestID
                 )
+            },
+            forYouAIPicker: { interests, articles, requestID in
+                try await aiService.personalizePicks(
+                    interests: interests,
+                    headlines: articles.map { (id: $0.id, title: $0.title) },
+                    requestID: requestID
+                )
             }
         )
     }

@@ -11,6 +11,26 @@ import Testing
 
 struct AIProvidersTests {
     @Test
+    func normalizedPicksDropsMalformedEntriesAndClampsRelevance() throws {
+        // Issue #133: the picks parser tolerates a sloppy model — rows
+        // without id/interest are dropped, relevance is clamped to 1-100.
+        let object: [String: Any] = [
+            "picks": [
+                ["id": "a", "interest": "Sport", "relevance": 80],
+                ["id": "", "interest": "Sport", "relevance": 50],
+                ["interest": "Sport", "relevance": 50],
+                ["id": "b", "interest": "Politica", "relevance": 250],
+                "garbage"
+            ]
+        ]
+        let picks = try AIProviderSupport.normalizedPicks(from: object)
+        #expect(picks == [
+            AIHeadlinePick(id: "a", interest: "Sport", relevance: 80),
+            AIHeadlinePick(id: "b", interest: "Politica", relevance: 100)
+        ])
+    }
+
+    @Test
     func openAIProviderExecutorReceivesStableRequestSnapshot() async throws {
         let responseData = Data(
             """

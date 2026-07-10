@@ -201,6 +201,28 @@ enum AIProviderSupport {
         return AICategoryResult(category: category)
     }
 
+    /// Parses the personal-picks response (issue #133): `picks` as an
+    /// array of {id, interest, relevance} objects; malformed entries
+    /// are dropped, relevance is clamped to 1-100.
+    nonisolated static func normalizedPicks(from object: [String: Any]) throws -> [AIHeadlinePick] {
+        guard let rawPicks = object["picks"] as? [Any] else {
+            throw AIProviderError.parsingFailure("Missing picks array.")
+        }
+        return rawPicks.compactMap { rawPick -> AIHeadlinePick? in
+            guard let pick = rawPick as? [String: Any] else { return nil }
+            let id = sanitizeText(pick["id"] as? String)
+            let interest = sanitizeText(pick["interest"] as? String)
+            guard id.isEmpty == false, interest.isEmpty == false else { return nil }
+            let relevance = (pick["relevance"] as? Int)
+                ?? Int(pick["relevance"] as? Double ?? 0)
+            return AIHeadlinePick(
+                id: id,
+                interest: interest,
+                relevance: min(100, max(1, relevance))
+            )
+        }
+    }
+
     /// Parses the headline-grouping response (issue #113): `groups` as
     /// an array of arrays of ids, dropping empties and one-element
     /// groups (singletons are implied by omission).

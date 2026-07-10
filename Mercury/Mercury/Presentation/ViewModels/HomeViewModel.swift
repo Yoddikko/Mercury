@@ -33,12 +33,42 @@ final class HomeViewModel: ObservableObject {
         case failed(message: String)
     }
 
-    /// Home shows two feeds behind a segmented control (issue #109):
-    /// the chronological stream and the last-24h topic aggregation.
+    /// Home shows three feeds behind a segmented control (issues #109,
+    /// #133): the chronological stream, the last-24h topic aggregation
+    /// and the AI-personalized "For You" ranking.
     enum FeedDisplayMode: String, CaseIterable {
         case chronological
         case topics
+        case forYou
     }
+
+    /// One personalized entry in the "For You" feed (issue #133): the
+    /// article, the user interest the AI matched it to, and a 1-100
+    /// relevance driving the order.
+    struct ForYouPick: Equatable, Identifiable {
+        let article: Article
+        let interest: String
+        let relevance: Int
+        var id: String { article.id }
+    }
+
+    /// State machine for the "For You" tab. The feature is AI-only by
+    /// design (issue #133): no provider means an honest configure
+    /// prompt, never a silent fallback.
+    enum ForYouFeedState: Equatable {
+        case idle
+        case loading
+        case ready(picks: [ForYouPick])
+        case needsInterests
+        case needsProvider
+        case empty
+        case failed(message: String)
+    }
+
+    /// Seam for the provider-made personalization (issue #133): takes
+    /// the user's interests and the candidate articles, returns
+    /// validated picks. Production wires `AIService.personalizePicks`.
+    typealias ForYouAIPicker = @Sendable (_ interests: [String], _ articles: [Article], _ requestID: String) async throws -> [AIHeadlinePick]
 
     /// Dedicated state machine for the Topics tab: aggregation runs off
     /// the main actor and the tab shows a "grouping…" state meanwhile.
@@ -83,6 +113,10 @@ final class HomeViewModel: ObservableObject {
     /// footer shows a live countdown and the section recomputes when it
     /// passes. Pull-to-refresh saves a new cache and resets it.
     @Published private(set) var topicsCacheExpiresAt: Date?
+    @Published private(set) var forYouState: ForYouFeedState = .idle
+    /// When the persisted personalization expires (issue #133): same
+    /// countdown + auto-recompute contract as the Topics tab.
+    @Published private(set) var forYouCacheExpiresAt: Date?
 
     let isDeveloperModeEnabled: Bool
 
@@ -94,10 +128,14 @@ final class HomeViewModel: ObservableObject {
     private let topicAggregator = FeedTopicAggregationService()
     private let topicAIGrouper: TopicAIGrouper?
     private let topicsCache: TopicGroupsCache
+    private let forYouAIPicker: ForYouAIPicker?
+    private let forYouCache: ForYouPicksCache
     private var topicTask: Task<Void, Never>?
+    private var forYouTask: Task<Void, Never>?
     /// Identity of the in-flight aggregation run: a superseded run must
     /// not publish over its successor's state.
     private var topicRunToken: UUID?
+    private var forYouRunToken: UUID?
     private var modelContext: ModelContext?
     private var activeTask: Task<RSSFeedBatchResult, Never>?
     private var activeRequestID: String?
@@ -113,7 +151,8 @@ final class HomeViewModel: ObservableObject {
         fetchHomeFeedUseCase: FetchHomeFeedUseCase,
         sourceFilter: RSSSourceFilter = RSSSourceFilter(),
         isDeveloperModeEnabled: Bool = DeveloperMode.isEnabled,
-        topicAIGrouper: TopicAIGrouper? = nil
+        topicAIGrouper: TopicAIGrouper? = nil,
+        forYouAIPicker: ForYouAIPicker? = nil
     ) {
         self.init(
             feedRefreshAction: { sources in
@@ -126,7 +165,8 @@ final class HomeViewModel: ObservableObject {
             },
             sourceFilter: sourceFilter,
             isDeveloperModeEnabled: isDeveloperModeEnabled,
-            topicAIGrouper: topicAIGrouper
+            topicAIGrouper: topicAIGrouper,
+            forYouAIPicker: forYouAIPicker
         )
     }
 
@@ -140,13 +180,16 @@ final class HomeViewModel: ObservableObject {
         logger: AppLogger = .shared,
         maxDisplayedArticles: Int = 50,
         topicAIGrouper: TopicAIGrouper? = nil,
+        forYouAIPicker: ForYouAIPicker? = nil,
         topicsCacheDefaults: UserDefaults = .standard
     ) {
         self.feedRefreshAction = feedRefreshAction
         self.sourceFilter = sourceFilter
         self.isDeveloperModeEnabled = isDeveloperModeEnabled
         self.topicAIGrouper = topicAIGrouper
+        self.forYouAIPicker = forYouAIPicker
         self.topicsCache = TopicGroupsCache(defaults: topicsCacheDefaults, logger: logger)
+        self.forYouCache = ForYouPicksCache(defaults: topicsCacheDefaults, logger: logger)
         self.logger = logger
         self.maxDisplayedArticles = max(1, maxDisplayedArticles)
         logger.debug(
@@ -163,6 +206,7 @@ final class HomeViewModel: ObservableObject {
     deinit {
         activeTask?.cancel()
         topicTask?.cancel()
+        forYouTask?.cancel()
         logger.debug(
             "Deinitializing Home view model",
             category: .ui,
@@ -582,6 +626,9 @@ final class HomeViewModel: ObservableObject {
         if mode == .topics {
             refreshTopicsIfNeeded()
         }
+        if mode == .forYou {
+            refreshForYouIfNeeded()
+        }
     }
 
     /// Pull-to-refresh on the Topics list: bypasses the 12h cache and
@@ -792,6 +839,265 @@ final class HomeViewModel: ObservableObject {
                 self.topicsCacheExpiresAt = entry.savedAt.addingTimeInterval(TopicGroupsCache.ttl)
             }
         }
+    }
+
+    // MARK: - For You personalization (issue #133)
+
+    /// Pull-to-refresh on the For You list: bypasses the 12h cache and
+    /// re-ranks, awaiting completion so the spinner is honest.
+    func forceRefreshForYou() async {
+        logger.info(
+            "For You force refresh requested",
+            category: .ui,
+            service: "HomeViewModel"
+        )
+        refreshForYouIfNeeded(force: true)
+        await forYouTask?.value
+    }
+
+    /// Shows the personalized feed: in-memory state first, then the
+    /// persisted 12h cache, and only calls the provider when both miss
+    /// or `force` is set. AI-only by design (issue #133): no provider
+    /// or no interests produce dedicated honest states, never a
+    /// silent fallback ranking.
+    func refreshForYouIfNeeded(force: Bool = false) {
+        guard case let .loaded(displayed) = state else {
+            forYouState = .empty
+            return
+        }
+        let interests = currentPreferences()?.preferredTopics ?? []
+        guard interests.isEmpty == false else {
+            forYouState = .needsInterests
+            return
+        }
+        guard let picker = forYouAIPicker else {
+            forYouState = .needsProvider
+            return
+        }
+        if force == false {
+            if case .ready = forYouState { return }
+            if case .loading = forYouState { return }
+        }
+
+        let runToken = UUID()
+        forYouRunToken = runToken
+        forYouState = .loading
+        let requestID = "home-foryou-\(UUID().uuidString.lowercased())"
+
+        if force == false, let cached = forYouCache.loadFresh(requestID: requestID) {
+            rehydrateForYou(from: cached, runToken: runToken, requestID: requestID)
+            return
+        }
+        logger.info(
+            "For You personalization started",
+            category: .ui,
+            service: "HomeViewModel",
+            requestID: requestID,
+            metadata: ["interests": "\(interests.count)"]
+        )
+        forYouTask?.cancel()
+        let container = modelContext?.container
+        let allowList = sourceFilter.makeArticleAllowList(for: currentPreferences())
+        forYouTask = Task { [weak self, logger, forYouCache] in
+            // Without a store (unit tests) the displayed articles stay
+            // the corpus, mirroring the topics flow.
+            let corpus = await Self.loadPersonalizationCorpus(
+                container: container,
+                allowList: allowList,
+                fallback: displayed,
+                anchor: .now,
+                requestID: requestID
+            )
+            let candidates = Self.balancedSample(
+                corpus.filter { $0.publishedAt >= Date().addingTimeInterval(-FeedTopicAggregationService.recencyWindow) },
+                limit: Self.topicsAIHeadlineLimit
+            )
+            guard candidates.isEmpty == false else {
+                guard let self, self.forYouRunToken == runToken else { return }
+                self.forYouState = .empty
+                return
+            }
+            do {
+                let rawPicks = try await picker(interests, candidates, requestID)
+                guard let self, Task.isCancelled == false else { return }
+                guard self.forYouRunToken == runToken else { return }
+                let picks = Self.resolvePicks(rawPicks, articles: corpus)
+                self.forYouState = picks.isEmpty ? .empty : .ready(picks: picks)
+                if picks.isEmpty == false {
+                    let savedAt = Date.now
+                    forYouCache.save(
+                        ForYouPicksCacheEntry(savedAt: savedAt, picks: rawPicks),
+                        requestID: requestID
+                    )
+                    self.forYouCacheExpiresAt = savedAt.addingTimeInterval(ForYouPicksCache.ttl)
+                }
+            } catch is CancellationError {
+                // Superseded by a newer run (issue #125 semantics).
+                return
+            } catch {
+                guard let self, self.forYouRunToken == runToken else { return }
+                if case AIServiceError.invalidConfiguration = error {
+                    self.forYouState = .needsProvider
+                } else if case AIServiceError.missingToken = error {
+                    self.forYouState = .needsProvider
+                } else {
+                    self.forYouState = .failed(message: error.localizedDescription)
+                }
+                logger.warn(
+                    "For You personalization failed",
+                    category: .business,
+                    service: "HomeViewModel",
+                    requestID: requestID,
+                    metadata: ["error": String(describing: error)]
+                )
+            }
+        }
+    }
+
+    /// Rebuilds the For You state from a persisted ranking: fetches the
+    /// corpus anchored to the save time and maps the saved picks back to
+    /// articles — no provider call.
+    private func rehydrateForYou(
+        from entry: ForYouPicksCacheEntry,
+        runToken: UUID,
+        requestID: String
+    ) {
+        guard let container = modelContext?.container else {
+            refreshForYouIfNeeded(force: true)
+            return
+        }
+        let allowList = sourceFilter.makeArticleAllowList(for: currentPreferences())
+        forYouTask?.cancel()
+        forYouTask = Task { [weak self] in
+            let corpus = await Self.loadPersonalizationCorpus(
+                container: container,
+                allowList: allowList,
+                fallback: [],
+                anchor: entry.savedAt,
+                requestID: requestID
+            )
+            let picks = Self.resolvePicks(entry.picks, articles: corpus)
+            guard let self, Task.isCancelled == false else { return }
+            guard self.forYouRunToken == runToken else { return }
+            if picks.isEmpty {
+                // Cache no longer maps to stored articles — recompute.
+                self.refreshForYouIfNeeded(force: true)
+            } else {
+                self.forYouState = .ready(picks: picks)
+                self.forYouCacheExpiresAt = entry.savedAt.addingTimeInterval(ForYouPicksCache.ttl)
+            }
+        }
+    }
+
+    /// Last-24h corpus for the personalization, same shape as the topics
+    /// corpus: cache fetch anchored to `anchor`, allow-list filter,
+    /// per-outlet cap.
+    nonisolated private static func loadPersonalizationCorpus(
+        container: ModelContainer?,
+        allowList: ArticleSourceAllowList?,
+        fallback: [Article],
+        anchor: Date,
+        requestID: String
+    ) async -> [Article] {
+        let cutoff = anchor.addingTimeInterval(-FeedTopicAggregationService.recencyWindow)
+        var corpus = fallback
+        if let container {
+            let store = ArticleLocalStore(modelContainer: container)
+            if let fetched = try? await store.fetchRecentFeedArticles(
+                limit: topicsCorpusFetchLimit,
+                since: cutoff,
+                requestID: requestID
+            ), fetched.isEmpty == false {
+                corpus = fetched
+            }
+        }
+        if let allowList {
+            corpus = corpus.filter { article in
+                allowList.allows(sourceID: article.sourceID, sourceName: article.sourceName)
+            }
+        }
+        return cappingPerSource(corpus, cap: topicsPerSourceCap)
+    }
+
+    /// Maps validated AI picks back to articles, preserving the
+    /// relevance order; picks whose article left the cache are dropped.
+    nonisolated private static func resolvePicks(
+        _ picks: [AIHeadlinePick],
+        articles: [Article]
+    ) -> [ForYouPick] {
+        let byID = Dictionary(articles.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+        return picks
+            .sorted { $0.relevance > $1.relevance }
+            .compactMap { pick in
+                guard let article = byID[pick.id] else { return nil }
+                return ForYouPick(article: article, interest: pick.interest, relevance: pick.relevance)
+            }
+    }
+
+    // MARK: - For You localized copy
+
+    var displayModeForYouLabel: String {
+        String(localized: "home.feed_mode.for_you", defaultValue: "For You")
+    }
+
+    var forYouLoadingLabel: String {
+        String(
+            localized: "home.for_you.loading",
+            defaultValue: "Picking the news for you…"
+        )
+    }
+
+    var forYouLoadingHint: String {
+        String(
+            localized: "home.for_you.loading.hint",
+            defaultValue: "AI is matching the last 24 hours against your interests"
+        )
+    }
+
+    var forYouNeedsProviderTitle: String {
+        String(
+            localized: "home.for_you.needs_provider.title",
+            defaultValue: "For You needs an AI provider"
+        )
+    }
+
+    var forYouNeedsProviderSubtitle: String {
+        String(
+            localized: "home.for_you.needs_provider.subtitle",
+            defaultValue: "This feed is ranked by AI against your interests. Configure a provider in Settings to enable it."
+        )
+    }
+
+    var forYouNeedsInterestsTitle: String {
+        String(
+            localized: "home.for_you.needs_interests.title",
+            defaultValue: "Tell us what you care about"
+        )
+    }
+
+    var forYouNeedsInterestsSubtitle: String {
+        String(
+            localized: "home.for_you.needs_interests.subtitle",
+            defaultValue: "Add your interests in Settings and the AI will pick matching stories here."
+        )
+    }
+
+    var forYouEmptyLabel: String {
+        String(
+            localized: "home.for_you.empty",
+            defaultValue: "No stories matching your interests in the last 24 hours."
+        )
+    }
+
+    var forYouFailedTitle: String {
+        String(
+            localized: "home.for_you.failed.title",
+            defaultValue: "Personalization failed"
+        )
+    }
+
+    var forYouRetryLabel: String {
+        String(localized: "home.for_you.retry", defaultValue: "Try again")
     }
 
     /// Countdown copy for the Topics footer (issue #131).

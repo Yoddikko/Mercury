@@ -106,6 +106,25 @@ struct ClaudeProvider: AIProvider {
         return try AIProviderSupport.normalizedHeadlineGroups(from: output)
     }
 
+    nonisolated func pickHeadlines(_ prompt: String, requestID: String?) async throws -> [AIHeadlinePick] {
+        logger.debug(
+            "Running personal picks operation",
+            category: .business,
+            service: "ClaudeProvider",
+            requestID: requestID,
+            metadata: [
+                "provider": id.rawValue,
+                "model": model
+            ]
+        )
+
+        let output = try await runPrompt(
+            prompt: prompt,
+            requestID: requestID
+        )
+        return try AIProviderSupport.normalizedPicks(from: output)
+    }
+
     nonisolated private func runPrompt(
         prompt: String,
         requestID: String?

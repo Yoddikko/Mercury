@@ -63,6 +63,14 @@ enum AIProviderID: String, CaseIterable, Codable, Sendable, Identifiable {
     }
 }
 
+/// One personalized pick from the "Per te" ranking (issue #133): the
+/// article id, which user interest it matched, and a 1-100 relevance.
+nonisolated struct AIHeadlinePick: Sendable, Equatable, Codable {
+    let id: String
+    let interest: String
+    let relevance: Int
+}
+
 struct AISummaryResult: Sendable, Equatable {
     nonisolated let shortSummary: String
     nonisolated let bullets: [String]

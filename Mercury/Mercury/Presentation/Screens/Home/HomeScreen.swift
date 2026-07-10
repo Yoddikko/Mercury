@@ -132,18 +132,21 @@ struct HomeScreen: View {
                     loadedList(articles: articles)
                 case .topics:
                     topicsContent
+                case .forYou:
+                    forYouContent
                 }
             }
         }
     }
 
-    /// Paper-styled two-way segmented control (issue #109): the
-    /// selected mode is an ink-filled block, the other a hairline box —
+    /// Paper-styled segmented control (issues #109, #133): the
+    /// selected mode is an ink-filled block, the others a hairline box —
     /// printed tabs, per the design system.
     private var feedModePicker: some View {
         HStack(spacing: 0) {
             feedModeButton(.chronological, label: viewModel.displayModeChronologicalLabel)
             feedModeButton(.topics, label: viewModel.displayModeTopicsLabel)
+            feedModeButton(.forYou, label: viewModel.displayModeForYouLabel)
         }
         .overlay(Rectangle().stroke(Color.paperInk, lineWidth: 0.8))
         .padding(.horizontal, 20)
@@ -320,6 +323,147 @@ struct HomeScreen: View {
             await viewModel.forceRefreshTopics()
         }
         .accessibilityIdentifier("home.topics.loaded")
+    }
+
+    // MARK: - For You (issue #133)
+
+    @ViewBuilder
+    private var forYouContent: some View {
+        switch viewModel.forYouState {
+        case .idle, .loading:
+            forYouLoadingView
+        case .needsInterests:
+            forYouSetupView(
+                title: viewModel.forYouNeedsInterestsTitle,
+                subtitle: viewModel.forYouNeedsInterestsSubtitle,
+                systemImage: "text.badge.star",
+                identifier: "home.for_you.needs_interests"
+            )
+        case .needsProvider:
+            forYouSetupView(
+                title: viewModel.forYouNeedsProviderTitle,
+                subtitle: viewModel.forYouNeedsProviderSubtitle,
+                systemImage: "sparkles",
+                identifier: "home.for_you.needs_provider"
+            )
+        case .empty:
+            ContentUnavailableView {
+                Label(viewModel.forYouEmptyLabel, systemImage: "person.text.rectangle")
+            }
+            .accessibilityIdentifier("home.for_you.empty")
+        case let .failed(message):
+            ContentUnavailableView {
+                Label(viewModel.forYouFailedTitle, systemImage: "exclamationmark.triangle")
+            } description: {
+                Text(message)
+            } actions: {
+                Button {
+                    Task { await viewModel.forceRefreshForYou() }
+                } label: {
+                    Text(viewModel.forYouRetryLabel)
+                }
+                .buttonStyle(.paperPrimary)
+                .accessibilityIdentifier("home.for_you.retry")
+            }
+            .accessibilityIdentifier("home.for_you.failed")
+        case let .ready(picks):
+            forYouList(picks: picks)
+        }
+    }
+
+    private var forYouLoadingView: some View {
+        VStack(spacing: 12) {
+            ProgressView()
+                .tint(Color.paperInk)
+            Text(viewModel.forYouLoadingLabel)
+                .font(.paperHeadline)
+                .foregroundStyle(Color.paperInk)
+                .multilineTextAlignment(.center)
+            Text(viewModel.forYouLoadingHint.uppercased())
+                .font(.paperBadge)
+                .foregroundStyle(Color.paperRule)
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(.horizontal, 32)
+        .accessibilityIdentifier("home.for_you.loading")
+        .task { viewModel.refreshForYouIfNeeded() }
+    }
+
+    /// Honest setup state (issue #133): the feature is AI-only, so the
+    /// screen says what is missing and routes to Settings.
+    private func forYouSetupView(
+        title: String,
+        subtitle: String,
+        systemImage: String,
+        identifier: String
+    ) -> some View {
+        ContentUnavailableView {
+            Label(title, systemImage: systemImage)
+        } description: {
+            Text(subtitle)
+        } actions: {
+            NavigationLink {
+                SettingsScreen()
+            } label: {
+                Text(String(
+                    localized: "home.for_you.open_settings",
+                    defaultValue: "Open Settings"
+                ))
+            }
+            .buttonStyle(.paperPrimary)
+            .accessibilityIdentifier("\(identifier).settings")
+        }
+        .accessibilityIdentifier(identifier)
+    }
+
+    private func forYouList(picks: [HomeViewModel.ForYouPick]) -> some View {
+        List {
+            Section {
+                HStack(spacing: 6) {
+                    Image(systemName: "sparkles")
+                        .font(.caption2)
+                    Text(viewModel.forYouLoadingHint.uppercased())
+                        .font(.paperBadge)
+                }
+                .foregroundStyle(Color.paperRule)
+                .listRowSeparator(.hidden)
+                .accessibilityElement(children: .combine)
+                .accessibilityIdentifier("home.for_you.ai_badge")
+            }
+            Section {
+                ForEach(picks) { pick in
+                    articleLink(pick.article) {
+                        ForYouPickRow(pick: pick, viewModel: viewModel)
+                    }
+                    .listRowSeparator(.hidden)
+                }
+            }
+            if let expiresAt = viewModel.forYouCacheExpiresAt {
+                Section {
+                    HStack(spacing: 4) {
+                        Text(viewModel.topicsAutoRefreshLabel)
+                        Text(expiresAt, style: .relative)
+                    }
+                    .font(.paperMeta)
+                    .foregroundStyle(Color.paperRule)
+                    .listRowSeparator(.hidden)
+                    .accessibilityIdentifier("home.for_you.auto_refresh")
+                }
+                .task(id: expiresAt) {
+                    let delay = expiresAt.timeIntervalSinceNow
+                    guard delay > 0 else { return }
+                    try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
+                    guard Task.isCancelled == false else { return }
+                    viewModel.refreshForYouIfNeeded(force: true)
+                }
+            }
+        }
+        .listStyle(.plain)
+        .refreshable {
+            await viewModel.forceRefreshForYou()
+        }
+        .accessibilityIdentifier("home.for_you.loaded")
     }
 
     @ViewBuilder
@@ -525,6 +669,37 @@ private struct TopicClusterCard: View {
                 .overlay(Rectangle().stroke(Color.paperRule.opacity(0.35), lineWidth: 0.8))
                 .accessibilityHidden(true)
         }
+    }
+}
+
+/// One personalized row (issue #133): the matched interest as an
+/// uppercase badge, then the same lean headline + meta line as the
+/// chronological cards. Rows arrive already ordered by relevance.
+private struct ForYouPickRow: View {
+    let pick: HomeViewModel.ForYouPick
+    let viewModel: HomeViewModel
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            PaperBadge(text: pick.interest)
+                .accessibilityIdentifier("home.for_you.interest")
+
+            Text(pick.article.title)
+                .font(.paperHeadline)
+                .foregroundStyle(Color.paperInk)
+
+            Text(viewModel.articleMetadataLine(
+                sourceName: pick.article.sourceName,
+                publishedAt: pick.article.publishedAt
+            ))
+            .font(.paperMeta)
+            .foregroundStyle(Color.paperRule)
+
+            PaperRule()
+                .padding(.top, 8)
+        }
+        .padding(.vertical, 6)
+        .accessibilityIdentifier("home.for_you.pick.\(pick.id)")
     }
 }
 
