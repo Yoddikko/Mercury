@@ -39,6 +39,18 @@ Displays a list of articles ranked and filtered based on logic and user preferen
 
 ---
 
+### 2b. "Per te" Feed (shipped v1, issue #133)
+
+* third Home segment, personalized on the user's interests
+  (`preferredTopics`, collected in onboarding)
+* AI-only: one provider call ranks a source-balanced sample of the
+  shared last-24h corpus against the interests
+  (see `docs/features/PERSONALIZATION.md` § Shipped v1); without a
+  provider the tab shows a configure prompt
+* rows carry the matched interest as an uppercase mono badge; picks
+  are ordered by relevance
+* 12h persistence + countdown + pull-to-refresh, same as Topics
+
 ### 3. Topic Feed (shipped v1, issue #109)
 
 * second Home feed, selectable via a paper-styled segmented control at

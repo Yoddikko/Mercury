@@ -6,18 +6,32 @@ The onboarding flow introduces the user to Mercury and collects the minimum info
 
 The onboarding should be short, modular, and skippable only where appropriate.
 
-## Current shipping scope (2026-07-01)
+## Current shipping scope (2026-07-10, issue #133)
 
-Steps 2 and 3 (source geography selection + source selection) land as one
-combined screen shown on first launch. `AppRouter` gates the whole app
-behind `UserPreference.hasCompletedOnboarding`; once the user taps
-"Continue" the flag flips and the flow does not fire again unless
-preferences are reset. The rest of the steps (welcome copy, preferred
-language, translation preferences, topics, confirmation) are still
-pending — see the numbered sections below for the full target design.
-The same region/source picker is also mounted inside the Settings screen
-under a "Feed sources" section so users can revisit their choices any
-time (see `docs/features/SETTINGS.md`).
+The onboarding is a **four-step paged flow** shown on first launch,
+gated by `UserPreference.hasCompletedOnboarding` exactly as before
+(tri-state in `AppRouter`; the flag flips only on the final Continue).
+
+1. **Intro** — one paper-styled page that explains the app in three
+   lines (Italian outlets, stories grouped by topic, AI summaries).
+   Zero I/O: no store reads, no network.
+2. **Fonti** — the existing outlet picker (single-region catalog,
+   auto-enabled Italy, per-outlet toggles). **Must not fetch or load
+   any article** — selection persists preferences only; the first
+   feed refresh still fires after the final step.
+3. **Interessi** — suggested chips (Italia, Politica, Ambiente,
+   Economia, Sport, Tecnologia, Cronaca, Esteri, Salute, Cultura,
+   Scienza) plus a free-text field for custom interests. Persists to
+   `UserPreferenceEntity.preferredTopics`. A footnote explains that
+   the personalized "Per te" feed requires the AI provider configured
+   in the next step. Skippable (no interests → Per te shows its
+   configure/empty state).
+4. **Provider AI** — compact provider setup (provider picker + API
+   key; same behavior as Settings → AI provider, shared view model).
+   Skippable: everything except Per te and summaries works without it.
+
+The same pickers are mounted in Settings so every choice can be
+revisited (see `docs/features/SETTINGS.md`).
 
 **No fetching before Continue** (issue #87): while onboarding is
 incomplete, no RSS fetch may run. `AppRouter` treats the persisted flag

@@ -1,5 +1,62 @@
 # Feature: Personalization
 
+## Shipped v1 — "Per te" (For You), AI-only (issue #133)
+
+The embedding/behavioral design below remains the long-term target.
+The shipped v1 is a dedicated **"Per te" feed** in Home (third segment
+next to Ultime and Argomenti), built on the user's **interests** and
+the configured AI provider. It is deliberately **AI-only**: interests
+are free-form ("vela oceanica", "fusione nucleare"), and matching an
+arbitrary interest against headlines is a semantic task the provider
+does well and lexical matching does poorly. Without a configured
+provider the tab shows a paper-styled prompt to set one up — it never
+degrades to a fake personalization.
+
+### Signals (v1)
+
+* `UserPreferenceEntity.preferredTopics` — the interests, collected in
+  onboarding (suggested chips: Italia, Politica, Ambiente, Economia,
+  Sport, Tecnologia, Cronaca, Esteri, Salute, Cultura, Scienza — plus
+  free-text custom entries) and editable later.
+* Interaction history (clicks, reading time, bookmarks) is modeled but
+  NOT consumed in v1 — behavioral personalization stays future work.
+
+### Single fetch, two algorithms
+
+Argomenti and Per te share **one corpus fetch**: the same last-24h
+window from the article cache (800 rows, source allow-list, 20 per
+outlet). Argomenti groups it by story (`FeedTopicAggregationService`);
+Per te ranks it against the interests:
+
+1. Source-balanced sample of up to 100 headlines (`id<TAB>title`),
+   the same sampling used for AI grouping.
+2. One provider call (`AIProvider.pickHeadlines`): the prompt carries
+   the interest list and the headlines; the model answers JSON-only
+   `{"picks": [{"id", "interest", "relevance"}]}` — at most 30 picks,
+   only input ids, `interest` naming which user interest matched,
+   `relevance` 1–100.
+3. Validation mirrors the grouping path: unknown ids dropped, each id
+   used once, picks below a minimum relevance (25) discarded.
+4. Rendering: articles ordered by relevance, each row carrying an
+   uppercase mono badge with the matched interest.
+
+### Caching and refresh
+
+Same policy as Argomenti (issues #127/#131): the picks structure
+(savedAt + [{id, interest, relevance}]) persists for 12 hours,
+rehydrates from the article cache, shows the live auto-refresh
+countdown, and recomputes only on pull-to-refresh or expiry.
+
+### Rules (v1 addenda)
+
+* No provider → dedicated "configure AI" state, never a silent
+  lexical imitation.
+* Empty picks (nothing matches the interests) → honest empty state,
+  never padding with unrelated articles.
+* Hidden sources are excluded before the sample (same allow-list).
+
+---
+
 ## Description
 
 Adapts the news feed based on user preferences and behavior.
