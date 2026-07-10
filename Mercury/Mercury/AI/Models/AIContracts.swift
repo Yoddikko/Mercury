@@ -55,7 +55,10 @@ enum AIProviderID: String, CaseIterable, Codable, Sendable, Identifiable {
         case .ollama:
             return "llama3.2"
         case .deepSeek:
-            return "deepseek-chat"
+            // DeepSeek's 2026 lineup is v4 flash/pro (the legacy
+            // deepseek-chat id is gone from their models list); flash is
+            // the fast non-reasoning variant suited to grouping.
+            return "deepseek-v4-flash"
         }
     }
 }
