@@ -107,6 +107,90 @@ struct HomeViewModelTests {
     }
 
     @Test
+    func topicsRehydrateFromPersistedCacheWithoutCallingGrouper() async throws {
+        // Issue #127: a second view model with the same cache defaults
+        // and article store must rehydrate the saved AI grouping
+        // instantly — the grouper must NOT be called again.
+        let container = try Self.makeInMemoryContainer()
+        let context = ModelContext(container)
+        let now = Date()
+        context.insert(ArticleEntity(
+            id: "a",
+            title: "Prima notizia sul vertice europeo di bilancio",
+            sourceName: "ansa",
+            sourceID: "ansa",
+            sourceURL: "https://example.com/ansa",
+            articleURL: "https://example.com/ansa/a",
+            publishedAt: now.addingTimeInterval(-3600)
+        ))
+        context.insert(ArticleEntity(
+            id: "b",
+            title: "Seconda notizia sul campionato di calcio",
+            sourceName: "gazzetta",
+            sourceID: "gazzetta",
+            sourceURL: "https://example.com/gazzetta",
+            articleURL: "https://example.com/gazzetta/b",
+            publishedAt: now.addingTimeInterval(-7200)
+        ))
+        try context.save()
+
+        let sharedDefaults = Self.ephemeralDefaults()
+        let articles = [
+            Self.recentArticle(id: "a", source: "ansa", title: "Prima notizia sul vertice europeo di bilancio", publishedAt: now.addingTimeInterval(-3600)),
+            Self.recentArticle(id: "b", source: "gazzetta", title: "Seconda notizia sul campionato di calcio", publishedAt: now.addingTimeInterval(-7200))
+        ]
+
+        // First VM computes via the AI grouper and persists the result.
+        let first = makeViewModel(
+            deduplicatedArticles: articles,
+            topicAIGrouper: { _, _ in [["a", "b"]] },
+            topicsCacheDefaults: sharedDefaults
+        )
+        first.attach(modelContext: context)
+        await first.refresh()
+        first.selectDisplayMode(.topics)
+        for _ in 0..<100 {
+            if case .ready = first.topicState { break }
+            try await Task.sleep(nanoseconds: 50_000_000)
+        }
+        guard case .ready = first.topicState else {
+            Issue.record("First aggregation never became ready")
+            return
+        }
+
+        // Second VM: same defaults + store, a grouper that must not run.
+        let second = makeViewModel(
+            deduplicatedArticles: articles,
+            topicAIGrouper: { _, _ in
+                Issue.record("Grouper called despite fresh cache")
+                return []
+            },
+            topicsCacheDefaults: sharedDefaults
+        )
+        second.attach(modelContext: context)
+        await second.refresh()
+        second.selectDisplayMode(.topics)
+
+        var outcome: (clusters: [TopicCluster], method: HomeViewModel.TopicAggregationMethod)?
+        for _ in 0..<100 {
+            if case let .ready(clusters, method) = second.topicState {
+                outcome = (clusters, method)
+                break
+            }
+            try await Task.sleep(nanoseconds: 50_000_000)
+        }
+        guard let outcome else {
+            Issue.record("Expected rehydrated .ready state, got \(second.topicState)")
+            return
+        }
+        #expect(outcome.method == .ai)
+        #expect(outcome.clusters.contains { cluster in
+            cluster.isAggregated
+                && Set([cluster.lead.id] + cluster.members.map(\.id)) == ["a", "b"]
+        })
+    }
+
+    @Test
     func topicsModeUsesAIGrouperWhenAvailable() async throws {
         let now = Date()
         let articles = [
@@ -126,7 +210,8 @@ struct HomeViewModelTests {
         let viewModel = HomeViewModel(
             feedRefreshAction: { _ in result },
             isDeveloperModeEnabled: false,
-            topicAIGrouper: { _, _ in [["a", "b"]] }
+            topicAIGrouper: { _, _ in [["a", "b"]] },
+            topicsCacheDefaults: Self.ephemeralDefaults()
         )
         await viewModel.refresh()
         viewModel.selectDisplayMode(.topics)
@@ -167,7 +252,8 @@ struct HomeViewModelTests {
         let viewModel = HomeViewModel(
             feedRefreshAction: { _ in result },
             isDeveloperModeEnabled: false,
-            topicAIGrouper: { _, _ in throw NotConfigured() }
+            topicAIGrouper: { _, _ in throw NotConfigured() },
+            topicsCacheDefaults: Self.ephemeralDefaults()
         )
         await viewModel.refresh()
         viewModel.selectDisplayMode(.topics)
@@ -633,7 +719,9 @@ struct HomeViewModelTests {
 
     private func makeViewModel(
         deduplicatedArticles: [Article],
-        checks: [RSSFeedCheckResult] = []
+        checks: [RSSFeedCheckResult] = [],
+        topicAIGrouper: HomeViewModel.TopicAIGrouper? = nil,
+        topicsCacheDefaults: UserDefaults = Self.ephemeralDefaults()
     ) -> HomeViewModel {
         let result = RSSFeedBatchResult(
             checkedAt: .now,
@@ -644,8 +732,16 @@ struct HomeViewModelTests {
         )
         return HomeViewModel(
             feedRefreshAction: { _ in result },
-            isDeveloperModeEnabled: false
+            isDeveloperModeEnabled: false,
+            topicAIGrouper: topicAIGrouper,
+            topicsCacheDefaults: topicsCacheDefaults
         )
+    }
+
+    /// Isolated UserDefaults per test: the topics cache must not leak
+    /// between tests (or from previous simulator runs).
+    nonisolated private static func ephemeralDefaults() -> UserDefaults {
+        UserDefaults(suiteName: "test-topics-\(UUID().uuidString)")!
     }
 
     private static func sampleArticles(count: Int, prefix: String = "article") -> [Article] {
