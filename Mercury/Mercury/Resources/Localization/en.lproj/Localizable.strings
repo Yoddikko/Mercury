@@ -295,3 +295,4 @@
 "settings.ai.summary_language.system" = "System language";
 "settings.ai.summary_language.italian" = "Italiano";
 "settings.ai.summary_language.english" = "English";
+"home.topics.auto_refresh" = "Refreshes automatically in";

@@ -289,6 +289,29 @@ struct HomeScreen: View {
                         .foregroundStyle(Color.paperRule)
                 }
             }
+            // Live countdown to the automatic re-aggregation
+            // (issue #131): pull-to-refresh saves a new cache and
+            // resets it.
+            if let expiresAt = viewModel.topicsCacheExpiresAt {
+                Section {
+                    HStack(spacing: 4) {
+                        Text(viewModel.topicsAutoRefreshLabel)
+                        Text(expiresAt, style: .relative)
+                    }
+                    .font(.paperMeta)
+                    .foregroundStyle(Color.paperRule)
+                    .listRowSeparator(.hidden)
+                    .accessibilityIdentifier("home.topics.auto_refresh")
+                }
+                .task(id: expiresAt) {
+                    // Recompute when the cache expires while visible.
+                    let delay = expiresAt.timeIntervalSinceNow
+                    guard delay > 0 else { return }
+                    try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
+                    guard Task.isCancelled == false else { return }
+                    viewModel.refreshTopicsIfNeeded(force: true)
+                }
+            }
         }
         .listStyle(.plain)
         .refreshable {
