@@ -318,7 +318,12 @@ actor AIService {
             }
             .joined(separator: "\n")
         do {
-            let rawGroups = try await provider.groupHeadlines(input, requestID: flowRequestID)
+            let rawGroups = try await Self.retryingOnceOnTransientFailure(
+                requestID: flowRequestID,
+                logger: logger
+            ) {
+                try await provider.groupHeadlines(input, requestID: flowRequestID)
+            }
             let knownIDs = Set(headlines.map(\.id))
             var seen: Set<String> = []
             let groups = rawGroups.compactMap { group -> [String]? in
@@ -442,6 +447,35 @@ actor AIService {
                 ]
             )
             throw AIServiceError.unknown(error.localizedDescription)
+        }
+    }
+
+    /// One retry on transient network failures (issue #123): long
+    /// non-streaming completions are prone to mid-request connection
+    /// drops (NSURLErrorNetworkConnectionLost) that a single retry
+    /// resolves. Non-transient errors fail immediately.
+    private static func retryingOnceOnTransientFailure<T: Sendable>(
+        requestID: String,
+        logger: AppLogger,
+        _ operation: () async throws -> T
+    ) async throws -> T {
+        do {
+            return try await operation()
+        } catch let error as AIProviderError {
+            switch error {
+            case .networkFailure, .timeout:
+                logger.info(
+                    "Transient provider failure, retrying once",
+                    category: .business,
+                    service: "AIService",
+                    requestID: requestID,
+                    metadata: ["error": String(describing: error)]
+                )
+                try await Task.sleep(nanoseconds: 2_000_000_000)
+                return try await operation()
+            default:
+                throw error
+            }
         }
     }
 

@@ -287,6 +287,65 @@ struct AIServiceTests {
     }
 
     @Test
+    func headlineGroupingRetriesOnceOnTransientNetworkFailure() async throws {
+        // Issue #123: NSURLErrorNetworkConnectionLost mid-generation is
+        // transient — the first attempt fails, the retry succeeds.
+        final class AttemptCounter: @unchecked Sendable {
+            private let lock = NSLock()
+            private var value = 0
+            func next() -> Int {
+                lock.lock()
+                defer { lock.unlock() }
+                value += 1
+                return value
+            }
+            var count: Int {
+                lock.lock()
+                defer { lock.unlock() }
+                return value
+            }
+        }
+        struct FlakyGroupingProvider: AIProvider {
+            let id: AIProviderID
+            let counter: AttemptCounter
+            func summarizeArticle(_ content: String, requestID: String?) async throws -> AISummaryResult {
+                throw AIProviderError.invalidResponse
+            }
+            func categorizeArticle(_ content: String, requestID: String?) async throws -> AICategoryResult {
+                throw AIProviderError.invalidResponse
+            }
+            func generateTags(_ content: String, requestID: String?) async throws -> [String] {
+                throw AIProviderError.invalidResponse
+            }
+            func groupHeadlines(_ headlines: String, requestID: String?) async throws -> [[String]] {
+                if counter.next() == 1 {
+                    throw AIProviderError.networkFailure("La connessione è persa.")
+                }
+                return [["a", "b"]]
+            }
+        }
+
+        let counter = AttemptCounter()
+        let service = AIService(
+            configurationStore: InMemoryAIProviderConfigurationStore(
+                initialConfiguration: completeConfiguration(active: .deepSeek)
+            ),
+            credentialStore: InMemoryAIProviderCredentialStore(
+                initialTokens: [.deepSeek: "token-deepseek"]
+            ),
+            providerFactory: { context in
+                FlakyGroupingProvider(id: context.providerID, counter: counter)
+            }
+        )
+
+        let groups = try await service.groupArticleHeadlines(
+            [(id: "a", title: "Titolo uno"), (id: "b", title: "Titolo due")]
+        )
+        #expect(groups == [["a", "b"]])
+        #expect(counter.count == 2)
+    }
+
+    @Test
     func propagatesRequestIDToProvider() async throws {
         let configurationStore = InMemoryAIProviderConfigurationStore(
             initialConfiguration: completeConfiguration(active: .openAI)
