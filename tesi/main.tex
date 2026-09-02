@@ -1,0 +1,76 @@
+% !TEX program = pdflatex
+% Mercury --- tesi di laurea
+% Template ufficiale Universitas Mercatorum (report twoside/openright, Times, interlinea 1.5)
+% Compila con:  latexmk -pdf main.tex
+\documentclass[twoside,12pt,openright]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[italian]{babel}
+\usepackage[a4paper,top=3cm,bottom=3cm,left=3cm,right=3cm,marginparwidth=1.5cm,bindingoffset=15mm,heightrounded]{geometry}
+\usepackage{csquotes}
+\usepackage{quoting}
+\quotingsetup{font=small}
+
+% Times New Roman + interlinea 1.5 (mandatorie Mercatorum)
+\usepackage{times}
+\linespread{1.5}
+
+% Box colorati (dal template)
+\usepackage{tcolorbox}
+\usepackage{mdframed}
+
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{microtype}
+
+\usepackage[colorlinks=true, allcolors=black]{hyperref}
+
+% Codice
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{array}
+\usepackage{listings}
+
+% Swift (usato nel capitolo Implementazione)
+\lstdefinelanguage{Swift}{
+  keywords={class,struct,enum,protocol,func,var,let,if,else,for,while,return,import,guard,switch,case,break,continue,in,as,is,nil,self,Self,init,deinit,private,public,internal,fileprivate,open,static,final,override,extension,do,try,catch,throws,async,await,actor,@Model,@Environment,@State,@Binding,@Observable},
+  keywordstyle=\color{blue!70!black}\bfseries,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{gray}\itshape,
+  stringstyle=\color{purple!70!black},
+  morestring=[b]",
+  sensitive=true
+}
+\lstset{basicstyle=\ttfamily\small,frame=single,breaklines=true,showstringspaces=false}
+
+\usepackage[style=apa, backend=biber]{biblatex}
+\addbibresource{refs.bib}
+
+\begin{document}
+
+\include{Capitoli/Frontespizio_Merca}
+
+\newpage
+\null
+\newpage
+
+% ===================== Sommario =====================
+\chapter*{Sommario}
+\addcontentsline{toc}{chapter}{Sommario}
+\input{Capitoli/_abstract.txt}
+
+\vspace{1em}
+\noindent\textbf{Codice sorgente.} Il repository del progetto è disponibile su
+GitHub: \url{https://github.com/Yoddikko/Mercury}.
+
+\tableofcontents
+
+% ===================== Corpo (9 capitoli) =====================
+\include{Capitoli/Corpo}
+
+\printbibliography[heading=bibintoc]
+
+\end{document}

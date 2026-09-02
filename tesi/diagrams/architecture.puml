@@ -1,0 +1,104 @@
+@startuml architecture
+title Mercury - Architettura logica a strati
+
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam defaultFontName "Helvetica"
+
+package "Presentation (SwiftUI + MVVM)" {
+  [Views] as V
+  [ViewModels] as VM
+  [Developer Playground] as DP
+}
+
+package "Application Layer" {
+  [FetchFeedsUseCase] as UC1
+  [SummarizeArticleUseCase] as UC2
+  [CategorizeArticleUseCase] as UC3
+  [BuildPersonalizedFeedUseCase] as UC4
+  [SyncUserPreferencesUseCase] as UC5
+}
+
+package "Domain Services" {
+  [FeedRefreshService] as FRS
+  [ArticleContentEnrichmentService] as ACE
+  [FeedRankingService] as FRK
+  [InteractionTracker] as IT
+}
+
+package "Data Layer" {
+  [ArticleRepository] as AR
+  [UserPreferencesRepository] as UPR
+  [RSSFeedClient] as RSS
+  [RSSParser] as RSP
+  [ArticleNormalizer] as AN
+  [ArticlePageClient] as APC
+  [ArticlePageContentExtractor] as APE
+}
+
+package "AI Layer" {
+  [AIService] as AIS
+  interface "AIProvider" as AIP
+  [OpenAIProvider] as P1
+  [ClaudeProvider] as P2
+  [GeminiProvider] as P3
+  [OllamaProvider] as P4
+}
+
+package "Persistence" {
+  database "SwiftData (on-device)" as DB
+  cloud "Firebase (opzionale)" as FB
+}
+
+package "Cross-cutting" {
+  [AppLogger] as LOG
+  [AppLogStore] as LSTORE
+}
+
+V --> VM
+VM --> UC1
+VM --> UC2
+VM --> UC3
+VM --> UC4
+VM --> UC5
+
+UC1 --> FRS
+UC2 --> AIS
+UC3 --> AIS
+UC4 --> FRK
+UC5 --> UPR
+
+FRS --> RSS
+FRS --> RSP
+FRS --> AN
+FRS --> ACE
+ACE --> APC
+ACE --> APE
+
+UC1 ..> AR
+UC2 ..> AR
+UC3 ..> AR
+FRK --> AR
+FRK --> UPR
+IT --> UPR
+
+AR --> DB
+UPR --> DB
+UPR ..> FB
+
+AIS --> AIP
+AIP <|.. P1
+AIP <|.. P2
+AIP <|.. P3
+AIP <|.. P4
+
+LOG --> LSTORE
+DP ..> LOG
+
+note bottom of AIP
+  Astrazione plug-in:
+  un solo contratto,
+  N implementazioni.
+end note
+
+@enduml

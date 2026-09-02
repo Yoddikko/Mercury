@@ -1,0 +1,54 @@
+@startuml seq-article-detail
+title Mercury - Sequenza: apertura dettaglio articolo (bookmark + enrichment slot)
+
+skinparam shadowing false
+skinparam defaultFontName "Helvetica"
+
+actor Utente as U
+participant "HomeScreen" as HS
+participant "ArticleDetailScreen" as ADS
+participant "ArticleDetailViewModel" as VM
+participant "ArticleLocalStore\n<<@ModelActor>>" as STORE
+participant "EnrichContent?\n(slot AI, #28)" as EN
+participant "AppLogger" as LOG
+
+U -> HS: tap riga articolo
+HS -> ADS: NavigationLink(article)
+activate ADS
+ADS -> VM: init(article, store closures)
+activate VM
+VM -> LOG: info("detail.init", articleID)
+
+VM -> VM: state = .loading
+VM -> STORE: recordOpen(id)
+STORE --> VM: ack
+VM -> VM: state = .loaded(article)
+VM --> ADS: hero + title + body placeholder
+
+alt body assente o parziale
+  ADS -> VM: requestEnrichment()
+  VM -> VM: bodyState = .enriching
+  VM -> EN: enrich(article)
+  alt success
+    EN --> VM: enrichedBody
+    VM -> VM: bodyState = .loaded(body)
+  else failure
+    EN --> VM: throws
+    VM -> LOG: error("detail.enrich.fail")
+    VM -> VM: bodyState = .failed
+  end
+end
+
+U -> ADS: tap bookmark
+ADS -> VM: toggleBookmark()
+VM -> STORE: toggleFavorite(id)
+STORE --> VM: ack
+VM -> VM: state = .loaded(article')
+
+U -> ADS: back
+ADS -> VM: deinit
+VM -> LOG: info("detail.deinit", articleID)
+deactivate VM
+deactivate ADS
+
+@enduml

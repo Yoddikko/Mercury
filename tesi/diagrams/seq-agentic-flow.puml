@@ -1,0 +1,58 @@
+@startuml seq-agentic-flow
+title Mercury - Sequenza: flusso agentico (issue -> branch -> agent -> PR -> merge -> doc)
+
+skinparam shadowing false
+skinparam defaultFontName "Helvetica"
+
+actor "Umano\n(architetto)" as H
+participant "GitHub Issues" as GH
+participant "Agent CLI\n(Claude Code /\nCodex CLI)" as AG
+participant "Repository\nlocale + branch" as REPO
+participant "PR su GitHub" as PR
+participant "GitHub Actions\n(CI)" as CI
+participant "docs/" as DOC
+
+H -> GH: apre issue (specifica)\nrequisiti, scope, vincoli
+H -> AG: prompt iniziale +\nriferimento issue #N
+activate AG
+AG -> REPO: crea branch\ncodex/issue-N-<slug>
+AG -> DOC: legge guidelines\n(AGENTS, CLAUDE.md,\nCODEX.md, docs/*)
+AG -> REPO: implementa modifiche\n(codice + log + test +\nlocalizzazione + docs)
+AG -> REPO: commit(s) atomici
+AG -> PR: apre PR (template completo)
+deactivate AG
+
+PR -> CI: trigger workflow
+activate CI
+CI -> CI: build iOS
+CI -> CI: unit tests
+CI -> CI: docs sync check
+CI -> CI: markdown lint
+CI -> CI: localization check
+CI --> PR: status checks
+deactivate CI
+
+alt CI verde
+  H -> PR: review umana\n(architettura, intent)
+  alt approvato
+    H -> PR: merge
+    PR -> REPO: merge su main
+    H -> DOC: (eventuale) refine doc\npost-merge
+  else richiesta modifica
+    H -> AG: feedback / nuovo prompt
+    AG -> REPO: nuovi commit sulla stessa branch
+    REPO -> PR: aggiorna PR
+  end
+else CI rossa
+  AG -> REPO: fix + nuovo commit
+  REPO -> PR: ri-trigger CI
+end
+
+note over H, DOC
+  Governance: i documenti
+  in docs/guidelines/ sono
+  il "system prompt" implicito
+  che vincola ogni agente.
+end note
+
+@enduml

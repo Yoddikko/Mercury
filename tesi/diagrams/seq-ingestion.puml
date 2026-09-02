@@ -1,0 +1,56 @@
+@startuml seq-ingestion
+title Mercury - Sequenza: ingestion RSS
+
+skinparam shadowing false
+skinparam defaultFontName "Helvetica"
+
+actor Utente as U
+participant "HomeViewModel" as VM
+participant "FetchFeedsUseCase" as UC
+participant "FeedRefreshService" as FRS
+participant "RSSFeedClient" as CLI
+participant "RSSParser" as P
+participant "ArticleNormalizer" as N
+participant "ArticleRepository" as REPO
+database "SwiftData" as DB
+participant "AppLogger" as LOG
+
+U -> VM: pull-to-refresh
+activate VM
+VM -> LOG: info("refresh.start", reqID)
+VM -> UC: execute(group)
+activate UC
+UC -> FRS: refreshGroup(group, reqID)
+activate FRS
+
+loop per ogni feed selezionato
+  FRS -> CLI: fetch(url, reqID)
+  activate CLI
+  CLI --> FRS: rawXML | error
+  deactivate CLI
+  alt fetch ok
+    FRS -> P: parse(rawXML, reqID)
+    activate P
+    P --> FRS: [RawItem]
+    deactivate P
+    FRS -> N: normalize(items, source, reqID)
+    activate N
+    N --> FRS: [Article] (dedup intra-feed)
+    deactivate N
+  else fetch error
+    FRS -> LOG: warn("feed.fetch.failed", source_id, status)
+  end
+end
+
+FRS -> FRS: cross-feed dedup
+FRS -> REPO: upsertAll(articles)
+REPO -> DB: insert/update
+FRS --> UC: FeedRefreshReport
+deactivate FRS
+UC --> VM: report
+deactivate UC
+VM -> LOG: info("refresh.done", duration_ms, items_out)
+VM --> U: aggiorna UI
+deactivate VM
+
+@enduml

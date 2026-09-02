@@ -1,0 +1,58 @@
+@startuml seq-ranking
+title Mercury - Sequenza: costruzione feed personalizzato (specifica)
+
+skinparam shadowing false
+skinparam defaultFontName "Helvetica"
+
+actor Utente as U
+participant "HomeViewModel" as VM
+participant "BuildPersonalizedFeedUseCase" as UC
+participant "FeedRankingService" as RANK
+participant "ArticleRepository" as AR
+participant "UserPreferencesRepository" as UPR
+database "SwiftData" as DB
+participant "AppLogger" as LOG
+
+U -> VM: apre Home
+activate VM
+VM -> UC: build(profileID, reqID)
+activate UC
+
+UC -> UPR: load(profileID)
+UPR -> DB: select preferences
+DB --> UPR: UserPreferenceEntity
+UPR --> UC: profile
+
+UC -> AR: fetchCandidates(filters)
+AR -> DB: select articles\n(exclude hiddenSources)
+DB --> AR: [Article]
+AR --> UC: candidates
+
+UC -> RANK: rank(candidates, profile)
+activate RANK
+loop per ogni articolo
+  RANK -> RANK: score = recency\n + categoryMatch\n + topicMatch\n + sourcePreference\n + engagement
+end
+RANK -> RANK: diversity controls\n(no overconcentrazione fonti/topic)
+RANK --> UC: [Article] ordinati
+deactivate RANK
+
+alt ranking vuoto o fallito
+  UC -> AR: fetchChronological()
+  AR --> UC: fallback list
+  UC -> LOG: warn("feed.rank.fallback")
+end
+
+UC --> VM: feed
+deactivate UC
+VM -> LOG: info("feed.built", items_out)
+VM --> U: render feed
+deactivate VM
+
+note over RANK
+  Specifica del comportamento atteso.
+  Implementazione MVP: chronological.
+  Vedi RF-15, RF-16 e #13.
+end note
+
+@enduml

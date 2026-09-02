@@ -1,0 +1,18 @@
+Mercurio (nome in codice del progetto: \emph{Mercury}, mantenuto per
+repository e identificatori interni) è un'applicazione iOS nativa per
+l'aggregazione di feed RSS italiani arricchiti con servizi di
+intelligenza artificiale. Il progetto è stato condotto con metodo
+ingegneristico: requisiti tracciabili, specifiche architetturali,
+modelli UML e diagrammi di sequenza. L'architettura adotta MVVM con
+SwiftUI, persistenza locale-first su SwiftData e un layer AI plug-in che
+astrae cinque provider esterni (OpenAI, Anthropic, Google, Ollama,
+DeepSeek). Il contributo metodologico distintivo sta nel flusso di
+sviluppo agentico: l'autore ricopre il ruolo di architetto e revisore,
+mentre l'implementazione è delegata a coppie umano-agente (Claude Code e
+Codex CLI) sotto governance documentale. La tesi descrive il sistema,
+ne discute il modello dei dati, le interfacce esterne e la pipeline di
+enrichment, e formalizza il processo di sviluppo agentico adottato. Lo
+strato dati è dimensionato per la demo con un catalogo di testate
+italiane; il supporto multi-regione, sviluppato nelle fasi iniziali,
+resta nel codice dietro un flag di build come possibile estensione
+futura.

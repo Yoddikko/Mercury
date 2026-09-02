@@ -1,0 +1,251 @@
+@startuml class-diagram
+title Mercury - Diagramma delle classi (modelli di dominio + servizi)
+
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam defaultFontName "Helvetica"
+
+package "Domain Models (SwiftData)" {
+  class ArticleEntity {
+    +id: String
+    +externalID: String?
+    +title: String
+    +sourceName: String
+    +sourceURL: URL
+    +articleURL: URL
+    +authorName: String?
+    +publishedAt: Date
+    +heroImageURL: URL?
+    +rawContent: String?
+    +cleanedContent: String?
+    +contentSource: ContentSource
+    +contentWordCount: Int?
+    +isContentLikelyComplete: Bool
+    +summaryShort: String?
+    +summaryBullets: [String]?
+    +category: String?
+    +tags: [String]
+    +language: String?
+    +isBookmarked: Bool
+    +isRead: Bool
+    +clusterID: String?
+    +createdAt: Date
+    +updatedAt: Date
+  }
+
+  enum ContentSource {
+    feed
+    enriched
+    fallback
+  }
+
+  class ClusterEntity {
+    +id: String
+    +title: String
+    +summary: String?
+    +mainTopic: String?
+    +articleIDs: [String]
+    +createdAt: Date
+  }
+
+  class UserPreferenceEntity {
+    +id: String
+    +preferredCategories: [String]
+    +preferredTopics: [String]
+    +favoriteSources: [String]
+    +hiddenSources: [String]
+    +preferredLanguage: String
+    +enabledRegionRawValues: [String]
+    +hasCompletedOnboarding: Bool
+    +updatedAt: Date
+  }
+
+  class InteractionEntity {
+    +id: String
+    +articleID: String
+    +actionType: InteractionAction
+    +timestamp: Date
+    +readingDuration: TimeInterval?
+    +scrollDepth: Double?
+  }
+
+  enum InteractionAction {
+    opened
+    bookmarked
+    ignored
+    shared
+  }
+
+  enum TranslationMode {
+    never
+    onLanguageMismatch
+    always
+  }
+}
+
+package "AI Layer" {
+  interface AIProvider {
+    +id: AIProviderID
+    +summarizeArticle(content, requestID): AISummaryResult
+    +categorizeArticle(content, requestID): AICategoryResult
+    +generateTags(content, requestID): [String]
+  }
+  class AIService {
+    -activeProvider: AIProvider
+    +summarize(article): AISummaryResult
+    +categorize(article): AICategoryResult
+  }
+  class OpenAIProvider
+  class ClaudeProvider
+  class GeminiProvider
+  class OllamaProvider
+  class DeepSeekProvider
+}
+
+package "Domain Services" {
+  class FeedRefreshService {
+    +refreshFeed(group): FeedRefreshReport
+    +runDiagnostics(group): FeedDiagnosticsReport
+    -performFetch(group): RawFetchResult
+  }
+  class ArticleContentEnrichmentService {
+    +enrichIfPartial(article): Article
+  }
+  class FeedRankingService {
+    +rank(articles, profile): [Article]
+  }
+  class InteractionTracker {
+    +track(action, articleID)
+  }
+  class UserPreferencesService <<@MainActor>> {
+    +load(): UserPreferences
+    +update(mutation): UserPreferences
+    +reset()
+  }
+  class ArticleLocalStore <<@ModelActor>> {
+    +upsert(articles)
+    +query(filter): [Article]
+    +toggleFavorite(id)
+    +recordOpened(id)
+    +history(limit): [Article]
+  }
+}
+
+package "Application (Use Cases)" {
+  interface FetchHomeFeedUseCase {
+    +execute(groupMode, region, requestID): RSSFeedBatchResult
+  }
+  interface EnrichArticleUseCase {
+    +execute(article, requestID): Article
+  }
+  interface SummarizeArticleUseCase {
+    +execute(article, requestID): AISummaryResult
+  }
+  class LiveFetchHomeFeedUseCase
+  class LiveEnrichArticleUseCase
+  class LiveSummarizeArticleUseCase
+}
+
+package "Composition Root" {
+  class DependencyContainer {
+    +modelContainer: ModelContainer
+    +makeHomeViewModel(): HomeViewModel
+  }
+}
+
+package "Presentation" {
+  class HomeViewModel <<@Observable>> {
+    +state: HomeState
+    +load()
+    +refresh()
+  }
+  class SearchViewModel <<@MainActor>> <<ObservableObject>> {
+    +query: String
+    +state: SearchState
+    +results: [Article]
+    +runSearch()
+    +performSearchNow()
+  }
+  class ArticleEntityMapper {
+    +toDomain(entity): Article
+    +toEntity(article): ArticleEntity
+  }
+  class ArticleDetailScreen <<View>>
+  class ArticleDetailViewModel <<@MainActor>> <<ObservableObject>> {
+    +state: DetailState
+    +bodyState: BodyState
+    +load()
+    +toggleBookmark()
+    +requestEnrichment()
+  }
+  class DeveloperPlaygroundScreen <<View>>
+  class DeveloperAIFeatureTestsViewModel <<@MainActor>> <<ObservableObject>> {
+    +samples: [AIPlaygroundSampleArticle]
+    +activeSample: AIPlaygroundSampleArticle
+    +customPromptOverride: String?
+    +runSummarization()
+    +runCategorization()
+    +runTagGeneration()
+    +runAll()
+    +clear()
+  }
+}
+
+package "Data Layer" {
+  class ArticleRepository
+  class UserPreferencesRepository
+  class RSSFeedClient
+  class RSSParser
+  class ArticleNormalizer
+}
+
+ArticleEntity "*" --> "0..1" ClusterEntity : belongs to
+InteractionEntity "*" --> "1" ArticleEntity
+UserPreferenceEntity "1" --> "*" InteractionEntity : informs
+
+AIProvider <|.. OpenAIProvider
+AIProvider <|.. ClaudeProvider
+AIProvider <|.. GeminiProvider
+AIProvider <|.. OllamaProvider
+AIProvider <|.. DeepSeekProvider
+AIService o--> AIProvider
+
+FetchHomeFeedUseCase <|.. LiveFetchHomeFeedUseCase
+EnrichArticleUseCase <|.. LiveEnrichArticleUseCase
+SummarizeArticleUseCase <|.. LiveSummarizeArticleUseCase
+
+LiveFetchHomeFeedUseCase --> FeedRefreshService
+LiveFetchHomeFeedUseCase --> ArticleRepository
+LiveEnrichArticleUseCase --> ArticleContentEnrichmentService
+LiveSummarizeArticleUseCase --> AIService
+LiveSummarizeArticleUseCase --> ArticleLocalStore
+
+HomeViewModel --> FetchHomeFeedUseCase
+HomeViewModel --> ArticleLocalStore
+HomeViewModel --> ArticleEntityMapper
+HomeViewModel --> UserPreferencesService
+SearchViewModel --> ArticleRepository
+ArticleLocalStore --> ArticleEntity
+UserPreferencesService --> UserPreferenceEntity
+
+DependencyContainer ..> HomeViewModel : builds
+DependencyContainer ..> LiveFetchHomeFeedUseCase : wires
+DependencyContainer --> ArticleRepository
+
+ArticleDetailScreen --> ArticleDetailViewModel
+ArticleDetailViewModel --> ArticleLocalStore
+DeveloperPlaygroundScreen --> DeveloperAIFeatureTestsViewModel
+DeveloperAIFeatureTestsViewModel --> AIService
+
+FeedRefreshService --> RSSFeedClient
+FeedRefreshService --> RSSParser
+FeedRefreshService --> ArticleNormalizer
+FeedRefreshService --> ArticleContentEnrichmentService
+FeedRefreshService --> ArticleRepository
+
+FeedRankingService --> ArticleRepository
+FeedRankingService --> UserPreferencesRepository
+
+InteractionTracker --> UserPreferencesRepository
+
+@enduml

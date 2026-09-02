@@ -1,0 +1,50 @@
+@startuml usecase
+title Mercury - Diagramma dei casi d'uso
+
+left to right direction
+skinparam shadowing false
+skinparam defaultFontName "Helvetica"
+skinparam actorStyle awesome
+
+actor "Lettore" as U
+actor "Sviluppatore\n(debug)" as D
+actor "Provider AI\nesterno" as AI
+actor "Sorgente RSS" as RSS
+
+rectangle Mercury {
+  usecase "UC1 Configurare preferenze\n(onboarding)" as UC1
+  usecase "UC2 Sfogliare il feed" as UC2
+  usecase "UC3 Aprire e leggere un articolo" as UC3
+  usecase "UC4 Salvare articolo\n(bookmark)" as UC4
+  usecase "UC5 Richiedere sintesi AI" as UC5
+  usecase "UC6 Richiedere categorizzazione" as UC6
+  usecase "UC7 Aggiornare il feed" as UC7
+  usecase "UC8 Gestire fonti / interessi" as UC8
+  usecase "UC9 Diagnostica RSS" as UC9
+  usecase "UC10 Configurare provider AI" as UC10
+  usecase "UC11 Esportare log" as UC11
+}
+
+U --> UC1
+U --> UC2
+U --> UC3
+U --> UC4
+U --> UC5
+U --> UC6
+U --> UC7
+U --> UC8
+U --> UC10
+
+D --> UC9
+D --> UC11
+
+UC7 ..> RSS : <<include>>
+UC5 ..> AI : <<include>>
+UC6 ..> AI : <<include>>
+UC9 ..> RSS : <<include>>
+
+UC2 ..> UC7 : <<extend>>\n(pull-to-refresh)
+UC3 ..> UC5 : <<extend>>
+UC3 ..> UC6 : <<extend>>
+
+@enduml

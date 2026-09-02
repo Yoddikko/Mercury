@@ -1,0 +1,62 @@
+@startuml seq-enrichment
+title Mercury - Sequenza: enrichment articolo (sintesi + categorizzazione)
+
+skinparam shadowing false
+skinparam defaultFontName "Helvetica"
+
+actor Utente as U
+participant "ArticleDetailViewModel" as VM
+participant "SummarizeArticleUseCase" as UCS
+participant "CategorizeArticleUseCase" as UCC
+participant "AIService" as AIS
+participant "AIProvider\n(impl. attiva)" as AIP
+participant "ArticleRepository" as REPO
+database "SwiftData" as DB
+participant "AppLogger" as LOG
+
+U -> VM: apre articolo
+activate VM
+VM -> REPO: fetch(id)
+REPO -> DB: select
+DB --> REPO: ArticleEntity
+REPO --> VM: article
+
+alt article.cleanedContent presente
+  VM -> UCS: summarize(article, reqID)
+  activate UCS
+  UCS -> AIS: summarize(content, reqID)
+  activate AIS
+  AIS -> AIP: summarizeArticle(content, reqID)
+  activate AIP
+  AIP --> AIS: AISummaryResult | error
+  deactivate AIP
+  alt success
+    AIS -> LOG: info("ai.summary.ok", provider, duration_ms)
+    AIS --> UCS: result
+    UCS -> REPO: update(summaryShort, summaryBullets)
+    REPO -> DB: write
+  else failure
+    AIS -> LOG: error("ai.summary.fail", provider, reason)
+    AIS --> UCS: throws
+    UCS --> VM: errore (non blocca lettura)
+  end
+  deactivate AIS
+  deactivate UCS
+
+  par categorizzazione in parallelo
+    VM -> UCC: categorize(article, reqID)
+    activate UCC
+    UCC -> AIS: categorize(content, reqID)
+    AIS -> AIP: categorizeArticle(content, reqID)
+    AIP --> AIS: AICategoryResult
+    AIS --> UCC: result
+    UCC -> REPO: update(category, tags)
+    REPO -> DB: write
+    deactivate UCC
+  end
+end
+
+VM --> U: render articolo arricchito
+deactivate VM
+
+@enduml
